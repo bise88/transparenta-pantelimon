@@ -528,6 +528,7 @@
     <li><a href="#" onclick="showTab('flags', this)">🚩 Red Flags <span class="cnt">7</span></a></li>
     <li><a href="#" onclick="showTab('achizitii', this)">📋 Achiziții Publice</a></li>
     <li><a href="#" onclick="showTab('surse', this)">🔗 Surse & Documente</a></li>
+    <li><a href="#" onclick="showTab('actiune', this)">⚖️ Ce poți face</a></li>
   </ul>
 </nav>
 
@@ -1102,203 +1103,68 @@
 
   </div><!-- end tab-surse -->
 
-</main>
+  <!-- ============================= TAB: CE POȚI FACE ============================= -->
+  <div id="tab-actiune" class="section">
 
-<footer>
-  <p>Elaborat de <strong>Inițiativă cetățenească independentă, pe baza datelor publice · <a href="https://www.primariapantelimon.ro" target="_blank">primariapantelimon.ro</a> · <a href="https://www.e-licitatie.ro/pub" target="_blank">e-licitatie.ro</a> · <a href="https://data.gov.ro" target="_blank">data.gov.ro</a></p>
-  <p style="margin-top:6px;font-size:11px">Acest site nu este afiliat cu Primăria Pantelimon. Datele sunt extrase exclusiv din surse publice oficiale. Ultima actualizare: mai 2026.</p>
-</footer>
+    <div class="disclaimer">
+      Aceasta nu este consultanță juridică. Informațiile de mai jos sunt orientative, bazate pe legislația română în vigoare.
+      Pentru situații concrete, consultați un avocat sau o asociație civică specializată.
+    </div>
 
-<script>
-// ===================== TABS =====================
-function showTab(name, el) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('nav.tabs a').forEach(a => a.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  el.classList.add('active');
-  return false;
-}
+    <h2 style="font-size:22px;font-weight:800;color:var(--albastru);margin-bottom:8px">⚖️ Drepturile tale ca cetățean</h2>
+    <p style="color:#555;margin-bottom:32px;max-width:700px">Dacă ai identificat o neregulă — în raportul de red flags, în achizițiile publice sau în altă decizie a primăriei — ai mai multe instrumente legale la dispoziție. Iată, pas cu pas, ce poți face.</p>
 
-// ===================== CHARTS =====================
-const BLUE = '#0070C0';
-const LBLUE = '#3FA8E8';
-const RED = '#C0392B';
-const ORANGE = '#E67E22';
-const GREEN = '#27AE60';
-const YELLOW = '#F39C12';
-const GREY = '#BDC3C7';
+    <!-- BLOC 1: CERERE DE INFORMATII -->
+    <div style="background:#fff;border-radius:14px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:24px;border-left:5px solid var(--albastru-deschis)">
+      <div style="display:flex;align-items:flex-start;gap:18px">
+        <div style="font-size:40px;flex-shrink:0">📄</div>
+        <div>
+          <h3 style="font-size:17px;font-weight:800;color:var(--albastru);margin-bottom:6px">Cerere de informații publice — Legea 544/2001</h3>
+          <p style="color:#444;font-size:14px;margin-bottom:12px">Orice cetățean poate solicita orice document public de la primărie. Primăria este obligată să răspundă în <strong>10 zile lucrătoare</strong> (sau 30 de zile pentru documente complexe). Refuzul nejustificat poate fi contestat în instanță.</p>
+          <div style="background:#EBF5FB;border-radius:8px;padding:14px 16px;font-size:13px;color:#1A5276">
+            <strong>Ce poți cere concret:</strong><br>
+            • Contractul integral (nu doar anunțul din SEAP) pentru orice achiziție publică<br>
+            • Documentația de atribuire și caietul de sarcini<br>
+            • Procesele-verbale ale comisiei de evaluare<br>
+            • Execuția bugetară lunară detaliată<br>
+            • Declarațiile de avere și interese ale funcționarilor implicați
+          </div>
+          <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+            <a href="https://www.primariapantelimon.ro/contact/" target="_blank"
+               style="background:var(--albastru);color:#fff;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600">
+              Trimite cerere la primărie →
+            </a>
+            <a href="https://legislatie.just.ro/Public/DetaliiDocument/28952" target="_blank"
+               style="background:#EBF5FB;color:var(--albastru);padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600;border:1px solid #AED6F1">
+              Text Lege 544/2001 →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
 
-const categLabels = [
-  'Autorități publice',
-  'Ordine publică',
-  'Învățământ',
-  'Sănătate',
-  'Cultură & Sport',
-  'Asistență socială',
-  'Servicii publice',
-  'Prot. mediului',
-  'Transport & Infra',
-  'Acțiuni economice'
-];
+    <!-- BLOC 2: PETITIE -->
+    <div style="background:#fff;border-radius:14px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:24px;border-left:5px solid var(--verde)">
+      <div style="display:flex;align-items:flex-start;gap:18px">
+        <div style="font-size:40px;flex-shrink:0">✍️</div>
+        <div>
+          <h3 style="font-size:17px;font-weight:800;color:#1E8449;margin-bottom:6px">Petiție formală — OG 27/2002</h3>
+          <p style="color:#444;font-size:14px;margin-bottom:12px">Poți depune o petiție (sesizare, reclamație, propunere) la primărie sau la orice altă instituție publică. Răspunsul este obligatoriu în <strong>30 de zile</strong>. Dacă nu primești răspuns, poți sesiza prefectura sau instanța de contencios administrativ.</p>
+          <div style="background:#EAFAF1;border-radius:8px;padding:14px 16px;font-size:13px;color:#145A32">
+            <strong>Sfat practic:</strong> Trimite petiția prin email cu confirmare de primire SAU prin poștă cu confirmare de primire (scrisoare recomandată). Păstrează o copie — dovada trimiterii e esențială dacă ajungi în instanță.
+          </div>
+        </div>
+      </div>
+    </div>
 
-const bugetAprobat = [8.2, 3.1, 14.8, 1.9, 4.2, 7.6, 11.4, 5.1, 23.6, 7.5];
-const cheltuieliRealizate = [7.5, 2.7, 12.4, 1.4, 4.0, 6.8, 8.9, 3.7, 12.8, 4.6];
-
-// Chart 1: Buget vs Realizat (bar grouped)
-new Chart(document.getElementById('chartBugetCateg'), {
-  type: 'bar',
-  data: {
-    labels: categLabels,
-    datasets: [
-      {
-        label: 'Buget aprobat (mil. RON)',
-        data: bugetAprobat,
-        backgroundColor: BLUE + 'CC',
-        borderColor: BLUE,
-        borderWidth: 1,
-        borderRadius: 4
-      },
-      {
-        label: 'Cheltuieli realizate* (mil. RON)',
-        data: cheltuieliRealizate,
-        backgroundColor: GREEN + 'CC',
-        borderColor: GREEN,
-        borderWidth: 1,
-        borderRadius: 4
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      legend: { position: 'top' },
-      tooltip: {
-        callbacks: {
-          label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y} mil. RON`
-        }
-      }
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        title: { display: true, text: 'Milioane RON' },
-        grid: { color: '#F0F2F5' }
-      },
-      x: { grid: { display: false } }
-    }
-  }
-});
-
-// Chart 2: Evoluție multi-an
-new Chart(document.getElementById('chartEvolutie'), {
-  type: 'line',
-  data: {
-    labels: ['2020', '2021', '2022', '2023', '2024', '2025*'],
-    datasets: [
-      {
-        label: 'Venituri totale',
-        data: [52.4, 58.1, 65.3, 72.8, 80.1, 87.4],
-        borderColor: BLUE,
-        backgroundColor: BLUE + '20',
-        fill: true,
-        tension: 0.4,
-        pointRadius: 4
-      },
-      {
-        label: 'Cheltuieli realizate',
-        data: [48.2, 53.4, 60.1, 65.9, 74.3, 71.2],
-        borderColor: ORANGE,
-        backgroundColor: ORANGE + '20',
-        fill: true,
-        tension: 0.4,
-        pointRadius: 4
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      legend: { position: 'top' },
-      tooltip: {
-        callbacks: {
-          label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y} mil. RON`
-        }
-      }
-    },
-    scales: {
-      y: {
-        beginAtZero: false,
-        title: { display: true, text: 'Mil. RON' },
-        grid: { color: '#F0F2F5' }
-      },
-      x: { grid: { display: false } }
-    }
-  }
-});
-
-// Chart 3: Pie structura cheltuieli
-new Chart(document.getElementById('chartPie'), {
-  type: 'doughnut',
-  data: {
-    labels: categLabels,
-    datasets: [{
-      data: cheltuieliRealizate,
-      backgroundColor: [
-        '#0070C0','#27AE60','#E67E22','#8E44AD','#F39C12',
-        '#16A085','#2980B9','#D35400','#C0392B','#7F8C8D'
-      ],
-      borderWidth: 2,
-      borderColor: '#fff'
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      legend: { position: 'right', labels: { font: { size: 11 } } },
-      tooltip: {
-        callbacks: {
-          label: ctx => ` ${ctx.label}: ${ctx.parsed} mil. RON (${Math.round(ctx.parsed/71.2*100)}%)`
-        }
-      }
-    }
-  }
-});
-
-// Chart 4: Proceduri achiziții
-new Chart(document.getElementById('chartProceduri'), {
-  type: 'bar',
-  data: {
-    labels: ['Cumpărare directă', 'Procedură simplificată', 'Licitație deschisă', 'Negociere fără publicare', 'Achiziție online SEAP'],
-    datasets: [{
-      label: 'Nr. contracte',
-      data: [38, 12, 3, 5, 8],
-      backgroundColor: [RED+'CC', ORANGE+'CC', GREEN+'CC', '#8E44AD'+'CC', LBLUE+'CC'],
-      borderColor: [RED, ORANGE, GREEN, '#8E44AD', LBLUE],
-      borderWidth: 1,
-      borderRadius: 4
-    }]
-  },
-  options: {
-    indexAxis: 'y',
-    responsive: true,
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        callbacks: {
-          label: ctx => ` ${ctx.parsed.x} contracte`
-        }
-      }
-    },
-    scales: {
-      x: {
-        beginAtZero: true,
-        title: { display: true, text: 'Număr contracte' },
-        grid: { color: '#F0F2F5' }
-      },
-      y: { grid: { display: false } }
-    }
-  }
-});
-</script>
-</body>
-</html>
+    <!-- BLOC 3: SESIZARE ANAP -->
+    <div style="background:#fff;border-radius:14px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:24px;border-left:5px solid var(--portocaliu)">
+      <div style="display:flex;align-items:flex-start;gap:18px">
+        <div style="font-size:40px;flex-shrink:0">🛒</div>
+        <div>
+          <h3 style="font-size:17px;font-weight:800;color:#A04000;margin-bottom:6px">Sesizare ANAP — nereguli la achiziții publice</h3>
+          <p style="color:#444;font-size:14px;margin-bottom:12px">Agenția Națională pentru Achiziții Publice (ANAP) monitorizează respectarea Legii 98/2016. Dacă suspectezi fragmentare de contracte, criterii discriminatorii, atribuire fără licitație sau orice altă neregulă în achizițiile din SEAP, poți sesiza direct ANAP.</p>
+          <div style="background:#FEF9E7;border-radius:8px;padding:14px 16px;font-size:13px;color:#7D6608;margin-bottom:12px">
+            <strong>Red flags tipice pentru sesizare ANAP:</strong><br>
+            • Contract atribuit fără licitație (procedură simplificată nejustificată)<br>
+            • Valoa
