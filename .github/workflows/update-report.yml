@@ -2,8 +2,9 @@ name: 🚩 Monitor Transparență Pantelimon
 
 "on":
   schedule:
-    # Luni la 06:00 UTC = 08:00 ora României (vara) / 08:00 iarna cu 1h diferență
-    - cron: '0 6 * * 1'
+    # Prima luni din fiecare lună, 06:00 UTC = 08:00 ora României
+    # data.gov.ro publică date trimestrial — lunar e suficient și mai eficient
+    - cron: '0 6 1-7 * 1'
   workflow_dispatch:  # permite și pornire manuală din GitHub
 
 jobs:
@@ -22,7 +23,7 @@ jobs:
           python-version: '3.11'
 
       - name: 📦 Instalare dependențe
-        run: pip install requests beautifulsoup4
+        run: pip install requests beautifulsoup4 openpyxl
 
       - name: 🔍 Rulare monitor transparență
         run: python monitor_pantelimon.py
