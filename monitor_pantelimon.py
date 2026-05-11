@@ -185,11 +185,39 @@ def fetch_contracts_seap(cui: str, luni: int = 12) -> list:
 
         for tip_sursa, url, res_name in fisiere_relevante:
             try:
-                resp = requests.get(url, timeout=40, headers=HEADERS)
+                # Verificăm dimensiunea fișierului înainte de descărcare
+                MAX_FILE_MB = 6
+                try:
+                    head = requests.head(url, timeout=10, headers=HEADERS, allow_redirects=True)
+                    content_len = int(head.headers.get("Content-Length", 0))
+                    if content_len > MAX_FILE_MB * 1024 * 1024:
+                        print(f"    ⏭ {res_name}: {content_len//1024//1024}MB > {MAX_FILE_MB}MB, sărim")
+                        continue
+                except Exception:
+                    pass  # HEAD eșuat — încercăm oricum
+
+                # Descărcare cu streaming + limită de timp și dimensiune
+                resp = requests.get(url, timeout=30, headers=HEADERS, stream=True)
                 if resp.status_code != 200:
                     continue
 
-                wb = openpyxl.load_workbook(io.BytesIO(resp.content), read_only=True)
+                chunks = []
+                downloaded = 0
+                LIMIT = MAX_FILE_MB * 1024 * 1024
+                for chunk in resp.iter_content(chunk_size=65536):
+                    downloaded += len(chunk)
+                    if downloaded > LIMIT:
+                        print(f"    ⏭ {res_name}: depășit {MAX_FILE_MB}MB în descărcare, sărim")
+                        chunks = []
+                        break
+                    chunks.append(chunk)
+                resp.close()
+
+                if not chunks:
+                    continue
+
+                file_bytes = b"".join(chunks)
+                wb = openpyxl.load_workbook(io.BytesIO(file_bytes), read_only=True)
                 ws = wb.active
                 rows_iter = ws.iter_rows(values_only=True)
                 headers_row = next(rows_iter, None)
@@ -714,7 +742,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
           </div>
           <p style="font-size:13px;color:#444;margin:0 0 8px">{f['descriere']}</p>
           <div style="font-size:12px;color:#777;display:flex;gap:16px;flex-wrap:wrap">
-            <span>📋 {f['contract_numar'] or '–'}</span>
+            <span>📋 {f.get('contract_id', f.get('contract_numar', '–')) or '–'}</span>
             <span>💰 {_fmt_ron(f['valoare'])}</span>
             <span>🏢 {f['furnizor']}</span>
             <span>📅 {f['data']}</span>
@@ -985,39 +1013,4 @@ def main():
     CONFIG["_hcl_ordinare"] = statistici_hcl.get("ordinare", 0)
     CONFIG["_hcl_extraordinare"] = statistici_hcl.get("extraordinare", 0)
     CONFIG["_hcl_pct"] = statistici_hcl.get("pct_extraordinare", 0)
-    CONFIG["_hcl_ocr"] = statistici_hcl.get("ocr_disponibil", False)
-
-    # 4. Red flags contracte SEAP
-    print("\n[4/6] Analizez red flags contracte...")
-    flags_seap = analizeaza_red_flags(contracte, CONFIG)
-    flags = flags_seap + flags_hcl
-
-    # 5. Flags noi față de ultima rulare
-    print("\n[5/6] Compar cu starea anterioară...")
-    flags_noi = detecteaza_flags_noi(flags, stare_ant)
-    if flags_noi:
-        print(f"    ⚠ {len(flags_noi)} RED FLAG(URI) NOI față de ultima rulare!")
-    else:
-        print("    ✓ Niciun flag nou.")
-
-    # 6. Generare raport
-    print("\n[6/6] Generez raport HTML...")
-    raport = genereaza_raport_html(budget, contracte, flags, flags_noi, CONFIG)
-    with open(CONFIG["fisier_raport"], "w", encoding="utf-8") as f:
-        f.write(raport)
-    print(f"    ✓ Raport salvat: {CONFIG['fisier_raport']}")
-
-    salveaza_stare(CONFIG["fisier_stare"], flags, contracte, rezultat_hcl.get("hcl_list", []))
-
-    if trimite_email or (flags_noi and CONFIG["email_from"]):
-        print("\n[+] Trimit alertă email...")
-        trimite_email_alerta(flags_noi, raport, CONFIG)
-
-    print("\n" + "="*60)
-    print(f"  SUMAR: {len(contracte)} contracte · {len(flags)} flags ({len(flags_noi)} noi) · HCL: {statistici_hcl.get('total_hcl',0)}")
-    print("="*60 + "\n")
-    return len(flags_noi)
-
-
-if __name__ == "__main__":
-    main()
+    CONFIG["_hcl_ocr"] = statistici_hcl.get
