@@ -22,8 +22,11 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: 📦 Instalare dependențe
-        run: pip install requests beautifulsoup4 openpyxl
+     - name: 🔧 Instalare Tesseract OCR + Poppler
+      run: sudo apt-get install -y tesseract-ocr tesseract-ocr-ron poppler-utils
+
+    - name: 📦 Instalare dependențe Python
+      run: pip install requests beautifulsoup4 openpyxl pytesseract pdf2image
 
       - name: 🔍 Rulare monitor transparență
         run: python monitor_pantelimon.py
