@@ -281,7 +281,190 @@ def fetch_contracts_seap(cui: str, luni: int = 12) -> list:
 
 
 # ==============================================================================
-# 3. ALGORITMI DE DETECȚIE RED FLAGS
+# 3. HOTĂRÂRI CONSILIU LOCAL — ANALIZĂ OCR
+# ==============================================================================
+
+HCL_URL_2025 = "https://www.primariapantelimon.ro/hotarari-2025/"
+HCL_URL_2024 = "https://www.primariapantelimon.ro/hotarari-2024/"
+
+# Cuvinte cheie care indică proceduri de urgență sau potențiale nereguli
+HCL_RED_FLAG_KEYWORDS = {
+    "urgenta_procedura": [
+        "negociere fără publicare", "negociere fara publicare",
+        "procedură de urgență", "procedura de urgenta",
+        "atribuire directă", "atribuire directa",
+        "fără licitație", "fara licitatie",
+    ],
+    "rectificare_bugetara": [
+        "rectificare bugetară", "rectificare bugetara",
+        "rectificare a bugetului", "modificare buget",
+    ],
+    "sedinta_extraordinara": [
+        "convocare de îndată", "convocare de indata",
+        "ședință extraordinară", "sedinta extraordinara",
+    ],
+}
+
+
+def fetch_hcl_metadata(url: str) -> list:
+    """Extrage lista de HCL-uri (PDF-uri) de pe pagina primăriei."""
+    try:
+        r = requests.get(url, headers=HEADERS, timeout=20)
+        r.raise_for_status()
+    except Exception as e:
+        print(f"    ⚠ Nu am putut accesa {url}: {e}")
+        return []
+
+    from bs4 import BeautifulSoup
+    soup = BeautifulSoup(r.text, "html.parser")
+    results = []
+    for a in soup.find_all("a", href=True):
+        text = a.get_text(strip=True)
+        href = a["href"]
+        if not any(kw in (text + href).lower() for kw in ["hcl", "hotarare", "hotărâre", ".pdf"]):
+            continue
+        if not href.lower().endswith(".pdf"):
+            continue
+        if not href.startswith("http"):
+            href = "https://www.primariapantelimon.ro" + href
+        tip = "extraordinara" if "extraordinar" in text.lower() or "extraordinar" in href.lower() else "ordinara"
+        results.append({
+            "titlu": text[:120],
+            "url": href,
+            "tip": tip,
+            "filename": href.split("/")[-1],
+        })
+    return results
+
+
+def ocr_pdf_prima_pagina(url: str, max_pages: int = 3) -> str:
+    """
+    Descarcă PDF-ul și aplică OCR pe primele max_pages pagini.
+    Returnează textul extras (poate fi gol dacă OCR eșuează).
+    Necesită: tesseract-ocr, tesseract-ocr-ron, poppler-utils instalate pe sistem.
+    """
+    try:
+        import pytesseract
+        from pdf2image import convert_from_bytes
+    except ImportError:
+        return ""
+
+    try:
+        r = requests.get(url, headers=HEADERS, timeout=40)
+        if r.status_code != 200:
+            return ""
+        images = convert_from_bytes(r.content, first_page=1, last_page=max_pages, dpi=200)
+        text_total = ""
+        for img in images:
+            text_total += pytesseract.image_to_string(img, lang="ron+eng") + "\n"
+        return text_total.lower()
+    except Exception as e:
+        print(f"      ⚠ OCR eșuat: {e}")
+        return ""
+
+
+def analizeaza_hcl(stare_anterioara: dict) -> dict:
+    """
+    Analizează hotărârile Consiliului Local:
+    1. Metadata (fără OCR): rata ședințelor extraordinare
+    2. OCR (doar HCL-uri noi față de rularea anterioară): caută cuvinte cheie red flag
+
+    Returnează dict cu statistici și lista de red flags HCL.
+    """
+    print("  [HCL] Analizez hotărârile Consiliului Local...")
+
+    ocr_disponibil = False
+    try:
+        import pytesseract
+        from pdf2image import convert_from_bytes
+        ocr_disponibil = True
+        print("    ✓ OCR disponibil (tesseract)")
+    except ImportError:
+        print("    ⚠ OCR indisponibil — analiză doar din metadata/nume fișiere")
+
+    hcl_list = []
+    for url in [HCL_URL_2025, HCL_URL_2024]:
+        found = fetch_hcl_metadata(url)
+        hcl_list.extend(found)
+        print(f"    → {url.split('/')[-2]}: {len(found)} HCL-uri găsite")
+
+    if not hcl_list:
+        print("    ✗ Nu s-au putut obține HCL-urile.")
+        return {"flags": [], "statistici": {}, "hcl_list": []}
+
+    total = len(hcl_list)
+    extraordinare = [h for h in hcl_list if h["tip"] == "extraordinara"]
+    ordinare = [h for h in hcl_list if h["tip"] == "ordinara"]
+    pct_extra = round(len(extraordinare) / total * 100) if total else 0
+
+    print(f"    → Total: {total} HCL | Ordinare: {len(ordinare)} | Extraordinare: {len(extraordinare)} ({pct_extra}%)")
+
+    flags_hcl = []
+
+    # FLAG 1: Rată ridicată de ședințe extraordinare
+    if pct_extra > 25:
+        flags_hcl.append({
+            "tip": "sedinte_extraordinare_excesive",
+            "severitate": "MAJOR" if pct_extra < 40 else "CRITIC",
+            "titlu": f"Rată ridicată de ședințe extraordinare: {pct_extra}%",
+            "descriere": (
+                f"Din {total} ședințe de Consiliu Local analizate, {len(extraordinare)} ({pct_extra}%) "
+                f"sunt 'extraordinare cu convocare de îndată'. Norma legală implică urgențe reale — "
+                f"o rată peste 25% sugerează că procedura de urgență este folosită sistematic "
+                f"pentru a ocoli consultarea publică obligatorie (Legea 52/2003)."
+            ),
+            "contract_id": "HCL-META-001",
+            "valoare": 0,
+            "furnizor": "Consiliul Local Pantelimon",
+            "data": datetime.now().strftime("%Y-%m-%d"),
+            "tip_procedura": "Sedinta CL extraordinara",
+        })
+
+    # FLAG 2: OCR pe HCL-urile noi
+    if ocr_disponibil:
+        hcl_vazute = set(stare_anterioara.get("hcl_urls_vazute", []))
+        hcl_noi = [h for h in hcl_list if h["url"] not in hcl_vazute]
+        print(f"    → OCR: {len(hcl_noi)} HCL-uri noi de procesat")
+
+        for hcl in hcl_noi[:10]:  # max 10 per rulare pentru a nu depăși timeout
+            print(f"      OCR: {hcl['titlu'][:60]}...")
+            text = ocr_pdf_prima_pagina(hcl["url"], max_pages=2)
+            if not text:
+                continue
+
+            for tip_flag, keywords in HCL_RED_FLAG_KEYWORDS.items():
+                for kw in keywords:
+                    if kw in text:
+                        flags_hcl.append({
+                            "tip": f"hcl_{tip_flag}",
+                            "severitate": "MAJOR",
+                            "titlu": f"HCL: {tip_flag.replace('_', ' ').title()} detectat",
+                            "descriere": (
+                                f"Cuvânt cheie '{kw}' detectat în: {hcl['titlu']}. "
+                                f"Verificați documentul pentru detalii."
+                            ),
+                            "contract_id": hcl["filename"],
+                            "valoare": 0,
+                            "furnizor": "Consiliul Local Pantelimon",
+                            "data": datetime.now().strftime("%Y-%m-%d"),
+                            "tip_procedura": hcl["tip"],
+                        })
+                        break
+
+    statistici = {
+        "total_hcl": total,
+        "ordinare": len(ordinare),
+        "extraordinare": len(extraordinare),
+        "pct_extraordinare": pct_extra,
+        "ocr_disponibil": ocr_disponibil,
+    }
+
+    print(f"    ✓ Analiză HCL finalizată. Red flags HCL: {len(flags_hcl)}")
+    return {"flags": flags_hcl, "statistici": statistici, "hcl_list": hcl_list}
+
+
+# ==============================================================================
+# 4. ALGORITMI DE DETECȚIE RED FLAGS (contracte SEAP)
 # ==============================================================================
 
 def analizeaza_red_flags(contracte: list, config: dict) -> list:
@@ -474,11 +657,12 @@ def incarca_stare_anterioara(fisier: str) -> dict:
     return {"flags_anterioare": [], "data_ultima_rulare": None, "contracte_vazute": []}
 
 
-def salveaza_stare(fisier: str, flags: list, contracte: list):
+def salveaza_stare(fisier: str, flags: list, contracte: list, hcl_list: list = None):
     """Salvează starea curentă pentru comparație viitoare."""
     stare = {
         "flags_anterioare": [f["contract_id"] + "_" + f["tip"] for f in flags],
         "contracte_vazute": [c["id"] for c in contracte],
+        "hcl_urls_vazute": [h["url"] for h in (hcl_list or [])],
         "data_ultima_rulare": datetime.now().isoformat(),
         "total_flags": len(flags),
     }
@@ -648,98 +832,111 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
   <!-- RED FLAGS -->
   <h2 style="color:#00427A;margin:28px 0 8px">🚩 Red Flags Detectate ({len(flags)})</h2>
   <p style="font-size:13px;color:#777;margin:0 0 16px">
-    {sum(1 for f in flags if f['severitate']=='CRITIC')} CRITIC &nbsp;·&nbsp;
-    {sum(1 for f in flags if f['severitate']=='MAJOR')} MAJOR &nbsp;·&nbsp;
-    {sum(1 for f in flags if f['severitate']=='MEDIU')} MEDIU
-    {f" &nbsp;·&nbsp; <strong style='color:#2E7D32'>{len(flags_noi)} NOI față de ultima rulare</strong>" if flags_noi else ""}
-  </p>
+    {sum(1 for f in flags if f['severitate']=='CRITIC')} CRITIC · {sum(1 for f in flags if f['severitate']=='MAJOR')} MAJOR · {sum(1 for f in flags if f['severitate']=='MEDIU')} MEDIU</p>
   {nota_demo_msg}
-  {flags_html if flags_html else '<p style="color:#27AE60;font-size:14px">✅ Niciun red flag detectat în această perioadă.</p>'}
+  {flags_html if flags_html else '<div style="background:#E8F5E9;border-left:4px solid #27AE60;padding:14px 18px;border-radius:0 8px 8px 0"><span style="color:#27AE60;font-weight:700">✅ Niciun red flag detectat în această perioadă.</span></div>'}
+
+  <!-- HCL STATISTICI -->
+  <h2 style="color:#00427A;margin:28px 0 8px">📋 Hotărâri Consiliu Local</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px">
+    <div style="background:#fff;border-radius:10px;padding:16px;border-top:4px solid #0070C0;box-shadow:0 1px 4px rgba(0,0,0,.08)">
+      <div style="font-size:28px;font-weight:800;color:#0070C0">{config.get('_hcl_total',0)}</div>
+      <div style="font-size:11px;color:#777;text-transform:uppercase">HCL Total analizate</div>
+    </div>
+    <div style="background:#fff;border-radius:10px;padding:16px;border-top:4px solid #27AE60;box-shadow:0 1px 4px rgba(0,0,0,.08)">
+      <div style="font-size:28px;font-weight:800;color:#27AE60">{config.get('_hcl_ordinare',0)}</div>
+      <div style="font-size:11px;color:#777;text-transform:uppercase">Ședințe ordinare</div>
+    </div>
+    <div style="background:#fff;border-radius:10px;padding:16px;border-top:4px solid {'#C0392B' if config.get('_hcl_pct',0)>25 else '#E67E22'};box-shadow:0 1px 4px rgba(0,0,0,.08)">
+      <div style="font-size:28px;font-weight:800;color:{'#C0392B' if config.get('_hcl_pct',0)>25 else '#E67E22'}">{config.get('_hcl_extraordinare',0)}</div>
+      <div style="font-size:11px;color:#777;text-transform:uppercase">Extraordinare cu convocare de îndată ({config.get('_hcl_pct',0)}%)</div>
+    </div>
+    <div style="background:#fff;border-radius:10px;padding:16px;border-top:4px solid #8E44AD;box-shadow:0 1px 4px rgba(0,0,0,.08)">
+      <div style="font-size:12px;font-weight:700;color:#8E44AD">{'✅ OCR activ' if config.get('_hcl_ocr') else '⚠️ Doar metadata'}</div>
+      <div style="font-size:11px;color:#777;text-transform:uppercase;margin-top:4px">Mod analiză HCL</div>
+    </div>
+  </div>
 
   <!-- STATISTICI ACHIZITII -->
-  <h2 style="color:#00427A;margin:28px 0 16px">📋 Statistici Achiziții</h2>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px">
-    <div style="background:#fff;border-radius:8px;padding:16px;border-top:3px solid #0070C0;box-shadow:0 1px 3px rgba(0,0,0,.08)">
-      <div style="font-size:22px;font-weight:800;color:#0070C0">{len(contracte)}</div>
+  <h2 style="color:#00427A;margin:28px 0 8px">📊 Statistici Achiziții</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px">
+    <div style="background:#fff;border-radius:10px;padding:16px;border-top:4px solid #0070C0;box-shadow:0 1px 4px rgba(0,0,0,.08)">
+      <div style="font-size:28px;font-weight:800;color:#0070C0">{len(contracte)}</div>
       <div style="font-size:11px;color:#777;text-transform:uppercase">Contracte totale</div>
     </div>
-    <div style="background:#fff;border-radius:8px;padding:16px;border-top:3px solid #C0392B;box-shadow:0 1px 3px rgba(0,0,0,.08)">
-      <div style="font-size:22px;font-weight:800;color:#C0392B">{len(directe)}</div>
-      <div style="font-size:11px;color:#777;text-transform:uppercase">Cumpărare directă</div>
+    <div style="background:#fff;border-radius:10px;padding:16px;border-top:4px solid #C0392B;box-shadow:0 1px 4px rgba(0,0,0,.08)">
+      <div style="font-size:28px;font-weight:800;color:#C0392B">{len(directe)}</div>
+      <div style="font-size:11px;color:#777;text-transform:uppercase">Cumpărare directă / negociere</div>
     </div>
-    <div style="background:#fff;border-radius:8px;padding:16px;border-top:3px solid #E67E22;box-shadow:0 1px 3px rgba(0,0,0,.08)">
-      <div style="font-size:22px;font-weight:800;color:#E67E22">{len(unic_ofertant)}</div>
+    <div style="background:#fff;border-radius:10px;padding:16px;border-top:4px solid #E67E22;box-shadow:0 1px 4px rgba(0,0,0,.08)">
+      <div style="font-size:28px;font-weight:800;color:#E67E22">{len(unic_ofertant)}</div>
       <div style="font-size:11px;color:#777;text-transform:uppercase">Un singur ofertant</div>
     </div>
-    <div style="background:#fff;border-radius:8px;padding:16px;border-top:3px solid #27AE60;box-shadow:0 1px 3px rgba(0,0,0,.08)">
-      <div style="font-size:22px;font-weight:800;color:#27AE60">{_fmt_ron(total_val)}</div>
+    <div style="background:#fff;border-radius:10px;padding:16px;border-top:4px solid #27AE60;box-shadow:0 1px 4px rgba(0,0,0,.08)">
+      <div style="font-size:28px;font-weight:800;color:#27AE60">{_fmt_ron(total_val)}</div>
       <div style="font-size:11px;color:#777;text-transform:uppercase">Valoare totală</div>
     </div>
   </div>
 
-  <!-- TABEL CONTRACTE -->
-  <h3 style="color:#00427A;margin:0 0 12px">Lista contracte analizate (primele 20)</h3>
+  <!-- LISTA CONTRACTE -->
+  <h2 style="color:#00427A;margin:28px 0 8px">📄 Lista contracte analizate (primele 20)</h2>
+  <div style="overflow-x:auto">
   <table>
-    <thead>
-      <tr>
-        <th>Titlu contract</th><th>Valoare</th><th>Tip procedură</th>
-        <th style="text-align:center">Ofertanți</th><th>Câștigător</th><th>Data</th>
-      </tr>
-    </thead>
-    <tbody>{contracte_html}</tbody>
+    <thead><tr>
+      <th>Titlu contract</th><th>Valoare</th><th>Tip procedură</th>
+      <th>Ofertanți</th><th>Câștigător</th><th>Data</th>
+    </tr></thead>
+    <tbody>{contracte_html if contracte_html else '<tr><td colspan="6" style="text-align:center;padding:20px;color:#777">Nu există contracte de afișat</td></tr>'}</tbody>
   </table>
-
-  <!-- FOOTER -->
-  <div style="margin-top:32px;padding:16px;background:#fff;border-radius:8px;
-              font-size:12px;color:#777;box-shadow:0 1px 3px rgba(0,0,0,.08)">
-    <strong style="color:#00427A">Surse date:</strong>
-    <a href="https://transparenta.eu/entities/{config['cui']}" target="_blank">transparenta.eu</a> (ANAF/MF) &nbsp;·&nbsp;
-    <a href="https://www.e-licitatie.ro/pub" target="_blank">e-licitatie.ro (SEAP)</a> &nbsp;·&nbsp;
-    <a href="https://www.primariapantelimon.ro" target="_blank">primariapantelimon.ro</a>
-    <br><br>
-    Raport generat automat de <strong>monitor_pantelimon.py</strong> &nbsp;·&nbsp;
-    Inițiativă cetățenească independentă &nbsp;·&nbsp;
-    Datele sunt extrase exclusiv din surse publice oficiale.
   </div>
 
 </div>
+
+<footer style="background:#00427A;color:rgba(255,255,255,.7);text-align:center;padding:16px;font-size:12px;margin-top:40px">
+  <p>Surse date: <a href="https://transparenta.eu/entities/{config['cui']}" target="_blank" style="color:#FFD000">transparenta.eu</a> (ANAF/MF) &nbsp;·&nbsp;
+     <a href="https://www.e-licitatie.ro/pub" target="_blank" style="color:#FFD000">e-licitatie.ro (SEAP)</a> &nbsp;·&nbsp;
+     <a href="https://www.primariapantelimon.ro" target="_blank" style="color:#FFD000">primariapantelimon.ro</a></p>
+  <p style="margin-top:6px;font-size:11px;opacity:.7">
+    Raport generat automat de <strong>monitor_pantelimon.py</strong> &nbsp;·&nbsp;
+    Inițiativă cetățenească independentă &nbsp;·&nbsp;
+    Datele sunt extrase exclusiv din surse publice oficiale.
+  </p>
+</footer>
 </body>
 </html>"""
-
     return html
 
 
 # ==============================================================================
-# 6. ALERTĂ EMAIL
+# 6. TRIMITERE EMAIL ALERTĂ
 # ==============================================================================
 
 def trimite_email_alerta(flags_noi: list, raport_html: str, config: dict):
-    """Trimite email cu alertă dacă există flags noi."""
-    if not config["email_from"] or not config["email_to"]:
-        print("  [Email] Configurație email lipsă – se sare trimiterea.")
+    """Trimite email de alertă dacă există red flags noi."""
+    if not config.get("email_from") or not config.get("email_to"):
+        print("  [Email] Emailul nu e configurat — se sare.")
         return
 
-    if not flags_noi:
-        print("  [Email] Niciun flag nou – nu se trimite email.")
-        return
+    subiect = f"🚩 {len(flags_noi)} red flag(uri) noi — Transparență Pantelimon {datetime.now().strftime('%d.%m.%Y')}"
 
-    print(f"  [Email] Trimit alertă la {config['email_to']}...")
+    flags_text = "\n".join([
+        f"[{f['severitate']}] {f['titlu']}\n  → {f['descriere'][:200]}"
+        for f in flags_noi[:5]
+    ])
 
-    critice = [f for f in flags_noi if f["severitate"] == "CRITIC"]
-    majore = [f for f in flags_noi if f["severitate"] == "MAJOR"]
+    body_text = f"""
+Monitor Transparență Bugetară — Pantelimon
+==========================================
 
-    subiect = (f"🚩 {len(flags_noi)} red flag(s) noi – Primăria Pantelimon "
-               f"[{len(critice)} CRITIC, {len(majore)} MAJOR]")
+{len(flags_noi)} red flag(uri) noi detectate față de ultima rulare:
 
-    body_text = f"""ALERTĂ TRANSPARENȚĂ BUGETARĂ — Primăria Pantelimon
-Detectate {len(flags_noi)} red flag(uri) noi față de ultima verificare.
+{flags_text}
 
+Raport complet: https://bise88.github.io/transparenta-pantelimon/raport_transparenta.html
+
+---
+Inițiativă cetățenească independentă · Date din surse publice oficiale.
 """
-    for f in flags_noi:
-        body_text += f"[{f['severitate']}] {f['titlu']}\n{f['descriere']}\n\n"
-
-    body_text += f"\nRaportul complet este atașat.\nGenerat la {datetime.now().strftime('%d.%m.%Y %H:%M')}"
-
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subiect
     msg["From"] = config["email_from"]
@@ -752,9 +949,9 @@ Detectate {len(flags_noi)} red flag(uri) noi față de ultima verificare.
             server.starttls()
             server.login(config["email_from"], config["email_parola"])
             server.sendmail(config["email_from"], config["email_to"], msg.as_string())
-        print(f"  [Email] ✓ Email trimis cu succes la {config['email_to']}")
+        print(f"  [Email] ✓ Trimis la {config['email_to']}")
     except Exception as e:
-        print(f"  [Email] ✗ Eroare la trimitere: {e}")
+        print(f"  [Email] ✗ Eroare: {e}")
 
 
 # ==============================================================================
@@ -769,52 +966,57 @@ def main():
     print("="*60)
 
     # 1. Buget
-    print("\n[1/5] Fetchuiesc date bugetare...")
+    print("\n[1/6] Fetchuiesc date bugetare...")
     budget = fetch_budget_transparenta(CONFIG["cui"])
 
-    # 2. Contracte din data.gov.ro (export oficial SEAP)
-    print("\n[2/5] Fetchuiesc contracte din data.gov.ro...")
+    # 2. Contracte din data.gov.ro
+    print("\n[2/6] Fetchuiesc contracte din data.gov.ro...")
     contracte = fetch_contracts_seap(CONFIG["cui"], CONFIG["luni_analiza"])
 
-    # 3. Analiză red flags
-    print("\n[3/5] Analizez red flags...")
-    flags = analizeaza_red_flags(contracte, CONFIG)
-
-    # 4. Detecție flags noi
-    print("\n[4/5] Compar cu starea anterioară...")
+    # 3. Hotărâri Consiliu Local
+    print("\n[3/6] Analizez hotărârile Consiliului Local...")
     stare_ant = incarca_stare_anterioara(CONFIG["fisier_stare"])
+    rezultat_hcl = analizeaza_hcl(stare_ant)
+    flags_hcl = rezultat_hcl["flags"]
+    statistici_hcl = rezultat_hcl["statistici"]
+
+    # Pasăm statisticile HCL în CONFIG pentru template
+    CONFIG["_hcl_total"] = statistici_hcl.get("total_hcl", 0)
+    CONFIG["_hcl_ordinare"] = statistici_hcl.get("ordinare", 0)
+    CONFIG["_hcl_extraordinare"] = statistici_hcl.get("extraordinare", 0)
+    CONFIG["_hcl_pct"] = statistici_hcl.get("pct_extraordinare", 0)
+    CONFIG["_hcl_ocr"] = statistici_hcl.get("ocr_disponibil", False)
+
+    # 4. Red flags contracte SEAP
+    print("\n[4/6] Analizez red flags contracte...")
+    flags_seap = analizeaza_red_flags(contracte, CONFIG)
+    flags = flags_seap + flags_hcl
+
+    # 5. Flags noi față de ultima rulare
+    print("\n[5/6] Compar cu starea anterioară...")
     flags_noi = detecteaza_flags_noi(flags, stare_ant)
     if flags_noi:
         print(f"    ⚠ {len(flags_noi)} RED FLAG(URI) NOI față de ultima rulare!")
     else:
-        print("    ✓ Niciun flag nou față de ultima rulare.")
+        print("    ✓ Niciun flag nou.")
 
-    # 5. Generare raport
-    print("\n[5/5] Generez raport HTML...")
+    # 6. Generare raport
+    print("\n[6/6] Generez raport HTML...")
     raport = genereaza_raport_html(budget, contracte, flags, flags_noi, CONFIG)
-
     with open(CONFIG["fisier_raport"], "w", encoding="utf-8") as f:
         f.write(raport)
     print(f"    ✓ Raport salvat: {CONFIG['fisier_raport']}")
 
-    # Salvare stare
-    salveaza_stare(CONFIG["fisier_stare"], flags, contracte)
+    salveaza_stare(CONFIG["fisier_stare"], flags, contracte, rezultat_hcl.get("hcl_list", []))
 
-    # Email (dacă e configurat și solicitat)
     if trimite_email or (flags_noi and CONFIG["email_from"]):
         print("\n[+] Trimit alertă email...")
         trimite_email_alerta(flags_noi, raport, CONFIG)
 
-    # Sumar final
     print("\n" + "="*60)
-    print(f"  SUMAR RULARE:")
-    print(f"  • Contracte analizate: {len(contracte)}")
-    print(f"  • Red flags total: {len(flags)}")
-    print(f"  • Red flags NOI: {len(flags_noi)}")
-    print(f"  • Raport: {CONFIG['fisier_raport']}")
+    print(f"  SUMAR: {len(contracte)} contracte · {len(flags)} flags ({len(flags_noi)} noi) · HCL: {statistici_hcl.get('total_hcl',0)}")
     print("="*60 + "\n")
-
-    return len(flags_noi)  # returnăm nr. de flags noi (util pentru scheduler)
+    return len(flags_noi)
 
 
 if __name__ == "__main__":
