@@ -1,14 +1,14 @@
 """
 Monitor Transparență Bugetară — Primăria Pantelimon
 ====================================================
-Script de monitorizare automată: trage date din SEAP și transparenta.eu,
-detectează red flags și generează raport HTML + alertă email opțională.
+Script de monitorizare automată: trage date din data.gov.ro (export SEAP oficial)
+și transparenta.eu, detectează red flags și generează raport HTML.
 
 Utilizare:
     python monitor_pantelimon.py          # rulează analiza și generează raportul
     python monitor_pantelimon.py --email  # rulează și trimite email dacă sunt flags noi
 
-Dependențe: pip install requests beautifulsoup4
+Dependențe: pip install requests beautifulsoup4 openpyxl
 """
 
 import json
@@ -58,7 +58,7 @@ CONFIG = {
 # SURSE DE DATE
 # ==============================================================================
 
-SEAP_BASE = "https://www.e-licitatie.ro/api-pub"
+DATAGOV_BASE = "https://data.gov.ro/api/3/action"
 TRANSPARENTA_BASE = "https://transparenta.eu"
 
 HEADERS = {
@@ -130,140 +130,154 @@ def fetch_budget_transparenta(cui: str) -> dict:
 
 
 # ==============================================================================
-# 2. DATE CONTRACTE DIN SEAP (e-licitatie.ro)
+# 2. DATE CONTRACTE DIN DATA.GOV.RO (export oficial SEAP trimestrial)
 # ==============================================================================
 
 def fetch_contracts_seap(cui: str, luni: int = 12) -> list:
     """
-    Caută contractele atribuite de Primăria Pantelimon în SEAP
-    în ultimele `luni` luni. Returnează lista de contracte.
+    Descarcă contractele Primăriei Pantelimon din data.gov.ro — exportul oficial
+    trimestrial al SEAP publicat de ANAP. Mult mai fiabil decât API-ul direct SEAP.
+    Returnează lista standardizată de contracte (licitații + achiziții directe).
     """
-    print(f"  [SEAP] Caut contracte pentru CUI {cui} (ultimele {luni} luni)...")
-
-    data_start = (datetime.now() - timedelta(days=luni * 30)).strftime("%Y-%m-%d")
-    data_end = datetime.now().strftime("%Y-%m-%d")
-
-    # Endpoint pentru anunțuri de atribuire (contracte finalizate)
-    url = f"{SEAP_BASE}/NoticeSearch/GetList"
-
-    payload = {
-        "caNoticeStateCode": None,
-        "cpvCodeId": None,
-        "contractingAuthority": cui,
-        "contractingAuthorityFiscalNumber": cui,
-        "noticeStateCode": None,
-        "publicationDateStart": data_start,
-        "publicationDateEnd": data_end,
-        "pageSize": 100,
-        "pageIndex": 0,
-        "sortField": "publicationDate",
-        "sortDirection": "desc",
-    }
-
-    contracte = []
-
+    import io
     try:
-        r = requests.post(url, json=payload, headers=HEADERS, timeout=30)
-        r.raise_for_status()
-        data = r.json()
+        import openpyxl
+    except ImportError:
+        print("    ✗ openpyxl lipsă. Rulează: pip install openpyxl")
+        return []
 
-        items = data.get("items", data.get("list", data.get("data", [])))
-        print(f"    ✓ Găsite {len(items)} înregistrări în anunțuri de atribuire")
+    print(f"  [data.gov.ro] Caut contracte pentru CUI {cui}...")
 
-        for item in items:
-            contract = {
-                "id": item.get("caNoticeId") or item.get("id", ""),
-                "numar": item.get("noticeNo", ""),
-                "titlu": item.get("contractTitle", item.get("title", "Fără titlu")),
-                "valoare_ron": float(item.get("contractValue", item.get("estimatedValue", 0)) or 0),
-                "moneda": item.get("currencyCode", "RON"),
-                "tip_procedura": item.get("procedureTypeName", item.get("procedureType", "")),
-                "data_publicare": item.get("publicationDate", "")[:10] if item.get("publicationDate") else "",
-                "castigator": item.get("winnerName", item.get("winner", {}).get("name", "Necunoscut")),
-                "castigator_cui": item.get("winnerFiscalNumber", ""),
-                "nr_ofertanti": int(item.get("numberOfOffers", item.get("nbTendersReceived", 1)) or 1),
-                "sursa": "SEAP-atribuire",
-            }
-            contracte.append(contract)
+    an_curent = datetime.now().year
+    ani_de_verificat = sorted({an_curent - 1, an_curent})  # ultimii 2 ani
+    contracte = []
+    surse_ok = 0
 
-    except requests.exceptions.HTTPError as e:
-        print(f"    ⚠ Anunțuri atribuire: HTTP {e.response.status_code} - încerc endpoint alternativ")
-
-    # Fallback: endpoint alternativ pentru contracte
-    if not contracte:
-        url2 = f"{SEAP_BASE}/C_PUBLIC_CANotice/GetCANoticeContracts"
-        payload2 = {
-            "contractingAuthorityCode": cui,
-            "pageSize": 100,
-            "pageIndex": 0,
-        }
+    for an in ani_de_verificat:
+        package_id = f"achizitii-publice-{an}"
         try:
-            r2 = requests.post(url2, json=payload2, headers=HEADERS, timeout=30)
-            if r2.status_code == 200:
-                data2 = r2.json()
-                items2 = data2.get("items", data2.get("list", []))
-                print(f"    ✓ Fallback: găsite {len(items2)} contracte")
-                for item in items2:
-                    contracte.append({
-                        "id": item.get("caNoticeId", ""),
-                        "numar": item.get("contractNo", ""),
-                        "titlu": item.get("contractTitle", ""),
-                        "valoare_ron": float(item.get("contractValue", 0) or 0),
-                        "moneda": "RON",
-                        "tip_procedura": item.get("procedureType", ""),
-                        "data_publicare": (item.get("contractDate") or "")[:10],
-                        "castigator": item.get("winnerTitle", ""),
-                        "castigator_cui": item.get("winnerFiscalNumber", ""),
-                        "nr_ofertanti": 1,
-                        "sursa": "SEAP-contracte",
-                    })
-        except Exception as e2:
-            print(f"    ✗ Fallback eșuat: {e2}")
+            r = requests.get(
+                f"{DATAGOV_BASE}/package_show?id={package_id}",
+                timeout=20, headers=HEADERS
+            )
+            if r.status_code != 200:
+                print(f"    ⚠ Pachet {an} indisponibil (HTTP {r.status_code})")
+                continue
+            resources = r.json()["result"]["resources"]
+        except Exception as e:
+            print(f"    ⚠ Nu am putut accesa pachetul {an}: {e}")
+            continue
 
-    # Dacă tot nu avem date, generăm date demonstrative cu avertisment
+        # Selectăm fișierele relevante: Contracte și Achiziții directe (nu notificări)
+        fisiere_relevante = []
+        for res in resources:
+            name = res.get("name", "").lower()
+            url = res.get("url", "")
+            if not (url.endswith(".xlsx") or url.endswith(".xls")):
+                continue
+            este_contracte = "contracte" in name and "modificare" not in name
+            este_directe = "direct" in name and "notific" not in name and "atribuire" not in name
+            if este_contracte or este_directe:
+                tip = "contract" if este_contracte else "achizitie-directa"
+                fisiere_relevante.append((tip, url, res.get("name", "")))
+
+        print(f"    → {an}: {len(fisiere_relevante)} fișiere relevante găsite")
+
+        for tip_sursa, url, res_name in fisiere_relevante:
+            try:
+                resp = requests.get(url, timeout=40, headers=HEADERS)
+                if resp.status_code != 200:
+                    continue
+
+                wb = openpyxl.load_workbook(io.BytesIO(resp.content), read_only=True)
+                ws = wb.active
+                rows_iter = ws.iter_rows(values_only=True)
+                headers_row = next(rows_iter, None)
+                if not headers_row:
+                    wb.close()
+                    continue
+
+                hdrs = [str(h).strip() if h else "" for h in headers_row]
+
+                def col_idx(*names):
+                    for name in names:
+                        for i, h in enumerate(hdrs):
+                            if name.lower() in h.lower():
+                                return i
+                    return None
+
+                idx_cui_ac   = col_idx("CUI autoritate")
+                idx_proc     = col_idx("Tip procedura")
+                idx_valoare  = col_idx("Valoare contract", "Valoare achizitie", "Valoare")
+                idx_castig   = col_idx("Ofertant castigator", "Furnizor", "Castigator")
+                idx_cui_casg = col_idx("CUI ofertant", "CUI furnizor")
+                idx_data     = col_idx("Data contract", "Data achizitie", "Data publicare")
+                idx_cpv      = col_idx("Denumire CPV", "Denumire produs", "Obiect")
+                idx_numar    = col_idx("Numar contract", "Numar achizitie", "ID")
+
+                if idx_cui_ac is None:
+                    wb.close()
+                    continue
+
+                rand_idx = 0
+                for row in rows_iter:
+                    rand_idx += 1
+                    if not row or not row[idx_cui_ac]:
+                        continue
+                    if str(row[idx_cui_ac]).strip() != str(cui):
+                        continue
+
+                    # Valoare
+                    valoare = 0.0
+                    if idx_valoare is not None and row[idx_valoare]:
+                        try:
+                            valoare = float(str(row[idx_valoare]).replace(",", ".").replace(" ", ""))
+                        except (ValueError, TypeError):
+                            pass
+
+                    # Dată
+                    data_str = ""
+                    if idx_data is not None and row[idx_data]:
+                        d = row[idx_data]
+                        try:
+                            data_str = d.strftime("%Y-%m-%d") if hasattr(d, "strftime") else str(d)[:10]
+                        except Exception:
+                            data_str = str(d)[:10]
+
+                    tip_proc = str(row[idx_proc]).strip() if idx_proc is not None and row[idx_proc] else ""
+
+                    # nr_ofertanti: deducem din tip procedură (nu e în export)
+                    nr_ofertanti = 1
+                    if any(kw in tip_proc.lower() for kw in ["deschis", "restrâns", "competitiv"]):
+                        nr_ofertanti = 2  # cel puțin 2 în proceduri competitive
+
+                    cid = f"{tip_sursa}-{an}-{rand_idx}"
+                    contracte.append({
+                        "id": cid,
+                        "numar": str(row[idx_numar]).strip() if idx_numar is not None and row[idx_numar] else cid,
+                        "titlu": str(row[idx_cpv]).strip() if idx_cpv is not None and row[idx_cpv] else "Nespecificat",
+                        "valoare_ron": valoare,
+                        "moneda": "RON",
+                        "tip_procedura": tip_proc,
+                        "data_publicare": data_str,
+                        "castigator": str(row[idx_castig]).strip() if idx_castig is not None and row[idx_castig] else "Necunoscut",
+                        "castigator_cui": str(row[idx_cui_casg]).strip() if idx_cui_casg is not None and row[idx_cui_casg] else "",
+                        "nr_ofertanti": nr_ofertanti,
+                        "sursa": f"data.gov.ro/{tip_sursa}/{an}",
+                    })
+
+                wb.close()
+                surse_ok += 1
+
+            except Exception as e:
+                print(f"    ⚠ Eroare la {res_name}: {e}")
+
+    print(f"    ✓ Procesate {surse_ok} fișiere. Găsite {len(contracte)} contracte Pantelimon.")
+
     if not contracte:
-        print("    ⚠ Nu s-au putut obține date live SEAP - folosim date demonstrative")
-        contracte = _date_demonstrative_seap()
+        print("    ✗ Nu s-au găsit contracte reale în data.gov.ro.")
 
     return contracte
-
-
-def _date_demonstrative_seap() -> list:
-    """Date demonstrative pentru când API-ul SEAP nu răspunde."""
-    return [
-        {"id": "demo1", "numar": "2025-001", "titlu": "Lucrări reabilitare str. Principală",
-         "valoare_ron": 1_240_000, "moneda": "RON", "tip_procedura": "Negociere fără publicare prealabilă",
-         "data_publicare": "2025-03-15", "castigator": "SC CONSTRUCT RAPID SRL",
-         "castigator_cui": "12345678", "nr_ofertanti": 1, "sursa": "DEMO"},
-        {"id": "demo2", "numar": "2025-002", "titlu": "Furnizare materiale construcții lot 1",
-         "valoare_ron": 128_500, "moneda": "RON", "tip_procedura": "Cumpărare directă",
-         "data_publicare": "2025-04-02", "castigator": "SC MATERIALE BUILD SRL",
-         "castigator_cui": "87654321", "nr_ofertanti": 1, "sursa": "DEMO"},
-        {"id": "demo3", "numar": "2025-003", "titlu": "Furnizare materiale construcții lot 2",
-         "valoare_ron": 127_800, "moneda": "RON", "tip_procedura": "Cumpărare directă",
-         "data_publicare": "2025-04-09", "castigator": "SC MATERIALE BUILD SRL",
-         "castigator_cui": "87654321", "nr_ofertanti": 1, "sursa": "DEMO"},
-        {"id": "demo4", "numar": "2025-004", "titlu": "Servicii salubrizare stradală",
-         "valoare_ron": 680_000, "moneda": "RON", "tip_procedura": "Licitație deschisă",
-         "data_publicare": "2025-02-10", "castigator": "SC SALUBRITATE ILFOV SRL",
-         "castigator_cui": "11223344", "nr_ofertanti": 2, "sursa": "DEMO"},
-        {"id": "demo5", "numar": "2025-005", "titlu": "Servicii pază și securitate sediu",
-         "valoare_ron": 96_000, "moneda": "RON", "tip_procedura": "Procedură simplificată",
-         "data_publicare": "2025-01-20", "castigator": "SC PAZA TOTAL SRL",
-         "castigator_cui": "55667788", "nr_ofertanti": 1, "sursa": "DEMO"},
-        {"id": "demo6", "numar": "2025-006", "titlu": "Lucrări reabilitare str. Secundară",
-         "valoare_ron": 1_180_000, "moneda": "RON", "tip_procedura": "Negociere fără publicare prealabilă",
-         "data_publicare": "2025-03-22", "castigator": "SC CONSTRUCT RAPID SRL",
-         "castigator_cui": "12345678", "nr_ofertanti": 1, "sursa": "DEMO"},
-        {"id": "demo7", "numar": "2025-007", "titlu": "Servicii IT infrastructură",
-         "valoare_ron": 45_000, "moneda": "RON", "tip_procedura": "Cumpărare directă",
-         "data_publicare": "2025-05-01", "castigator": "SC DIGITAL SOLUTIONS SRL",
-         "castigator_cui": "99001122", "nr_ofertanti": 1, "sursa": "DEMO"},
-        {"id": "demo8", "numar": "2025-008", "titlu": "Amenajare spații verzi",
-         "valoare_ron": 38_200, "moneda": "RON", "tip_procedura": "Cumpărare directă",
-         "data_publicare": "2025-04-18", "castigator": "SC GREEN PARK SRL",
-         "castigator_cui": "33445566", "nr_ofertanti": 1, "sursa": "DEMO"},
-    ]
 
 
 # ==============================================================================
@@ -758,8 +772,8 @@ def main():
     print("\n[1/5] Fetchuiesc date bugetare...")
     budget = fetch_budget_transparenta(CONFIG["cui"])
 
-    # 2. Contracte SEAP
-    print("\n[2/5] Fetchuiesc contracte din SEAP...")
+    # 2. Contracte din data.gov.ro (export oficial SEAP)
+    print("\n[2/5] Fetchuiesc contracte din data.gov.ro...")
     contracte = fetch_contracts_seap(CONFIG["cui"], CONFIG["luni_analiza"])
 
     # 3. Analiză red flags
@@ -805,4 +819,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-                                                                                                            
