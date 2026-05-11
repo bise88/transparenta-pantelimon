@@ -1013,40 +1013,37 @@ def main():
     CONFIG["_hcl_ordinare"] = statistici_hcl.get("ordinare", 0)
     CONFIG["_hcl_extraordinare"] = statistici_hcl.get("extraordinare", 0)
     CONFIG["_hcl_pct"] = statistici_hcl.get("pct_extraordinare", 0)
-    CONFIG["_hcl_ocr"] = statistici_hcl.get("ocr_disponibil", False)
+    CONFIG["_hcl_ocr"] = statistici_hcl.get("ocr_rezumat", "")
 
-    # 4. Red flags contracte SEAP
-    print("\n[4/6] Analizez red flags contracte...")
-    flags_seap = analizeaza_red_flags(contracte, CONFIG)
-    flags = flags_seap + flags_hcl
+    # 4. Red flags
+    print("\n[4/6] Analizez red flags...")
+    flags_contracte = analizeaza_red_flags(contracte)
+    toate_flags = flags_contracte + flags_hcl
 
-    # 5. Flags noi față de ultima rulare
-    print("\n[5/6] Compar cu starea anterioară...")
-    flags_noi = detecteaza_flags_noi(flags, stare_ant)
-    if flags_noi:
-        print(f"    ⚠ {len(flags_noi)} RED FLAG(URI) NOI față de ultima rulare!")
-    else:
-        print("    ✓ Niciun flag nou.")
-
-    # 6. Generare raport
-    print("\n[6/6] Generez raport HTML...")
-    raport = genereaza_raport_html(budget, contracte, flags, flags_noi, CONFIG)
+    # 5. Raport HTML
+    print("\n[5/6] Generez raport HTML...")
+    raport_html = genereaza_raport_html(budget, contracte, toate_flags, stare_ant)
     with open(CONFIG["fisier_raport"], "w", encoding="utf-8") as f:
-        f.write(raport)
-    print(f"    ✓ Raport salvat: {CONFIG['fisier_raport']}")
+        f.write(raport_html)
+    print(f"  ✓ Raport salvat: {CONFIG['fisier_raport']}")
 
-    salveaza_stare(CONFIG["fisier_stare"], flags, contracte, rezultat_hcl.get("hcl_list", []))
+    # 6. Salvare stare
+    print("\n[6/6] Salvez starea...")
+    hcl_urls_noi = rezultat_hcl.get("hcl_urls", [])
+    salveaza_stare(contracte, toate_flags, stare_ant, hcl_urls_noi)
+    print(f"  ✓ Stare salvata: {CONFIG['fisier_stare']}")
 
-    if trimite_email or (flags_noi and CONFIG["email_from"]):
-        print("\n[+] Trimit alertă email...")
-        trimite_email_alerta(flags_noi, raport, CONFIG)
+    if trimite_email and toate_flags:
+        flags_noi = [f for f in toate_flags
+                     if f.get("titlu") not in
+                     [x.get("titlu") for x in stare_ant.get("flags_anterioare", [])]]
+        if flags_noi:
+            trimite_email_alerta(toate_flags, budget, CONFIG)
 
-    print("\n" + "="*60)
-    print(f"  SUMAR: {len(contracte)} contracte · {len(flags)} flags ({len(flags_noi)} noi) · HCL: {statistici_hcl.get('total_hcl',0)}")
-    print("="*60 + "\n")
-    return len(flags_noi)
+    print(f"\n{'='*60}")
+    print(f"  FINALIZAT -- {len(toate_flags)} flags, {len(contracte)} contracte analizate")
+    print(f"{'='*60}\n")
 
 
 if __name__ == "__main__":
-    main()
     main()
