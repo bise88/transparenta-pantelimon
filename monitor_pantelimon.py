@@ -1022,7 +1022,7 @@ def main():
 
     # 5. Raport HTML
     print("\n[5/6] Generez raport HTML...")
-    raport_html = genereaza_raport_html(budget, contracte, toate_flags, stare_ant)
+    raport_html = genereaza_raport_html(budget, contracte, toate_flags, [], CONFIG)
     with open(CONFIG["fisier_raport"], "w", encoding="utf-8") as f:
         f.write(raport_html)
     print(f"  ✓ Raport salvat: {CONFIG['fisier_raport']}")
@@ -1030,7 +1030,7 @@ def main():
     # 6. Salvare stare
     print("\n[6/6] Salvez starea...")
     hcl_urls_noi = rezultat_hcl.get("hcl_urls", [])
-    salveaza_stare(contracte, toate_flags, stare_ant, hcl_urls_noi)
+    salveaza_stare(CONFIG["fisier_stare"], toate_flags, contracte, hcl_urls_noi)
     print(f"  ✓ Stare salvata: {CONFIG['fisier_stare']}")
 
     if trimite_email and toate_flags:
@@ -1038,7 +1038,7 @@ def main():
                      if f.get("titlu") not in
                      [x.get("titlu") for x in stare_ant.get("flags_anterioare", [])]]
         if flags_noi:
-            trimite_email_alerta(toate_flags, budget, CONFIG)
+            trimite_email_alerta(flags_noi, raport_html, CONFIG)
 
     print(f"\n{'='*60}")
     print(f"  FINALIZAT -- {len(toate_flags)} flags, {len(contracte)} contracte analizate")
