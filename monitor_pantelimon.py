@@ -1017,7 +1017,7 @@ def main():
 
     # 4. Red flags
     print("\n[4/6] Analizez red flags...")
-    flags_contracte = analizeaza_red_flags(contracte)
+    flags_contracte = analizeaza_red_flags(contracte, CONFIG)
     toate_flags = flags_contracte + flags_hcl
 
     # 5. Raport HTML
