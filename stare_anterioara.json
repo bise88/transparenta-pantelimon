@@ -160,7 +160,12 @@
     "achizitie-directa-2025-343382,achizitie-directa-2025-343418_FRAGMENTARE",
     "contract-2025-113859,contract-2026-168284_FRAGMENTARE",
     "contract-2026-181041,contract-2026-181042_FRAGMENTARE",
-    "HCL-META-001_sedinte_extraordinare_excesive"
+    "HCL-META-001_sedinte_extraordinare_excesive",
+    "H.C.L.-sedinta-ordinara-cu-convocare-de-indata-din-22.12.2025.pdf_hcl_sedinta_extraordinara",
+    "H.C.L.sedinta-extraordinara-cu-convocare-de-indata-din-26.11.2025.pdf_hcl_sedinta_extraordinara",
+    "P.V.-sedinta-extraodinara-cu-convocare-de-indata-din-26.11.2025.pdf_hcl_sedinta_extraordinara",
+    "H.C.L.sedinta-extraordinara-convocare-de-indata-din-21.11.2025.pdf_hcl_sedinta_extraordinara",
+    "P.V.-sedinta-extraodinara-cu-convocare-de-indata-din-21.11.2025.pdf_hcl_sedinta_extraordinara"
   ],
   "contracte_vazute": [
     "achizitie-directa-2025-2637",
@@ -671,6 +676,6 @@
     "contract-2026-181043"
   ],
   "hcl_urls_vazute": [],
-  "data_ultima_rulare": "2026-05-12T11:19:15.455009",
-  "total_flags": 161
+  "data_ultima_rulare": "2026-05-13T13:59:34.925849",
+  "total_flags": 166
 }
