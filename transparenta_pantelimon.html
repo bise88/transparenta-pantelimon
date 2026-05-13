@@ -485,7 +485,7 @@
   .alert.orange { background: #FEF3E2; border-left: 4px solid var(--portocaliu); color: #935116; }
   .alert.blue { background: #EBF5FB; border-left: 4px solid var(--albastru-deschis); color: #1A5276; }
 
-  canvas { max-height: 350px; }
+  canvas { max-height: 350px; min-height: 280px; display: block; width: 100% !important; }
 </style>
 </head>
 <body>
@@ -574,7 +574,7 @@
     <div class="chart-box">
       <h3>Buget aprobat vs. Cheltuieli realizate 2025 — pe capitole</h3>
       <p class="subtitle">Surse: Proiect buget 2026 (publicat pe primariapantelimon.ro), hotărâri CL 2024–2025, SEAP</p>
-      <canvas id="chartBugetCateg"></canvas>
+      <canvas id="chartBugetCateg" style="height:320px"></canvas>
     </div>
 
     <div class="two-col">
@@ -582,14 +582,14 @@
       <div class="chart-box">
         <h3>Evoluția bugetului 2020–2025</h3>
         <p class="subtitle">Total venituri & cheltuieli (mil. RON)</p>
-        <canvas id="chartEvolutie"></canvas>
+        <canvas id="chartEvolutie" style="height:300px"></canvas>
       </div>
 
       <!-- CHART: STRUCTURA CHELTUIELI -->
       <div class="chart-box">
         <h3>Structura cheltuielilor 2025</h3>
         <p class="subtitle">Distribuția pe domenii de activitate</p>
-        <canvas id="chartPie"></canvas>
+        <canvas id="chartPie" style="height:300px"></canvas>
       </div>
     </div>
 
@@ -696,27 +696,31 @@
             <span class="tag">Lege 273/2006</span>
             <span class="tag orange">Verificabil online</span>
           </div>
+          <a href="https://www.primariapantelimon.ro/documente-si-informatii-financiare/" target="_blank"
+             style="display:inline-block;margin-top:10px;font-size:12px;color:var(--albastru);text-decoration:underline">
+            🔗 Verifică pagina primăriei →
+          </a>
         </div>
       </div>
 
-      <div class="flag-card">
+      <div class="flag-card" style="cursor:pointer" onclick="expandFlag(this,'sedinta extraordinara','Ședințe extraordinare cu convocare de îndată')">
         <span class="flag-icon">🚩</span>
         <div class="flag-content">
-          <h4>Utilizare repetată a procedurii de urgență în achiziții</h4>
-          <p>Analiza procedurilor din SEAP arată că o parte semnificativă a contractelor sunt atribuite prin „cumpărare directă" invocând urgența, deși valoarea contractelor indică planificare insuficientă, nu urgențe reale. Procedura de urgență permite evitarea licitației deschise și a transparenței competitive.</p>
+          <h4>Ședințe extraordinare abuzive — 43% din total <span style="font-size:11px;background:#FEE;color:#C00;border-radius:4px;padding:2px 7px;margin-left:6px">▼ Click pentru contracte</span></h4>
+          <p>Din 81 ședințe de Consiliu Local analizate, 35 (43%) sunt „extraordinare cu convocare de îndată". Norma legală implică urgențe reale — o rată peste 25% sugerează că procedura de urgență este folosită sistematic pentru a ocoli consultarea publică obligatorie (Legea 52/2003).</p>
           <div class="flag-tags">
-            <span class="tag red">RISC MAJOR</span>
-            <span class="tag">SEAP / e-licitatie.ro</span>
-            <span class="tag">Lege 98/2016</span>
+            <span class="tag red">CRITIC</span>
+            <span class="tag">Lege 52/2003</span>
+            <span class="tag">HCL 2024–2025</span>
           </div>
         </div>
       </div>
 
-      <div class="flag-card orange">
+      <div class="flag-card orange" style="cursor:pointer" onclick="expandFlag(this,'Un singur ofertant','Ofertant unic — contracte fără competiție')">
         <span class="flag-icon">⚠️</span>
         <div class="flag-content">
-          <h4>Licitații cu un singur ofertant (monopol de facto)</h4>
-          <p>Multiple proceduri de achiziție publică pentru lucrări de infrastructură și servicii de curățenie au înregistrat un singur ofertant, ceea ce poate indica: specificații tehnice redactate pentru a avantaja un anumit furnizor, presiune informală pe potențiali concurenți, sau segmentare artificială a pieței.</p>
+          <h4>Licitații cu un singur ofertant (monopol de facto) <span style="font-size:11px;background:#FFF3E0;color:#E65100;border-radius:4px;padding:2px 7px;margin-left:6px">▼ Click pentru contracte</span></h4>
+          <p>Multiple proceduri de achiziție publică au înregistrat un singur ofertant, ceea ce poate indica specificații tehnice redactate pentru a avantaja un anumit furnizor, presiune pe potențiali concurenți sau segmentare artificială a pieței.</p>
           <div class="flag-tags">
             <span class="tag orange">RISC MEDIU</span>
             <span class="tag">Concurență limitată</span>
@@ -725,11 +729,11 @@
         </div>
       </div>
 
-      <div class="flag-card orange">
+      <div class="flag-card orange" style="cursor:pointer" onclick="expandFlag(this,'Fragmentare','Fragmentare contracte — art. 11 Lege 98/2016')">
         <span class="flag-icon">⚠️</span>
         <div class="flag-content">
-          <h4>Fragmentarea contractelor sub pragul de licitație</h4>
-          <p>Se identifică un tipar în care contracte cu același obiect și același furnizor sunt împărțite în bucăți de valoare ușor sub pragul legal care ar impune licitație deschisă (130.000 RON pentru servicii/furnizare, 500.000 RON pentru lucrări). Această practică — interzisă explicit de art. 11 din Legea 98/2016 — permite adjudecarea directă fără competiție.</p>
+          <h4>Fragmentarea contractelor sub pragul de licitație <span style="font-size:11px;background:#FFF3E0;color:#E65100;border-radius:4px;padding:2px 7px;margin-left:6px">▼ Click pentru contracte</span></h4>
+          <p>Contracte cu același obiect și același furnizor sunt împărțite în bucăți de valoare ușor sub pragul legal care ar impune licitație deschisă (130.000 RON). Această practică — interzisă explicit de art. 11 din Legea 98/2016 — permite adjudecarea directă fără competiție.</p>
           <div class="flag-tags">
             <span class="tag orange">RISC MEDIU</span>
             <span class="tag">Art. 11 Lege 98/2016</span>
@@ -742,7 +746,7 @@
         <span class="flag-icon">⚠️</span>
         <div class="flag-content">
           <h4>Rectificări bugetare frecvente fără justificare publică</h4>
-          <p>Bugetul local a suferit multiple rectificări în cursul anului, unele cu deplasări semnificative de sume între capitole, fără ca documentele justificative să fie publicate în timp util conform transparenței decizionale. Rectificările repetate pot ascunde redistribuiri discreționare ale resurselor.</p>
+          <p>Bugetul local a suferit multiple rectificări în cursul anului, unele cu deplasări semnificative de sume între capitole, fără ca documentele justificative să fie publicate în timp util conform transparenței decizionale.</p>
           <div class="flag-tags">
             <span class="tag orange">RISC MEDIU</span>
             <span class="tag">Hotărâri CL</span>
@@ -755,7 +759,7 @@
         <span class="flag-icon">🔶</span>
         <div class="flag-content">
           <h4>Execuție bugetară la investiții sub 60% (al doilea an consecutiv)</h4>
-          <p>Capitolul de cheltuieli de capital (investiții publice) are un grad de execuție sub 60% — sumele alocate pentru drumuri, infrastructură și proiecte de dezvoltare rămân necheltuite sau sunt reportate. Aceasta poate indica fie planificare deficitară, fie proiecte lansate electoral fără fonduri reale asigurate.</p>
+          <p>Capitolul de cheltuieli de capital (investiții publice) are un grad de execuție sub 60% — sumele alocate pentru drumuri, infrastructură și proiecte de dezvoltare rămân necheltuite sau sunt reportate.</p>
           <div class="flag-tags">
             <span class="tag yellow" style="background:#FFF9E6;color:#7D6608;border-color:#F0D58C">ATENȚIE</span>
             <span class="tag">Execuție bugetară</span>
@@ -768,7 +772,7 @@
         <span class="flag-icon">🔶</span>
         <div class="flag-content">
           <h4>Cheltuieli de protocol și reprezentare nereportate transparent</h4>
-          <p>Cheltuielile din subcapitolul „alte cheltuieli curente" (protocol, reprezentare, publicitate instituțională) nu sunt detaliate în documentele publice disponibile. Conform bunelor practici și recomandărilor Curții de Conturi, aceste cheltuieli trebuie justificate și publicate.</p>
+          <p>Cheltuielile din subcapitolul „alte cheltuieli curente" (protocol, reprezentare, publicitate instituțională) nu sunt detaliate în documentele publice disponibile.</p>
           <div class="flag-tags">
             <span class="tag yellow" style="background:#FFF9E6;color:#7D6608;border-color:#F0D58C">ATENȚIE</span>
             <span class="tag">Cheltuieli curente</span>
@@ -1167,4 +1171,398 @@
           <div style="background:#FEF9E7;border-radius:8px;padding:14px 16px;font-size:13px;color:#7D6608;margin-bottom:12px">
             <strong>Red flags tipice pentru sesizare ANAP:</strong><br>
             • Contract atribuit fără licitație (procedură simplificată nejustificată)<br>
-            • Valoa
+            • Valoare contract fragmentată în mai multe contracte sub pragul de licitație<br>
+            • Ofertant unic în mod repetat la același tip de achiziție<br>
+            • Criterii de selecție discriminatorii sau personalizate
+          </div>
+          <a href="https://www.anap.gov.ro/web/sesizari/" target="_blank"
+             style="display:inline-block;margin-top:12px;background:var(--portocaliu);color:#fff;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600">
+            Sesizează ANAP →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOC 4: CURTEA DE CONTURI -->
+    <div style="background:#fff;border-radius:14px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:24px;border-left:5px solid var(--rosu)">
+      <div style="display:flex;align-items:flex-start;gap:18px">
+        <div style="font-size:40px;flex-shrink:0">🏛️</div>
+        <div>
+          <h3 style="font-size:17px;font-weight:800;color:var(--rosu);margin-bottom:6px">Sesizare Curtea de Conturi</h3>
+          <p style="color:#444;font-size:14px;margin-bottom:12px">Curtea de Conturi exercită controlul asupra modului de formare, administrare și utilizare a fondurilor publice. Orice cetățean poate sesiza Curtea de Conturi în legătură cu nereguli grave privind utilizarea banilor publici.</p>
+          <div style="background:#FDEDEC;border-radius:8px;padding:14px 16px;font-size:13px;color:#7B241C;margin-bottom:12px">
+            <strong>Când sesizezi Curtea de Conturi:</strong><br>
+            • Cheltuieli publice nejustificate sau ilegale<br>
+            • Contracte supraevaluate față de piață<br>
+            • Lipsă documente justificative pentru plăți publice
+          </div>
+          <a href="https://www.curteadeconturi.ro/Sesizari" target="_blank"
+             style="display:inline-block;background:var(--rosu);color:#fff;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600">
+            Sesizează Curtea de Conturi →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOC 5: PREFECTURA -->
+    <div style="background:#fff;border-radius:14px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:24px;border-left:5px solid #1A5276">
+      <div style="display:flex;align-items:flex-start;gap:18px">
+        <div style="font-size:40px;flex-shrink:0">🏢</div>
+        <div>
+          <h3 style="font-size:17px;font-weight:800;color:#1A5276;margin-bottom:6px">Sesizare Prefectură Ilfov — control de legalitate</h3>
+          <p style="color:#444;font-size:14px;margin-bottom:12px">Prefectul județului Ilfov exercită controlul de legalitate asupra actelor administrative emise de consiliile locale și primari (Legea 340/2004). Dacă o hotărâre de consiliu local sau o decizie a primarului este ilegală, prefectul poate ataca actul la instanța de contencios administrativ.</p>
+          <div style="background:#EBF5FB;border-radius:8px;padding:14px 16px;font-size:13px;color:#1A5276;margin-bottom:12px">
+            <strong>Când te adresezi Prefecturii:</strong><br>
+            • Hotărâri CL adoptate cu încălcarea procedurii legale (fără dezbatere publică, fără avize obligatorii)<br>
+            • Dispoziții de primar ilegale<br>
+            • Nerespectarea Legii 52/2003 privind transparența decizională<br>
+            • Ședințe extraordinare abuzive pentru eludarea consultării publice
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <a href="https://ilfov.prefecturas.ro/contact/" target="_blank"
+               style="background:#1A5276;color:#fff;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600">
+              Prefectura Ilfov — Contact →
+            </a>
+            <a href="mailto:prefectura@prefecturaif.ro"
+               style="background:#EBF5FB;color:#1A5276;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600;border:1px solid #AED6F1">
+              ✉️ prefectura@prefecturaif.ro
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOC 6: ANI -->
+    <div style="background:#fff;border-radius:14px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:24px;border-left:5px solid #7D3C98">
+      <div style="display:flex;align-items:flex-start;gap:18px">
+        <div style="font-size:40px;flex-shrink:0">⚖️</div>
+        <div>
+          <h3 style="font-size:17px;font-weight:800;color:#7D3C98;margin-bottom:6px">Sesizare ANI — conflict de interese & avere nejustificată</h3>
+          <p style="color:#444;font-size:14px;margin-bottom:12px">Agenția Națională de Integritate (ANI) verifică declarațiile de avere și de interese ale alesilor locali și funcționarilor publici și identifică conflictele de interese, incompatibilitățile și averile nejustificate.</p>
+          <div style="background:#F9EBF8;border-radius:8px;padding:14px 16px;font-size:13px;color:#6C3483;margin-bottom:12px">
+            <strong>Când sesizezi ANI:</strong><br>
+            • Contract public atribuit unei firme unde aleșii locali sau rudele lor au interese<br>
+            • Avere nejustificată față de veniturile declarate<br>
+            • Funcții incompatibile deținute simultan de un ales sau funcționar<br>
+            • Declarație de avere incompletă sau cu date false
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <a href="https://www.integritate.eu/Sesizari.aspx" target="_blank"
+               style="background:#7D3C98;color:#fff;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600">
+              Sesizează ANI →
+            </a>
+            <a href="https://www.integritate.eu/Declaratii-de-avere-si-interese.aspx" target="_blank"
+               style="background:#F9EBF8;color:#7D3C98;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600;border:1px solid #D7BDE2">
+              Caută declarații de avere →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOC 7: DNA -->
+    <div style="background:#fff;border-radius:14px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:24px;border-left:5px solid #922B21">
+      <div style="display:flex;align-items:flex-start;gap:18px">
+        <div style="font-size:40px;flex-shrink:0">🔍</div>
+        <div>
+          <h3 style="font-size:17px;font-weight:800;color:#922B21;margin-bottom:6px">Sesizare DNA — corupție la nivel mediu și mare</h3>
+          <p style="color:#444;font-size:14px;margin-bottom:12px">Direcția Națională Anticorupție (DNA) cercetează infracțiuni de corupție săvârșite de demnitari, funcționari publici și persoane care gestionează fonduri publice. Sesizările pot fi depuse de orice persoană fizică sau juridică.</p>
+          <div style="background:#FDEDEC;border-radius:8px;padding:14px 16px;font-size:13px;color:#7B241C;margin-bottom:12px">
+            <strong>Infracțiuni tipice sesizate la DNA:</strong><br>
+            • Luare de mită — favoruri, bani sau alte foloase oferite unui funcționar pentru atribuirea unui contract<br>
+            • Abuz în serviciu — decizii administrative ilegale care produc daune publice sau avantaje private<br>
+            • Fraudă în achiziții publice — trucarea licitațiilor, criterii discriminatorii, documente falsificate<br>
+            • Delapidare — utilizarea banilor publici în interes personal
+          </div>
+          <div style="background:#FFF5F5;border-radius:8px;padding:12px 16px;font-size:13px;color:#922B21;margin-bottom:12px;border:1px dashed #F1948A">
+            <strong>⚠️ Important:</strong> O sesizare la DNA trebuie să conțină fapte concrete, date identificabile și, pe cât posibil, documente doveditoare. Sesizările vagi sau fără probe sunt greu de instrumentat. Poți sesiza anonim, dar o sesizare identificată are mai multe șanse să fie preluată.
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <a href="https://www.pna.ro/sesizare.xhtml" target="_blank"
+               style="background:#922B21;color:#fff;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600">
+              Sesizează DNA →
+            </a>
+            <a href="mailto:sesizari@pna.ro"
+               style="background:#FDEDEC;color:#922B21;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600;border:1px solid #F1948A">
+              ✉️ sesizari@pna.ro
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOC 8: AVOCATUL POPORULUI -->
+    <div style="background:#fff;border-radius:14px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:24px;border-left:5px solid #148F77">
+      <div style="display:flex;align-items:flex-start;gap:18px">
+        <div style="font-size:40px;flex-shrink:0">🛡️</div>
+        <div>
+          <h3 style="font-size:17px;font-weight:800;color:#148F77;margin-bottom:6px">Sesizare Avocatul Poporului — drepturi cetățenești încălcate de administrație</h3>
+          <p style="color:#444;font-size:14px;margin-bottom:12px">Avocatul Poporului (Ombudsmanul) apără drepturile și libertățile cetățenilor în raport cu autoritățile publice. Sesizarea este <strong>gratuită</strong> și nu necesită avocat. Instituția poate interveni pe lângă orice autoritate publică locală pentru restabilirea drepturilor încălcate.</p>
+          <div style="background:#E8F8F5;border-radius:8px;padding:14px 16px;font-size:13px;color:#0E6655;margin-bottom:12px">
+            <strong>Când te adresezi Avocatului Poporului:</strong><br>
+            • Primăria refuză să îți furnizeze documente publice la care ai dreptul (Lege 544/2001)<br>
+            • Autoritatea locală nu îți răspunde la petiții în termenul legal<br>
+            • Ești tratat discriminatoriu sau abuziv de un funcționar public<br>
+            • Primăria nu respectă o hotărâre judecătorească definitivă<br>
+            • Drepturi constituționale încălcate prin acte administrative
+          </div>
+          <div style="background:#FEF9E7;border-radius:8px;padding:12px 16px;font-size:13px;color:#7D6608;margin-bottom:12px">
+            <strong>⚠️ Limite:</strong> Avocatul Poporului nu poate anula acte administrative și nu are putere de constrângere — emite <em>recomandări</em> pe care autoritățile sunt moral și legal obligate să le respecte. Dacă autoritatea ignoră recomandarea, Avocatul Poporului sesizează Parlamentul.
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <a href="https://www.avp.ro/index.php/petitii-si-sesizari" target="_blank"
+               style="background:#148F77;color:#fff;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600">
+              Sesizează Avocatul Poporului →
+            </a>
+            <a href="mailto:avp@avp.ro"
+               style="background:#E8F8F5;color:#148F77;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600;border:1px solid #A9DFBF">
+              ✉️ avp@avp.ro
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOC 9: ACȚIUNE ÎN JUDECATĂ -->
+    <div style="background:#fff;border-radius:14px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:24px;border-left:5px solid #1E8449">
+      <div style="display:flex;align-items:flex-start;gap:18px">
+        <div style="font-size:40px;flex-shrink:0">⚖️</div>
+        <div>
+          <h3 style="font-size:17px;font-weight:800;color:#1E8449;margin-bottom:6px">Acțiune în judecată — contencios administrativ</h3>
+          <p style="color:#444;font-size:14px;margin-bottom:12px">Orice persoană vătămată într-un drept sau interes legitim de un act administrativ ilegal poate contesta actul în instanță (Legea 554/2004 — Legea contenciosului administrativ). Procedura este accesibilă, dar necesită, de regulă, asistență juridică.</p>
+          <div style="background:#EAFAF1;border-radius:8px;padding:14px 16px;font-size:13px;color:#145A32;margin-bottom:12px">
+            <strong>Ce poți ataca în contencios administrativ:</strong><br>
+            • Hotărâri de consiliu local ilegale (ex: aprobare contract fără respectarea procedurii)<br>
+            • Refuzul nejustificat al primăriei de a-ți furniza documente publice (Lege 544/2001)<br>
+            • Autorizații de construire emise ilegal<br>
+            • Orice act administrativ individual sau normativ care îți lezează un drept<br><br>
+            <strong>Pași:</strong> Plângere prealabilă la autoritate (termen: 30 zile) → dacă nu primești răspuns sau răspunsul e nesatisfăcător → acțiune la Tribunalul Ilfov (Secția contencios administrativ) în termen de 6 luni.
+          </div>
+          <div style="background:#FEF9E7;border-radius:8px;padding:12px 16px;font-size:13px;color:#7D6608;margin-bottom:12px">
+            <strong>💡 Resurse de asistență juridică gratuită sau cu costuri reduse:</strong><br>
+            • <a href="https://www.unbr.ro/" target="_blank" style="color:#7D6608">UNBR</a> — Uniunea Națională a Barourilor din România (barourile județene oferă uneori consultanță pro bono)<br>
+            • <a href="https://www.expertforum.ro/" target="_blank" style="color:#7D6608">Expert Forum</a> — ONG cu expertiză în administrație publică și bună guvernare<br>
+            • <a href="https://www.activewatch.ro/" target="_blank" style="color:#7D6608">ActiveWatch</a> — monitorizare și apărarea accesului la informații publice
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end tab-actiune -->
+
+</main>
+
+<footer style="background:var(--albastru);color:#fff;text-align:center;padding:24px;font-size:13px;margin-top:40px">
+  <p>Inițiativă cetățenească independentă · Datele provin exclusiv din surse publice oficiale</p>
+  <p style="margin-top:6px;opacity:0.7">transparenta.eu · e-licitatie.ro · primariapantelimon.ro · data.gov.ro</p>
+</footer>
+
+<script>
+// ---- TAB NAVIGATION ----
+function showTab(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tabs a').forEach(a => a.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  if (el) el.classList.add('active');
+  return false;
+}
+
+// ---- FLAG EXPAND: fetch contracte din raport ----
+let _raportCache = null;
+
+async function expandFlag(cardEl, keyword, titlu) {
+  let panel = cardEl.querySelector('.contracts-panel');
+
+  // Dacă panelul există și e vizibil, îl închidem
+  if (panel && panel.style.display === 'block') {
+    panel.style.display = 'none';
+    return;
+  }
+
+  // Creăm panelul dacă nu există
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.className = 'contracts-panel';
+    panel.style.cssText = [
+      'display:none', 'margin-top:14px', 'border-top:2px solid #eee',
+      'padding-top:14px', 'border-radius:0 0 8px 8px'
+    ].join(';');
+    cardEl.appendChild(panel);
+  }
+
+  panel.style.display = 'block';
+
+  // Dacă deja am încărcat datele, nu refetch
+  if (panel.dataset.loaded === '1') return;
+
+  panel.innerHTML = '<p style="color:#888;font-style:italic;font-size:13px;padding:4px 0">⏳ Se încarcă datele din raportul SEAP...</p>';
+
+  try {
+    if (!_raportCache) {
+      const resp = await fetch('raport_transparenta.html');
+      _raportCache = await resp.text();
+    }
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(_raportCache, 'text/html');
+
+    // Găsim toate divurile de flag (au border-left:4px solid)
+    const allDivs = Array.from(doc.querySelectorAll('div'));
+    const flagDivs = allDivs.filter(d => {
+      const s = d.getAttribute('style') || '';
+      return s.includes('border-left:4px solid') && d.textContent.includes(keyword);
+    });
+
+    if (flagDivs.length === 0) {
+      panel.innerHTML = `<p style="color:#888;font-size:13px">Nu s-au găsit contracte pentru „${keyword}" în raportul curent.</p>`;
+    } else {
+      const rows = flagDivs.map(f => {
+        const desc = f.querySelector('p')?.textContent?.trim() || '—';
+        const spans = Array.from(f.querySelectorAll('span'));
+        const get = emoji => spans.find(s => s.textContent.includes(emoji))?.textContent?.replace(emoji,'').trim() || '—';
+        const contractId = get('📋');
+        const amount = get('💰');
+        const firm = get('🏢');
+        const date = get('📅');
+        const seapUrl = contractId !== '—'
+          ? `https://www.e-licitatie.ro/pub/notices/contract-notices/list/0/0?search=${encodeURIComponent(contractId)}`
+          : '#';
+        return `<tr style="border-bottom:1px solid #f0f0f0">
+          <td style="padding:7px 8px;font-size:12px;max-width:260px">${desc}</td>
+          <td style="padding:7px 8px;font-size:12px;white-space:nowrap;font-weight:700;color:#C0392B">${amount}</td>
+          <td style="padding:7px 8px;font-size:12px">${firm}</td>
+          <td style="padding:7px 8px;font-size:12px;white-space:nowrap">${date}</td>
+          <td style="padding:7px 8px;font-size:12px">
+            ${contractId !== '—' ? `<a href="${seapUrl}" target="_blank" style="color:var(--albastru);font-size:11px">SEAP →</a>` : ''}
+          </td>
+        </tr>`;
+      }).join('');
+
+      panel.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <strong style="font-size:13px;color:#333">📊 ${titlu} — ${flagDivs.length} contracte detectate</strong>
+          <a href="raport_transparenta.html" target="_blank"
+             style="font-size:12px;color:var(--albastru);text-decoration:underline">
+            Raport complet →
+          </a>
+        </div>
+        <div style="overflow-x:auto;border-radius:6px;border:1px solid #eee">
+          <table style="width:100%;border-collapse:collapse;background:#fff">
+            <thead>
+              <tr style="background:#f5f7fa">
+                <th style="padding:7px 8px;text-align:left;font-size:11px;color:#555;font-weight:600">Descriere contract</th>
+                <th style="padding:7px 8px;text-align:left;font-size:11px;color:#555;font-weight:600">Sumă</th>
+                <th style="padding:7px 8px;text-align:left;font-size:11px;color:#555;font-weight:600">Firmă</th>
+                <th style="padding:7px 8px;text-align:left;font-size:11px;color:#555;font-weight:600">Data</th>
+                <th style="padding:7px 8px;text-align:left;font-size:11px;color:#555;font-weight:600">Link</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>`;
+    }
+    panel.dataset.loaded = '1';
+  } catch(e) {
+    panel.innerHTML = `<p style="color:#C00;font-size:13px">Eroare la încărcarea raportului. <a href="raport_transparenta.html" target="_blank" style="color:var(--albastru)">Deschide raportul direct →</a></p>`;
+  }
+}
+
+// ---- CHART.JS INITIALIZATION ----
+document.addEventListener('DOMContentLoaded', function() {
+
+  // Chart 1: Buget vs Cheltuieli pe categorii
+  const ctxCateg = document.getElementById('chartBugetCateg');
+  if (ctxCateg) {
+    new Chart(ctxCateg, {
+      type: 'bar',
+      data: {
+        labels: ['Autorități publice', 'Ordine publică', 'Învățământ', 'Sănătate', 'Cultură & Sport', 'Asistență socială', 'Servicii publice', 'Mediu', 'Transport', 'Acțiuni economice'],
+        datasets: [
+          {
+            label: 'Buget aprobat (mil. RON)',
+            data: [18.2, 9.4, 22.1, 5.6, 8.3, 14.7, 11.2, 6.8, 28.4, 7.9],
+            backgroundColor: 'rgba(0, 112, 192, 0.7)',
+            borderColor: 'rgba(0, 66, 122, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Cheltuieli realizate (mil. RON)',
+            data: [16.7, 8.3, 18.6, 4.3, 7.9, 13.1, 8.7, 4.9, 15.3, 4.8],
+            backgroundColor: 'rgba(231, 76, 60, 0.7)',
+            borderColor: 'rgba(192, 57, 43, 1)',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'top' } },
+        scales: { y: { beginAtZero: true, title: { display: true, text: 'mil. RON' } } }
+      }
+    });
+  }
+
+  // Chart 2: Evoluție buget 2020-2025
+  const ctxEvol = document.getElementById('chartEvolutie');
+  if (ctxEvol) {
+    new Chart(ctxEvol, {
+      type: 'line',
+      data: {
+        labels: ['2020', '2021', '2022', '2023', '2024', '2025'],
+        datasets: [
+          {
+            label: 'Venituri (mil. RON)',
+            data: [98.4, 108.2, 124.6, 143.1, 161.2, 147.97],
+            borderColor: 'rgba(0, 112, 192, 1)',
+            backgroundColor: 'rgba(0, 112, 192, 0.1)',
+            fill: true, tension: 0.3
+          },
+          {
+            label: 'Cheltuieli (mil. RON)',
+            data: [95.1, 104.7, 119.3, 131.8, 138.2, 146.43],
+            borderColor: 'rgba(231, 76, 60, 1)',
+            backgroundColor: 'rgba(231, 76, 60, 0.1)',
+            fill: true, tension: 0.3
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'top' } },
+        scales: { y: { beginAtZero: false, title: { display: true, text: 'mil. RON' } } }
+      }
+    });
+  }
+
+  // Chart 3: Structura cheltuieli (pie)
+  const ctxPie = document.getElementById('chartPie');
+  if (ctxPie) {
+    new Chart(ctxPie, {
+      type: 'doughnut',
+      data: {
+        labels: ['Autorități publice', 'Ordine publică', 'Învățământ', 'Sănătate', 'Cultură & Sport', 'Asistență socială', 'Servicii & Transport', 'Altele'],
+        datasets: [{
+          data: [16.7, 8.3, 18.6, 4.3, 7.9, 13.1, 24.0, 4.8],
+          backgroundColor: [
+            '#00427A','#0070C0','#FFD000','#C0392B',
+            '#27AE60','#E67E22','#8E44AD','#BDC3C7'
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right' },
+          tooltip: { callbacks: { label: ctx => ctx.label + ': ' + ctx.parsed + ' mil. RON' } }
+        }
+      }
+    });
+  }
+
+});
+</script>
+</body>
+</html>
