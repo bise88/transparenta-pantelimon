@@ -16,6 +16,7 @@ import os
 import smtplib
 import sys
 import time
+import urllib.parse
 from datetime import datetime, timedelta
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -186,7 +187,8 @@ def fetch_contracts_seap(cui: str, luni: int = 12) -> list:
         for tip_sursa, url, res_name in fisiere_relevante:
             try:
                 # Verificăm dimensiunea fișierului înainte de descărcare
-                MAX_FILE_MB = 6
+                IS_CI = os.environ.get("GITHUB_ACTIONS") == "true"
+                MAX_FILE_MB = 6 if IS_CI else 200
                 try:
                     head = requests.head(url, timeout=10, headers=HEADERS, allow_redirects=True)
                     content_len = int(head.headers.get("Content-Length", 0))
@@ -367,13 +369,13 @@ def fetch_hcl_metadata(url: str) -> list:
 
 def ocr_pdf_prima_pagina(url: str, max_pages: int = 3) -> str:
     """
-    Descarcă PDF-ul și aplică OCR pe primele max_pages pagini.
-    Returnează textul extras (poate fi gol dacă OCR eșuează).
-    Necesită: tesseract-ocr, tesseract-ocr-ron, poppler-utils instalate pe sistem.
+    Descarcă PDF-ul și extrage textul în două moduri:
+    1. PyMuPDF (fitz) — extrage text digital direct (fără OCR, rapid, fără Poppler)
+    2. Dacă textul e prea scurt (PDF scanat), aplică OCR cu pytesseract pe imagini
+    Returnează textul extras (lowercase) sau '' dacă eșuează.
     """
     try:
-        import pytesseract
-        from pdf2image import convert_from_bytes
+        import fitz  # PyMuPDF
     except ImportError:
         return ""
 
@@ -381,13 +383,46 @@ def ocr_pdf_prima_pagina(url: str, max_pages: int = 3) -> str:
         r = requests.get(url, headers=HEADERS, timeout=40)
         if r.status_code != 200:
             return ""
-        images = convert_from_bytes(r.content, first_page=1, last_page=max_pages, dpi=200)
+
+        pdf_bytes = r.content
+        doc = fitz.open(stream=pdf_bytes, filetype="pdf")
         text_total = ""
-        for img in images:
-            text_total += pytesseract.image_to_string(img, lang="ron+eng") + "\n"
+
+        # Pas 1: extrage text digital (funcționează pentru PDF-uri native)
+        for page_num in range(min(max_pages, len(doc))):
+            text_total += doc[page_num].get_text() + "\n"
+
+        # Pas 2: dacă textul e prea scurt → PDF scanat → aplică OCR
+        if len(text_total.strip()) < 100:
+            try:
+                import pytesseract
+                from PIL import Image
+                import io
+                # Setăm calea Tesseract explicit pentru Windows (dacă nu e în PATH)
+                for _tp in [
+                    r"C:\Program Files\Tesseract-OCR\tesseract.exe",
+                    r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
+                    r"C:\Users\HP\AppData\Local\Programs\Tesseract-OCR\tesseract.exe",
+                ]:
+                    if os.path.exists(_tp):
+                        pytesseract.pytesseract.tesseract_cmd = _tp
+                        break
+                text_total = ""
+                for page_num in range(min(max_pages, len(doc))):
+                    page = doc[page_num]
+                    # Renderizează pagina ca imagine (200 DPI)
+                    mat = fitz.Matrix(200/72, 200/72)
+                    pix = page.get_pixmap(matrix=mat)
+                    img_bytes = pix.tobytes("png")
+                    img = Image.open(io.BytesIO(img_bytes))
+                    text_total += pytesseract.image_to_string(img, lang="ron+eng") + "\n"
+            except Exception as ocr_err:
+                print(f"      ⚠ OCR fallback eșuat: {ocr_err}")
+
+        doc.close()
         return text_total.lower()
     except Exception as e:
-        print(f"      ⚠ OCR eșuat: {e}")
+        print(f"      ⚠ Extragere text PDF eșuată: {e}")
         return ""
 
 
@@ -403,12 +438,29 @@ def analizeaza_hcl(stare_anterioara: dict) -> dict:
 
     ocr_disponibil = False
     try:
-        import pytesseract
-        from pdf2image import convert_from_bytes
+        import fitz  # PyMuPDF
         ocr_disponibil = True
-        print("    ✓ OCR disponibil (tesseract)")
+        # Verifică și dacă tesseract e disponibil pentru PDF-uri scanate
+        try:
+            import pytesseract
+            # Setăm calea Tesseract explicit pentru Windows (dacă nu e în PATH)
+            _tesseract_paths = [
+                r"C:\Program Files\Tesseract-OCR\tesseract.exe",
+                r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
+                r"C:\Users\HP\AppData\Local\Programs\Tesseract-OCR\tesseract.exe",
+            ]
+            for _tp in _tesseract_paths:
+                if os.path.exists(_tp):
+                    pytesseract.pytesseract.tesseract_cmd = _tp
+                    break
+            pytesseract.get_tesseract_version()
+            print("    ✓ OCR complet disponibil (PyMuPDF + Tesseract)")
+        except Exception:
+            print("    ✓ Extragere text PDF disponibilă (PyMuPDF — text digital)")
+            print("      ℹ  Tesseract indisponibil — PDF-urile scanate vor fi sărite")
     except ImportError:
         print("    ⚠ OCR indisponibil — analiză doar din metadata/nume fișiere")
+        print("      → Rulează instaleaza_ocr.bat pentru a activa analiza completă")
 
     hcl_list = []
     for url in [HCL_URL_2025, HCL_URL_2024]:
@@ -525,6 +577,26 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
                 "tip_procedura": c["tip_procedura"],
             })
 
+    # ── Algoritm 1b: Achiziție directă individuală PESTE prag ───────────────
+    for c in contracte:
+        v = c["valoare_ron"]
+        # Dacă o SINGURĂ achiziție directă depășește pragul → ilegal fără licitație
+        if v > prag_s and ("direct" in c["tip_procedura"].lower() or c["tip_procedura"] == ""):
+            flags.append({
+                "tip": "ACHIZITIE_DIRECTA_PESTE_PRAG",
+                "severitate": "CRITIC",
+                "titlu": "Achiziție directă peste pragul legal",
+                "descriere": (f'Contract "{c["titlu"][:70]}" ({_fmt_ron(v)}) '
+                              f'depășește singur pragul de achiziție directă ({_fmt_ron(prag_s)}). '
+                              f'Valoarea ar fi impus licitație publică (Legea 98/2016, art. 7).'),
+                "contract_id": c["id"],
+                "contract_numar": c["numar"],
+                "valoare": v,
+                "furnizor": c["castigator"],
+                "data": c["data_publicare"],
+                "tip_procedura": c["tip_procedura"],
+            })
+
     # ── Algoritm 2: Valoare aproape de prag (fragmentare suspectă) ───────────
     for c in contracte:
         v = c["valoare_ron"]
@@ -575,13 +647,20 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
             valoare_combinata = a["valoare_ron"] + b["valoare_ron"]
 
             if zile_diferenta < 60 and titlu_similar and valoare_combinata > prag_s:
+                # Detectăm dacă unul dintre contracte depășește pragul individual
+                peste_individual = []
+                if a["valoare_ron"] > prag_s:
+                    peste_individual.append(f'{_fmt_ron(a["valoare_ron"])} (primul contract depășește singur pragul)')
+                if b["valoare_ron"] > prag_s:
+                    peste_individual.append(f'{_fmt_ron(b["valoare_ron"])} (al doilea contract depășește singur pragul)')
+                nota_individuala = f' Notă: {"; ".join(peste_individual)}.' if peste_individual else ''
                 flags.append({
                     "tip": "FRAGMENTARE",
                     "severitate": "CRITIC",
                     "titlu": "Posibilă fragmentare artificială a contractelor",
                     "descriere": (f'Furnizor "{a["castigator"]}" a primit 2 contracte similare '
                                  f'la interval de {zile_diferenta} zile, valoare combinată '
-                                 f'{_fmt_ron(valoare_combinata)} (peste pragul de {_fmt_ron(prag_s)}). '
+                                 f'{_fmt_ron(valoare_combinata)} (peste pragul de {_fmt_ron(prag_s)}).{nota_individuala} '
                                  f'Posibilă încălcare art. 11 din Legea 98/2016.'),
                     "contract_id": f"{a['id']},{b['id']}",
                     "contract_numar": f"{a['numar']} + {b['numar']}",
@@ -655,6 +734,19 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
     return flags_unice
 
 
+def _seap_url(contract_id: str) -> str:
+    """Construiește URL-ul direct SEAP dintr-un contract_id de forma 'achizitie-directa-2025-489392'.
+    Returnează URL-ul la anunțul specific, sau lista generică dacă ID-ul nu e parsabil."""
+    # Luăm primul ID dacă sunt mai multe (separate prin virgulă)
+    primul_id = contract_id.split(",")[0].strip()
+    # Extragem partea numerică: achizitie-directa-2025-489392 → 489392
+    parts = primul_id.split("-")
+    numeric_id = parts[-1] if parts and parts[-1].isdigit() else ""
+    if numeric_id:
+        return f"https://e-licitatie.ro/pub/notices/da-direct-acquisition/view/{numeric_id}"
+    return "https://e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0"
+
+
 def _fmt_ron(valoare: float) -> str:
     """Formatează o sumă în RON pentru afișare."""
     if valoare >= 1_000_000:
@@ -725,28 +817,83 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
     culori = {"CRITIC": "#C0392B", "MAJOR": "#E67E22", "MEDIU": "#F39C12"}
     emoji_sev = {"CRITIC": "🔴", "MAJOR": "🟠", "MEDIU": "🟡"}
 
+    # Sortare: CRITIC primul, apoi MAJOR, apoi MEDIU
+    ordine_sev = {"CRITIC": 0, "MAJOR": 1, "MEDIU": 2}
+    flags_sortate = sorted(flags, key=lambda f: ordine_sev.get(f.get("severitate", "MEDIU"), 2))
+
+    # Serializăm contractele ca JSON pentru embed în HTML (folosit de JS pentru "toate contractele firmei")
+    contracte_json_embed = json.dumps([{
+        "id": c["id"],
+        "titlu": c["titlu"][:80],
+        "valoare": c["valoare_ron"],
+        "data": c["data_publicare"],
+        "tip": c["tip_procedura"],
+        "firma": c["castigator"],
+        "ofertanti": c["nr_ofertanti"],
+    } for c in contracte], ensure_ascii=False)
+
+    # Index: câte contracte are fiecare firmă
+    nr_contracte_firma_map = {}
+    for c in contracte:
+        nr_contracte_firma_map[c["castigator"]] = nr_contracte_firma_map.get(c["castigator"], 0) + 1
+
     flags_html = ""
-    for f in flags:
+    for idx, f in enumerate(flags_sortate, 1):
         culoare = culori.get(f["severitate"], "#999")
         emoji = emoji_sev.get(f["severitate"], "⚪")
         nou_badge = ' <span style="background:#E8F5E9;color:#2E7D32;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700">NOU</span>' if f in flags_noi else ""
+
+        contract_id = (f.get('contract_id') or f.get('contract_numar') or '').strip()
+        furnizor = (f.get('furnizor') or '').strip()
+        firma_scurta = furnizor[:35] + ('…' if len(furnizor) > 35 else '')
+        nr_firma = nr_contracte_firma_map.get(furnizor, 0)
+
+        # Escaping pentru JS (ghilimele simple în numele firmei)
+        furnizor_js = furnizor.replace("'", "\\'").replace('"', '&quot;')
+
         flags_html += f"""
-        <div style="border-left:4px solid {culoare};background:#fff;padding:14px 18px;
-                    border-radius:0 8px 8px 0;margin-bottom:12px;
-                    box-shadow:0 1px 3px rgba(0,0,0,0.08)">
+        <div onclick="toggleFlag(this)"
+             style="border-left:4px solid {culoare};background:#fff;padding:14px 18px;
+                    border-radius:0 8px 8px 0;margin-bottom:10px;
+                    box-shadow:0 1px 3px rgba(0,0,0,0.08);cursor:pointer"
+             onmouseenter="this.style.boxShadow='0 4px 14px rgba(0,0,0,0.14)'"
+             onmouseleave="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.08)'">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-size:12px;font-weight:700;color:#bbb;min-width:32px">#{idx}</span>
             <span style="font-size:16px">{emoji}</span>
             <strong style="color:{culoare}">[{f['severitate']}]</strong>
             <span style="font-weight:700">{f['titlu']}</span>
             {nou_badge}
+            <span class="flag-arrow" style="margin-left:auto;font-size:11px;color:#aaa">▼ detalii</span>
           </div>
           <p style="font-size:13px;color:#444;margin:0 0 8px">{f['descriere']}</p>
           <div style="font-size:12px;color:#777;display:flex;gap:16px;flex-wrap:wrap">
-            <span>📋 {f.get('contract_id', f.get('contract_numar', '–')) or '–'}</span>
+            <span>📋 {contract_id or '–'}</span>
             <span>💰 {_fmt_ron(f['valoare'])}</span>
-            <span>🏢 {f['furnizor']}</span>
+            <span>🏢 {furnizor or '–'}</span>
             <span>📅 {f['data']}</span>
             <span>⚙️ {f['tip_procedura']}</span>
+          </div>
+          <div class="flag-detail" style="display:none;margin-top:14px;padding-top:12px;border-top:1px solid #eee">
+            <div style="font-size:12px;color:#555;margin-bottom:10px">
+              <strong>Firmă:</strong> {furnizor or '–'} &nbsp;|&nbsp;
+              <strong>Sumă:</strong> {_fmt_ron(f['valoare'])} &nbsp;|&nbsp;
+              <strong>Data:</strong> {f['data']} &nbsp;|&nbsp;
+              <strong>Procedură:</strong> {f['tip_procedura'] or '–'}
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+              <a href="{_seap_url(contract_id)}"
+                 target="_blank" onclick="event.stopPropagation()"
+                 style="background:#0070C0;color:#fff;padding:6px 14px;border-radius:6px;
+                        text-decoration:none;font-size:12px;font-weight:600">
+                🔍 Deschide în SEAP →
+              </a>
+              {f"""<button onclick="showFirmaContracts('{furnizor_js}', event)"
+                 style="background:#EBF5FB;color:#0070C0;padding:6px 14px;border-radius:6px;
+                        font-size:12px;font-weight:600;border:1px solid #AED6F1;cursor:pointer">
+                📊 Toate contractele cu {firma_scurta} ({nr_firma} contracte)
+              </button>""" if furnizor else ''}
+            </div>
           </div>
         </div>"""
 
@@ -920,6 +1067,100 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
 
 </div>
 
+<script id="contracte-data" type="application/json">{contracte_json_embed}</script>
+<script>
+// ── Date contracte ──────────────────────────────────────────────
+var _contracteData = null;
+function _getContracte() {{
+  if (!_contracteData) {{
+    try {{
+      _contracteData = JSON.parse(document.getElementById('contracte-data').textContent);
+    }} catch(e) {{ _contracteData = []; }}
+  }}
+  return _contracteData;
+}}
+
+// ── Toggle detalii flag ─────────────────────────────────────────
+function toggleFlag(el) {{
+  var detail = el.querySelector('.flag-detail');
+  var arrow = el.querySelector('.flag-arrow');
+  if (detail.style.display === 'none') {{
+    detail.style.display = 'block';
+    if (arrow) arrow.textContent = '▲ ascunde';
+  }} else {{
+    detail.style.display = 'none';
+    if (arrow) arrow.textContent = '▼ detalii';
+  }}
+}}
+
+// ── Toate contractele unei firme ────────────────────────────────
+function showFirmaContracts(firma, evt) {{
+  evt.stopPropagation();
+  var flagDiv = evt.target.closest('[onclick="toggleFlag(this)"]');
+  var existing = flagDiv.querySelector('.firma-contracts-panel');
+  if (existing) {{
+    existing.style.display = existing.style.display === 'none' ? 'block' : 'none';
+    return;
+  }}
+
+  var contracte = _getContracte();
+  var firmaLow = firma.toLowerCase();
+  var matches = contracte.filter(function(c) {{
+    var cl = (c.firma || '').toLowerCase();
+    return cl.indexOf(firmaLow) !== -1 || firmaLow.indexOf(cl.substring(0, 12)) !== -1;
+  }});
+  matches.sort(function(a, b) {{ return b.data.localeCompare(a.data); }});
+
+  var totalVal = matches.reduce(function(s, c) {{ return s + (c.valoare || 0); }}, 0);
+  var totalFmt = totalVal >= 1000000
+    ? (totalVal / 1000000).toFixed(2) + ' mil. RON'
+    : Math.round(totalVal / 1000) + ' K RON';
+
+  function fmtVal(v) {{
+    if (!v) return '–';
+    return v >= 1000000
+      ? (v/1000000).toFixed(2) + ' mil.'
+      : Math.round(v/1000) + ' K RON';
+  }}
+
+  var rows = matches.map(function(c, i) {{
+    var bg = i % 2 === 0 ? '#fff' : '#f8f9fa';
+    var ofColor = c.ofertanti === 1 ? '#C0392B' : '#27AE60';
+    return '<tr style="background:' + bg + '">'
+      + '<td style="padding:6px 10px;font-size:12px;white-space:nowrap">' + (c.data || '–') + '</td>'
+      + '<td style="padding:6px 10px;font-size:12px;max-width:300px">' + (c.titlu || '').substring(0, 70) + '</td>'
+      + '<td style="padding:6px 10px;font-size:12px;font-weight:700;white-space:nowrap">' + fmtVal(c.valoare) + '</td>'
+      + '<td style="padding:6px 10px;font-size:12px">' + (c.tip || '–') + '</td>'
+      + '<td style="padding:6px 10px;font-size:12px;text-align:center;color:' + ofColor + ';font-weight:700">' + (c.ofertanti || '?') + '</td>'
+      + '</tr>';
+  }}).join('');
+
+  var panel = document.createElement('div');
+  panel.className = 'firma-contracts-panel';
+  panel.style.cssText = 'margin-top:16px;';
+  panel.innerHTML =
+    '<div style="background:#EBF5FB;border-radius:8px;padding:14px 16px;border:1px solid #AED6F1">'
+    + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">'
+    + '<strong style="color:#0070C0;font-size:14px">📊 Contracte cu Primăria Pantelimon – ' + firma + '</strong>'
+    + '<span style="font-size:12px;color:#555;background:#fff;padding:4px 10px;border-radius:12px;border:1px solid #AED6F1">'
+    + matches.length + ' contracte · Total: ' + totalFmt
+    + '</span></div>'
+    + (matches.length === 0
+      ? '<p style="text-align:center;color:#888;font-size:13px">Niciun contract găsit în datele descărcate.</p>'
+      : '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse">'
+        + '<thead><tr style="background:#0070C0;color:#fff">'
+        + '<th style="padding:6px 10px;font-size:11px;text-align:left">Data</th>'
+        + '<th style="padding:6px 10px;font-size:11px;text-align:left">Obiect contract</th>'
+        + '<th style="padding:6px 10px;font-size:11px;text-align:left">Valoare</th>'
+        + '<th style="padding:6px 10px;font-size:11px;text-align:left">Tip procedură</th>'
+        + '<th style="padding:6px 10px;font-size:11px;text-align:center">Ofertanți</th>'
+        + '</tr></thead><tbody>' + rows + '</tbody></table></div>')
+    + '<div style="margin-top:10px;font-size:11px;color:#777">Date: data.gov.ro · Perioadă analizată: ultimele 12 luni</div>'
+    + '</div>';
+
+  flagDiv.appendChild(panel);
+}}
+</script>
 <footer style="background:#00427A;color:rgba(255,255,255,.7);text-align:center;padding:16px;font-size:12px;margin-top:40px">
   <p>Surse date: <a href="https://transparenta.eu/entities/{config['cui']}" target="_blank" style="color:#FFD000">transparenta.eu</a> (ANAF/MF) &nbsp;·&nbsp;
      <a href="https://www.e-licitatie.ro/pub" target="_blank" style="color:#FFD000">e-licitatie.ro (SEAP)</a> &nbsp;·&nbsp;
@@ -1020,12 +1261,26 @@ def main():
     flags_contracte = analizeaza_red_flags(contracte, CONFIG)
     toate_flags = flags_contracte + flags_hcl
 
-    # 5. Raport HTML
+    # 5. Raport HTML + export contracte.json
     print("\n[5/6] Generez raport HTML...")
     raport_html = genereaza_raport_html(budget, contracte, toate_flags, [], CONFIG)
     with open(CONFIG["fisier_raport"], "w", encoding="utf-8") as f:
         f.write(raport_html)
     print(f"  ✓ Raport salvat: {CONFIG['fisier_raport']}")
+
+    # Export contracte.json pentru acces extern
+    contracte_export = [{
+        "id": c["id"],
+        "titlu": c["titlu"][:80],
+        "valoare": c["valoare_ron"],
+        "data": c["data_publicare"],
+        "tip": c["tip_procedura"],
+        "firma": c["castigator"],
+        "ofertanti": c["nr_ofertanti"],
+    } for c in contracte]
+    with open("contracte.json", "w", encoding="utf-8") as f:
+        json.dump(contracte_export, f, ensure_ascii=False, indent=2)
+    print(f"  ✓ Contracte exportate: contracte.json ({len(contracte_export)} intrări)")
 
     # 6. Salvare stare
     print("\n[6/6] Salvez starea...")
