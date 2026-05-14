@@ -901,7 +901,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
                         text-decoration:none;font-size:12px;font-weight:600">
                 🔍 Deschide în SEAP →
               </a>
-              <a href="https://transparenta.eu/entities/{config['cui']}"
+              <a href="https://transparenta.eu/entities/{config['cui']}#achizitii"
                  target="_blank" onclick="event.stopPropagation()"
                  style="background:#1E8449;color:#fff;padding:6px 14px;border-radius:6px;
                         text-decoration:none;font-size:12px;font-weight:600">
@@ -1239,7 +1239,7 @@ function showFirmaContracts(firma, evt) {{
 }}
 </script>
 <footer style="background:#00427A;color:rgba(255,255,255,.7);text-align:center;padding:16px;font-size:12px;margin-top:40px">
-  <p>Surse date: <a href="https://transparenta.eu/entities/{config['cui']}" target="_blank" style="color:#FF6B35">transparenta.eu</a> (ANAF/MF) &nbsp;·&nbsp;
+  <p>Surse date: <a href="https://transparenta.eu/entities/{config['cui']}#achizitii" target="_blank" style="color:#FF6B35">transparenta.eu</a> (ANAF/MF) &nbsp;·&nbsp;
      <a href="https://www.e-licitatie.ro/pub" target="_blank" style="color:#FF6B35">e-licitatie.ro (SEAP)</a> &nbsp;·&nbsp;
      <a href="https://www.primariapantelimon.ro" target="_blank" style="color:#FF6B35">primariapantelimon.ro</a></p>
   <p style="margin-top:6px;font-size:11px;opacity:.7">
