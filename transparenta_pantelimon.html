@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ro">
 <head>
 <meta charset="UTF-8">
@@ -9,7 +9,7 @@
   :root {
     --albastru: #00427A;
     --albastru-deschis: #0070C0;
-    --galben: #FFD000;
+    --galben: #FF6B35;
     --rosu: #C0392B;
     --portocaliu: #E67E22;
     --verde: #27AE60;
@@ -486,6 +486,15 @@
   .alert.blue { background: #EBF5FB; border-left: 4px solid var(--albastru-deschis); color: #1A5276; }
 
   canvas { max-height: 350px; min-height: 280px; display: block; width: 100% !important; }
+
+  @media print {
+    body { background: #fff !important; }
+    nav.tabs, .no-print { display: none !important; }
+    .section { display: block !important; }
+    header { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    .chart-box { page-break-inside: avoid; }
+    @page { margin: 1.5cm; size: A4; }
+  }
 </style>
 </head>
 <body>
@@ -493,7 +502,7 @@
 <!-- HEADER -->
 <header>
   <div class="header-top">
-    
+    <a href="index.html" style="color:rgba(255,255,255,.8);text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:4px;font-size:12px">← Acasă</a>
     <span>Monitorizare cetățenească · Pantelimon, jud. Ilfov</span>
     <span style="margin-left:auto">Actualizat: mai 2026</span>
   </div>
@@ -515,8 +524,20 @@
       </div>
       <div class="stat-pill">
         <span class="val" style="color:#FF6B6B">7 ⚑</span>
-        <span class="lbl">Red flags identificate</span>
+        <span class="lbl">Nereguli identificate</span>
       </div>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <a href="raport_transparenta.html"
+         style="background:#C0392B;color:#fff;padding:9px 18px;border-radius:8px;
+                text-decoration:none;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:6px">
+        🚩 Raport Nereguli →
+      </a>
+      <button onclick="window.print()"
+              style="background:#FF6B35;color:#00427A;border:none;padding:9px 18px;border-radius:8px;
+                     font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px">
+        🖨️ Salvează ca PDF
+      </button>
     </div>
   </div>
 </header>
@@ -525,7 +546,7 @@
 <nav class="tabs">
   <ul>
     <li><a href="#" class="active" onclick="showTab('buget', this)">📊 Buget vs Realizat</a></li>
-    <li><a href="#" onclick="showTab('flags', this)">🚩 Red Flags <span class="cnt">7</span></a></li>
+    <li><a href="#" onclick="showTab('flags', this)">🚩 Nereguli <span class="cnt">7</span></a></li>
     <li><a href="#" onclick="showTab('achizitii', this)">📋 Achiziții Publice</a></li>
     <li><a href="#" onclick="showTab('surse', this)">🔗 Surse & Documente</a></li>
     <li><a href="#" onclick="showTab('actiune', this)">⚖️ Ce poți face</a></li>
@@ -654,7 +675,7 @@
 
     <div class="section-title">
       <span class="icon">🚩</span>
-      <h2>Red Flags — Nereguli Identificate</h2>
+      <h2>Nereguli Detectate</h2>
     </div>
 
     <div class="method-box">
@@ -829,7 +850,7 @@
     <div class="chart-box">
       <h3>Distribuția contractelor după tipul procedurii (2025)</h3>
       <p class="subtitle">Conform datelor SEAP · Pantelimon ca autoritate contractantă</p>
-      <canvas id="chartProceduri"></canvas>
+      <canvas id="chartProceduri" style="height:300px"></canvas>
     </div>
 
     <!-- TABEL CONTRACTE -->
@@ -1116,7 +1137,7 @@
     </div>
 
     <h2 style="font-size:22px;font-weight:800;color:var(--albastru);margin-bottom:8px">⚖️ Drepturile tale ca cetățean</h2>
-    <p style="color:#555;margin-bottom:32px;max-width:700px">Dacă ai identificat o neregulă — în raportul de red flags, în achizițiile publice sau în altă decizie a primăriei — ai mai multe instrumente legale la dispoziție. Iată, pas cu pas, ce poți face.</p>
+    <p style="color:#555;margin-bottom:32px;max-width:700px">Dacă ai identificat o neregulă — în raportul de nereguli, în achizițiile publice sau în altă decizie a primăriei — ai mai multe instrumente legale la dispoziție. Iată, pas cu pas, ce poți face.</p>
 
     <!-- BLOC 1: CERERE DE INFORMATII -->
     <div style="background:#fff;border-radius:14px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:24px;border-left:5px solid var(--albastru-deschis)">
@@ -1169,7 +1190,7 @@
           <h3 style="font-size:17px;font-weight:800;color:#A04000;margin-bottom:6px">Sesizare ANAP — nereguli la achiziții publice</h3>
           <p style="color:#444;font-size:14px;margin-bottom:12px">Agenția Națională pentru Achiziții Publice (ANAP) monitorizează respectarea Legii 98/2016. Dacă suspectezi fragmentare de contracte, criterii discriminatorii, atribuire fără licitație sau orice altă neregulă în achizițiile din SEAP, poți sesiza direct ANAP.</p>
           <div style="background:#FEF9E7;border-radius:8px;padding:14px 16px;font-size:13px;color:#7D6608;margin-bottom:12px">
-            <strong>Red flags tipice pentru sesizare ANAP:</strong><br>
+            <strong>Nereguli tipice pentru sesizare ANAP:</strong><br>
             • Contract atribuit fără licitație (procedură simplificată nejustificată)<br>
             • Valoare contract fragmentată în mai multe contracte sub pragul de licitație<br>
             • Ofertant unic în mod repetat la același tip de achiziție<br>
@@ -1546,7 +1567,7 @@ document.addEventListener('DOMContentLoaded', function() {
         datasets: [{
           data: [16.7, 8.3, 18.6, 4.3, 7.9, 13.1, 24.0, 4.8],
           backgroundColor: [
-            '#00427A','#0070C0','#FFD000','#C0392B',
+            '#00427A','#0070C0','#FF6B35','#C0392B',
             '#27AE60','#E67E22','#8E44AD','#BDC3C7'
           ]
         }]
@@ -1558,6 +1579,32 @@ document.addEventListener('DOMContentLoaded', function() {
           legend: { position: 'right' },
           tooltip: { callbacks: { label: ctx => ctx.label + ': ' + ctx.parsed + ' mil. RON' } }
         }
+      }
+    });
+  }
+
+  // Chart 4: Distribuție proceduri achiziții
+  const ctxProc = document.getElementById('chartProceduri');
+  if (ctxProc) {
+    new Chart(ctxProc, {
+      type: 'bar',
+      data: {
+        labels: ['Cumpărare directă', 'Licitație deschisă', 'Procedură simplificată', 'Negociere fără publicare', 'Altele'],
+        datasets: [{
+          label: 'Nr. contracte 2025',
+          data: [38, 12, 3, 5, 8],
+          backgroundColor: ['#C0392B','#27AE60','#F39C12','#E67E22','#BDC3C7'],
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ctx.parsed.y + ' contracte' } }
+        },
+        scales: { y: { beginAtZero: true, title: { display: true, text: 'Nr. contracte' } } }
       }
     });
   }
