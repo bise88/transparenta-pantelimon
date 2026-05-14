@@ -1,4 +1,4 @@
-"""
+﻿"""
 Monitor Transparență Bugetară — Primăria Pantelimon
 ====================================================
 Script de monitorizare automată: trage date din data.gov.ro (export SEAP oficial)
@@ -844,12 +844,25 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
         nou_badge = ' <span style="background:#E8F5E9;color:#2E7D32;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700">NOU</span>' if f in flags_noi else ""
 
         contract_id = (f.get('contract_id') or f.get('contract_numar') or '').strip()
+        contract_numar_display = (f.get('contract_numar') or '').strip()
         furnizor = (f.get('furnizor') or '').strip()
         firma_scurta = furnizor[:35] + ('…' if len(furnizor) > 35 else '')
         nr_firma = nr_contracte_firma_map.get(furnizor, 0)
 
         # Escaping pentru JS (ghilimele simple în numele firmei)
         furnizor_js = furnizor.replace("'", "\\'").replace('"', '&quot;')
+
+        # Pre-compute butonul firmei (evităm nested f-string cu același tip de ghilimele)
+        if furnizor:
+            btn_firma = (
+                f'<button onclick="showFirmaContracts(\'{furnizor_js}\', event)"'
+                f' style="background:#EBF5FB;color:#0070C0;padding:6px 14px;border-radius:6px;'
+                f'font-size:12px;font-weight:600;border:1px solid #AED6F1;cursor:pointer">'
+                f'📊 Toate contractele cu {firma_scurta} ({nr_firma} contracte)'
+                f'</button>'
+            )
+        else:
+            btn_firma = ''
 
         flags_html += f"""
         <div onclick="toggleFlag(this)"
@@ -888,11 +901,24 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
                         text-decoration:none;font-size:12px;font-weight:600">
                 🔍 Deschide în SEAP →
               </a>
-              {f"""<button onclick="showFirmaContracts('{furnizor_js}', event)"
-                 style="background:#EBF5FB;color:#0070C0;padding:6px 14px;border-radius:6px;
-                        font-size:12px;font-weight:600;border:1px solid #AED6F1;cursor:pointer">
-                📊 Toate contractele cu {firma_scurta} ({nr_firma} contracte)
-              </button>""" if furnizor else ''}
+              <a href="https://transparenta.eu/entities/{config['cui']}"
+                 target="_blank" onclick="event.stopPropagation()"
+                 style="background:#1E8449;color:#fff;padding:6px 14px;border-radius:6px;
+                        text-decoration:none;font-size:12px;font-weight:600">
+                🌐 transparenta.eu →
+              </a>
+              {btn_firma}
+            </div>
+            <div style="margin-top:10px;padding:8px 12px;background:#F4F6F8;border-radius:6px;
+                        font-size:11px;color:#666;line-height:1.6">
+              ℹ️ <strong>Cum verifici în SEAP:</strong> apasă „Deschide în SEAP" de mai sus.
+              Dacă pagina apare goală, intră manual pe
+              <a href="https://e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0"
+                 target="_blank" onclick="event.stopPropagation()"
+                 style="color:#0070C0">lista achizițiilor directe</a>,
+              caută <strong>„Pantelimon"</strong> la câmpul Autoritate și filtrează după
+              numărul <strong>{contract_numar_display or contract_id}</strong>
+              și data <strong>{f['data']}</strong>.
             </div>
           </div>
         </div>"""
@@ -992,27 +1018,33 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
     </div>
     <h1 style="font-size:26px;font-weight:800;margin:0 0 6px">
       Raport Transparență Bugetară<br>
-      <span style="color:#FFD000">{config['nume_entitate']}</span>
+      <span style="color:#FF6B35">{config['nume_entitate']}</span>
     </h1>
     <p style="opacity:.85;margin:0">Generat automat la {data_generare} · CUI: {config['cui']}</p>
-    <div style="margin-top:14px" class="no-print">
+    <div style="margin-top:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap" class="no-print">
+      <a href="index.html"
+         style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4);
+                padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;
+                display:inline-flex;align-items:center;gap:6px">
+        ← Pagina Principală
+      </a>
       <button onclick="printRaport()"
-              style="background:#FFD000;color:#00427A;border:none;padding:9px 20px;
+              style="background:#FF6B35;color:#00427A;border:none;padding:9px 20px;
                      border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;
                      display:inline-flex;align-items:center;gap:8px">
         🖨️ Salvează ca PDF / Tipărește
       </button>
-      <span style="font-size:11px;opacity:.65;margin-left:12px">
+      <span style="font-size:11px;opacity:.65">
         → în dialogul de tipărire alege „Salvare ca PDF"
       </span>
     </div>
     <div style="display:flex;gap:24px;margin-top:16px;flex-wrap:wrap">
       <div style="background:rgba(255,255,255,.15);border-radius:8px;padding:10px 16px;text-align:center">
         <div style="font-size:22px;font-weight:800;color:#{"C0392B" if flags else "27AE60"}">{len(flags)}</div>
-        <div style="font-size:11px;opacity:.8">Red Flags Total</div>
+        <div style="font-size:11px;opacity:.8">Nereguli detectate</div>
       </div>
       <div style="background:rgba(255,255,255,.15);border-radius:8px;padding:10px 16px;text-align:center">
-        <div style="font-size:22px;font-weight:800;color:{"#FFD000" if flags_noi else "#27AE60"}">{len(flags_noi)}</div>
+        <div style="font-size:22px;font-weight:800;color:{"#FF6B35" if flags_noi else "#27AE60"}">{len(flags_noi)}</div>
         <div style="font-size:11px;opacity:.8">Flags Noi (față de ultima rulare)</div>
       </div>
       <div style="background:rgba(255,255,255,.15);border-radius:8px;padding:10px 16px;text-align:center">
@@ -1034,11 +1066,11 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
   {budget_html if budget_html else '<p style="color:#777;font-size:13px">Date buget indisponibile.</p>'}
 
   <!-- RED FLAGS -->
-  <h2 style="color:#00427A;margin:28px 0 8px">🚩 Red Flags Detectate ({len(flags)})</h2>
+  <h2 style="color:#00427A;margin:28px 0 8px">🚩 Nereguli Detectate ({len(flags)})</h2>
   <p style="font-size:13px;color:#777;margin:0 0 16px">
     {sum(1 for f in flags if f['severitate']=='CRITIC')} CRITIC · {sum(1 for f in flags if f['severitate']=='MAJOR')} MAJOR · {sum(1 for f in flags if f['severitate']=='MEDIU')} MEDIU</p>
   {nota_demo_msg}
-  {flags_html if flags_html else '<div style="background:#E8F5E9;border-left:4px solid #27AE60;padding:14px 18px;border-radius:0 8px 8px 0"><span style="color:#27AE60;font-weight:700">✅ Niciun red flag detectat în această perioadă.</span></div>'}
+  {flags_html if flags_html else '<div style="background:#E8F5E9;border-left:4px solid #27AE60;padding:14px 18px;border-radius:0 8px 8px 0"><span style="color:#27AE60;font-weight:700">✅ Nicio neregulă detectată în această perioadă.</span></div>'}
 
   <!-- HCL STATISTICI -->
   <h2 style="color:#00427A;margin:28px 0 8px">📋 Hotărâri Consiliu Local</h2>
@@ -1207,9 +1239,9 @@ function showFirmaContracts(firma, evt) {{
 }}
 </script>
 <footer style="background:#00427A;color:rgba(255,255,255,.7);text-align:center;padding:16px;font-size:12px;margin-top:40px">
-  <p>Surse date: <a href="https://transparenta.eu/entities/{config['cui']}" target="_blank" style="color:#FFD000">transparenta.eu</a> (ANAF/MF) &nbsp;·&nbsp;
-     <a href="https://www.e-licitatie.ro/pub" target="_blank" style="color:#FFD000">e-licitatie.ro (SEAP)</a> &nbsp;·&nbsp;
-     <a href="https://www.primariapantelimon.ro" target="_blank" style="color:#FFD000">primariapantelimon.ro</a></p>
+  <p>Surse date: <a href="https://transparenta.eu/entities/{config['cui']}" target="_blank" style="color:#FF6B35">transparenta.eu</a> (ANAF/MF) &nbsp;·&nbsp;
+     <a href="https://www.e-licitatie.ro/pub" target="_blank" style="color:#FF6B35">e-licitatie.ro (SEAP)</a> &nbsp;·&nbsp;
+     <a href="https://www.primariapantelimon.ro" target="_blank" style="color:#FF6B35">primariapantelimon.ro</a></p>
   <p style="margin-top:6px;font-size:11px;opacity:.7">
     Raport generat automat de <strong>monitor_pantelimon.py</strong> &nbsp;·&nbsp;
     Inițiativă cetățenească independentă &nbsp;·&nbsp;
@@ -1231,7 +1263,7 @@ def trimite_email_alerta(flags_noi: list, raport_html: str, config: dict):
         print("  [Email] Emailul nu e configurat — se sare.")
         return
 
-    subiect = f"🚩 {len(flags_noi)} red flag(uri) noi — Transparență Pantelimon {datetime.now().strftime('%d.%m.%Y')}"
+    subiect = f"🚩 {len(flags_noi)} nereguli noi — Transparență Pantelimon {datetime.now().strftime('%d.%m.%Y')}"
 
     flags_text = "\n".join([
         f"[{f['severitate']}] {f['titlu']}\n  → {f['descriere'][:200]}"
@@ -1242,7 +1274,7 @@ def trimite_email_alerta(flags_noi: list, raport_html: str, config: dict):
 Monitor Transparență Bugetară — Pantelimon
 ==========================================
 
-{len(flags_noi)} red flag(uri) noi detectate față de ultima rulare:
+{len(flags_noi)} nereguli noi detectate față de ultima rulare:
 
 {flags_text}
 
