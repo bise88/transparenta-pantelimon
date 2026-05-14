@@ -1588,16 +1588,31 @@ async function expandFlag(cardEl, keyword, titlu) {
         const amount = get('💰');
         const firm = get('🏢');
         const date = get('📅');
-        const seapUrl = contractId !== '—'
-          ? `https://www.e-licitatie.ro/pub/notices/contract-notices/list/0/0?search=${encodeURIComponent(contractId)}`
-          : '#';
+        // Construiește URL direct SEAP dacă ID-ul e achiziție directă
+        const seapMatch = contractId.match(/(\d{5,})$/);
+        const seapUrl = seapMatch
+          ? `https://e-licitatie.ro/pub/notices/da-direct-acquisition/view/${seapMatch[1]}`
+          : contractId !== '—'
+            ? `https://e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0`
+            : null;
+        // ID scurt pentru afișare (ex: "2025-203198" din "achizitie-directa-2025-203198")
+        const idScurt = contractId.replace(/^achizitie-directa-/, '').replace(/^HCL-.*/, '');
+        const hasSeapId = !!seapMatch && !!idScurt;
         return `<tr style="border-bottom:1px solid #f0f0f0">
           <td style="padding:7px 8px;font-size:12px;max-width:260px">${desc}</td>
           <td style="padding:7px 8px;font-size:12px;white-space:nowrap;font-weight:700;color:#C0392B">${amount}</td>
           <td style="padding:7px 8px;font-size:12px">${firm}</td>
           <td style="padding:7px 8px;font-size:12px;white-space:nowrap">${date}</td>
-          <td style="padding:7px 8px;font-size:12px">
-            ${contractId !== '—' ? `<a href="${seapUrl}" target="_blank" style="color:var(--albastru);font-size:11px">SEAP →</a>` : ''}
+          <td style="padding:7px 8px;font-size:11px;min-width:160px">
+            ${seapUrl ? `<a href="${seapUrl}" target="_blank"
+              style="display:inline-block;background:#0070C0;color:#fff;padding:3px 8px;border-radius:4px;text-decoration:none;font-weight:600;font-size:11px;margin-bottom:4px">
+              🔍 SEAP →</a>` : ''}
+            ${hasSeapId ? `<div style="margin-top:3px;font-size:10px;color:#666;line-height:1.5">
+              Dacă pagina e goală, caută manual:<br>
+              <strong>Autoritate:</strong> Pantelimon<br>
+              <strong>ID:</strong> <code style="background:#f0f0f0;padding:1px 4px;border-radius:3px">${idScurt}</code><br>
+              <strong>Data:</strong> ${date}
+            </div>` : ''}
           </td>
         </tr>`;
       }).join('');
