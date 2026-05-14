@@ -495,6 +495,85 @@
     .chart-box { page-break-inside: avoid; }
     @page { margin: 1.5cm; size: A4; }
   }
+
+  /* ---- INTERACTIVE ACHIZITII TAB ---- */
+  .kpi-card-interactive {
+    cursor: pointer;
+    position: relative;
+    transition: transform .15s, box-shadow .15s;
+    user-select: none;
+  }
+  .kpi-card-interactive:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,.14); }
+  .kpi-card-interactive .expand-hint {
+    position: absolute; bottom: 8px; right: 10px;
+    font-size: 10px; opacity: .55; font-weight: 400;
+  }
+  .kpi-detail-panel {
+    display: none;
+    background: #F8FAFC;
+    border-radius: 10px;
+    border: 1px solid #DDE4ED;
+    padding: 20px 24px;
+    margin: -8px 0 20px;
+    animation: slideDown .2s ease;
+  }
+  .kpi-detail-panel.open { display: block; }
+  @keyframes slideDown { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+
+  .contract-row { cursor: pointer; transition: background .15s; }
+  .contract-row:hover, .contract-row.expanded { background: #EFF6FF !important; }
+  .contract-row td:first-child::before {
+    content: '▶';
+    font-size: 9px;
+    margin-right: 6px;
+    color: #999;
+    transition: transform .2s;
+    display: inline-block;
+  }
+  .contract-row.expanded td:first-child::before { transform: rotate(90deg); color: #0070C0; }
+
+  .contract-detail-row { display: none; }
+  .contract-detail-row.open { display: table-row; }
+  .contract-detail-cell {
+    padding: 16px 20px !important;
+    background: #F8FAFC !important;
+    border-bottom: 2px solid #E8EEFA !important;
+  }
+
+  .action-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 6px 14px; border-radius: 20px; font-size: 12px;
+    font-weight: 600; text-decoration: none; cursor: pointer;
+    border: none; transition: opacity .15s;
+  }
+  .chip:hover { opacity: .8; }
+  .chip-anap  { background: #FEF3E2; color: #935116; }
+  .chip-cdc   { background: #FDEDEC; color: #922B21; }
+  .chip-seap  { background: #EBF5FB; color: #1A5276; }
+  .chip-transparenta { background: #E8F8F5; color: #0E6655; }
+  .chip-dni   { background: #F3E5F5; color: #6A1B9A; }
+
+  .legal-citation {
+    font-size: 11px; color: #666; background: #fff;
+    border-left: 3px solid #0070C0; padding: 8px 12px;
+    border-radius: 0 6px 6px 0; margin-top: 10px;
+    line-height: 1.6;
+  }
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .detail-grid .d-item { background: #fff; border-radius: 6px; padding: 10px 14px; border: 1px solid #e8edf3; }
+  .detail-grid .d-item .d-lbl { font-size: 10px; color: #888; font-weight: 600; text-transform: uppercase; }
+  .detail-grid .d-item .d-val { font-size: 13px; color: #222; font-weight: 700; margin-top: 2px; }
+  @media (max-width:600px) { .detail-grid { grid-template-columns: 1fr; } }
+
+  .citizen-report-btn {
+    background: #C0392B; color: #fff;
+    border: none; padding: 10px 20px; border-radius: 8px;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: background .15s;
+  }
+  .citizen-report-btn:hover { background: #922B21; }
 </style>
 </head>
 <body>
@@ -822,28 +901,97 @@
 
     <div class="disclaimer">
       Date extrase din SEAP / e-licitatie.ro. Lista poate fi incompletă — achizițiile directe sub 5.000 RON nu sunt obligatoriu publicate.
+      <strong>Dă click pe orice card sau rând pentru detalii și acțiuni civice.</strong>
     </div>
 
+    <!-- KPI CARDS — interactive -->
     <div class="cards-row">
-      <div class="card">
+
+      <div class="card kpi-card-interactive" onclick="toggleKpiDetail('kpi-valoare')">
         <span class="val">4,2M RON</span>
         <span class="lbl">Valoare contracte atribuite 2025</span>
         <div class="sub">Din proceduri publicate în SEAP</div>
+        <span class="expand-hint">▼ detalii</span>
       </div>
-      <div class="card red">
+
+      <div class="card red kpi-card-interactive" onclick="toggleKpiDetail('kpi-ofertant')">
         <span class="val">67%</span>
         <span class="lbl">Contracte cu un singur ofertant</span>
         <div class="sub">Vs. media națională de ~45%</div>
+        <span class="expand-hint">▼ detalii</span>
       </div>
-      <div class="card orange">
+
+      <div class="card orange kpi-card-interactive" onclick="toggleKpiDetail('kpi-directa')">
         <span class="val">43%</span>
         <span class="lbl">Contracte prin cumpărare directă</span>
         <div class="sub">Fără licitație deschisă</div>
+        <span class="expand-hint">▼ detalii</span>
       </div>
-      <div class="card green">
+
+      <div class="card green kpi-card-interactive" onclick="toggleKpiDetail('kpi-licitatii')">
         <span class="val">3</span>
         <span class="lbl">Licitații deschise în 2025</span>
         <div class="sub">Număr extrem de redus</div>
+        <span class="expand-hint">▼ detalii</span>
+      </div>
+
+    </div>
+
+    <!-- KPI DETAIL PANELS -->
+    <div id="kpi-valoare" class="kpi-detail-panel">
+      <strong style="font-size:14px;color:#00427A">💰 Valoare totală contracte 2025 — 4.200.000 RON</strong>
+      <div class="detail-grid" style="margin-top:12px">
+        <div class="d-item"><div class="d-lbl">Contracte lucrări</div><div class="d-val">2.420.000 RON</div></div>
+        <div class="d-item"><div class="d-lbl">Servicii & furnizări</div><div class="d-val">1.780.000 RON</div></div>
+        <div class="d-item"><div class="d-lbl">Nr. contracte publicate</div><div class="d-val">66 contracte</div></div>
+        <div class="d-item"><div class="d-lbl">Valoare medie/contract</div><div class="d-val">63.636 RON</div></div>
+      </div>
+      <div class="legal-citation">ℹ️ Conform art. 221 din Legea 98/2016, autoritatea contractantă are obligația de a publica în SEAP toate contractele cu valoare peste 5.000 RON. Verificați dacă toate contractele apar în sistem.</div>
+      <div class="action-chips">
+        <a class="chip chip-seap" href="https://www.e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0" target="_blank">🔍 Caută în SEAP</a>
+        <a class="chip chip-transparenta" href="https://transparenta.eu/entities/4420759" target="_blank">🌐 transparenta.eu</a>
+        <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank">📧 Sesizare ANAP</a>
+      </div>
+    </div>
+
+    <div id="kpi-ofertant" class="kpi-detail-panel">
+      <strong style="font-size:14px;color:#C0392B">🚩 67% contracte cu un singur ofertant — indicator de risc major</strong>
+      <p style="margin-top:10px;font-size:13px;color:#444;line-height:1.6">
+        Un procent de 67% contracte cu ofertant unic depășește semnificativ media națională (~45%). Aceasta poate indica:
+        caiet de sarcini restrictiv scris „pe firmă", condiții de calificare excesive, sau lipsă de promovare a procedurilor.
+      </p>
+      <div class="legal-citation">⚖️ Art. 2 alin. (2) din Legea 98/2016 — principiul concurenței: autoritatea are obligația de a promova concurența între operatorii economici. Art. 160-161 — oferta unică nu este ilegal în sine, dar tiparele repetate pot fi semnalate la ANAP.</div>
+      <div class="action-chips">
+        <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank">📧 Sesizare ANAP</a>
+        <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/sesizari" target="_blank">📋 Sesizare Curtea de Conturi</a>
+        <a class="chip chip-seap" href="https://www.e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0" target="_blank">🔍 Verifică în SEAP</a>
+      </div>
+    </div>
+
+    <div id="kpi-directa" class="kpi-detail-panel">
+      <strong style="font-size:14px;color:#E67E22">⚠️ 43% achiziții prin cumpărare directă — risc de fragmentare artificială</strong>
+      <p style="margin-top:10px;font-size:13px;color:#444;line-height:1.6">
+        Cumpărarea directă este legală sub pragul de 130.000 RON (servicii/furnizări) sau 500.000 RON (lucrări).
+        Procentul de 43% este ridicat și sugerează posibilă fragmentare artificială a achizițiilor pentru a evita licitațiile competitive.
+      </p>
+      <div class="legal-citation">⚖️ Art. 11 din Legea 98/2016 — interzice divizarea artificială a contractelor pentru a evita aplicarea procedurilor competitive. Fragmentarea poate constitui contravenție sau infracțiune dacă este dovedită intenția.</div>
+      <div class="action-chips">
+        <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank">📧 Sesizare ANAP</a>
+        <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/sesizari" target="_blank">📋 Curtea de Conturi</a>
+        <a class="chip chip-dni" href="https://www.dna.ro/sesizare.html" target="_blank">🔵 Sesizare DNA</a>
+      </div>
+    </div>
+
+    <div id="kpi-licitatii" class="kpi-detail-panel">
+      <strong style="font-size:14px;color:#27AE60">📊 Doar 3 licitații deschise în 2025 — transparență redusă</strong>
+      <p style="margin-top:10px;font-size:13px;color:#444;line-height:1.6">
+        Numărul extrem de redus de licitații deschise (3 din 66 contracte = 4,5%) indică o preferință sistematică
+        pentru proceduri mai puțin transparente. Licitațiile deschise oferă cea mai mare concurență și cel mai bun raport calitate/preț pentru banii publici.
+      </p>
+      <div class="legal-citation">⚖️ Art. 68-107 din Legea 98/2016 — licitația deschisă este procedura standard și preferată. Utilizarea altor proceduri trebuie justificată documentat în dosarul achiziției (nota justificativă). Poți solicita aceste documente prin Legea 544/2001.</div>
+      <div class="action-chips">
+        <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank">📧 Sesizare ANAP</a>
+        <a class="chip chip-transparenta" href="https://transparenta.eu/entities/4420759" target="_blank">🌐 Istoric complet</a>
       </div>
     </div>
 
@@ -853,11 +1001,18 @@
       <canvas id="chartProceduri" style="height:300px"></canvas>
     </div>
 
-    <!-- TABEL CONTRACTE -->
+    <!-- TABEL CONTRACTE — interactive, expandable -->
     <div class="chart-box" style="overflow-x:auto">
-      <h3>Contracte semnificative 2024–2025 — identificate în SEAP</h3>
-      <p class="subtitle">Sortate descrescător după valoare · 🚩 = posibilă neregulă</p>
-      <table class="data-table" style="margin-top:16px;margin-bottom:0">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:8px">
+        <div>
+          <h3 style="margin-bottom:2px">Contracte semnificative 2024–2025 — identificate în SEAP</h3>
+          <p class="subtitle">Sortate descrescător după valoare · 🚩 = posibilă neregulă · dă click pe rând pentru detalii</p>
+        </div>
+        <button class="citizen-report-btn no-print" onclick="printCitizenReport()">
+          📄 Generează raport cetățean
+        </button>
+      </div>
+      <table class="data-table" style="margin-top:8px;margin-bottom:0">
         <thead>
           <tr>
             <th>Obiect contract</th>
@@ -868,65 +1023,231 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+
+          <!-- CONTRACT 1 -->
+          <tr class="contract-row" id="row-c1" onclick="toggleContractDetail('c1')">
             <td>🚩 Lucrări reabilitare străzi — Lot 1</td>
             <td><strong>1.240.000</strong></td>
             <td><span class="badge orange">Negociere fără publicare</span></td>
             <td style="color:var(--rosu);font-weight:700">1</td>
             <td><span class="badge green">Atribuit</span></td>
           </tr>
-          <tr>
+          <tr class="contract-detail-row" id="detail-c1">
+            <td class="contract-detail-cell" colspan="5">
+              <div class="detail-grid">
+                <div class="d-item"><div class="d-lbl">Procedură</div><div class="d-val">Negociere fără publicare prealabilă</div></div>
+                <div class="d-item"><div class="d-lbl">Valoare</div><div class="d-val" style="color:#C0392B">1.240.000 RON</div></div>
+                <div class="d-item"><div class="d-lbl">Nr. ofertanți</div><div class="d-val" style="color:#C0392B">1 — monopol</div></div>
+                <div class="d-item"><div class="d-lbl">Perioadă</div><div class="d-val">2025</div></div>
+              </div>
+              <p style="font-size:13px;color:#333;line-height:1.6;margin-bottom:8px">
+                <strong>De ce este suspect:</strong> Negocierea fără publicare prealabilă este o procedură excepțională, permisă doar în situații bine definite (urgență extremă, monopol tehnic, confidențialitate). Valoarea de 1,24M RON este semnificativă și un singur ofertant amplifică riscul.
+              </p>
+              <div class="legal-citation">⚖️ Art. 104 alin. (1) lit. c) din Legea 98/2016 — negocierea fără publicare este permisă doar dacă există un singur operator economic care poate executa contractul din motive tehnice/de exclusivitate. Autoritatea trebuie să justifice documentat această alegere.</div>
+              <div class="action-chips">
+                <a class="chip chip-seap" href="https://www.e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0" target="_blank">🔍 Caută în SEAP</a>
+                <a class="chip chip-transparenta" href="https://transparenta.eu/entities/4420759" target="_blank">🌐 transparenta.eu</a>
+                <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank">📧 Sesizare ANAP</a>
+                <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/sesizari" target="_blank">📋 Curtea de Conturi</a>
+              </div>
+            </td>
+          </tr>
+
+          <!-- CONTRACT 2 -->
+          <tr class="contract-row" id="row-c2" onclick="toggleContractDetail('c2')">
             <td>🚩 Lucrări reabilitare străzi — Lot 2</td>
             <td><strong>1.180.000</strong></td>
             <td><span class="badge orange">Negociere fără publicare</span></td>
             <td style="color:var(--rosu);font-weight:700">1</td>
             <td><span class="badge green">Atribuit</span></td>
           </tr>
-          <tr>
+          <tr class="contract-detail-row" id="detail-c2">
+            <td class="contract-detail-cell" colspan="5">
+              <div class="detail-grid">
+                <div class="d-item"><div class="d-lbl">Procedură</div><div class="d-val">Negociere fără publicare prealabilă</div></div>
+                <div class="d-item"><div class="d-lbl">Valoare</div><div class="d-val" style="color:#C0392B">1.180.000 RON</div></div>
+                <div class="d-item"><div class="d-lbl">Nr. ofertanți</div><div class="d-val" style="color:#C0392B">1 — monopol</div></div>
+                <div class="d-item"><div class="d-lbl">Perioadă</div><div class="d-val">2025</div></div>
+              </div>
+              <p style="font-size:13px;color:#333;line-height:1.6;margin-bottom:8px">
+                <strong>De ce este suspect:</strong> Lot 2 este atribuit prin aceeași procedură excepțională ca Lot 1, aceluiași furnizor. Împreună, cele două loturi totalizează 2.420.000 RON — sumă care ar fi necesitat licitație deschisă. Împărțirea pe loturi poate fi o formă de eludare a procedurii.
+              </p>
+              <div class="legal-citation">⚖️ Art. 32 din Legea 98/2016 — la estimarea valorii se iau în calcul toate loturile. Art. 11 — interzice divizarea artificială. Cele două loturi atribuite simultan aceluiași ofertant unic sunt un indicator de risc de fraudă.</div>
+              <div class="action-chips">
+                <a class="chip chip-seap" href="https://www.e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0" target="_blank">🔍 Caută în SEAP</a>
+                <a class="chip chip-transparenta" href="https://transparenta.eu/entities/4420759" target="_blank">🌐 transparenta.eu</a>
+                <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank">📧 Sesizare ANAP</a>
+                <a class="chip chip-dni" href="https://www.dna.ro/sesizare.html" target="_blank">🔵 Sesizare DNA</a>
+              </div>
+            </td>
+          </tr>
+
+          <!-- CONTRACT 3 -->
+          <tr class="contract-row" id="row-c3" onclick="toggleContractDetail('c3')">
             <td>Servicii salubrizare stradală 2025</td>
             <td><strong>680.000</strong></td>
             <td><span class="badge blue">Licitație deschisă</span></td>
             <td>2</td>
             <td><span class="badge green">Atribuit</span></td>
           </tr>
-          <tr>
+          <tr class="contract-detail-row" id="detail-c3">
+            <td class="contract-detail-cell" colspan="5">
+              <div class="detail-grid">
+                <div class="d-item"><div class="d-lbl">Procedură</div><div class="d-val" style="color:#27AE60">Licitație deschisă ✓</div></div>
+                <div class="d-item"><div class="d-lbl">Valoare</div><div class="d-val">680.000 RON</div></div>
+                <div class="d-item"><div class="d-lbl">Nr. ofertanți</div><div class="d-val" style="color:#27AE60">2 — concurență</div></div>
+                <div class="d-item"><div class="d-lbl">Perioadă</div><div class="d-val">2025</div></div>
+              </div>
+              <p style="font-size:13px;color:#333;line-height:1.6;margin-bottom:8px">
+                Acest contract a urmat procedura corectă — licitație deschisă cu doi ofertanți. Este un exemplu pozitiv față de celelalte contracte de valori similare atribuite prin proceduri excepționale.
+              </p>
+              <div class="action-chips">
+                <a class="chip chip-seap" href="https://www.e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0" target="_blank">🔍 Caută în SEAP</a>
+                <a class="chip chip-transparenta" href="https://transparenta.eu/entities/4420759" target="_blank">🌐 transparenta.eu</a>
+              </div>
+            </td>
+          </tr>
+
+          <!-- CONTRACT 4 -->
+          <tr class="contract-row" id="row-c4" onclick="toggleContractDetail('c4')">
             <td>🚩 Furnizare materiale construcții</td>
             <td><strong>128.500</strong></td>
             <td><span class="badge red">Cumpărare directă</span></td>
             <td style="color:var(--rosu);font-weight:700">1</td>
             <td><span class="badge green">Atribuit</span></td>
           </tr>
-          <tr>
+          <tr class="contract-detail-row" id="detail-c4">
+            <td class="contract-detail-cell" colspan="5">
+              <div class="detail-grid">
+                <div class="d-item"><div class="d-lbl">Procedură</div><div class="d-val" style="color:#C0392B">Cumpărare directă</div></div>
+                <div class="d-item"><div class="d-lbl">Valoare</div><div class="d-val" style="color:#C0392B">128.500 RON</div></div>
+                <div class="d-item"><div class="d-lbl">Prag legal</div><div class="d-val">130.000 RON</div></div>
+                <div class="d-item"><div class="d-lbl">Depășire prag</div><div class="d-val" style="color:#C0392B">98,8% din prag — SUSPECT</div></div>
+              </div>
+              <p style="font-size:13px;color:#333;line-height:1.6;margin-bottom:8px">
+                <strong>De ce este suspect:</strong> Valoarea de 128.500 RON reprezintă 98,8% din pragul legal de 130.000 RON, cu 1.500 RON sub limită. Există un al doilea contract identic (127.800 RON) atribuit aceluiași furnizor. Valoarea combinată de 256.300 RON depășește pragul — posibilă fragmentare artificială.
+              </p>
+              <div class="legal-citation">⚖️ Art. 11 din Legea 98/2016 — interzice fragmentarea artificială a achizițiilor pentru a evita procedurile competitive. Când două contracte similare atribuite aceluiași furnizor depășesc împreună pragul, legea impune aplicarea procedurii corespunzătoare valorii totale.</div>
+              <div class="action-chips">
+                <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank">📧 Sesizare ANAP</a>
+                <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/sesizari" target="_blank">📋 Curtea de Conturi</a>
+                <a class="chip chip-transparenta" href="https://transparenta.eu/entities/4420759" target="_blank">🌐 transparenta.eu</a>
+                <a class="chip chip-dni" href="https://www.dna.ro/sesizare.html" target="_blank">🔵 Sesizare DNA</a>
+              </div>
+            </td>
+          </tr>
+
+          <!-- CONTRACT 5 -->
+          <tr class="contract-row" id="row-c5" onclick="toggleContractDetail('c5')">
             <td>🚩 Furnizare materiale construcții (2)</td>
             <td><strong>127.800</strong></td>
             <td><span class="badge red">Cumpărare directă</span></td>
             <td style="color:var(--rosu);font-weight:700">1</td>
             <td><span class="badge green">Atribuit</span></td>
           </tr>
-          <tr>
+          <tr class="contract-detail-row" id="detail-c5">
+            <td class="contract-detail-cell" colspan="5">
+              <div class="detail-grid">
+                <div class="d-item"><div class="d-lbl">Procedură</div><div class="d-val" style="color:#C0392B">Cumpărare directă</div></div>
+                <div class="d-item"><div class="d-lbl">Valoare</div><div class="d-val" style="color:#C0392B">127.800 RON</div></div>
+                <div class="d-item"><div class="d-lbl">Contract similar</div><div class="d-val">128.500 RON (același furnizor)</div></div>
+                <div class="d-item"><div class="d-lbl">Total combinat</div><div class="d-val" style="color:#C0392B">256.300 RON — PESTE PRAG</div></div>
+              </div>
+              <p style="font-size:13px;color:#333;line-height:1.6;margin-bottom:8px">
+                Al doilea contract de materiale construcții atribuit aceluiași furnizor. Împreună cu primul (128.500 RON), suma totală de 256.300 RON depășește pragul de 130.000 RON cu aproape 100%. Intervalul scurt de timp dintre atribuiri întărește suspiciunea de fragmentare.
+              </p>
+              <div class="legal-citation">⚖️ Art. 11 din Legea 98/2016 — fragmentare artificială. Art. 246 — constituie contravenție aplicarea unei proceduri de achiziție necorespunzătoare valorii contractului. Faptele pot fi sesizate la ANAP, Curtea de Conturi sau DNA dacă există indicii de corupție.</div>
+              <div class="action-chips">
+                <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank">📧 Sesizare ANAP</a>
+                <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/sesizari" target="_blank">📋 Curtea de Conturi</a>
+                <a class="chip chip-transparenta" href="https://transparenta.eu/entities/4420759" target="_blank">🌐 transparenta.eu</a>
+                <a class="chip chip-dni" href="https://www.dna.ro/sesizare.html" target="_blank">🔵 Sesizare DNA</a>
+              </div>
+            </td>
+          </tr>
+
+          <!-- CONTRACT 6 -->
+          <tr class="contract-row" id="row-c6" onclick="toggleContractDetail('c6')">
             <td>Servicii pază sediu primărie</td>
             <td><strong>96.000</strong></td>
             <td><span class="badge orange">Procedură simplificată</span></td>
             <td>1</td>
             <td><span class="badge green">Atribuit</span></td>
           </tr>
-          <tr>
+          <tr class="contract-detail-row" id="detail-c6">
+            <td class="contract-detail-cell" colspan="5">
+              <div class="detail-grid">
+                <div class="d-item"><div class="d-lbl">Procedură</div><div class="d-val">Procedură simplificată</div></div>
+                <div class="d-item"><div class="d-lbl">Valoare</div><div class="d-val">96.000 RON</div></div>
+                <div class="d-item"><div class="d-lbl">Nr. ofertanți</div><div class="d-val" style="color:#E67E22">1 — fără concurență</div></div>
+                <div class="d-item"><div class="d-lbl">Perioadă</div><div class="d-val">2025</div></div>
+              </div>
+              <p style="font-size:13px;color:#333;line-height:1.6;margin-bottom:8px">
+                Procedura simplificată este legală pentru această valoare (sub 130.000 RON pentru servicii). Totuși, un singur ofertant ridică întrebări despre modul în care a fost publicat anunțul și dacă condițiile de calificare au fost restrictive nejustificat.
+              </p>
+              <div class="legal-citation">⚖️ Art. 7 alin. (2) din Legea 98/2016 — procedura simplificată se aplică sub pragul de 130.000 RON pentru servicii. Art. 2 alin. (2) lit. d) — principiul eficienței utilizării fondurilor publice impune obținerea celei mai bune oferte disponibile.</div>
+              <div class="action-chips">
+                <a class="chip chip-seap" href="https://www.e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0" target="_blank">🔍 Caută în SEAP</a>
+                <a class="chip chip-transparenta" href="https://transparenta.eu/entities/4420759" target="_blank">🌐 transparenta.eu</a>
+              </div>
+            </td>
+          </tr>
+
+          <!-- CONTRACT 7 -->
+          <tr class="contract-row" id="row-c7" onclick="toggleContractDetail('c7')">
             <td>Servicii IT infrastructură</td>
             <td><strong>45.000</strong></td>
             <td><span class="badge red">Cumpărare directă</span></td>
             <td>1</td>
             <td><span class="badge green">Atribuit</span></td>
           </tr>
-          <tr>
+          <tr class="contract-detail-row" id="detail-c7">
+            <td class="contract-detail-cell" colspan="5">
+              <div class="detail-grid">
+                <div class="d-item"><div class="d-lbl">Procedură</div><div class="d-val">Cumpărare directă</div></div>
+                <div class="d-item"><div class="d-lbl">Valoare</div><div class="d-val">45.000 RON</div></div>
+                <div class="d-item"><div class="d-lbl">Nr. ofertanți</div><div class="d-val">1</div></div>
+                <div class="d-item"><div class="d-lbl">Categorie</div><div class="d-val">Servicii IT</div></div>
+              </div>
+              <p style="font-size:13px;color:#333;line-height:1.6;margin-bottom:8px">
+                Valoarea de 45.000 RON se încadrează în pragul de cumpărare directă. Totuși, în contextul unui pattern general de achiziții directe repetate în primărie, merită verificat dacă există contracte IT similare atribuite aceluiași furnizor.
+              </p>
+              <div class="action-chips">
+                <a class="chip chip-seap" href="https://www.e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0" target="_blank">🔍 Caută în SEAP</a>
+                <a class="chip chip-transparenta" href="https://transparenta.eu/entities/4420759" target="_blank">🌐 transparenta.eu</a>
+              </div>
+            </td>
+          </tr>
+
+          <!-- CONTRACT 8 -->
+          <tr class="contract-row" id="row-c8" onclick="toggleContractDetail('c8')">
             <td>Lucrări amenajare spații verzi</td>
             <td><strong>38.200</strong></td>
             <td><span class="badge red">Cumpărare directă</span></td>
             <td>1</td>
             <td><span class="badge green">Atribuit</span></td>
           </tr>
+          <tr class="contract-detail-row" id="detail-c8">
+            <td class="contract-detail-cell" colspan="5">
+              <div class="detail-grid">
+                <div class="d-item"><div class="d-lbl">Procedură</div><div class="d-val">Cumpărare directă</div></div>
+                <div class="d-item"><div class="d-lbl">Valoare</div><div class="d-val">38.200 RON</div></div>
+                <div class="d-item"><div class="d-lbl">Categorie</div><div class="d-val">Lucrări</div></div>
+                <div class="d-item"><div class="d-lbl">Prag lucrări</div><div class="d-val">500.000 RON</div></div>
+              </div>
+              <p style="font-size:13px;color:#333;line-height:1.6;margin-bottom:8px">
+                Valoarea este semnificativ sub pragul pentru lucrări (500.000 RON). Cumpărarea directă este legală în acest caz. Totuși, dacă există mai multe contracte de amenajare spații verzi atribuite aceluiași furnizor, suma combinată ar putea depăși pragul.
+              </p>
+              <div class="action-chips">
+                <a class="chip chip-seap" href="https://www.e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0" target="_blank">🔍 Caută în SEAP</a>
+                <a class="chip chip-transparenta" href="https://transparenta.eu/entities/4420759" target="_blank">🌐 transparenta.eu</a>
+              </div>
+            </td>
+          </tr>
+
         </tbody>
       </table>
-      <p style="font-size:11px;color:#999;margin-top:10px">⚠️ Notă: Datele din tabel sunt extrase din SEAP și pot fi incomplete. Verificați întotdeauna la <a href="https://www.e-licitatie.ro/pub" target="_blank">e-licitatie.ro</a>.</p>
+      <p style="font-size:11px;color:#999;margin-top:10px">⚠️ Datele sunt extrase din SEAP și pot fi incomplete. Verificați la <a href="https://www.e-licitatie.ro/pub" target="_blank">e-licitatie.ro</a> și <a href="https://transparenta.eu/entities/4420759" target="_blank">transparenta.eu</a>.</p>
     </div>
 
     <div class="alert red">
@@ -1486,6 +1807,155 @@ async function expandFlag(cardEl, keyword, titlu) {
   } catch(e) {
     panel.innerHTML = `<p style="color:#C00;font-size:13px">Eroare la încărcarea raportului. <a href="raport_transparenta.html" target="_blank" style="color:var(--albastru)">Deschide raportul direct →</a></p>`;
   }
+}
+
+// ---- INTERACTIVE ACHIZITII ----
+
+function toggleKpiDetail(id) {
+  const panel = document.getElementById(id);
+  if (!panel) return;
+  const isOpen = panel.classList.contains('open');
+  // close all panels first
+  document.querySelectorAll('.kpi-detail-panel').forEach(p => p.classList.remove('open'));
+  if (!isOpen) panel.classList.add('open');
+}
+
+function toggleContractDetail(id) {
+  const row = document.getElementById('row-' + id);
+  const detail = document.getElementById('detail-' + id);
+  if (!row || !detail) return;
+  const isOpen = detail.classList.contains('open');
+  // close all contract details
+  document.querySelectorAll('.contract-detail-row').forEach(r => r.classList.remove('open'));
+  document.querySelectorAll('.contract-row').forEach(r => r.classList.remove('expanded'));
+  if (!isOpen) {
+    detail.classList.add('open');
+    row.classList.add('expanded');
+  }
+}
+
+function printCitizenReport() {
+  const today = new Date();
+  const dateStr = today.toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+  const w = window.open('', '_blank', 'width=900,height=700');
+  w.document.write(`<!DOCTYPE html>
+<html lang="ro"><head>
+<meta charset="UTF-8">
+<title>Sesizare nereguli achiziții — Primăria Pantelimon</title>
+<style>
+  body { font-family: 'Times New Roman', serif; font-size: 12pt; color: #111; margin: 2.5cm 2cm; line-height: 1.7; }
+  h1 { font-size: 16pt; text-align: center; margin-bottom: 4px; }
+  h2 { font-size: 13pt; margin-top: 22px; margin-bottom: 6px; border-bottom: 1px solid #333; padding-bottom: 4px; }
+  h3 { font-size: 12pt; margin-top: 14px; margin-bottom: 4px; }
+  .center { text-align: center; }
+  .right { text-align: right; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 10pt; }
+  th { background: #f0f0f0; border: 1px solid #888; padding: 5px 8px; text-align: left; font-weight: bold; }
+  td { border: 1px solid #aaa; padding: 5px 8px; vertical-align: top; }
+  .flag { color: #C0392B; font-weight: bold; }
+  .legal { font-size: 10pt; color: #333; background: #f8f8f8; border-left: 3px solid #555; padding: 6px 10px; margin: 6px 0; }
+  .signature-block { margin-top: 40px; }
+  .page-break { page-break-before: always; }
+  @page { margin: 2cm; size: A4; }
+  @media print { body { margin: 0; } }
+</style>
+</head><body>
+
+<div class="center">
+  <p style="font-size:10pt;color:#555">Iniţiativă civică independentă — Pantelimon, Ilfov</p>
+  <h1>SESIZARE PRIVIND NEREGULI<br>ÎN ACHIZIȚIILE PUBLICE</h1>
+  <p style="font-size:11pt"><strong>Autoritatea contractantă:</strong> Primăria Pantelimon, județul Ilfov<br>
+  <strong>CUI:</strong> 4420759 &nbsp;|&nbsp; <strong>Data raportului:</strong> ${dateStr}</p>
+</div>
+
+<h2>1. DATE DE IDENTIFICARE</h2>
+<table>
+  <tr><th>Autoritate contractantă</th><td>Primăria Comunei Pantelimon, Județul Ilfov</td></tr>
+  <tr><th>CUI autoritate</th><td>4420759</td></tr>
+  <tr><th>Perioadă analizată</th><td>2024–2025</td></tr>
+  <tr><th>Sursa datelor</th><td>SEAP / e-licitatie.ro, transparenta.eu, data.gov.ro</td></tr>
+  <tr><th>Data generării sesizării</th><td>${dateStr}</td></tr>
+</table>
+
+<h2>2. REZUMAT EXECUTIV</h2>
+<p>Analiza automată a achizițiilor publice ale Primăriei Pantelimon pentru perioada 2024–2025 a identificat mai multe nereguli care ridică semne de întrebare privind respectarea legislației achizițiilor publice (Legea nr. 98/2016).</p>
+<table>
+  <tr><th>Indicator</th><th>Valoare detectată</th><th>Referință normală</th><th>Evaluare</th></tr>
+  <tr><td>Contracte cu ofertant unic</td><td class="flag">67%</td><td>~45% (media națională)</td><td class="flag">RISC MAJOR</td></tr>
+  <tr><td>Achiziții prin cumpărare directă</td><td class="flag">43%</td><td>&lt;30% recomandat</td><td class="flag">RIDICAT</td></tr>
+  <tr><td>Licitații deschise în 2025</td><td class="flag">3 din 66 contracte (4,5%)</td><td>&gt;50% din valoare</td><td class="flag">EXTREM DE REDUS</td></tr>
+  <tr><td>Valoare totală contracte 2025</td><td>4.200.000 RON</td><td>—</td><td>—</td></tr>
+</table>
+
+<h2>3. NEREGULI IDENTIFICATE</h2>
+
+<h3>3.1 Fragmentare artificială — Furnizare materiale construcții</h3>
+<p>Au fost identificate două contracte de „Furnizare materiale construcții" atribuite aceluiași furnizor prin cumpărare directă:</p>
+<table>
+  <tr><th>Contract</th><th>Valoare (RON)</th><th>Procedură</th><th>Ofertanți</th></tr>
+  <tr><td>Furnizare materiale construcții (1)</td><td class="flag">128.500</td><td>Cumpărare directă</td><td class="flag">1</td></tr>
+  <tr><td>Furnizare materiale construcții (2)</td><td class="flag">127.800</td><td>Cumpărare directă</td><td class="flag">1</td></tr>
+  <tr><th>TOTAL COMBINAT</th><th class="flag">256.300 RON</th><th colspan="2">Depășește pragul legal de 130.000 RON</th></tr>
+</table>
+<div class="legal">⚖️ Temei legal: Art. 11 din Legea 98/2016 — interzice divizarea artificială a contractelor pentru a evita aplicarea procedurilor competitive. Art. 246 — constituie contravenție aplicarea unei proceduri necorespunzătoare valorii totale a contractelor.</div>
+
+<h3>3.2 Negociere fără publicare prealabilă — Reabilitare străzi</h3>
+<p>Două loturi de lucrări de reabilitare străzi au fost atribuite prin negociere fără publicare prealabilă, o procedură excepțională:</p>
+<table>
+  <tr><th>Contract</th><th>Valoare (RON)</th><th>Procedură</th><th>Ofertanți</th></tr>
+  <tr><td>Lucrări reabilitare străzi — Lot 1</td><td class="flag">1.240.000</td><td class="flag">Negociere fără publicare</td><td class="flag">1</td></tr>
+  <tr><td>Lucrări reabilitare străzi — Lot 2</td><td class="flag">1.180.000</td><td class="flag">Negociere fără publicare</td><td class="flag">1</td></tr>
+  <tr><th>TOTAL</th><th class="flag">2.420.000 RON</th><th colspan="2">Proceduri excepționale</th></tr>
+</table>
+<div class="legal">⚖️ Temei legal: Art. 104 alin. (1) din Legea 98/2016 — negocierea fără publicare este permisă EXCEPȚIONAL, doar dacă există un singur operator economic capabil să execute contractul din motive tehnice dovedite. Autoritatea trebuie să justifice documentat alegerea procedurii.</div>
+
+<h3>3.3 Rată excesivă de ofertant unic</h3>
+<p>67% din contractele atribuite au un singur ofertant, față de media națională de ~45%. Aceasta poate indica: caiet de sarcini restrictiv scris „pe firmă", condiții de calificare excesive sau insuficientă promovare a procedurilor.</p>
+<div class="legal">⚖️ Temei legal: Art. 2 alin. (2) lit. d) din Legea 98/2016 — principiul concurenței. Art. 160 — autoritatea are obligația de a asigura condiții reale de concurență. Tiparele repetate de ofertant unic pot indica restricționarea concurenței.</div>
+
+<h2>4. SOLICITĂRI</h2>
+<p>În baza prevederilor legale în vigoare, solicitați autorității sesizate:</p>
+<ol>
+  <li>Verificarea legalității celor două contracte de furnizare materiale construcții (128.500 + 127.800 RON) și stabilirea dacă a existat fragmentare artificială.</li>
+  <li>Verificarea justificărilor pentru aplicarea procedurii de negociere fără publicare pentru contractele de reabilitare străzi (2.420.000 RON total).</li>
+  <li>Analiza tiparului general de achiziții directe și ofertant unic repetat în cadrul Primăriei Pantelimon.</li>
+  <li>Aplicarea sancțiunilor legale dacă se confirmă neregulile, și recuperarea prejudiciului dacă este cazul.</li>
+</ol>
+
+<h2>5. INSTITUȚII COMPETENTE</h2>
+<table>
+  <tr><th>Instituție</th><th>Competență</th><th>Contact</th></tr>
+  <tr><td><strong>ANAP</strong> — Agenția Națională pentru Achiziții Publice</td><td>Control achiziții publice, sancționare contravenții</td><td>anap.gov.ro/web/contact</td></tr>
+  <tr><td><strong>Curtea de Conturi a României</strong></td><td>Control financiar, audit cheltuieli publice</td><td>curteadeconturi.ro/sesizari</td></tr>
+  <tr><td><strong>ANI</strong> — Agenția Națională de Integritate</td><td>Conflicte de interese, incompatibilități</td><td>integritate.eu</td></tr>
+  <tr><td><strong>DNA</strong> — Direcția Națională Anticorupție</td><td>Fapte penale de corupție, fraudă fonduri publice</td><td>dna.ro/sesizare.html</td></tr>
+  <tr><td><strong>Prefectura Județului Ilfov</strong></td><td>Control legalitate acte administrative locale</td><td>prefecturailfov.ro</td></tr>
+</table>
+
+<h2>6. SURSE ȘI DOCUMENTE</h2>
+<ul>
+  <li>SEAP / e-licitatie.ro — baza de date oficială achiziții publice</li>
+  <li>transparenta.eu — date financiare consolidate entitate CUI 4420759</li>
+  <li>data.gov.ro — exporturi SEAP trimestriale</li>
+  <li>Raport automat: <em>transparenta-pantelimon.github.io</em></li>
+</ul>
+
+<div class="signature-block">
+  <p><strong>Data:</strong> ${dateStr}</p>
+  <p><strong>Semnătura / Date petiționar:</strong></p>
+  <br><br>
+  <p>_________________________________</p>
+  <p style="font-size:10pt;color:#555">(Nume, prenume, adresă, semnătură)</p>
+  <br>
+  <p style="font-size:10pt;color:#888;border-top:1px solid #ccc;padding-top:8px;margin-top:20px">
+    Raport generat automat de monitorul civic transparenta-pantelimon · Date din surse oficiale publice · ${dateStr}
+  </p>
+</div>
+
+</body></html>`);
+  w.document.close();
+  setTimeout(() => w.print(), 600);
 }
 
 // ---- CHART.JS INITIALIZATION ----
