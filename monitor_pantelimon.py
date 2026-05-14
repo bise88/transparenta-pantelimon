@@ -964,6 +964,24 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
          overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.08)}}
   thead{{background:#00427A;color:#fff}}
   th{{padding:10px 12px;font-size:12px;text-align:left;text-transform:uppercase;letter-spacing:.5px}}
+
+  /* ---- PRINT / PDF ---- */
+  @media print {{
+    body {{ background:#fff !important; font-size:11pt; }}
+    .wrap {{ max-width:100%; padding:0; }}
+    .no-print {{ display:none !important; }}
+    .flag-detail {{ display:block !important; }}
+    .flag-arrow {{ display:none !important; }}
+    .firma-contracts-panel {{ display:none !important; }}
+    [onmouseenter] {{ box-shadow:none !important; cursor:default !important; }}
+    h2 {{ color:#00427A !important; page-break-after:avoid; }}
+    h2, h3 {{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }}
+    table {{ page-break-inside:avoid; }}
+    div[style*="border-left"] {{ page-break-inside:avoid;
+      -webkit-print-color-adjust:exact; print-color-adjust:exact; }}
+    thead {{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }}
+    @page {{ margin:1.5cm; size:A4; }}
+  }}
 </style>
 </head>
 <body>
@@ -977,6 +995,17 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
       <span style="color:#FFD000">{config['nume_entitate']}</span>
     </h1>
     <p style="opacity:.85;margin:0">Generat automat la {data_generare} · CUI: {config['cui']}</p>
+    <div style="margin-top:14px" class="no-print">
+      <button onclick="printRaport()"
+              style="background:#FFD000;color:#00427A;border:none;padding:9px 20px;
+                     border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;
+                     display:inline-flex;align-items:center;gap:8px">
+        🖨️ Salvează ca PDF / Tipărește
+      </button>
+      <span style="font-size:11px;opacity:.65;margin-left:12px">
+        → în dialogul de tipărire alege „Salvare ca PDF"
+      </span>
+    </div>
     <div style="display:flex;gap:24px;margin-top:16px;flex-wrap:wrap">
       <div style="background:rgba(255,255,255,.15);border-radius:8px;padding:10px 16px;text-align:center">
         <div style="font-size:22px;font-weight:800;color:#{"C0392B" if flags else "27AE60"}">{len(flags)}</div>
@@ -1078,6 +1107,22 @@ function _getContracte() {{
     }} catch(e) {{ _contracteData = []; }}
   }}
   return _contracteData;
+}}
+
+// ── Export PDF / Print ──────────────────────────────────────────
+function printRaport() {{
+  // Deschidem toate flag-urile înainte de print
+  document.querySelectorAll('.flag-detail').forEach(function(el) {{
+    el.style.display = 'block';
+  }});
+  document.querySelectorAll('.flag-arrow').forEach(function(el) {{
+    el.style.display = 'none';
+  }});
+  // Închidem toate panourile de contracte (prea verbose pentru PDF)
+  document.querySelectorAll('.firma-contracts-panel').forEach(function(el) {{
+    el.style.display = 'none';
+  }});
+  window.print();
 }}
 
 // ── Toggle detalii flag ─────────────────────────────────────────
