@@ -1762,6 +1762,13 @@ function _renderRows(reset) {
       + '<p style="font-size:13px;color:#333;line-height:1.6;margin-bottom:8px">' + _flagReason(flag, c) + '</p>'
       + (legal ? '<div class="legal-citation">' + legal + '</div>' : '')
       + '<div class="action-chips">' + _flagChips(flag, c) + '</div>'
+      + '<div style="margin-top:10px;padding:8px 12px;background:#F4F6F8;border-radius:6px;font-size:11px;color:#666;line-height:1.7">'
+      + 'ℹ️ <strong>Cum cauți în SEAP dacă butonul deschide pagină goală:</strong> Intră pe '
+      + '<a href="https://e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0" target="_blank" onclick="event.stopPropagation()" style="color:#0070C0">e-licitatie.ro → Achiziții Directe</a>'
+      + ', setează câmpul <strong>Autoritate contractantă</strong> = <em>Pantelimon</em>'
+      + ', apoi caută după <strong>identificator: ' + c.id.replace(/^achizitie-directa-/, '') + '</strong>'
+      + ' și <strong>data: ' + c.data + '</strong>.'
+      + '</div>'
       + '</td>';
     tbody.appendChild(detailTr);
   });
