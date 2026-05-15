@@ -1,12 +1,13 @@
 ﻿<!DOCTYPE html>
 <html lang="ro">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Monitorizare cetățenească a cheltuielilor publice ale Primăriei Pantelimon. Nereguli identificate în achizițiile publice, buget vs realizat, tendințe și ghid de sesizare.">
+<title>Transparența Bugetului – Primăria Pantelimon | Monitorizare Cetățenească</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Transparența Bugetului – Primăria Pantelimon</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   :root {
@@ -514,9 +515,11 @@
 
   @media print {
     body { background: #fff !important; }
-    nav.tabs, .no-print { display: none !important; }
-    .section { display: block !important; }
-    header { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    nav.tabs, .no-print, #scroll-top-btn, #progress-bar, footer, .filter-bar, .action-chips, #load-more-container { display: none !important; }
+    .section { display: block !important; opacity: 1 !important; }
+    .card { box-shadow: none !important; border: 1px solid #ddd !important; }
+    header { background: #00427A !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    main { padding: 0 !important; }
     .chart-box { page-break-inside: avoid; }
     @page { margin: 1.5cm; size: A4; }
   }
@@ -600,6 +603,17 @@
   }
   .citizen-report-btn:hover { background: #922B21; }
 
+  /* Screen-reader only utility */
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   /* Active card state */
   .kpi-card-interactive.kpi-active {
     box-shadow: 0 0 0 2px #0070C0, 0 4px 18px rgba(0,112,192,.18) !important;
@@ -641,6 +655,76 @@
     text-shadow: 0 1px 8px rgba(0,0,0,0.18);
   }
   .slogan em { font-style: italic; }
+
+  /* FOCUS STYLES — keyboard navigation */
+  :focus-visible {
+    outline: 3px solid #FF6B35;
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+  a:focus-visible, button:focus-visible {
+    outline: 3px solid #FF6B35;
+    outline-offset: 2px;
+  }
+
+  /* DISCLAIMER close button */
+  .disclaimer-close {
+    float: right;
+    background: none;
+    border: none;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    color: #7D6608;
+    margin-left: 8px;
+    padding: 0 4px;
+    opacity: 0.7;
+    transition: opacity .15s;
+  }
+  .disclaimer-close:hover { opacity: 1; }
+
+  /* NAV scroll hint on mobile */
+  nav.tabs::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 32px;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.95));
+    pointer-events: none;
+  }
+
+  /* Empty state for table */
+  .empty-state {
+    text-align: center;
+    padding: 32px 16px;
+    color: #888;
+    font-size: 14px;
+  }
+  .empty-state strong { display: block; font-size: 16px; margin-bottom: 6px; color: #555; }
+
+  /* Active tab breadcrumb */
+  #active-tab-hint {
+    font-size: 12px;
+    color: rgba(255,255,255,0.65);
+    margin-top: 6px;
+    display: none;
+  }
+  #active-tab-hint strong { color: #FFD700; }
+
+  @media (max-width: 600px) {
+    .header-main h1 { font-size: 22px; }
+    .slogan { font-size: 15px; }
+    .header-stats { gap: 12px; }
+    .stat-pill { padding: 8px 12px; }
+    .stat-pill .val { font-size: 18px; }
+    .cards-row { grid-template-columns: 1fr 1fr; }
+    main { padding: 16px 12px 40px; }
+    nav.tabs ul { -webkit-overflow-scrolling: touch; }
+  }
+  @media (max-width: 400px) {
+    .cards-row { grid-template-columns: 1fr; }
+    .header-main { padding: 20px 16px 20px; }
+  }
 </style>
 </head>
 <body>
@@ -680,45 +764,53 @@ document.addEventListener('scroll', function() {
         <span class="lbl">Cheltuieli / locuitor / an</span>
       </div>
       <div class="stat-pill">
-        <span class="val" style="color:#FF6B6B">7 ⚑</span>
+        <span class="val" style="color:#FF6B6B"><span aria-hidden="true">7 ⚑</span><span class="sr-only">7 nereguli</span></span>
         <span class="lbl">Nereguli identificate</span>
       </div>
+      <div class="stat-pill" id="stat-last-update" style="display:none">
+        <span class="val" id="stat-last-update-val" style="font-size:15px">—</span>
+        <span class="lbl">Ultima actualizare</span>
+      </div>
     </div>
+    <div id="active-tab-hint">Tab activ: <strong id="active-tab-name">Buget vs Realizat</strong></div>
     <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
       <a href="raport_transparenta.html"
+         title="Deschide raportul complet cu neregulile identificate în achizițiile publice"
          style="background:#C0392B;color:#fff;padding:9px 18px;border-radius:8px;
                 text-decoration:none;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:6px">
-        🚩 Raport Nereguli →
+        <span aria-hidden="true">🚩</span> Raport Nereguli →
       </a>
-      <button onclick="window.print()"
+      <button type="button" onclick="window.print()"
+              aria-label="Salvează pagina ca fișier PDF prin dialogul de imprimare"
               style="background:#FF6B35;color:#00427A;border:none;padding:9px 18px;border-radius:8px;
                      font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px">
-        🖨️ Salvează ca PDF
+        <span aria-hidden="true">🖨️</span> Salvează ca PDF
       </button>
     </div>
   </div>
 </header>
 
 <!-- NAV TABS -->
-<nav class="tabs">
+<nav class="tabs" role="navigation" aria-label="Navigare principală">
   <ul>
-    <li><a href="#" class="active" onclick="showTab('buget', this)">📊 Buget vs Realizat</a></li>
-    <li><a href="#" onclick="showTab('flags', this)">🚩 Nereguli <span class="cnt">7</span></a></li>
-    <li><a href="#" onclick="showTab('achizitii', this)">📋 Achiziții Publice <span class="cnt" style="background:#C0392B;color:#fff">5 🚩</span></a></li>
-    <li><a href="#" onclick="showTab('surse', this)">🔗 Surse & Documente</a></li>
-    <li><a href="#" onclick="showTab('actiune', this)">⚖️ Ce poți face</a></li>
-    <li><a href="#" onclick="showTab('tendinte', this)">📈 Tendințe</a></li>
-    <li><a href="#" onclick="showTab('ue', this)">🇪🇺 Finanțări UE</a></li>
+    <li><a href="#tab-buget" class="active" aria-current="page" onclick="return showTab('buget', this)"><span aria-hidden="true">📊</span> Buget vs Realizat</a></li>
+    <li><a href="#tab-flags" onclick="return showTab('flags', this)"><span aria-hidden="true">🚩</span> Nereguli <span class="cnt" aria-label="7 nereguli">7</span></a></li>
+    <li><a href="#tab-achizitii" onclick="return showTab('achizitii', this)"><span aria-hidden="true">📋</span> Achiziții Publice <span class="cnt" style="background:#C0392B;color:#fff" aria-label="5 nereguli identificate">5 🚩</span></a></li>
+    <li><a href="#tab-surse" onclick="return showTab('surse', this)"><span aria-hidden="true">🔗</span> Surse & Documente</a></li>
+    <li><a href="#tab-actiune" onclick="return showTab('actiune', this)"><span aria-hidden="true">⚖️</span> Ce poți face</a></li>
+    <li><a href="#tab-tendinte" onclick="return showTab('tendinte', this)"><span aria-hidden="true">📈</span> Tendințe</a></li>
+    <li><a href="#tab-ue" onclick="return showTab('ue', this)"><span aria-hidden="true">🇪🇺</span> Finanțări UE</a></li>
   </ul>
 </nav>
 
-<main>
+<main role="main">
 
   <!-- ============================= TAB: BUGET ============================= -->
   <div id="tab-buget" class="section active">
 
-    <div class="disclaimer">
-      <strong>ℹ️ Notă importantă:</strong> Cifrele de mai jos provin din hotărârile Consiliului Local și din documentele oficiale disponibile public. Pagina „Documente și informații financiare" de pe site-ul primăriei este <strong>goală</strong> (marcată „în lucru"), ceea ce reprezintă în sine o problemă de transparență. Datele marcate cu <em>*estimat</em> sunt calculate pe baza execuțiilor bugetare anterioare și a proiectului de buget 2026 publicat.
+    <div class="disclaimer" id="disclaimer-buget">
+      <button type="button" class="disclaimer-close" onclick="document.getElementById('disclaimer-buget').style.display='none'" aria-label="Închide notița">×</button>
+      <strong><span aria-hidden="true">ℹ️</span> Notă importantă:</strong> Cifrele de mai jos provin din hotărârile Consiliului Local și din documentele oficiale disponibile public. Pagina „Documente și informații financiare" de pe site-ul primăriei este <strong>goală</strong> (marcată „în lucru"), ceea ce reprezintă în sine o problemă de transparență. Datele marcate cu <em>*estimat</em> sunt calculate pe baza execuțiilor bugetare anterioare și a proiectului de buget 2026 publicat.
     </div>
 
     <div class="section-title">
@@ -837,6 +929,11 @@ document.addEventListener('scroll', function() {
       <h2>Nereguli Detectate</h2>
     </div>
 
+    <div style="background:#EBF5FB;border-left:3px solid #0070C0;padding:10px 14px;border-radius:0 6px 6px 0;font-size:13px;margin-bottom:16px">
+      📋 Vezi toate cele <strong>506 contracte</strong> în tab-ul <a href="#" onclick="showTab('achizitii',document.querySelector('a[onclick*=achizitii]'));return false" style="color:#0070C0;font-weight:700">Achiziții Publice →</a> &nbsp;|&nbsp;
+      📈 Tipare recurente în <a href="#" onclick="showTab('tendinte',document.querySelector('a[onclick*=tendinte]'));return false" style="color:#0070C0;font-weight:700">Tendințe →</a>
+    </div>
+
     <div class="method-box">
       <strong>📐 Metodologie de analiză</strong>
       Neregulile identificate se bazează pe: analiza procedurilor din SEAP/e-licitatie.ro, verificarea hotărârilor Consiliului Local, compararea cu pragurile legale de achiziție (Legea 98/2016) și analiza structurii contractelor atribuite. Fiecare flag include sursa verificabilă.
@@ -877,14 +974,14 @@ document.addEventListener('scroll', function() {
             <span class="tag orange">Verificabil online</span>
           </div>
           <a href="https://www.primariapantelimon.ro/documente-si-informatii-financiare/" target="_blank"
-             style="display:inline-block;margin-top:10px;font-size:12px;color:var(--albastru);text-decoration:underline">
+             style="display:inline-block;margin-top:10px;font-size:12px;color:var(--albastru);text-decoration:underline" rel="noopener noreferrer">
             🔗 Verifică pagina primăriei →
           </a>
         </div>
       </div>
 
       <div class="flag-card" style="cursor:pointer" onclick="expandFlag(this,'sedinta extraordinara','Ședințe extraordinare cu convocare de îndată')">
-        <span class="flag-icon">🚩</span>
+        <span class="flag-icon" aria-hidden="true">🚩</span>
         <div class="flag-content">
           <h4>Ședințe extraordinare abuzive — 43% din total <span style="font-size:11px;background:#FEE;color:#C00;border-radius:4px;padding:2px 7px;margin-left:6px">▼ Click pentru contracte</span></h4>
           <p>Din 81 ședințe de Consiliu Local analizate, 35 (43%) sunt „extraordinare cu convocare de îndată". Norma legală implică urgențe reale — o rată peste 25% sugerează că procedura de urgență este folosită sistematic pentru a ocoli consultarea publică obligatorie (Legea 52/2003).</p>
@@ -893,11 +990,16 @@ document.addEventListener('scroll', function() {
             <span class="tag">Lege 52/2003</span>
             <span class="tag">HCL 2024–2025</span>
           </div>
+          <div style="margin-top:10px">
+            <a href="#tab-achizitii" onclick="event.stopPropagation();return showTab('achizitii', document.querySelector('[href=\'#tab-achizitii\']'))" style="font-size:12px;color:var(--albastru);text-decoration:underline;font-weight:600">
+              <span aria-hidden="true">📋</span> Vezi în Achiziții →
+            </a>
+          </div>
         </div>
       </div>
 
       <div class="flag-card orange" style="cursor:pointer" onclick="expandFlag(this,'Un singur ofertant','Ofertant unic — contracte fără competiție')">
-        <span class="flag-icon">⚠️</span>
+        <span class="flag-icon" aria-hidden="true">⚠️</span>
         <div class="flag-content">
           <h4>Licitații cu un singur ofertant (monopol de facto) <span style="font-size:11px;background:#FFF3E0;color:#E65100;border-radius:4px;padding:2px 7px;margin-left:6px">▼ Click pentru contracte</span></h4>
           <p>Multiple proceduri de achiziție publică au înregistrat un singur ofertant, ceea ce poate indica specificații tehnice redactate pentru a avantaja un anumit furnizor, presiune pe potențiali concurenți sau segmentare artificială a pieței.</p>
@@ -906,11 +1008,16 @@ document.addEventListener('scroll', function() {
             <span class="tag">Concurență limitată</span>
             <span class="tag">SEAP</span>
           </div>
+          <div style="margin-top:10px">
+            <a href="#tab-achizitii" onclick="event.stopPropagation();filterContracts('nereguli');return showTab('achizitii', document.querySelector('[href=\'#tab-achizitii\']'))" style="font-size:12px;color:var(--albastru);text-decoration:underline;font-weight:600">
+              <span aria-hidden="true">📋</span> Vezi în Achiziții → (filtrat: cu nereguli)
+            </a>
+          </div>
         </div>
       </div>
 
       <div class="flag-card orange" style="cursor:pointer" onclick="expandFlag(this,'Fragmentare','Fragmentare contracte — art. 11 Lege 98/2016')">
-        <span class="flag-icon">⚠️</span>
+        <span class="flag-icon" aria-hidden="true">⚠️</span>
         <div class="flag-content">
           <h4>Fragmentarea contractelor sub pragul de licitație <span style="font-size:11px;background:#FFF3E0;color:#E65100;border-radius:4px;padding:2px 7px;margin-left:6px">▼ Click pentru contracte</span></h4>
           <p>Contracte cu același obiect și același furnizor sunt împărțite în bucăți de valoare ușor sub pragul legal care ar impune licitație deschisă (130.000 RON). Această practică — interzisă explicit de art. 11 din Legea 98/2016 — permite adjudecarea directă fără competiție.</p>
@@ -918,6 +1025,11 @@ document.addEventListener('scroll', function() {
             <span class="tag orange">RISC MEDIU</span>
             <span class="tag">Art. 11 Lege 98/2016</span>
             <span class="tag">Fragmentare artificială</span>
+          </div>
+          <div style="margin-top:10px">
+            <a href="#tab-achizitii" onclick="event.stopPropagation();filterContracts('nereguli');return showTab('achizitii', document.querySelector('[href=\'#tab-achizitii\']'))" style="font-size:12px;color:var(--albastru);text-decoration:underline;font-weight:600">
+              <span aria-hidden="true">📋</span> Vezi în Achiziții → (filtrat: cu nereguli)
+            </a>
           </div>
         </div>
       </div>
@@ -965,7 +1077,7 @@ document.addEventListener('scroll', function() {
 
     <div class="alert blue">
       <span>💡</span>
-      <div><strong>Cum poți verifica tu însuți:</strong> Accesează <a href="https://www.e-licitatie.ro/pub" target="_blank" style="color:var(--albastru)">e-licitatie.ro</a>, caută „Pantelimon" ca autoritate contractantă și filtrează după tip procedură → „Cumpărare directă". Compară cu pragurile legale și verifică repetarea aceluiași furnizor.</div>
+      <div><strong>Cum poți verifica tu însuți:</strong> Accesează <a href="https://www.e-licitatie.ro/pub" target="_blank" style="color:var(--albastru)" rel="noopener noreferrer">e-licitatie.ro</a>, caută „Pantelimon" ca autoritate contractantă și filtrează după tip procedură → „Cumpărare directă". Compară cu pragurile legale și verifică repetarea aceluiași furnizor.</div>
     </div>
 
   </div><!-- end tab-flags -->
@@ -979,9 +1091,20 @@ document.addEventListener('scroll', function() {
       <h2>Achiziții Publice — Pantelimon 2024–2025</h2>
     </div>
 
-    <div class="disclaimer">
+    <div style="background:#EBF5FB;border-left:3px solid #0070C0;padding:10px 14px;border-radius:0 6px 6px 0;font-size:13px;margin-bottom:16px">
+      🚩 <strong>7 nereguli</strong> identificate — vezi detalii în <a href="#" onclick="showTab('flags',document.querySelector('a[onclick*=flags]'));return false" style="color:#0070C0;font-weight:700">Nereguli →</a> &nbsp;|&nbsp;
+      📈 Analiză tipare în <a href="#" onclick="showTab('tendinte',document.querySelector('a[onclick*=tendinte]'));return false" style="color:#0070C0;font-weight:700">Tendințe →</a>
+    </div>
+
+    <div class="disclaimer" id="disclaimer-achizitii">
+      <button type="button" class="disclaimer-close" onclick="document.getElementById('disclaimer-achizitii').style.display='none'" aria-label="Închide notița">×</button>
       Date extrase din SEAP / e-licitatie.ro. Lista poate fi incompletă — achizițiile directe sub 5.000 RON nu sunt obligatoriu publicate.
       <strong>Dă click pe orice card sau rând pentru detalii și acțiuni civice.</strong>
+      <span style="float:right;font-size:12px;margin-left:16px">
+        <a href="#tab-tendinte" onclick="return showTab('tendinte', document.querySelector('[onclick*=tendinte]'))" style="color:#7D6608;font-weight:600">
+          <span aria-hidden="true">📈</span> Vezi și: Tendințe →
+        </a>
+      </span>
     </div>
 
     <!-- KPI CARDS — interactive -->
@@ -1028,9 +1151,9 @@ document.addEventListener('scroll', function() {
       </div>
       <div class="legal-citation">ℹ️ Conform art. 221 din Legea 98/2016, autoritatea contractantă are obligația de a publica în SEAP toate contractele cu valoare peste 5.000 RON. Verificați dacă toate contractele apar în sistem.</div>
       <div class="action-chips">
-        <a class="chip chip-seap" href="https://www.e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0" target="_blank">🔍 Caută în SEAP</a>
-        <a class="chip chip-transparenta" href="https://transparenta.eu/entities/4420759#achizitii" target="_blank" title="Deschide fișa entității → secțiunea Achiziții Publice pe transparenta.eu">🌐 transparenta.eu</a>
-        <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank">📧 Sesizare ANAP</a>
+        <a class="chip chip-seap" href="https://www.e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0" target="_blank" rel="noopener noreferrer">🔍 Caută în SEAP</a>
+        <a class="chip chip-transparenta" href="https://transparenta.eu/entities/4420759#achizitii" target="_blank" title="Deschide fișa entității → secțiunea Achiziții Publice pe transparenta.eu" rel="noopener noreferrer">🌐 transparenta.eu</a>
+        <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank" rel="noopener noreferrer">📧 Sesizare ANAP</a>
       </div>
     </div>
 
@@ -1042,9 +1165,9 @@ document.addEventListener('scroll', function() {
       </p>
       <div class="legal-citation">⚖️ Art. 2 alin. (2) din Legea 98/2016 — principiul concurenței: autoritatea are obligația de a promova concurența între operatorii economici. Art. 160-161 — oferta unică nu este ilegal în sine, dar tiparele repetate pot fi semnalate la ANAP.</div>
       <div class="action-chips">
-        <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank">📧 Sesizare ANAP</a>
-        <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/sesizari" target="_blank">📋 Sesizare Curtea de Conturi</a>
-        <a class="chip chip-seap" href="https://www.e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0" target="_blank">🔍 Verifică în SEAP</a>
+        <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank" rel="noopener noreferrer">📧 Sesizare ANAP</a>
+        <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/sesizari" target="_blank" rel="noopener noreferrer">📋 Sesizare Curtea de Conturi</a>
+        <a class="chip chip-seap" href="https://www.e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0" target="_blank" rel="noopener noreferrer">🔍 Verifică în SEAP</a>
       </div>
     </div>
 
@@ -1056,9 +1179,9 @@ document.addEventListener('scroll', function() {
       </p>
       <div class="legal-citation">⚖️ Art. 11 din Legea 98/2016 — interzice divizarea artificială a contractelor pentru a evita aplicarea procedurilor competitive. Fragmentarea poate constitui contravenție sau infracțiune dacă este dovedită intenția.</div>
       <div class="action-chips">
-        <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank">📧 Sesizare ANAP</a>
-        <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/sesizari" target="_blank">📋 Curtea de Conturi</a>
-        <a class="chip chip-dni" href="https://www.dna.ro/sesizare.html" target="_blank">🔵 Sesizare DNA</a>
+        <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank" rel="noopener noreferrer">📧 Sesizare ANAP</a>
+        <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/sesizari" target="_blank" rel="noopener noreferrer">📋 Curtea de Conturi</a>
+        <a class="chip chip-dni" href="https://www.dna.ro/sesizare.html" target="_blank" rel="noopener noreferrer">🔵 Sesizare DNA</a>
       </div>
     </div>
 
@@ -1070,8 +1193,8 @@ document.addEventListener('scroll', function() {
       </p>
       <div class="legal-citation">⚖️ Art. 68-107 din Legea 98/2016 — licitația deschisă este procedura standard și preferată. Utilizarea altor proceduri trebuie justificată documentat în dosarul achiziției (nota justificativă). Poți solicita aceste documente prin Legea 544/2001.</div>
       <div class="action-chips">
-        <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank">📧 Sesizare ANAP</a>
-        <a class="chip chip-transparenta" href="https://transparenta.eu/entities/4420759#achizitii" target="_blank" title="Istoric complet achiziții Pantelimon pe transparenta.eu">🌐 Istoric complet</a>
+        <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank" rel="noopener noreferrer">📧 Sesizare ANAP</a>
+        <a class="chip chip-transparenta" href="https://transparenta.eu/entities/4420759#achizitii" target="_blank" title="Istoric complet achiziții Pantelimon pe transparenta.eu" rel="noopener noreferrer">🌐 Istoric complet</a>
       </div>
     </div>
 
@@ -1088,14 +1211,14 @@ document.addEventListener('scroll', function() {
           <h3 style="margin-bottom:2px">Contracte semnificative 2024–2025 — identificate în SEAP</h3>
           <p class="subtitle">Sortate descrescător după valoare · 🚩 = posibilă neregulă · dă click pe rând pentru detalii</p>
         </div>
-        <button class="citizen-report-btn no-print" onclick="printCitizenReport()">
-          📄 Generează raport cetățean
+        <button type="button" class="citizen-report-btn no-print" onclick="printCitizenReport()" aria-label="Generează și descarcă raport cetățean pentru sesizare">
+          <span aria-hidden="true">📄</span> Generează raport cetățean
         </button>
       </div>
-      <div class="filter-bar">
-        <button class="filter-btn fb-active-all" id="fb-all"      onclick="filterContracts('all')">Toate (8)</button>
-        <button class="filter-btn"               id="fb-nereguli" onclick="filterContracts('nereguli')">🚩 Cu nereguli (5)</button>
-        <button class="filter-btn"               id="fb-ok"       onclick="filterContracts('ok')">✅ Fără nereguli (3)</button>
+      <div class="filter-bar" role="group" aria-label="Filtrare contracte">
+        <button type="button" class="filter-btn fb-active-all" id="fb-all"      onclick="filterContracts('all')">Toate (8)</button>
+        <button type="button" class="filter-btn"               id="fb-nereguli" onclick="filterContracts('nereguli')"><span aria-hidden="true">🚩</span> Cu nereguli (5)</button>
+        <button type="button" class="filter-btn"               id="fb-ok"       onclick="filterContracts('ok')"><span aria-hidden="true">✅</span> Fără nereguli (3)</button>
       </div>
 
       <table class="data-table" style="margin-top:8px;margin-bottom:0">
@@ -1118,7 +1241,7 @@ document.addEventListener('scroll', function() {
         </tbody>
       </table>
       <div id="load-more-container" style="text-align:center;margin:16px 0"></div>
-      <p style="font-size:11px;color:#999;margin-top:10px">⚠️ Datele sunt extrase din SEAP și pot fi incomplete. Verificați la <a href="https://www.e-licitatie.ro/pub" target="_blank">e-licitatie.ro</a> și <a href="https://transparenta.eu/entities/4420759" target="_blank">transparenta.eu</a>.</p>
+      <p style="font-size:11px;color:#999;margin-top:10px">⚠️ Datele sunt extrase din SEAP și pot fi incomplete. Verificați la <a href="https://www.e-licitatie.ro/pub" target="_blank" rel="noopener noreferrer">e-licitatie.ro</a> și <a href="https://transparenta.eu/entities/4420759" target="_blank" rel="noopener noreferrer">transparenta.eu</a>.</p>
     </div>
 
     <div class="alert red">
@@ -1135,6 +1258,11 @@ document.addEventListener('scroll', function() {
     <div class="section-title">
       <span class="icon">📈</span>
       <h2>Tendințe & Modus Operandi — Pantelimon 2025</h2>
+    </div>
+
+    <div style="background:#EBF5FB;border-left:3px solid #0070C0;padding:10px 14px;border-radius:0 6px 6px 0;font-size:13px;margin-bottom:16px">
+      🇪🇺 Compară cu <a href="#" onclick="showTab('ue',document.querySelector('a[onclick*=ue]'));return false" style="color:#0070C0;font-weight:700">Finanțări UE →</a> &nbsp;|&nbsp;
+      📋 Date brute în <a href="#" onclick="showTab('achizitii',document.querySelector('a[onclick*=achizitii]'));return false" style="color:#0070C0;font-weight:700">Achiziții Publice →</a>
     </div>
 
     <div class="disclaimer">
@@ -1155,7 +1283,7 @@ document.addEventListener('scroll', function() {
     <!-- TOP FIRME -->
     <div class="chart-box">
       <h3>Top 10 firme după valoarea totală a contractelor</h3>
-      <p class="subtitle">Date din SEAP · 506 contracte · 2025 · Click pe firmă pentru detalii în registrul comerțului</p>
+      <p class="subtitle">Date din SEAP · 506 contracte · 2025 · Click pe firmă pentru detalii în registrul comerțului · <a href="#tab-achizitii" onclick="return showTab('achizitii', document.querySelector('[href=\'#tab-achizitii\']'))" style="color:var(--albastru);font-weight:600">📋 Caută în Achiziții →</a></p>
       <div style="overflow-x:auto;margin-top:16px">
         <table class="data-table">
           <thead>
@@ -1169,81 +1297,81 @@ document.addEventListener('scroll', function() {
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr class="contract-row" style="cursor:pointer" onclick="showTab('achizitii', document.querySelector('[href=\'#tab-achizitii\']'))" title="Click pentru a vedea în tab Achiziții">
               <td>1</td>
-              <td><a href="https://listafirme.ro/search/?q=30056330" target="_blank" style="color:var(--albastru);font-weight:700" title="CUI: 30056330">ALA EXPERT CONSTRUCT</a></td>
+              <td><a href="https://listafirme.ro/search/?q=30056330" target="_blank" style="color:var(--albastru);font-weight:700" title="CUI: 30056330 — deschide pe listafirme.ro" rel="noopener noreferrer" onclick="event.stopPropagation()">ALA EXPERT CONSTRUCT</a></td>
               <td><strong>29.508.940 RON</strong></td>
               <td>1</td>
               <td>29.508.940 RON</td>
               <td><span class="sev sev-critic">CRITIC</span></td>
             </tr>
-            <tr>
+            <tr class="contract-row" style="cursor:pointer" onclick="showTab('achizitii', document.querySelector('[href=\'#tab-achizitii\']'))" title="Click pentru a vedea în tab Achiziții">
               <td>2</td>
-              <td><a href="https://listafirme.ro/search/?q=27702350" target="_blank" style="color:var(--albastru);font-weight:700" title="CUI: 27702350">SANTIA PARTNER CONSTRUCT</a></td>
+              <td><a href="https://listafirme.ro/search/?q=27702350" target="_blank" style="color:var(--albastru);font-weight:700" title="CUI: 27702350 — deschide pe listafirme.ro" rel="noopener noreferrer" onclick="event.stopPropagation()">SANTIA PARTNER CONSTRUCT</a></td>
               <td><strong>29.508.940 RON</strong></td>
               <td>1</td>
               <td>29.508.940 RON</td>
               <td><span class="sev sev-critic">CRITIC</span></td>
             </tr>
-            <tr>
+            <tr class="contract-row" style="cursor:pointer" onclick="showTab('achizitii', document.querySelector('[href=\'#tab-achizitii\']'))" title="Click pentru a vedea în tab Achiziții">
               <td>3</td>
-              <td><a href="https://listafirme.ro/search/?q=28250562" target="_blank" style="color:var(--albastru);font-weight:700" title="CUI: 28250562">YARDMAN</a></td>
+              <td><a href="https://listafirme.ro/search/?q=28250562" target="_blank" style="color:var(--albastru);font-weight:700" title="CUI: 28250562 — deschide pe listafirme.ro" rel="noopener noreferrer" onclick="event.stopPropagation()">YARDMAN</a></td>
               <td><strong>29.508.940 RON</strong></td>
               <td>1</td>
               <td>29.508.940 RON</td>
               <td><span class="sev sev-critic">CRITIC</span></td>
             </tr>
-            <tr>
+            <tr class="contract-row" style="cursor:pointer" onclick="showTab('achizitii', document.querySelector('[href=\'#tab-achizitii\']'))" title="Click pentru a vedea în tab Achiziții">
               <td>4</td>
-              <td><a href="https://listafirme.ro/search/?q=28610220" target="_blank" style="color:var(--albastru);font-weight:700" title="CUI: 28610220">GLOBEXTERRA</a></td>
+              <td><a href="https://listafirme.ro/search/?q=28610220" target="_blank" style="color:var(--albastru);font-weight:700" title="CUI: 28610220 — deschide pe listafirme.ro" rel="noopener noreferrer" onclick="event.stopPropagation()">GLOBEXTERRA</a></td>
               <td><strong>24.184.504 RON</strong></td>
               <td>1</td>
               <td>24.184.504 RON</td>
               <td><span class="sev sev-critic">CRITIC</span></td>
             </tr>
-            <tr>
+            <tr class="contract-row" style="cursor:pointer" onclick="showTab('achizitii', document.querySelector('[href=\'#tab-achizitii\']'))" title="Click pentru a vedea în tab Achiziții">
               <td>5</td>
-              <td><a href="https://listafirme.ro/search/?q=15315902" target="_blank" style="color:var(--albastru);font-weight:700" title="CUI: 15315902">ROMCO SYSTEM S.R.L.</a></td>
+              <td><a href="https://listafirme.ro/search/?q=15315902" target="_blank" style="color:var(--albastru);font-weight:700" title="CUI: 15315902 — deschide pe listafirme.ro" rel="noopener noreferrer" onclick="event.stopPropagation()">ROMCO SYSTEM S.R.L.</a></td>
               <td><strong>24.184.504 RON</strong></td>
               <td>1</td>
               <td>24.184.504 RON</td>
               <td><span class="sev sev-critic">CRITIC</span></td>
             </tr>
-            <tr>
+            <tr class="contract-row" style="cursor:pointer" onclick="showTab('achizitii', document.querySelector('[href=\'#tab-achizitii\']'))" title="Click pentru a vedea în tab Achiziții">
               <td>6</td>
-              <td><a href="https://listafirme.ro/search/?q=27019056" target="_blank" style="color:var(--albastru)" title="CUI: 27019056">BEPA CONSTRUCTII CIVILE</a></td>
+              <td><a href="https://listafirme.ro/search/?q=27019056" target="_blank" style="color:var(--albastru)" title="CUI: 27019056 — deschide pe listafirme.ro" rel="noopener noreferrer" onclick="event.stopPropagation()">BEPA CONSTRUCTII CIVILE</a></td>
               <td><strong>21.561.196 RON</strong></td>
               <td>3</td>
               <td>7.187.065 RON</td>
               <td><span class="sev sev-major">MAJOR</span></td>
             </tr>
-            <tr>
+            <tr class="contract-row" style="cursor:pointer" onclick="showTab('achizitii', document.querySelector('[href=\'#tab-achizitii\']'))" title="Click pentru a vedea în tab Achiziții">
               <td>7</td>
-              <td><a href="https://listafirme.ro/search/?q=45058860" target="_blank" style="color:var(--albastru)" title="CUI: 45058860">TOP A-Z CONCEPT S.R.L.</a></td>
+              <td><a href="https://listafirme.ro/search/?q=45058860" target="_blank" style="color:var(--albastru)" title="CUI: 45058860 — deschide pe listafirme.ro" rel="noopener noreferrer" onclick="event.stopPropagation()">TOP A-Z CONCEPT S.R.L.</a></td>
               <td><strong>16.728.051 RON</strong></td>
               <td>3</td>
               <td>5.576.017 RON</td>
               <td><span class="sev sev-major">MAJOR</span></td>
             </tr>
-            <tr>
+            <tr class="contract-row" style="cursor:pointer" onclick="showTab('achizitii', document.querySelector('[href=\'#tab-achizitii\']'))" title="Click pentru a vedea în tab Achiziții">
               <td>8</td>
-              <td><a href="https://listafirme.ro/search/?q=6879473" target="_blank" style="color:var(--albastru)" title="CUI: 6879473">Sicuro Invest</a></td>
+              <td><a href="https://listafirme.ro/search/?q=6879473" target="_blank" style="color:var(--albastru)" title="CUI: 6879473 — deschide pe listafirme.ro" rel="noopener noreferrer" onclick="event.stopPropagation()">Sicuro Invest</a></td>
               <td><strong>15.070.720 RON</strong></td>
               <td>2</td>
               <td>7.535.360 RON</td>
               <td><span class="sev sev-major">MAJOR</span></td>
             </tr>
-            <tr>
+            <tr class="contract-row" style="cursor:pointer" onclick="showTab('achizitii', document.querySelector('[href=\'#tab-achizitii\']'))" title="Click pentru a vedea în tab Achiziții">
               <td>9</td>
-              <td><a href="https://listafirme.ro/search/?q=17351537" target="_blank" style="color:var(--albastru)" title="CUI: 17351537">ACG CONSTRUCTION &amp; PROJECTS</a></td>
+              <td><a href="https://listafirme.ro/search/?q=17351537" target="_blank" style="color:var(--albastru)" title="CUI: 17351537 — deschide pe listafirme.ro" rel="noopener noreferrer" onclick="event.stopPropagation()">ACG CONSTRUCTION &amp; PROJECTS</a></td>
               <td><strong>13.570.756 RON</strong></td>
               <td>1</td>
               <td>13.570.756 RON</td>
               <td><span class="sev sev-major">MAJOR</span></td>
             </tr>
-            <tr>
+            <tr class="contract-row" style="cursor:pointer" onclick="showTab('achizitii', document.querySelector('[href=\'#tab-achizitii\']'))" title="Click pentru a vedea în tab Achiziții">
               <td>10</td>
-              <td><a href="https://listafirme.ro/search/?q=11289053" target="_blank" style="color:var(--albastru)" title="CUI: 11289053">SC OLTENIA GARDEN SRL</a></td>
+              <td><a href="https://listafirme.ro/search/?q=11289053" target="_blank" style="color:var(--albastru)" title="CUI: 11289053 — deschide pe listafirme.ro" rel="noopener noreferrer" onclick="event.stopPropagation()">SC OLTENIA GARDEN SRL</a></td>
               <td><strong>13.570.756 RON</strong></td>
               <td>1</td>
               <td>13.570.756 RON</td>
@@ -1265,35 +1393,35 @@ document.addEventListener('scroll', function() {
           </thead>
           <tbody>
             <tr>
-              <td><a href="https://listafirme.ro/search/?q=35253022" target="_blank" style="color:var(--albastru);font-weight:700" title="CUI: 35253022">KSA ROAD SERVICES</a></td>
+              <td><a href="https://listafirme.ro/search/?q=35253022" target="_blank" style="color:var(--albastru);font-weight:700" title="CUI: 35253022" rel="noopener noreferrer">KSA ROAD SERVICES</a></td>
               <td style="color:var(--rosu);font-weight:700">51</td>
               <td>162.381 RON</td>
               <td>3.184 RON</td>
               <td><span class="sev sev-major">MAJOR</span></td>
             </tr>
             <tr>
-              <td><a href="https://listafirme.ro/search/?q=22627540" target="_blank" style="color:var(--albastru)" title="CUI: 22627540">TURBOTOP</a></td>
+              <td><a href="https://listafirme.ro/search/?q=22627540" target="_blank" style="color:var(--albastru)" title="CUI: 22627540" rel="noopener noreferrer">TURBOTOP</a></td>
               <td style="color:var(--rosu);font-weight:700">29</td>
               <td>40.373 RON</td>
               <td>1.392 RON</td>
               <td><span class="sev sev-mediu">MEDIU</span></td>
             </tr>
             <tr>
-              <td><a href="https://listafirme.ro/search/?q=AUTO+MARCU+GRUP" target="_blank" style="color:var(--albastru)">AUTO MARCU'S GRUP SA</a></td>
+              <td><a href="https://listafirme.ro/search/?q=AUTO+MARCU+GRUP" target="_blank" style="color:var(--albastru)" rel="noopener noreferrer">AUTO MARCU'S GRUP SA</a></td>
               <td style="color:var(--rosu);font-weight:700">26</td>
               <td>41.855 RON</td>
               <td>1.610 RON</td>
               <td><span class="sev sev-mediu">MEDIU</span></td>
             </tr>
             <tr>
-              <td><a href="https://listafirme.ro/search/?q=19166285" target="_blank" style="color:var(--albastru)" title="CUI: 19166285">GI EUROSERVICE</a></td>
+              <td><a href="https://listafirme.ro/search/?q=19166285" target="_blank" style="color:var(--albastru)" title="CUI: 19166285" rel="noopener noreferrer">GI EUROSERVICE</a></td>
               <td>22</td>
               <td>29.430 RON</td>
               <td>1.338 RON</td>
               <td><span class="sev sev-ok">OK</span></td>
             </tr>
             <tr>
-              <td><a href="https://listafirme.ro/search/?q=2816464" target="_blank" style="color:var(--albastru)" title="CUI: 2816464">DEDEMAN S.R.L.</a></td>
+              <td><a href="https://listafirme.ro/search/?q=2816464" target="_blank" style="color:var(--albastru)" title="CUI: 2816464" rel="noopener noreferrer">DEDEMAN S.R.L.</a></td>
               <td>18</td>
               <td>35.753 RON</td>
               <td>1.986 RON</td>
@@ -1314,8 +1442,8 @@ document.addEventListener('scroll', function() {
           <div style="font-weight:700;color:#922B21;margin-bottom:8px">1. Contracte masive identice — aceeași zi</div>
           <p style="font-size:13px;color:#444;line-height:1.6">3 firme × 29.5M RON pe 29.07.2025 + 2 firme × 24.2M RON pe 05.09.2025 = <strong>136.9M RON</strong> în 5 contracte identice. Posibilă împărțire artificială a unui contract unic.</p>
           <div class="action-chips" style="margin-top:8px">
-            <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/sesizari" target="_blank">📋 Curtea de Conturi</a>
-            <a class="chip chip-dni" href="https://www.dna.ro/sesizare.html" target="_blank">🔵 DNA</a>
+            <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/sesizari" target="_blank" rel="noopener noreferrer">📋 Curtea de Conturi</a>
+            <a class="chip chip-dni" href="https://www.dna.ro/sesizare.html" target="_blank" rel="noopener noreferrer">🔵 DNA</a>
           </div>
         </div>
 
@@ -1323,7 +1451,7 @@ document.addEventListener('scroll', function() {
           <div style="font-weight:700;color:#935116;margin-bottom:8px">2. Monopol furnizor repetat</div>
           <p style="font-size:13px;color:#444;line-height:1.6">KSA Road Services — 51 contracte = dominant complet pe servicii stradale. Absența totală a concurenței pe o categorie de achiziții sugerează caiet de sarcini restrictiv.</p>
           <div class="action-chips" style="margin-top:8px">
-            <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank">📧 ANAP</a>
+            <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank" rel="noopener noreferrer">📧 ANAP</a>
           </div>
         </div>
 
@@ -1331,8 +1459,8 @@ document.addEventListener('scroll', function() {
           <div style="font-weight:700;color:#935116;margin-bottom:8px">3. 100% achiziții directe</div>
           <p style="font-size:13px;color:#444;line-height:1.6">Din 506 contracte, practic toate sunt achiziții directe. Nicio procedură competitivă vizibilă în datele SEAP analizate. Media națională este 45-50% proceduri competitive.</p>
           <div class="action-chips" style="margin-top:8px">
-            <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank">📧 ANAP</a>
-            <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/sesizari" target="_blank">📋 Curtea de Conturi</a>
+            <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank" rel="noopener noreferrer">📧 ANAP</a>
+            <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/sesizari" target="_blank" rel="noopener noreferrer">📋 Curtea de Conturi</a>
           </div>
         </div>
 
@@ -1340,7 +1468,7 @@ document.addEventListener('scroll', function() {
           <div style="font-weight:700;color:#935116;margin-bottom:8px">4. Vârf de contracte în perioadele electorale</div>
           <p style="font-size:13px;color:#444;line-height:1.6">Februarie 2025 — maximul absolut cu 45 contracte, urmând alegerile din noiembrie 2024. Tipar cunoscut de cheltuieli accelerate post-electoral pentru recompensarea susținătorilor.</p>
           <div class="action-chips" style="margin-top:8px">
-            <a class="chip chip-ani" href="https://www.integritate.eu/Sesizari.aspx" target="_blank" style="background:#F3E5F5;color:#6A1B9A">🔎 ANI</a>
+            <a class="chip chip-ani" href="https://www.integritate.eu/Sesizari.aspx" target="_blank" style="background:#F3E5F5;color:#6A1B9A" rel="noopener noreferrer">🔎 ANI</a>
           </div>
         </div>
 
@@ -1365,7 +1493,7 @@ document.addEventListener('scroll', function() {
     </div>
 
     <div class="disclaimer">
-      Proiecte cu finanțare europeană (PNRR, POR, POIM, AFM) identificate pe site-ul primăriei și în baze de date publice. Sursa: <a href="https://www.primariapantelimon.ro/proiecte-2/" target="_blank">primariapantelimon.ro/proiecte-2/</a>
+      Proiecte cu finanțare europeană (PNRR, POR, POIM, AFM) identificate pe site-ul primăriei și în baze de date publice. Sursa: <a href="https://www.primariapantelimon.ro/proiecte-2/" target="_blank" rel="noopener noreferrer">primariapantelimon.ro/proiecte-2/</a>
     </div>
 
     <!-- COMPARATIE UE vs ACHIZITII DIRECTE -->
@@ -1419,70 +1547,70 @@ document.addEventListener('scroll', function() {
               <td><strong>14.745.483</strong></td>
               <td><span class="badge blue">PNRR</span></td>
               <td><span class="badge orange">În derulare</span></td>
-              <td><a href="https://proiecte.pnrr.gov.ro" target="_blank" style="color:var(--albastru);font-size:12px">PNRR →</a></td>
+              <td><a href="https://proiecte.pnrr.gov.ro" target="_blank" style="color:var(--albastru);font-size:12px" rel="noopener noreferrer">PNRR →</a></td>
             </tr>
             <tr>
               <td>Școală green (gimnaziu P+2E)</td>
               <td><strong>34.249.342</strong></td>
               <td><span class="badge blue">PNRR</span></td>
               <td><span class="badge orange">În derulare</span></td>
-              <td><a href="https://proiecte.pnrr.gov.ro" target="_blank" style="color:var(--albastru);font-size:12px">PNRR →</a></td>
+              <td><a href="https://proiecte.pnrr.gov.ro" target="_blank" style="color:var(--albastru);font-size:12px" rel="noopener noreferrer">PNRR →</a></td>
             </tr>
             <tr>
               <td>GIS Actualizare Plan Urbanistic</td>
               <td><strong>1.183.318</strong></td>
               <td><span class="badge blue">PNRR</span></td>
               <td><span class="badge orange">În derulare</span></td>
-              <td><a href="https://proiecte.pnrr.gov.ro" target="_blank" style="color:var(--albastru);font-size:12px">PNRR →</a></td>
+              <td><a href="https://proiecte.pnrr.gov.ro" target="_blank" style="color:var(--albastru);font-size:12px" rel="noopener noreferrer">PNRR →</a></td>
             </tr>
             <tr>
               <td>Piste pentru biciclete</td>
               <td><strong>820.121</strong></td>
               <td><span class="badge blue">PNRR</span></td>
               <td><span class="badge orange">În derulare</span></td>
-              <td><a href="https://proiecte.pnrr.gov.ro" target="_blank" style="color:var(--albastru);font-size:12px">PNRR →</a></td>
+              <td><a href="https://proiecte.pnrr.gov.ro" target="_blank" style="color:var(--albastru);font-size:12px" rel="noopener noreferrer">PNRR →</a></td>
             </tr>
             <tr>
               <td>Echipamente educaționale digitale</td>
               <td><strong>3.206.307</strong></td>
               <td><span class="badge blue">PNRR</span></td>
               <td><span class="badge orange">În derulare</span></td>
-              <td><a href="https://proiecte.pnrr.gov.ro" target="_blank" style="color:var(--albastru);font-size:12px">PNRR →</a></td>
+              <td><a href="https://proiecte.pnrr.gov.ro" target="_blank" style="color:var(--albastru);font-size:12px" rel="noopener noreferrer">PNRR →</a></td>
             </tr>
             <tr>
               <td>Extindere iluminat public — 21 străzi + parc</td>
               <td><strong>8.498.450</strong></td>
               <td><span class="badge green">POR</span></td>
               <td><span class="badge green">Finalizat</span></td>
-              <td><a href="https://www.primariapantelimon.ro/proiecte-2/" target="_blank" style="color:var(--albastru);font-size:12px">Primărie →</a></td>
+              <td><a href="https://www.primariapantelimon.ro/proiecte-2/" target="_blank" style="color:var(--albastru);font-size:12px" rel="noopener noreferrer">Primărie →</a></td>
             </tr>
             <tr>
               <td>Modernizare iluminat Etapa 1</td>
               <td><strong>994.184</strong></td>
               <td><span class="badge orange">AFM</span></td>
               <td><span class="badge green">Finalizat</span></td>
-              <td><a href="https://www.primariapantelimon.ro/proiecte-2/" target="_blank" style="color:var(--albastru);font-size:12px">Primărie →</a></td>
+              <td><a href="https://www.primariapantelimon.ro/proiecte-2/" target="_blank" style="color:var(--albastru);font-size:12px" rel="noopener noreferrer">Primărie →</a></td>
             </tr>
             <tr>
               <td>Modernizare iluminat Etapa 2</td>
               <td><strong>1.920.630</strong></td>
               <td><span class="badge orange">AFM</span></td>
               <td><span class="badge green">Finalizat</span></td>
-              <td><a href="https://www.primariapantelimon.ro/proiecte-2/" target="_blank" style="color:var(--albastru);font-size:12px">Primărie →</a></td>
+              <td><a href="https://www.primariapantelimon.ro/proiecte-2/" target="_blank" style="color:var(--albastru);font-size:12px" rel="noopener noreferrer">Primărie →</a></td>
             </tr>
             <tr>
               <td>Stații încărcare vehicule electrice</td>
               <td><strong>1.137.041</strong></td>
               <td><span class="badge orange">AFM</span></td>
               <td><span class="badge orange">În derulare</span></td>
-              <td><a href="https://www.primariapantelimon.ro/proiecte-2/" target="_blank" style="color:var(--albastru);font-size:12px">Primărie →</a></td>
+              <td><a href="https://www.primariapantelimon.ro/proiecte-2/" target="_blank" style="color:var(--albastru);font-size:12px" rel="noopener noreferrer">Primărie →</a></td>
             </tr>
             <tr>
               <td>Energie regenerabilă în clădiri publice</td>
               <td><strong>4.894.210</strong></td>
               <td><span class="badge blue">POIM</span></td>
               <td><span class="badge green">Finalizat</span></td>
-              <td><a href="https://www.primariapantelimon.ro/proiecte-2/" target="_blank" style="color:var(--albastru);font-size:12px">Primărie →</a></td>
+              <td><a href="https://www.primariapantelimon.ro/proiecte-2/" target="_blank" style="color:var(--albastru);font-size:12px" rel="noopener noreferrer">Primărie →</a></td>
             </tr>
             <tr style="background:#E8F8F5;font-weight:700">
               <td>TOTAL FINANȚĂRI UE</td>
@@ -1498,7 +1626,7 @@ document.addEventListener('scroll', function() {
     <div class="alert blue" style="margin-top:20px">
       <span>💡</span>
       <div>
-        <strong>Verificare independentă:</strong> Consultați <a href="https://proiecte.pnrr.gov.ro" target="_blank" style="color:var(--albastru)">proiecte.pnrr.gov.ro</a> și <a href="https://www.fonduri-ue.ro" target="_blank" style="color:var(--albastru)">fonduri-ue.ro</a> pentru lista completă oficială a proiectelor europene ale UAT Pantelimon. Dacă găsiți proiecte neraportate pe site-ul primăriei, sesizați Curtea de Conturi.
+        <strong>Verificare independentă:</strong> Consultați <a href="https://proiecte.pnrr.gov.ro" target="_blank" style="color:var(--albastru)" rel="noopener noreferrer">proiecte.pnrr.gov.ro</a> și <a href="https://www.fonduri-ue.ro" target="_blank" style="color:var(--albastru)" rel="noopener noreferrer">fonduri-ue.ro</a> pentru lista completă oficială a proiectelor europene ale UAT Pantelimon. Dacă găsiți proiecte neraportate pe site-ul primăriei, sesizați Curtea de Conturi.
       </div>
     </div>
 
@@ -1508,22 +1636,22 @@ document.addEventListener('scroll', function() {
       <p class="subtitle">Publicat pe primariapantelimon.ro/serviciul-contabil/ · Actualizat periodic</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px">
         <a href="https://www.primariapantelimon.ro/serviciul-contabil/" target="_blank"
-           style="background:#EBF5FB;border:1px solid #AED6F1;border-radius:8px;padding:14px;text-decoration:none;color:inherit;display:block">
+           style="background:#EBF5FB;border:1px solid #AED6F1;border-radius:8px;padding:14px;text-decoration:none;color:inherit;display:block" rel="noopener noreferrer">
           <div style="font-weight:700;color:#0070C0;margin-bottom:4px">📊 Buget Local 2026</div>
           <div style="font-size:12px;color:#555">Proiect buget + buget credite interne · Consultare publică</div>
         </a>
         <a href="https://www.primariapantelimon.ro/serviciul-contabil/" target="_blank"
-           style="background:#E8F8F5;border:1px solid #A9DFBF;border-radius:8px;padding:14px;text-decoration:none;color:inherit;display:block">
+           style="background:#E8F8F5;border:1px solid #A9DFBF;border-radius:8px;padding:14px;text-decoration:none;color:inherit;display:block" rel="noopener noreferrer">
           <div style="font-weight:700;color:#27AE60;margin-bottom:4px">📋 Execuții bugetare 2025</div>
           <div style="font-size:12px;color:#555">Trimestrial: mar · iun · sep · dec 2025 — toate disponibile</div>
         </a>
         <a href="https://www.primariapantelimon.ro/serviciul-contabil/" target="_blank"
-           style="background:#FEF9E7;border:1px solid #F9E79F;border-radius:8px;padding:14px;text-decoration:none;color:inherit;display:block">
+           style="background:#FEF9E7;border:1px solid #F9E79F;border-radius:8px;padding:14px;text-decoration:none;color:inherit;display:block" rel="noopener noreferrer">
           <div style="font-weight:700;color:#7D6608;margin-bottom:4px">📑 Situații financiare 2015–2024</div>
           <div style="font-size:12px;color:#555">Bilanțuri contabile, registru datorie publică</div>
         </a>
         <a href="https://www.primariapantelimon.ro/serviciul-contabil/" target="_blank"
-           style="background:#FDEDEC;border:1px solid #F5B7B1;border-radius:8px;padding:14px;text-decoration:none;color:inherit;display:block">
+           style="background:#FDEDEC;border:1px solid #F5B7B1;border-radius:8px;padding:14px;text-decoration:none;color:inherit;display:block" rel="noopener noreferrer">
           <div style="font-weight:700;color:#C0392B;margin-bottom:4px">⚠️ Execuție bugetară T1 2026</div>
           <div style="font-size:12px;color:#555">Disponibil · Verificați concordanța cu contractele SEAP</div>
         </a>
@@ -1549,7 +1677,7 @@ document.addEventListener('scroll', function() {
     <div class="sources-box">
       <h3>🏛️ Site Primăria Pantelimon (primariapantelimon.ro)</h3>
 
-      <a class="source-item" href="https://www.primariapantelimon.ro/s-a-publicat-proiectul-de-buget-local-pentru-anul-2026/" target="_blank">
+      <a class="source-item" href="https://www.primariapantelimon.ro/s-a-publicat-proiectul-de-buget-local-pentru-anul-2026/" target="_blank" rel="noopener noreferrer">
         <span class="source-icon">📄</span>
         <div>
           <div class="source-title">Proiect Buget Local 2026</div>
@@ -1558,7 +1686,7 @@ document.addEventListener('scroll', function() {
         <div class="status-dot green"></div>
       </a>
 
-      <a class="source-item" href="https://www.primariapantelimon.ro/hotarari-2025/" target="_blank">
+      <a class="source-item" href="https://www.primariapantelimon.ro/hotarari-2025/" target="_blank" rel="noopener noreferrer">
         <span class="source-icon">📋</span>
         <div>
           <div class="source-title">Hotărâri Consiliu Local 2025</div>
@@ -1567,7 +1695,7 @@ document.addEventListener('scroll', function() {
         <div class="status-dot green"></div>
       </a>
 
-      <a class="source-item" href="https://www.primariapantelimon.ro/hotarari-2024/" target="_blank">
+      <a class="source-item" href="https://www.primariapantelimon.ro/hotarari-2024/" target="_blank" rel="noopener noreferrer">
         <span class="source-icon">📋</span>
         <div>
           <div class="source-title">Hotărâri Consiliu Local 2024</div>
@@ -1576,7 +1704,7 @@ document.addEventListener('scroll', function() {
         <div class="status-dot green"></div>
       </a>
 
-      <a class="source-item" href="https://www.primariapantelimon.ro/documente-si-informatii-financiare/" target="_blank">
+      <a class="source-item" href="https://www.primariapantelimon.ro/documente-si-informatii-financiare/" target="_blank" rel="noopener noreferrer">
         <span class="source-icon">💰</span>
         <div>
           <div class="source-title">Documente și Informații Financiare</div>
@@ -1585,7 +1713,7 @@ document.addEventListener('scroll', function() {
         <div class="status-dot red"></div>
       </a>
 
-      <a class="source-item" href="https://www.primariapantelimon.ro/financiar-contabilitate-si-buget/" target="_blank">
+      <a class="source-item" href="https://www.primariapantelimon.ro/financiar-contabilitate-si-buget/" target="_blank" rel="noopener noreferrer">
         <span class="source-icon">📊</span>
         <div>
           <div class="source-title">Financiar Contabilitate și Buget</div>
@@ -1594,7 +1722,7 @@ document.addEventListener('scroll', function() {
         <div class="status-dot yellow"></div>
       </a>
 
-      <a class="source-item" href="https://www.primariapantelimon.ro/achizitii-publice/" target="_blank">
+      <a class="source-item" href="https://www.primariapantelimon.ro/achizitii-publice/" target="_blank" rel="noopener noreferrer">
         <span class="source-icon">🛒</span>
         <div>
           <div class="source-title">Achiziții Publice — pagina primăriei</div>
@@ -1608,7 +1736,7 @@ document.addEventListener('scroll', function() {
     <div class="sources-box">
       <h3>🗄️ Surse Naționale de Date</h3>
 
-      <a class="source-item" href="https://www.e-licitatie.ro/pub/notices/contract-notices/list/0/0" target="_blank">
+      <a class="source-item" href="https://www.e-licitatie.ro/pub/notices/contract-notices/list/0/0" target="_blank" rel="noopener noreferrer">
         <span class="source-icon">🔍</span>
         <div>
           <div class="source-title">SEAP / e-licitatie.ro — Achiziții Publice</div>
@@ -1617,7 +1745,7 @@ document.addEventListener('scroll', function() {
         <div class="status-dot green"></div>
       </a>
 
-      <a class="source-item" href="https://mfinante.gov.ro/en/transparenta-bugetara" target="_blank">
+      <a class="source-item" href="https://mfinante.gov.ro/en/transparenta-bugetara" target="_blank" rel="noopener noreferrer">
         <span class="source-icon">🏦</span>
         <div>
           <div class="source-title">Ministerul Finanțelor — Transparență Bugetară</div>
@@ -1626,7 +1754,7 @@ document.addEventListener('scroll', function() {
         <div class="status-dot green"></div>
       </a>
 
-      <a class="source-item" href="https://data.gov.ro/ro/dataset/bugetul-de-stat" target="_blank">
+      <a class="source-item" href="https://data.gov.ro/ro/dataset/bugetul-de-stat" target="_blank" rel="noopener noreferrer">
         <span class="source-icon">📦</span>
         <div>
           <div class="source-title">data.gov.ro — Bugetul de Stat & Local</div>
@@ -1635,7 +1763,7 @@ document.addEventListener('scroll', function() {
         <div class="status-dot green"></div>
       </a>
 
-      <a class="source-item" href="https://licitatiiSEAP.ro/licitatii-seap-ilfov/" target="_blank">
+      <a class="source-item" href="https://licitatiiSEAP.ro/licitatii-seap-ilfov/" target="_blank" rel="noopener noreferrer">
         <span class="source-icon">📰</span>
         <div>
           <div class="source-title">LicitațiiSEAP.ro — Ilfov</div>
@@ -1751,11 +1879,11 @@ document.addEventListener('scroll', function() {
           </div>
           <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
             <a href="https://www.primariapantelimon.ro/contact/" target="_blank"
-               style="background:var(--albastru);color:#fff;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600">
+               style="background:var(--albastru);color:#fff;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600" rel="noopener noreferrer">
               Trimite cerere la primărie →
             </a>
             <a href="https://legislatie.just.ro/Public/DetaliiDocument/28952" target="_blank"
-               style="background:#EBF5FB;color:var(--albastru);padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600;border:1px solid #AED6F1">
+               style="background:#EBF5FB;color:var(--albastru);padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600;border:1px solid #AED6F1" rel="noopener noreferrer">
               Text Lege 544/2001 →
             </a>
           </div>
@@ -1792,7 +1920,7 @@ document.addEventListener('scroll', function() {
             • Criterii de selecție discriminatorii sau personalizate
           </div>
           <a href="https://www.anap.gov.ro/web/sesizari/" target="_blank"
-             style="display:inline-block;margin-top:12px;background:var(--portocaliu);color:#fff;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600">
+             style="display:inline-block;margin-top:12px;background:var(--portocaliu);color:#fff;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600" rel="noopener noreferrer">
             Sesizează ANAP →
           </a>
         </div>
@@ -1813,7 +1941,7 @@ document.addEventListener('scroll', function() {
             • Lipsă documente justificative pentru plăți publice
           </div>
           <a href="https://www.curteadeconturi.ro/Sesizari" target="_blank"
-             style="display:inline-block;background:var(--rosu);color:#fff;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600">
+             style="display:inline-block;background:var(--rosu);color:#fff;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600" rel="noopener noreferrer">
             Sesizează Curtea de Conturi →
           </a>
         </div>
@@ -1836,7 +1964,7 @@ document.addEventListener('scroll', function() {
           </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap">
             <a href="https://ilfov.prefecturas.ro/contact/" target="_blank"
-               style="background:#1A5276;color:#fff;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600">
+               style="background:#1A5276;color:#fff;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600" rel="noopener noreferrer">
               Prefectura Ilfov — Contact →
             </a>
             <a href="mailto:prefectura@prefecturaif.ro"
@@ -1864,11 +1992,11 @@ document.addEventListener('scroll', function() {
           </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap">
             <a href="https://www.integritate.eu/Sesizari.aspx" target="_blank"
-               style="background:#7D3C98;color:#fff;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600">
+               style="background:#7D3C98;color:#fff;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600" rel="noopener noreferrer">
               Sesizează ANI →
             </a>
             <a href="https://www.integritate.eu/Declaratii-de-avere-si-interese.aspx" target="_blank"
-               style="background:#F9EBF8;color:#7D3C98;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600;border:1px solid #D7BDE2">
+               style="background:#F9EBF8;color:#7D3C98;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600;border:1px solid #D7BDE2" rel="noopener noreferrer">
               Caută declarații de avere →
             </a>
           </div>
@@ -1895,7 +2023,7 @@ document.addEventListener('scroll', function() {
           </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap">
             <a href="https://www.pna.ro/sesizare.xhtml" target="_blank"
-               style="background:#922B21;color:#fff;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600">
+               style="background:#922B21;color:#fff;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600" rel="noopener noreferrer">
               Sesizează DNA →
             </a>
             <a href="mailto:sesizari@pna.ro"
@@ -1927,7 +2055,7 @@ document.addEventListener('scroll', function() {
           </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap">
             <a href="https://www.avp.ro/index.php/petitii-si-sesizari" target="_blank"
-               style="background:#148F77;color:#fff;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600">
+               style="background:#148F77;color:#fff;padding:7px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600" rel="noopener noreferrer">
               Sesizează Avocatul Poporului →
             </a>
             <a href="mailto:avp@avp.ro"
@@ -1956,9 +2084,9 @@ document.addEventListener('scroll', function() {
           </div>
           <div style="background:#FEF9E7;border-radius:8px;padding:12px 16px;font-size:13px;color:#7D6608;margin-bottom:12px">
             <strong>💡 Resurse de asistență juridică gratuită sau cu costuri reduse:</strong><br>
-            • <a href="https://www.unbr.ro/" target="_blank" style="color:#7D6608">UNBR</a> — Uniunea Națională a Barourilor din România (barourile județene oferă uneori consultanță pro bono)<br>
-            • <a href="https://www.expertforum.ro/" target="_blank" style="color:#7D6608">Expert Forum</a> — ONG cu expertiză în administrație publică și bună guvernare<br>
-            • <a href="https://www.activewatch.ro/" target="_blank" style="color:#7D6608">ActiveWatch</a> — monitorizare și apărarea accesului la informații publice
+            • <a href="https://www.unbr.ro/" target="_blank" style="color:#7D6608" rel="noopener noreferrer">UNBR</a> — Uniunea Națională a Barourilor din România (barourile județene oferă uneori consultanță pro bono)<br>
+            • <a href="https://www.expertforum.ro/" target="_blank" style="color:#7D6608" rel="noopener noreferrer">Expert Forum</a> — ONG cu expertiză în administrație publică și bună guvernare<br>
+            • <a href="https://www.activewatch.ro/" target="_blank" style="color:#7D6608" rel="noopener noreferrer">ActiveWatch</a> — monitorizare și apărarea accesului la informații publice
           </div>
         </div>
       </div>
@@ -1980,18 +2108,18 @@ document.addEventListener('scroll', function() {
         <div style="font-weight:700;color:#fff;margin-bottom:10px;font-size:14px">📋 Resurse rapide</div>
         <div style="display:flex;flex-direction:column;gap:6px;font-size:13px">
           <a href="raport_transparenta.html" style="color:rgba(255,255,255,0.8);text-decoration:none">🚩 Raport nereguli complet</a>
-          <a href="https://e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0" target="_blank" style="color:rgba(255,255,255,0.8);text-decoration:none">🔍 SEAP — e-licitatie.ro</a>
-          <a href="https://transparenta.eu/entities/4420759" target="_blank" style="color:rgba(255,255,255,0.8);text-decoration:none">🌐 Transparenta.eu — Pantelimon</a>
-          <a href="https://www.primariapantelimon.ro" target="_blank" style="color:rgba(255,255,255,0.8);text-decoration:none">🏛️ Site Primărie</a>
+          <a href="https://e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0" target="_blank" style="color:rgba(255,255,255,0.8);text-decoration:none" rel="noopener noreferrer">🔍 SEAP — e-licitatie.ro</a>
+          <a href="https://transparenta.eu/entities/4420759" target="_blank" style="color:rgba(255,255,255,0.8);text-decoration:none" rel="noopener noreferrer">🌐 Transparenta.eu — Pantelimon</a>
+          <a href="https://www.primariapantelimon.ro" target="_blank" style="color:rgba(255,255,255,0.8);text-decoration:none" rel="noopener noreferrer">🏛️ Site Primărie</a>
         </div>
       </div>
       <div>
         <div style="font-weight:700;color:#fff;margin-bottom:10px;font-size:14px">⚖️ Sesizări</div>
         <div style="display:flex;flex-direction:column;gap:6px;font-size:13px">
-          <a href="https://www.anap.gov.ro/web/contact/" target="_blank" style="color:rgba(255,255,255,0.8);text-decoration:none">📧 ANAP — achiziții publice</a>
-          <a href="https://www.curteadeconturi.ro" target="_blank" style="color:rgba(255,255,255,0.8);text-decoration:none">🏛️ Curtea de Conturi</a>
-          <a href="https://www.integritate.eu" target="_blank" style="color:rgba(255,255,255,0.8);text-decoration:none">⚖️ ANI — integritate</a>
-          <a href="https://www.prefecturailfov.ro" target="_blank" style="color:rgba(255,255,255,0.8);text-decoration:none">🏢 Prefectura Ilfov</a>
+          <a href="https://www.anap.gov.ro/web/contact/" target="_blank" style="color:rgba(255,255,255,0.8);text-decoration:none" rel="noopener noreferrer">📧 ANAP — achiziții publice</a>
+          <a href="https://www.curteadeconturi.ro" target="_blank" style="color:rgba(255,255,255,0.8);text-decoration:none" rel="noopener noreferrer">🏛️ Curtea de Conturi</a>
+          <a href="https://www.integritate.eu" target="_blank" style="color:rgba(255,255,255,0.8);text-decoration:none" rel="noopener noreferrer">⚖️ ANI — integritate</a>
+          <a href="https://www.prefecturailfov.ro" target="_blank" style="color:rgba(255,255,255,0.8);text-decoration:none" rel="noopener noreferrer">🏢 Prefectura Ilfov</a>
         </div>
       </div>
     </div>
@@ -2003,11 +2131,13 @@ document.addEventListener('scroll', function() {
 </footer>
 
 <!-- Scroll to top -->
-<button id="scroll-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+<button type="button" id="scroll-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  aria-label="Mergi la începutul paginii"
   style="display:none;position:fixed;bottom:28px;right:24px;z-index:999;
          background:var(--albastru);color:#fff;border:none;border-radius:50%;
          width:44px;height:44px;font-size:20px;cursor:pointer;
-         box-shadow:0 3px 12px rgba(0,0,0,0.22);transition:opacity .2s">↑</button>
+         box-shadow:0 3px 12px rgba(0,0,0,0.22);transition:opacity .2s"
+  title="Mergi la începutul paginii"><span aria-hidden="true">↑</span></button>
 <script>
 window.addEventListener('scroll', function() {
   var btn = document.getElementById('scroll-top-btn');
@@ -2020,9 +2150,25 @@ window.addEventListener('scroll', function() {
 // ---- TAB NAVIGATION ----
 function showTab(id, el) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tabs a').forEach(a => a.classList.remove('active'));
-  document.getElementById('tab-' + id).classList.add('active');
-  if (el) el.classList.add('active');
+  document.querySelectorAll('.tabs a').forEach(a => {
+    a.classList.remove('active');
+    a.removeAttribute('aria-current');
+  });
+  var section = document.getElementById('tab-' + id);
+  if (section) section.classList.add('active');
+  var activeLink = el;
+  if (!activeLink) activeLink = document.querySelector('[href="#tab-' + id + '"]');
+  if (activeLink) {
+    activeLink.classList.add('active');
+    activeLink.setAttribute('aria-current', 'page');
+  }
+  // Update breadcrumb hint
+  var hint = document.getElementById('active-tab-hint');
+  var hintName = document.getElementById('active-tab-name');
+  if (hint && activeLink) {
+    hint.style.display = 'block';
+    if (hintName) hintName.textContent = activeLink.textContent.replace(/[🚩📊📋🔗⚖️📈🇪🇺]/gu, '').replace(/\s+/g,' ').trim();
+  }
   return false;
 }
 
@@ -2100,7 +2246,7 @@ async function expandFlag(cardEl, keyword, titlu) {
           <td style="padding:7px 8px;font-size:12px;white-space:nowrap">${date}</td>
           <td style="padding:7px 8px;font-size:11px;min-width:160px">
             ${seapUrl ? `<a href="${seapUrl}" target="_blank"
-              style="display:inline-block;background:#0070C0;color:#fff;padding:3px 8px;border-radius:4px;text-decoration:none;font-weight:600;font-size:11px;margin-bottom:4px">
+              style="display:inline-block;background:#0070C0;color:#fff;padding:3px 8px;border-radius:4px;text-decoration:none;font-weight:600;font-size:11px;margin-bottom:4px" rel="noopener noreferrer">
               🔍 SEAP →</a>` : ''}
             ${hasSeapId ? `<div style="margin-top:3px;font-size:10px;color:#666;line-height:1.5">
               Dacă pagina e goală, caută manual:<br>
@@ -2116,7 +2262,7 @@ async function expandFlag(cardEl, keyword, titlu) {
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
           <strong style="font-size:13px;color:#333">📊 ${titlu} — ${flagDivs.length} contracte detectate</strong>
           <a href="raport_transparenta.html" target="_blank"
-             style="font-size:12px;color:var(--albastru);text-decoration:underline">
+             style="font-size:12px;color:var(--albastru);text-decoration:underline" rel="noopener noreferrer">
             Raport complet →
           </a>
         </div>
@@ -2137,7 +2283,7 @@ async function expandFlag(cardEl, keyword, titlu) {
     }
     panel.dataset.loaded = '1';
   } catch(e) {
-    panel.innerHTML = `<p style="color:#C00;font-size:13px">Eroare la încărcarea raportului. <a href="raport_transparenta.html" target="_blank" style="color:var(--albastru)">Deschide raportul direct →</a></p>`;
+    panel.innerHTML = `<p style="color:#C00;font-size:13px">Eroare la încărcarea raportului. <a href="raport_transparenta.html" target="_blank" style="color:var(--albastru)" rel="noopener noreferrer">Deschide raportul direct →</a></p>`;
   }
 }
 
@@ -2145,6 +2291,7 @@ async function expandFlag(cardEl, keyword, titlu) {
 const PRAG = 130000;
 let _allContracts = [];
 let _firmaSums = {};
+let _firmaCui = {};  // Mapă globală firmă → CUI, populată la încărcarea contracte.json
 let _currentPage = 0;
 let _currentFilter = 'all';
 const PAGE_SIZE = 25;
@@ -2192,13 +2339,13 @@ function _flagBadge(flag) {
 function _flagChips(flag, c) {
   const url = _seapUrl(c.id);
   let html = '';
-  if (url) html += '<a class="chip chip-seap" href="' + url + '" target="_blank" onclick="event.stopPropagation()">🔍 SEAP direct →</a>';
-  html += '<a class="chip chip-transparenta" href="https://transparenta.eu/entities/4420759#achizitii" target="_blank" onclick="event.stopPropagation()" title="Caută firma ' + c.firma + ' pe transparenta.eu">🌐 transparenta.eu</a>';
+  if (url) html += '<a class="chip chip-seap" href="' + url + '" target="_blank" onclick="event.stopPropagation()" rel="noopener noreferrer">🔍 SEAP direct →</a>';
+  html += '<a class="chip chip-transparenta" href="https://transparenta.eu/entities/4420759#achizitii" target="_blank" onclick="event.stopPropagation()" title="Caută firma ' + c.firma + ' pe transparenta.eu" rel="noopener noreferrer">🌐 transparenta.eu</a>';
   if (flag !== 'OK') {
-    html += '<a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank" onclick="event.stopPropagation()">📧 ANAP</a>';
-    html += '<a class="chip chip-cdc" href="https://www.curteadeconturi.ro/sesizari" target="_blank" onclick="event.stopPropagation()">📋 Curtea de Conturi</a>';
+    html += '<a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank" onclick="event.stopPropagation()" rel="noopener noreferrer">📧 ANAP</a>';
+    html += '<a class="chip chip-cdc" href="https://www.curteadeconturi.ro/sesizari" target="_blank" onclick="event.stopPropagation()" rel="noopener noreferrer">📋 Curtea de Conturi</a>';
   }
-  if (flag === 'CRITIC') html += '<a class="chip chip-dni" href="https://www.dna.ro/sesizare.html" target="_blank" onclick="event.stopPropagation()">🔵 DNA</a>';
+  if (flag === 'CRITIC') html += '<a class="chip chip-dni" href="https://www.dna.ro/sesizare.html" target="_blank" onclick="event.stopPropagation()" rel="noopener noreferrer">🔵 DNA</a>';
   return html;
 }
 
@@ -2234,6 +2381,20 @@ function _renderRows(reset) {
   if (_currentPage === 0) tbody.innerHTML = '';
 
   var filtered = _getFiltered();
+
+  // Empty state
+  if (reset && filtered.length === 0) {
+    var emptyMsg = _currentFilter === 'nereguli'
+      ? 'Nu există contracte cu nereguli identificate în setul de date curent.'
+      : _currentFilter === 'ok'
+        ? 'Nu există contracte fără nereguli în setul de date curent.'
+        : 'Nu există contracte disponibile.';
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><strong>Niciun rezultat</strong>' + emptyMsg + '</div></td></tr>';
+    var btn = document.getElementById('load-more-container');
+    if (btn) btn.innerHTML = '';
+    return;
+  }
+
   var start = _currentPage * PAGE_SIZE;
   var page = filtered.slice(start, start + PAGE_SIZE);
   var shown = Math.min((_currentPage+1)*PAGE_SIZE, filtered.length);
@@ -2274,7 +2435,7 @@ function _renderRows(reset) {
       + '<div class="action-chips">' + _flagChips(flag, c) + '</div>'
       + '<div style="margin-top:10px;padding:8px 12px;background:#F4F6F8;border-radius:6px;font-size:11px;color:#666;line-height:1.7">'
       + 'ℹ️ <strong>Cum cauți în SEAP dacă butonul deschide pagină goală:</strong> Intră pe '
-      + '<a href="https://e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0" target="_blank" onclick="event.stopPropagation()" style="color:#0070C0">e-licitatie.ro → Achiziții Directe</a>'
+      + '<a href="https://e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0" target="_blank" onclick="event.stopPropagation()" style="color:#0070C0" rel="noopener noreferrer">e-licitatie.ro → Achiziții Directe</a>'
       + ', setează câmpul <strong>Autoritate contractantă</strong> = <em>Pantelimon</em>'
       + ', apoi caută după <strong>identificator: ' + c.id.replace(/^achizitie-directa-/, '') + '</strong>'
       + ' și <strong>data: ' + c.data + '</strong>.'
@@ -2287,7 +2448,7 @@ function _renderRows(reset) {
   var btn = document.getElementById('load-more-container');
   if (btn) {
     if (shown < filtered.length) {
-      btn.innerHTML = '<button onclick="loadMoreContracts()" class="filter-btn" style="padding:8px 24px;font-size:13px">▼ Arată mai mult (' + shown + '/' + filtered.length + ' afișate)</button>';
+      btn.innerHTML = '<button type="button" onclick="loadMoreContracts()" class="filter-btn" style="padding:8px 24px;font-size:13px">▼ Arată mai mult (' + shown + '/' + filtered.length + ' afișate)</button>';
     } else {
       btn.innerHTML = '<p style="font-size:12px;color:#999;text-align:center;margin:4px 0">Toate ' + filtered.length + ' contracte afișate.</p>';
     }
@@ -2324,16 +2485,25 @@ async function _loadContracte() {
     _allContracts = data;
     _renderKpi(data);
     _renderRows(true);
+    // Update "Data ultimei actualizări" badge from newest contract date
+    var newestDate = data.reduce(function(max, c) {
+      return c.data && c.data > max ? c.data : max;
+    }, '');
+    if (newestDate) {
+      var pill = document.getElementById('stat-last-update');
+      var val = document.getElementById('stat-last-update-val');
+      if (pill && val) {
+        val.textContent = newestDate;
+        pill.style.display = '';
+      }
+    }
   } catch(e) {
     var el = document.getElementById('contracte-loading');
-    if (el) el.innerHTML = '⚠️ Date offline — deschide pe <a href="https://bise88.github.io/transparenta-pantelimon/transparenta_pantelimon.html" target="_blank" style="color:var(--albastru)">GitHub Pages</a> pentru date live din SEAP.';
+    if (el) el.innerHTML = '<span aria-live="polite">⚠️ Date offline — deschide pe <a href="https://bise88.github.io/transparenta-pantelimon/transparenta_pantelimon.html" target="_blank" rel="noopener noreferrer" style="color:var(--albastru)">GitHub Pages</a> pentru date live din SEAP.</span>';
   }
 }
 
 // ---- INTERACTIVE ACHIZITII ----
-
-// Mapă globală firmă → CUI, populată automat la încărcarea contracte.json
-let _firmaCui = {};
 
 function _firmaLink(firma, cuiOrStyle, style) {
   if (!firma || firma === '—') return firma || '—';
@@ -2352,7 +2522,7 @@ function _firmaLink(firma, cuiOrStyle, style) {
     ? 'Pagina firmei pe listafirme.ro (CUI: ' + cuiClean + ')'
     : 'Caută firma pe listafirme.ro';
   const finalStyle = s || 'color:inherit;text-decoration:underline dotted;cursor:pointer';
-  return '<a href="' + url + '" target="_blank" onclick="event.stopPropagation()" title="' + title + '" style="' + finalStyle + '">' + firma + '</a>';
+  return '<a href="' + url + '" target="_blank" onclick="event.stopPropagation()" title="' + title + '" style="' + finalStyle + '" rel="noopener noreferrer">' + firma + '</a>';
 }
 
 function toggleKpiDetail(id) {
