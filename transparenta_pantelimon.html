@@ -1,6 +1,9 @@
 ﻿<!DOCTYPE html>
 <html lang="ro">
 <head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Transparența Bugetului – Primăria Pantelimon</title>
@@ -22,7 +25,7 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: 'Segoe UI', Arial, sans-serif;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
     background: var(--gri-deschis);
     color: var(--text);
     font-size: 15px;
@@ -31,9 +34,20 @@
 
   /* HEADER */
   header {
-    background: linear-gradient(135deg, var(--albastru) 0%, var(--albastru-deschis) 100%);
+    background: linear-gradient(135deg, #00244A 0%, #00427A 60%, #0070C0 100%);
     color: var(--alb);
     padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(255,215,0,0.08) 0%, transparent 70%);
+    pointer-events: none;
   }
 
   .header-top {
@@ -47,13 +61,14 @@
   }
 
   .badge-civic {
-    background: var(--galben);
-    color: var(--albastru);
-    font-weight: 700;
-    padding: 2px 10px;
+    background: linear-gradient(90deg, #FF6B35, #FFD700);
+    color: #00427A;
+    font-weight: 800;
+    padding: 3px 12px;
     border-radius: 12px;
     font-size: 11px;
     letter-spacing: 1px;
+    text-transform: uppercase;
   }
 
   .header-main {
@@ -141,7 +156,8 @@
   nav.tabs ul li a:hover,
   nav.tabs ul li a.active {
     color: var(--albastru);
-    border-bottom-color: var(--albastru);
+    border-bottom-color: #FF6B35;
+    background: rgba(255,107,53,0.05);
   }
 
   nav.tabs ul li a .cnt {
@@ -161,8 +177,9 @@
   }
 
   /* SECTIONS */
-  .section { display: none; }
-  .section.active { display: block; }
+  .section { display: none; opacity: 0; }
+  .section.active { display: block; animation: fadeIn 0.25s ease forwards; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
   /* DISCLAIMER */
   .disclaimer {
@@ -191,6 +208,12 @@
     padding: 20px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.08);
     border-top: 4px solid var(--albastru-deschis);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
   }
 
   .card.green { border-top-color: var(--verde); }
@@ -438,12 +461,14 @@
   .section-title {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--gri-mediu);
   }
 
-  .section-title h2 { font-size: 20px; font-weight: 800; color: var(--albastru); }
-  .section-title .icon { font-size: 24px; }
+  .section-title h2 { font-size: 22px; font-weight: 800; color: var(--albastru); }
+  .section-title .icon { font-size: 26px; }
 
   /* METODOLOGIE */
   .method-box {
@@ -605,19 +630,42 @@
   #cra { display: none; }
   body.citizen-printing > *:not(#cra) { display: none !important; }
   body.citizen-printing > #cra { display: block !important; }
+
+  .slogan {
+    font-size: 18px;
+    font-weight: 700;
+    color: #FFD700;
+    margin-top: 10px;
+    margin-bottom: 4px;
+    letter-spacing: 0.3px;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.18);
+  }
+  .slogan em { font-style: italic; }
 </style>
 </head>
 <body>
+<div id="progress-bar" style="position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,#FF6B35,#FFD700);z-index:9999;transition:width .1s"></div>
+<script>
+document.addEventListener('scroll', function() {
+  var el = document.getElementById('progress-bar');
+  if (!el) return;
+  var h = document.documentElement;
+  var pct = (h.scrollTop || document.body.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+  el.style.width = pct + '%';
+});
+</script>
 
 <!-- HEADER -->
 <header>
   <div class="header-top">
     <a href="index.html" style="color:rgba(255,255,255,.8);text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:4px;font-size:12px">← Acasă</a>
+    <span class="badge-civic">🏛️ Inițiativă USR Pantelimon</span>
     <span>Monitorizare cetățenească · Pantelimon, jud. Ilfov</span>
     <span style="margin-left:auto">Actualizat: mai 2026</span>
   </div>
   <div class="header-main">
     <h1>Transparența Banului Public<br><span>Primăria Pantelimon</span></h1>
+    <div class="slogan">💡 <em>Aprindem lumina în Pantelimon</em></div>
     <p>Urmărim cheltuielile administrației locale și identificăm nereguli în achizițiile publice, pentru o comunitate mai bine informată.</p>
     <div class="header-stats">
       <div class="stat-pill">
@@ -1921,10 +1969,56 @@
 
 </main>
 
-<footer style="background:var(--albastru);color:#fff;text-align:center;padding:24px;font-size:13px;margin-top:40px">
-  <p>Inițiativă cetățenească independentă · Datele provin exclusiv din surse publice oficiale</p>
-  <p style="margin-top:6px;opacity:0.7">transparenta.eu · e-licitatie.ro · primariapantelimon.ro · data.gov.ro</p>
+<!-- FOOTER -->
+<footer style="background:var(--albastru);color:rgba(255,255,255,0.85);padding:36px 24px 24px;margin-top:48px">
+  <div style="max-width:1100px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px;margin-bottom:28px">
+      <div>
+        <div style="font-size:18px;font-weight:800;color:#FFD700;margin-bottom:8px">💡 Aprindem lumina în Pantelimon</div>
+        <div style="font-size:13px;line-height:1.7;opacity:0.85">Inițiativă civică independentă pentru transparența cheltuielilor publice ale Primăriei Pantelimon.</div>
+        <div style="margin-top:12px">
+          <span style="background:rgba(255,107,53,0.85);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px;letter-spacing:0.5px">USR PANTELIMON</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-weight:700;color:#fff;margin-bottom:10px;font-size:14px">📋 Resurse rapide</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:13px">
+          <a href="raport_transparenta.html" style="color:rgba(255,255,255,0.8);text-decoration:none">🚩 Raport nereguli complet</a>
+          <a href="https://e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0" target="_blank" style="color:rgba(255,255,255,0.8);text-decoration:none">🔍 SEAP — e-licitatie.ro</a>
+          <a href="https://transparenta.eu/entities/4420759" target="_blank" style="color:rgba(255,255,255,0.8);text-decoration:none">🌐 Transparenta.eu — Pantelimon</a>
+          <a href="https://www.primariapantelimon.ro" target="_blank" style="color:rgba(255,255,255,0.8);text-decoration:none">🏛️ Site Primărie</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-weight:700;color:#fff;margin-bottom:10px;font-size:14px">⚖️ Sesizări</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:13px">
+          <a href="https://www.anap.gov.ro/web/contact/" target="_blank" style="color:rgba(255,255,255,0.8);text-decoration:none">📧 ANAP — achiziții publice</a>
+          <a href="https://www.curteadeconturi.ro" target="_blank" style="color:rgba(255,255,255,0.8);text-decoration:none">🏛️ Curtea de Conturi</a>
+          <a href="https://www.integritate.eu" target="_blank" style="color:rgba(255,255,255,0.8);text-decoration:none">⚖️ ANI — integritate</a>
+          <a href="https://www.prefecturailfov.ro" target="_blank" style="color:rgba(255,255,255,0.8);text-decoration:none">🏢 Prefectura Ilfov</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,0.15);padding-top:16px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:12px;opacity:0.65">
+      <span>© 2026 · Transparența Pantelimon · Date publice ANAP / data.gov.ro / ANAF</span>
+      <span>Actualizat automat lunar · Cod sursă public pe GitHub</span>
+    </div>
+  </div>
 </footer>
+
+<!-- Scroll to top -->
+<button id="scroll-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  style="display:none;position:fixed;bottom:28px;right:24px;z-index:999;
+         background:var(--albastru);color:#fff;border:none;border-radius:50%;
+         width:44px;height:44px;font-size:20px;cursor:pointer;
+         box-shadow:0 3px 12px rgba(0,0,0,0.22);transition:opacity .2s">↑</button>
+<script>
+window.addEventListener('scroll', function() {
+  var btn = document.getElementById('scroll-top-btn');
+  if (btn) btn.style.display = window.scrollY > 300 ? 'flex' : 'none';
+  btn && (btn.style.alignItems = 'center') && (btn.style.justifyContent = 'center');
+});
+</script>
 
 <script>
 // ---- TAB NAVIGATION ----
