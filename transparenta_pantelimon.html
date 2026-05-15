@@ -660,6 +660,8 @@
     <li><a href="#" onclick="showTab('achizitii', this)">📋 Achiziții Publice <span class="cnt" style="background:#C0392B;color:#fff">5 🚩</span></a></li>
     <li><a href="#" onclick="showTab('surse', this)">🔗 Surse & Documente</a></li>
     <li><a href="#" onclick="showTab('actiune', this)">⚖️ Ce poți face</a></li>
+    <li><a href="#" onclick="showTab('tendinte', this)">📈 Tendințe</a></li>
+    <li><a href="#" onclick="showTab('ue', this)">🇪🇺 Finanțări UE</a></li>
   </ul>
 </nav>
 
@@ -1079,6 +1081,409 @@
 
   </div><!-- end tab-achizitii -->
 
+
+  <!-- ============================= TAB: TENDINȚE ============================= -->
+  <div id="tab-tendinte" class="section">
+
+    <div class="section-title">
+      <span class="icon">📈</span>
+      <h2>Tendințe & Modus Operandi — Pantelimon 2025</h2>
+    </div>
+
+    <div class="disclaimer">
+      Analiză automată a tiparelor din 506 contracte publice 2025. Tiparele identificate sunt indicatori de risc — nu constituie dovezi juridice, dar justifică sesizări la ANAP sau Curtea de Conturi.
+    </div>
+
+    <!-- PATTERN CRITIC: contracte identice aceeași zi -->
+    <div class="alert red" style="margin-bottom:20px">
+      <span>🚨</span>
+      <div>
+        <strong>Pattern CRITIC detectat: contracte masive identice în aceeași zi</strong><br>
+        <strong>29 iulie 2025:</strong> 3 firme diferite (ALA EXPERT CONSTRUCT, SANTIA PARTNER CONSTRUCT, YARDMAN) au primit contracte de exact <strong>29.508.940 RON fiecare</strong> — total 88.5M RON într-o singură zi.<br>
+        <strong>5 septembrie 2025:</strong> 2 firme (GLOBEXTERRA, ROMCO SYSTEM S.R.L.) au primit câte <strong>24.184.504 RON fiecare</strong> — total 48.4M RON.<br>
+        Valori identice la firme diferite în aceeași zi sugerează posibilă împărțire artificială a unui singur contract mare.
+      </div>
+    </div>
+
+    <!-- TOP FIRME -->
+    <div class="chart-box">
+      <h3>Top 10 firme după valoarea totală a contractelor</h3>
+      <p class="subtitle">Date din SEAP · 506 contracte · 2025 · Click pe firmă pentru detalii în registrul comerțului</p>
+      <div style="overflow-x:auto;margin-top:16px">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Firmă</th>
+              <th>Valoare totală</th>
+              <th>Nr. contracte</th>
+              <th>Valoare medie</th>
+              <th>Risc</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td><a href="https://listafirme.ro/search/?q=ALA+EXPERT+CONSTRUCT" target="_blank" style="color:var(--albastru);font-weight:700">ALA EXPERT CONSTRUCT</a></td>
+              <td><strong>29.508.940 RON</strong></td>
+              <td>1</td>
+              <td>29.508.940 RON</td>
+              <td><span class="sev sev-critic">CRITIC</span></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><a href="https://listafirme.ro/search/?q=SANTIA+PARTNER+CONSTRUCT" target="_blank" style="color:var(--albastru);font-weight:700">SANTIA PARTNER CONSTRUCT</a></td>
+              <td><strong>29.508.940 RON</strong></td>
+              <td>1</td>
+              <td>29.508.940 RON</td>
+              <td><span class="sev sev-critic">CRITIC</span></td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><a href="https://listafirme.ro/search/?q=YARDMAN" target="_blank" style="color:var(--albastru);font-weight:700">YARDMAN</a></td>
+              <td><strong>29.508.940 RON</strong></td>
+              <td>1</td>
+              <td>29.508.940 RON</td>
+              <td><span class="sev sev-critic">CRITIC</span></td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td><a href="https://listafirme.ro/search/?q=GLOBEXTERRA" target="_blank" style="color:var(--albastru);font-weight:700">GLOBEXTERRA</a></td>
+              <td><strong>24.184.504 RON</strong></td>
+              <td>1</td>
+              <td>24.184.504 RON</td>
+              <td><span class="sev sev-critic">CRITIC</span></td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td><a href="https://listafirme.ro/search/?q=ROMCO+SYSTEM+SRL" target="_blank" style="color:var(--albastru);font-weight:700">ROMCO SYSTEM S.R.L.</a></td>
+              <td><strong>24.184.504 RON</strong></td>
+              <td>1</td>
+              <td>24.184.504 RON</td>
+              <td><span class="sev sev-critic">CRITIC</span></td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td><a href="https://listafirme.ro/search/?q=BEPA+CONSTRUCTII+CIVILE" target="_blank" style="color:var(--albastru)">BEPA CONSTRUCTII CIVILE</a></td>
+              <td><strong>21.561.196 RON</strong></td>
+              <td>3</td>
+              <td>7.187.065 RON</td>
+              <td><span class="sev sev-major">MAJOR</span></td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td><a href="https://listafirme.ro/search/?q=TOP+A-Z+CONCEPT" target="_blank" style="color:var(--albastru)">TOP A-Z CONCEPT S.R.L.</a></td>
+              <td><strong>16.728.051 RON</strong></td>
+              <td>3</td>
+              <td>5.576.017 RON</td>
+              <td><span class="sev sev-major">MAJOR</span></td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td><a href="https://listafirme.ro/search/?q=Sicuro+Invest" target="_blank" style="color:var(--albastru)">Sicuro Invest</a></td>
+              <td><strong>15.070.720 RON</strong></td>
+              <td>2</td>
+              <td>7.535.360 RON</td>
+              <td><span class="sev sev-major">MAJOR</span></td>
+            </tr>
+            <tr>
+              <td>9</td>
+              <td><a href="https://listafirme.ro/search/?q=ACG+CONSTRUCTION+PROJECTS" target="_blank" style="color:var(--albastru)">ACG CONSTRUCTION &amp; PROJECTS</a></td>
+              <td><strong>13.570.756 RON</strong></td>
+              <td>1</td>
+              <td>13.570.756 RON</td>
+              <td><span class="sev sev-major">MAJOR</span></td>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td><a href="https://listafirme.ro/search/?q=OLTENIA+GARDEN" target="_blank" style="color:var(--albastru)">SC OLTENIA GARDEN SRL</a></td>
+              <td><strong>13.570.756 RON</strong></td>
+              <td>1</td>
+              <td>13.570.756 RON</td>
+              <td><span class="sev sev-major">MAJOR</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- MONOPOL FURNIZORI -->
+    <div class="chart-box">
+      <h3>Furnizori cu cel mai mare număr de contracte — tipar de monopol</h3>
+      <p class="subtitle">Repetiția aceluiași furnizor indică posibilă preferință sistematică sau caiet de sarcini restrictiv</p>
+      <div style="overflow-x:auto;margin-top:16px">
+        <table class="data-table">
+          <thead>
+            <tr><th>Firmă</th><th>Nr. contracte</th><th>Valoare totală</th><th>Valoare medie/contract</th><th>Risc</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="https://listafirme.ro/search/?q=KSA+ROAD+SERVICES" target="_blank" style="color:var(--albastru);font-weight:700">KSA ROAD SERVICES</a></td>
+              <td style="color:var(--rosu);font-weight:700">51</td>
+              <td>162.381 RON</td>
+              <td>3.184 RON</td>
+              <td><span class="sev sev-major">MAJOR</span></td>
+            </tr>
+            <tr>
+              <td><a href="https://listafirme.ro/search/?q=TURBOTOP" target="_blank" style="color:var(--albastru)">TURBOTOP</a></td>
+              <td style="color:var(--rosu);font-weight:700">29</td>
+              <td>40.373 RON</td>
+              <td>1.392 RON</td>
+              <td><span class="sev sev-mediu">MEDIU</span></td>
+            </tr>
+            <tr>
+              <td><a href="https://listafirme.ro/search/?q=AUTO+MARCU+GRUP" target="_blank" style="color:var(--albastru)">AUTO MARCU'S GRUP SA</a></td>
+              <td style="color:var(--rosu);font-weight:700">26</td>
+              <td>41.855 RON</td>
+              <td>1.610 RON</td>
+              <td><span class="sev sev-mediu">MEDIU</span></td>
+            </tr>
+            <tr>
+              <td><a href="https://listafirme.ro/search/?q=GI+EUROSERVICE" target="_blank" style="color:var(--albastru)">GI EUROSERVICE</a></td>
+              <td>22</td>
+              <td>29.430 RON</td>
+              <td>1.338 RON</td>
+              <td><span class="sev sev-ok">OK</span></td>
+            </tr>
+            <tr>
+              <td><a href="https://listafirme.ro/search/?q=DEDEMAN" target="_blank" style="color:var(--albastru)">DEDEMAN S.R.L.</a></td>
+              <td>18</td>
+              <td>35.753 RON</td>
+              <td>1.986 RON</td>
+              <td><span class="sev sev-ok">OK</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- MODUS OPERANDI -->
+    <div class="chart-box">
+      <h3>⚠️ Modus Operandi — Tipare identificate</h3>
+      <p class="subtitle">Metode identificate statistic în datele publice SEAP · Nu constituie dovezi juridice</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">
+
+        <div style="background:#FDEDEC;border-radius:10px;padding:16px;border-left:4px solid #C0392B">
+          <div style="font-weight:700;color:#922B21;margin-bottom:8px">1. Contracte masive identice — aceeași zi</div>
+          <p style="font-size:13px;color:#444;line-height:1.6">3 firme × 29.5M RON pe 29.07.2025 + 2 firme × 24.2M RON pe 05.09.2025 = <strong>136.9M RON</strong> în 5 contracte identice. Posibilă împărțire artificială a unui contract unic.</p>
+          <div class="action-chips" style="margin-top:8px">
+            <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/sesizari" target="_blank">📋 Curtea de Conturi</a>
+            <a class="chip chip-dni" href="https://www.dna.ro/sesizare.html" target="_blank">🔵 DNA</a>
+          </div>
+        </div>
+
+        <div style="background:#FEF3E2;border-radius:10px;padding:16px;border-left:4px solid #E67E22">
+          <div style="font-weight:700;color:#935116;margin-bottom:8px">2. Monopol furnizor repetat</div>
+          <p style="font-size:13px;color:#444;line-height:1.6">KSA Road Services — 51 contracte = dominant complet pe servicii stradale. Absența totală a concurenței pe o categorie de achiziții sugerează caiet de sarcini restrictiv.</p>
+          <div class="action-chips" style="margin-top:8px">
+            <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank">📧 ANAP</a>
+          </div>
+        </div>
+
+        <div style="background:#FEF3E2;border-radius:10px;padding:16px;border-left:4px solid #E67E22">
+          <div style="font-weight:700;color:#935116;margin-bottom:8px">3. 100% achiziții directe</div>
+          <p style="font-size:13px;color:#444;line-height:1.6">Din 506 contracte, practic toate sunt achiziții directe. Nicio procedură competitivă vizibilă în datele SEAP analizate. Media națională este 45-50% proceduri competitive.</p>
+          <div class="action-chips" style="margin-top:8px">
+            <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank">📧 ANAP</a>
+            <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/sesizari" target="_blank">📋 Curtea de Conturi</a>
+          </div>
+        </div>
+
+        <div style="background:#FEF3E2;border-radius:10px;padding:16px;border-left:4px solid #E67E22">
+          <div style="font-weight:700;color:#935116;margin-bottom:8px">4. Vârf de contracte în perioadele electorale</div>
+          <p style="font-size:13px;color:#444;line-height:1.6">Februarie 2025 — maximul absolut cu 45 contracte, urmând alegerile din noiembrie 2024. Tipar cunoscut de cheltuieli accelerate post-electoral pentru recompensarea susținătorilor.</p>
+          <div class="action-chips" style="margin-top:8px">
+            <a class="chip chip-ani" href="https://www.integritate.eu/Sesizari.aspx" target="_blank" style="background:#F3E5F5;color:#6A1B9A">🔎 ANI</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DISTRIBUTIE LUNARA -->
+    <div class="chart-box">
+      <h3>Distribuția lunară a contractelor 2025</h3>
+      <p class="subtitle">Număr contracte atribuite pe lună · Date SEAP</p>
+      <canvas id="chartLunar" style="height:260px"></canvas>
+    </div>
+
+  </div><!-- end tab-tendinte -->
+
+  <!-- ============================= TAB: FINANȚĂRI UE ============================= -->
+  <div id="tab-ue" class="section">
+
+    <div class="section-title">
+      <span class="icon">🇪🇺</span>
+      <h2>Finanțări Europene — Pantelimon</h2>
+    </div>
+
+    <div class="disclaimer">
+      Proiecte cu finanțare europeană (PNRR, POR, POIM, AFM) identificate pe site-ul primăriei și în baze de date publice. Sursa: <a href="https://www.primariapantelimon.ro/proiecte-2/" target="_blank">primariapantelimon.ro/proiecte-2/</a>
+    </div>
+
+    <!-- COMPARATIE UE vs ACHIZITII DIRECTE -->
+    <div class="cards-row" style="margin-bottom:24px">
+      <div class="card green">
+        <span class="val">71,6M RON</span>
+        <span class="lbl">Finanțări UE/PNRR atrase</span>
+        <div class="sub">10 proiecte active sau finalizate</div>
+      </div>
+      <div class="card red">
+        <span class="val">136,9M RON</span>
+        <span class="lbl">Contracte suspecte — o singură zi</span>
+        <div class="sub">5 contracte atribuite pe 2 date (29.07 + 05.09.2025)</div>
+      </div>
+      <div class="card orange">
+        <span class="val">506</span>
+        <span class="lbl">Achiziții directe SEAP 2025</span>
+        <div class="sub">0 proceduri competitive vizibile</div>
+      </div>
+      <div class="card">
+        <span class="val">1 : 1,9</span>
+        <span class="lbl">Raport UE : achiziții suspecte</span>
+        <div class="sub">Pentru fiecare leu atras din UE, 1,9 lei cheltuiți suspect</div>
+      </div>
+    </div>
+
+    <!-- ALERTA -->
+    <div class="alert red" style="margin-bottom:20px">
+      <span>⚠️</span>
+      <div><strong>Risc: achizițiile directe finanțate din fonduri UE necesită audit special.</strong> Proiectele PNRR și POR au reguli stricte de achiziție — orice cumpărare directă în cadrul unui proiect european poate duce la deduceri financiare sau returnarea fondurilor. Curtea de Conturi Europeană poate audita aceste cheltuieli.</div>
+    </div>
+
+    <!-- TABEL PROIECTE EU -->
+    <div class="chart-box">
+      <h3>Proiecte cu finanțare europeană identificate</h3>
+      <p class="subtitle">Sursa: primariapantelimon.ro/proiecte-2/ · Actualizat mai 2026</p>
+      <div style="overflow-x:auto;margin-top:16px">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Proiect</th>
+              <th>Valoare finanțată (RON)</th>
+              <th>Sursă</th>
+              <th>Status</th>
+              <th>Verificare</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Rețele apă și canalizare</td>
+              <td><strong>14.745.483</strong></td>
+              <td><span class="badge blue">PNRR</span></td>
+              <td><span class="badge orange">În derulare</span></td>
+              <td><a href="https://proiecte.pnrr.gov.ro" target="_blank" style="color:var(--albastru);font-size:12px">PNRR →</a></td>
+            </tr>
+            <tr>
+              <td>Școală green (gimnaziu P+2E)</td>
+              <td><strong>34.249.342</strong></td>
+              <td><span class="badge blue">PNRR</span></td>
+              <td><span class="badge orange">În derulare</span></td>
+              <td><a href="https://proiecte.pnrr.gov.ro" target="_blank" style="color:var(--albastru);font-size:12px">PNRR →</a></td>
+            </tr>
+            <tr>
+              <td>GIS Actualizare Plan Urbanistic</td>
+              <td><strong>1.183.318</strong></td>
+              <td><span class="badge blue">PNRR</span></td>
+              <td><span class="badge orange">În derulare</span></td>
+              <td><a href="https://proiecte.pnrr.gov.ro" target="_blank" style="color:var(--albastru);font-size:12px">PNRR →</a></td>
+            </tr>
+            <tr>
+              <td>Piste pentru biciclete</td>
+              <td><strong>820.121</strong></td>
+              <td><span class="badge blue">PNRR</span></td>
+              <td><span class="badge orange">În derulare</span></td>
+              <td><a href="https://proiecte.pnrr.gov.ro" target="_blank" style="color:var(--albastru);font-size:12px">PNRR →</a></td>
+            </tr>
+            <tr>
+              <td>Echipamente educaționale digitale</td>
+              <td><strong>3.206.307</strong></td>
+              <td><span class="badge blue">PNRR</span></td>
+              <td><span class="badge orange">În derulare</span></td>
+              <td><a href="https://proiecte.pnrr.gov.ro" target="_blank" style="color:var(--albastru);font-size:12px">PNRR →</a></td>
+            </tr>
+            <tr>
+              <td>Extindere iluminat public — 21 străzi + parc</td>
+              <td><strong>8.498.450</strong></td>
+              <td><span class="badge green">POR</span></td>
+              <td><span class="badge green">Finalizat</span></td>
+              <td><a href="https://www.primariapantelimon.ro/proiecte-2/" target="_blank" style="color:var(--albastru);font-size:12px">Primărie →</a></td>
+            </tr>
+            <tr>
+              <td>Modernizare iluminat Etapa 1</td>
+              <td><strong>994.184</strong></td>
+              <td><span class="badge orange">AFM</span></td>
+              <td><span class="badge green">Finalizat</span></td>
+              <td><a href="https://www.primariapantelimon.ro/proiecte-2/" target="_blank" style="color:var(--albastru);font-size:12px">Primărie →</a></td>
+            </tr>
+            <tr>
+              <td>Modernizare iluminat Etapa 2</td>
+              <td><strong>1.920.630</strong></td>
+              <td><span class="badge orange">AFM</span></td>
+              <td><span class="badge green">Finalizat</span></td>
+              <td><a href="https://www.primariapantelimon.ro/proiecte-2/" target="_blank" style="color:var(--albastru);font-size:12px">Primărie →</a></td>
+            </tr>
+            <tr>
+              <td>Stații încărcare vehicule electrice</td>
+              <td><strong>1.137.041</strong></td>
+              <td><span class="badge orange">AFM</span></td>
+              <td><span class="badge orange">În derulare</span></td>
+              <td><a href="https://www.primariapantelimon.ro/proiecte-2/" target="_blank" style="color:var(--albastru);font-size:12px">Primărie →</a></td>
+            </tr>
+            <tr>
+              <td>Energie regenerabilă în clădiri publice</td>
+              <td><strong>4.894.210</strong></td>
+              <td><span class="badge blue">POIM</span></td>
+              <td><span class="badge green">Finalizat</span></td>
+              <td><a href="https://www.primariapantelimon.ro/proiecte-2/" target="_blank" style="color:var(--albastru);font-size:12px">Primărie →</a></td>
+            </tr>
+            <tr style="background:#E8F8F5;font-weight:700">
+              <td>TOTAL FINANȚĂRI UE</td>
+              <td><strong>71.649.086 RON</strong></td>
+              <td colspan="3" style="color:#0E6655">10 proiecte identificate · Suma poate fi incompletă</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CE LIPSESTE -->
+    <div class="alert blue" style="margin-top:20px">
+      <span>💡</span>
+      <div>
+        <strong>Verificare independentă:</strong> Consultați <a href="https://proiecte.pnrr.gov.ro" target="_blank" style="color:var(--albastru)">proiecte.pnrr.gov.ro</a> și <a href="https://www.fonduri-ue.ro" target="_blank" style="color:var(--albastru)">fonduri-ue.ro</a> pentru lista completă oficială a proiectelor europene ale UAT Pantelimon. Dacă găsiți proiecte neraportate pe site-ul primăriei, sesizați Curtea de Conturi.
+      </div>
+    </div>
+
+    <!-- SURSE OFICIALE BUGET -->
+    <div class="chart-box" style="margin-top:20px">
+      <h3>📁 Documente bugetare oficiale disponibile</h3>
+      <p class="subtitle">Publicat pe primariapantelimon.ro/serviciul-contabil/ · Actualizat periodic</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px">
+        <a href="https://www.primariapantelimon.ro/serviciul-contabil/" target="_blank"
+           style="background:#EBF5FB;border:1px solid #AED6F1;border-radius:8px;padding:14px;text-decoration:none;color:inherit;display:block">
+          <div style="font-weight:700;color:#0070C0;margin-bottom:4px">📊 Buget Local 2026</div>
+          <div style="font-size:12px;color:#555">Proiect buget + buget credite interne · Consultare publică</div>
+        </a>
+        <a href="https://www.primariapantelimon.ro/serviciul-contabil/" target="_blank"
+           style="background:#E8F8F5;border:1px solid #A9DFBF;border-radius:8px;padding:14px;text-decoration:none;color:inherit;display:block">
+          <div style="font-weight:700;color:#27AE60;margin-bottom:4px">📋 Execuții bugetare 2025</div>
+          <div style="font-size:12px;color:#555">Trimestrial: mar · iun · sep · dec 2025 — toate disponibile</div>
+        </a>
+        <a href="https://www.primariapantelimon.ro/serviciul-contabil/" target="_blank"
+           style="background:#FEF9E7;border:1px solid #F9E79F;border-radius:8px;padding:14px;text-decoration:none;color:inherit;display:block">
+          <div style="font-weight:700;color:#7D6608;margin-bottom:4px">📑 Situații financiare 2015–2024</div>
+          <div style="font-size:12px;color:#555">Bilanțuri contabile, registru datorie publică</div>
+        </a>
+        <a href="https://www.primariapantelimon.ro/serviciul-contabil/" target="_blank"
+           style="background:#FDEDEC;border:1px solid #F5B7B1;border-radius:8px;padding:14px;text-decoration:none;color:inherit;display:block">
+          <div style="font-weight:700;color:#C0392B;margin-bottom:4px">⚠️ Execuție bugetară T1 2026</div>
+          <div style="font-size:12px;color:#555">Disponibil · Verificați concordanța cu contractele SEAP</div>
+        </a>
+      </div>
+    </div>
+
+  </div><!-- end tab-ue -->
 
   <!-- ============================= TAB: SURSE ============================= -->
   <div id="tab-surse" class="section">
@@ -1601,7 +2006,7 @@ async function expandFlag(cardEl, keyword, titlu) {
         return `<tr style="border-bottom:1px solid #f0f0f0">
           <td style="padding:7px 8px;font-size:12px;max-width:260px">${desc}</td>
           <td style="padding:7px 8px;font-size:12px;white-space:nowrap;font-weight:700;color:#C0392B">${amount}</td>
-          <td style="padding:7px 8px;font-size:12px">${firm}</td>
+          <td style="padding:7px 8px;font-size:12px">${firm !== '—' ? '<a href="https://listafirme.ro/search/?q=' + encodeURIComponent(firm) + '" target="_blank" style="color:var(--albastru);text-decoration:underline dotted" title="Detalii firmă">' + firm + '</a>' : '—'}</td>
           <td style="padding:7px 8px;font-size:12px;white-space:nowrap">${date}</td>
           <td style="padding:7px 8px;font-size:11px;min-width:160px">
             ${seapUrl ? `<a href="${seapUrl}" target="_blank"
@@ -1769,7 +2174,7 @@ function _renderRows(reset) {
     var legal = _flagLegal(flag);
     detailTr.innerHTML = '<td class="contract-detail-cell" colspan="6">'
       + '<div class="detail-grid">'
-      + '<div class="d-item"><div class="d-lbl">Firmă</div><div class="d-val" style="font-size:12px">' + c.firma + '</div></div>'
+      + '<div class="d-item"><div class="d-lbl">Firmă</div><div class="d-val" style="font-size:12px">' + _firmaLink(c.firma) + '</div></div>'
       + '<div class="d-item"><div class="d-lbl">Valoare</div><div class="d-val" ' + (flag!=='OK'?'style="color:#C0392B"':'') + '>' + Math.round(c.valoare).toLocaleString('ro-RO') + ' RON</div></div>'
       + '<div class="d-item"><div class="d-lbl">Data atribuirii</div><div class="d-val">' + c.data + '</div></div>'
       + '<div class="d-item"><div class="d-lbl">Nr. ofertanți</div><div class="d-val" ' + (c.ofertanti===1?'style="color:#C0392B"':'') + '>' + (c.ofertanti||'—') + '</div></div>'
@@ -1833,6 +2238,13 @@ async function _loadContracte() {
 }
 
 // ---- INTERACTIVE ACHIZITII ----
+
+function _firmaLink(firma, style) {
+  if (!firma || firma === '—') return firma || '—';
+  const url = 'https://listafirme.ro/search/?q=' + encodeURIComponent(firma);
+  const s = style || 'color:inherit;text-decoration:underline dotted;cursor:pointer';
+  return '<a href="' + url + '" target="_blank" onclick="event.stopPropagation()" title="Detalii firmă pe listafirme.ro" style="' + s + '">' + firma + '</a>';
+}
 
 function toggleKpiDetail(id) {
   const panel = document.getElementById(id);
@@ -2163,6 +2575,38 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   _loadContracte();
+
+  // Chart Lunar distribution
+  const ctxLunar = document.getElementById('chartLunar');
+  if (ctxLunar) {
+    new Chart(ctxLunar, {
+      type: 'bar',
+      data: {
+        labels: ['Sep 23','Dec 24','Ian 25','Feb 25','Mar 25','Apr 25','Mai 25','Iun 25','Iul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Ian 26','Feb 26','Mar 26'],
+        datasets: [{
+          label: 'Nr. contracte',
+          data: [2, 2, 28, 45, 41, 28, 38, 35, 38, 29, 31, 32, 34, 38, 23, 29, 33],
+          backgroundColor: function(ctx) {
+            const v = ctx.raw;
+            if (v >= 40) return '#C0392B';
+            if (v >= 35) return '#E67E22';
+            return 'rgba(0,112,192,0.7)';
+          },
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ctx.parsed.y + ' contracte' } },
+          annotation: {}
+        },
+        scales: { y: { beginAtZero: true, title: { display: true, text: 'Nr. contracte' } } }
+      }
+    });
+  }
 
 });
 </script>
