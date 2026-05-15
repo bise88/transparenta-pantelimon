@@ -829,6 +829,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
         "data": c["data_publicare"],
         "tip": c["tip_procedura"],
         "firma": c["castigator"],
+        "cui": c.get("castigator_cui", ""),
         "ofertanti": c["nr_ofertanti"],
     } for c in contracte], ensure_ascii=False)
 
@@ -1353,6 +1354,7 @@ def main():
         "data": c["data_publicare"],
         "tip": c["tip_procedura"],
         "firma": c["castigator"],
+        "cui": c.get("castigator_cui", ""),
         "ofertanti": c["nr_ofertanti"],
     } for c in contracte]
     with open("contracte.json", "w", encoding="utf-8") as f:
