@@ -1010,6 +1010,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
     @page {{ margin:1.5cm; size:A4; }}
   }}
 </style>
+<script src="enhance.js" defer></script>
 </head>
 <body>
 <div style="background:linear-gradient(135deg,#00427A,#0070C0);color:#fff;padding:24px 32px">
