@@ -1340,9 +1340,32 @@ def main():
     flags_contracte = analizeaza_red_flags(contracte, CONFIG)
     toate_flags = flags_contracte + flags_hcl
 
+    # 4b. Detectăm flags NOI față de rularea precedentă
+    flags_noi = detecteaza_flags_noi(toate_flags, stare_ant)
+    ids_curente = set(f["contract_id"] + "_" + f["tip"] for f in toate_flags)
+    ids_anterioare = set(stare_ant.get("flags_anterioare", []))
+    flags_rezolvate_n = len(ids_anterioare - ids_curente)
+    data_anterioara_str = stare_ant.get("data_ultima_rulare", None)
+
+    # Export delta.json — folosit de enhance.js pentru banner "ce e nou"
+    data_curenta = datetime.now()
+    delta = {
+        "data_curenta": data_curenta.isoformat(),
+        "data_anterioara": data_anterioara_str,
+        "nereguli_noi": len(flags_noi),
+        "nereguli_rezolvate": flags_rezolvate_n,
+        "top_noi": [
+            {"titlu": n["titlu"], "severitate": n["severitate"], "index": i}
+            for i, n in enumerate(flags_noi[:3], 1)
+        ],
+    }
+    with open("delta.json", "w", encoding="utf-8") as f:
+        json.dump(delta, f, ensure_ascii=False, indent=2)
+    print(f"  ✓ delta.json: {len(flags_noi)} nereguli noi, {flags_rezolvate_n} rezolvate")
+
     # 5. Raport HTML + export contracte.json
     print("\n[5/6] Generez raport HTML...")
-    raport_html = genereaza_raport_html(budget, contracte, toate_flags, [], CONFIG)
+    raport_html = genereaza_raport_html(budget, contracte, toate_flags, flags_noi, CONFIG)
     with open(CONFIG["fisier_raport"], "w", encoding="utf-8") as f:
         f.write(raport_html)
     print(f"  ✓ Raport salvat: {CONFIG['fisier_raport']}")
