@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bise88.github.io/transparenta-pantelimon/sitemap.xml
