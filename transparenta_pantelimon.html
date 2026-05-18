@@ -1166,7 +1166,7 @@ document.addEventListener('scroll', function() {
       <div class="legal-citation">⚖️ Art. 2 alin. (2) din Legea 98/2016 — principiul concurenței: autoritatea are obligația de a promova concurența între operatorii economici. Art. 160-161 — oferta unică nu este ilegal în sine, dar tiparele repetate pot fi semnalate la ANAP.</div>
       <div class="action-chips">
         <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank" rel="noopener noreferrer">📧 Sesizare ANAP</a>
-        <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/sesizari" target="_blank" rel="noopener noreferrer">📋 Sesizare Curtea de Conturi</a>
+        <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/Sesizari" target="_blank" rel="noopener noreferrer">📋 Sesizare Curtea de Conturi</a>
         <a class="chip chip-seap" href="https://www.e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0" target="_blank" rel="noopener noreferrer">🔍 Verifică în SEAP</a>
       </div>
     </div>
@@ -1180,8 +1180,8 @@ document.addEventListener('scroll', function() {
       <div class="legal-citation">⚖️ Art. 11 din Legea 98/2016 — interzice divizarea artificială a contractelor pentru a evita aplicarea procedurilor competitive. Fragmentarea poate constitui contravenție sau infracțiune dacă este dovedită intenția.</div>
       <div class="action-chips">
         <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank" rel="noopener noreferrer">📧 Sesizare ANAP</a>
-        <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/sesizari" target="_blank" rel="noopener noreferrer">📋 Curtea de Conturi</a>
-        <a class="chip chip-dni" href="https://www.dna.ro/sesizare.html" target="_blank" rel="noopener noreferrer">🔵 Sesizare DNA</a>
+        <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/Sesizari" target="_blank" rel="noopener noreferrer">📋 Curtea de Conturi</a>
+        <a class="chip chip-dni" href="https://www.pna.ro/sesizare.xhtml" target="_blank" rel="noopener noreferrer">🔵 Sesizare DNA</a>
       </div>
     </div>
 
@@ -1442,8 +1442,8 @@ document.addEventListener('scroll', function() {
           <div style="font-weight:700;color:#922B21;margin-bottom:8px">1. Contracte masive identice — aceeași zi</div>
           <p style="font-size:13px;color:#444;line-height:1.6">3 firme × 29.5M RON pe 29.07.2025 + 2 firme × 24.2M RON pe 05.09.2025 = <strong>136.9M RON</strong> în 5 contracte identice. Posibilă împărțire artificială a unui contract unic.</p>
           <div class="action-chips" style="margin-top:8px">
-            <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/sesizari" target="_blank" rel="noopener noreferrer">📋 Curtea de Conturi</a>
-            <a class="chip chip-dni" href="https://www.dna.ro/sesizare.html" target="_blank" rel="noopener noreferrer">🔵 DNA</a>
+            <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/Sesizari" target="_blank" rel="noopener noreferrer">📋 Curtea de Conturi</a>
+            <a class="chip chip-dni" href="https://www.pna.ro/sesizare.xhtml" target="_blank" rel="noopener noreferrer">🔵 DNA</a>
           </div>
         </div>
 
@@ -1460,7 +1460,7 @@ document.addEventListener('scroll', function() {
           <p style="font-size:13px;color:#444;line-height:1.6">Din 506 contracte, practic toate sunt achiziții directe. Nicio procedură competitivă vizibilă în datele SEAP analizate. Media națională este 45-50% proceduri competitive.</p>
           <div class="action-chips" style="margin-top:8px">
             <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank" rel="noopener noreferrer">📧 ANAP</a>
-            <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/sesizari" target="_blank" rel="noopener noreferrer">📋 Curtea de Conturi</a>
+            <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/Sesizari" target="_blank" rel="noopener noreferrer">📋 Curtea de Conturi</a>
           </div>
         </div>
 
@@ -2343,9 +2343,9 @@ function _flagChips(flag, c) {
   html += '<a class="chip chip-transparenta" href="https://transparenta.eu/entities/4420759#achizitii" target="_blank" onclick="event.stopPropagation()" title="Caută firma ' + c.firma + ' pe transparenta.eu" rel="noopener noreferrer">🌐 transparenta.eu</a>';
   if (flag !== 'OK') {
     html += '<a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank" onclick="event.stopPropagation()" rel="noopener noreferrer">📧 ANAP</a>';
-    html += '<a class="chip chip-cdc" href="https://www.curteadeconturi.ro/sesizari" target="_blank" onclick="event.stopPropagation()" rel="noopener noreferrer">📋 Curtea de Conturi</a>';
+    html += '<a class="chip chip-cdc" href="https://www.curteadeconturi.ro/Sesizari" target="_blank" onclick="event.stopPropagation()" rel="noopener noreferrer">📋 Curtea de Conturi</a>';
   }
-  if (flag === 'CRITIC') html += '<a class="chip chip-dni" href="https://www.dna.ro/sesizare.html" target="_blank" onclick="event.stopPropagation()" rel="noopener noreferrer">🔵 DNA</a>';
+  if (flag === 'CRITIC') html += '<a class="chip chip-dni" href="https://www.pna.ro/sesizare.xhtml" target="_blank" onclick="event.stopPropagation()" rel="noopener noreferrer">🔵 DNA</a>';
   return html;
 }
 
@@ -2682,9 +2682,9 @@ function printCitizenReport() {
 <table>
   <tr><th>Instituție</th><th>Competență</th><th>Contact</th></tr>
   <tr><td><strong>ANAP</strong></td><td>Control achiziții publice, sancționare contravenții</td><td>anap.gov.ro/web/contact</td></tr>
-  <tr><td><strong>Curtea de Conturi</strong></td><td>Control financiar, audit cheltuieli publice</td><td>curteadeconturi.ro/sesizari</td></tr>
+  <tr><td><strong>Curtea de Conturi</strong></td><td>Control financiar, audit cheltuieli publice</td><td><a href="https://www.curteadeconturi.ro/Sesizari" target="_blank" style="color:var(--albastru)">curteadeconturi.ro/Sesizari</a></td></tr>
   <tr><td><strong>ANI</strong></td><td>Conflicte de interese, incompatibilități</td><td>integritate.eu</td></tr>
-  <tr><td><strong>DNA</strong></td><td>Fapte penale de corupție, fraudă fonduri publice</td><td>dna.ro/sesizare.html</td></tr>
+  <tr><td><strong>DNA / PNA</strong></td><td>Fapte penale de corupție, fraudă fonduri publice</td><td><a href="https://www.pna.ro/sesizare.xhtml" target="_blank" style="color:var(--albastru)">pna.ro/sesizare.xhtml</a></td></tr>
   <tr><td><strong>Prefectura Ilfov</strong></td><td>Control legalitate acte administrative locale</td><td>prefecturailfov.ro</td></tr>
 </table>
 
