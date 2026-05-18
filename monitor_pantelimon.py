@@ -821,6 +821,17 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
     ordine_sev = {"CRITIC": 0, "MAJOR": 1, "MEDIU": 2}
     flags_sortate = sorted(flags, key=lambda f: ordine_sev.get(f.get("severitate", "MEDIU"), 2))
 
+    # ── SEO / Open Graph: numere dinamice din flags actuali ──────────────────
+    n_total = len(flags)
+    n_critic = sum(1 for f in flags if f.get("severitate") == "CRITIC")
+    n_major = sum(1 for f in flags if f.get("severitate") == "MAJOR")
+    seo_title = f"Raport Transparență — {n_total} Nereguli Detectate"
+    seo_description = (
+        f"{n_critic} critice, {n_major} majore din {n_total} nereguli detectate la "
+        f"{config['nume_entitate']}. Achiziții directe peste prag, fragmentare contracte, "
+        f"ofertanți unici. Date din SEAP și ANAF."
+    )
+
     # Serializăm contractele ca JSON pentru embed în HTML (folosit de JS pentru "toate contractele firmei")
     contracte_json_embed = json.dumps([{
         "id": c["id"],
@@ -982,7 +993,26 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Raport Transparență – {config['nume_entitate']} – {data_generare}</title>
+<title>{seo_title} — {config['nume_entitate']} — {data_generare}</title>
+
+<!-- SEO -->
+<meta name="description" content="{seo_description}">
+<meta name="keywords" content="transparență, Pantelimon, primărie, achiziții publice, SEAP, ANAF, monitorizare cetățenească, Ilfov, nereguli, raport">
+<meta name="author" content="Inițiativă cetățenească independentă">
+<link rel="canonical" href="https://bise88.github.io/transparenta-pantelimon/raport_transparenta.html">
+
+<!-- Open Graph (Facebook, LinkedIn) -->
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bise88.github.io/transparenta-pantelimon/raport_transparenta.html">
+<meta property="og:title" content="{seo_title}">
+<meta property="og:description" content="{seo_description}">
+<meta property="og:locale" content="ro_RO">
+<meta property="og:site_name" content="Transparența Pantelimon">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{seo_title}">
+<meta name="twitter:description" content="{seo_description}">
 <style>
   body{{font-family:'Segoe UI',Arial,sans-serif;background:#F4F6F9;color:#1A1A2E;margin:0;padding:0}}
   .wrap{{max-width:960px;margin:0 auto;padding:24px 16px 60px}}
