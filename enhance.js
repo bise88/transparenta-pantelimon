@@ -348,8 +348,12 @@ html[data-tp-theme="dark"] {
   // DETECȚIE CARDURI (raport_transparenta.html)
   // ──────────────────────────────────────────────────────────────
   function detectCards() {
+    // Strategie 0 (NOUĂ): clase semantice explicite adăugate de monitor v2
+    let cards = $$('.tp-flag');
+    if (cards.length >= 5) return cards;
+
     // Strategie 1: <details> care conțin severitate
-    let cards = $$('details').filter(d => /CRITIC|MAJOR|MEDIU/.test(d.textContent));
+    cards = $$('details').filter(d => /CRITIC|MAJOR|MEDIU/.test(d.textContent));
     if (cards.length >= 5) return cards;
 
     // Strategie 2: orice element cu clasă conținând "card"/"nereg"/"issue"/"flag"
@@ -380,6 +384,24 @@ html[data-tp-theme="dark"] {
   }
 
   function parseCard(el, idx) {
+    // Cale rapidă: data-* attributes (monitor v2+)
+    if (el.dataset && el.dataset.severity) {
+      return {
+        idx,
+        el,
+        severity:     el.dataset.severity || 'MEDIU',
+        title:        (el.querySelector('.flag-title') || {}).textContent || '',
+        supplier:     el.dataset.supplier || '',
+        supplierCif:  el.dataset.supplierCif || '',
+        sum:          parseFloat(el.dataset.sumRon || '0') || 0,
+        date:         el.dataset.date || '',
+        contract:     el.dataset.contractId || '',
+        procedure:    el.dataset.procedure || '',
+        haystack:     el.textContent.toLowerCase().replace(/\s+/g, ' ').slice(0, 4000),
+      };
+    }
+
+    // Cale veche (fallback heuristic) ────────────────────────────
     const txt = el.textContent;
     let sev = 'MEDIU';
     if (/\bCRITIC\b/.test(txt))      sev = 'CRITIC';
@@ -439,6 +461,34 @@ html[data-tp-theme="dark"] {
   }
 
   // ──────────────────────────────────────────────────────────────
+  // CITIRE DATE DIN JSON EMBEDDED (tp-data) — preferat față de DOM parsing
+  // ──────────────────────────────────────────────────────────────
+  function loadDataFromJson(cardEls) {
+    const tag = document.getElementById('tp-data');
+    if (!tag) return null;
+    try {
+      const data = JSON.parse(tag.textContent);
+      if (!data.flags || !data.flags.length) return null;
+      return data.flags.map((f, i) => ({
+        idx:         i,
+        el:          document.getElementById(f.anchor) || cardEls[i] || null,
+        severity:    f.severity || 'MEDIU',
+        title:       f.title || '',
+        supplier:    f.supplier || '',
+        supplierCif: f.supplier_cif || '',
+        sum:         parseFloat(f.sum_ron || 0) || 0,
+        date:        f.date || '',
+        contract:    f.contract_id || '',
+        procedure:   f.procedure || '',
+        haystack:    (f.title + ' ' + f.supplier + ' ' + f.explanation + ' ' + f.procedure).toLowerCase(),
+      }));
+    } catch (e) {
+      console.warn('[tp-enhance] tp-data JSON invalid — fallback la DOM parsing.');
+      return null;
+    }
+  }
+
+  // ──────────────────────────────────────────────────────────────
   // PAGINA RAPORT
   // ──────────────────────────────────────────────────────────────
   function enhanceReport() {
@@ -448,8 +498,8 @@ html[data-tp-theme="dark"] {
       return;
     }
 
-    // Indexare
-    const items = cardEls.map((el, i) => parseCard(el, i));
+    // Indexare: JSON embedded (rapid, fără regex) sau DOM parsing (fallback)
+    const items = loadDataFromJson(cardEls) || cardEls.map((el, i) => parseCard(el, i));
 
     // Ancore + permalink
     items.forEach(item => {
