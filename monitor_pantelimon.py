@@ -1286,7 +1286,76 @@ function showFirmaContracts(firma, evt) {{
 
 
 # ==============================================================================
-# 6. TRIMITERE EMAIL ALERTĂ
+# 6. FEED ATOM
+# ==============================================================================
+
+def genereaza_feed_atom(nereguli: list, data_generare: datetime) -> str:
+    """Generează feed Atom cu cele mai noi N=20 nereguli (CRITIC > MAJOR > MEDIU, apoi valoare descendentă)."""
+    import html as html_mod
+    from datetime import timezone
+
+    BASE = "https://bise88.github.io/transparenta-pantelimon"
+    if data_generare.tzinfo is None:
+        updated = data_generare.replace(tzinfo=timezone.utc).isoformat()
+    else:
+        updated = data_generare.astimezone(timezone.utc).isoformat()
+
+    sev_order = {"CRITIC": 0, "MAJOR": 1, "MEDIU": 2}
+    sorted_nereguli = sorted(
+        nereguli,
+        key=lambda n: (sev_order.get(n.get("severitate", "MEDIU"), 99),
+                       -float(n.get("valoare", 0) or 0))
+    )[:20]
+
+    entries = []
+    for i, n in enumerate(sorted_nereguli, 1):
+        titlu = html_mod.escape(str(n.get("titlu", "Nereguă")))
+        sev = html_mod.escape(str(n.get("severitate", "MEDIU")))
+        furnizor = html_mod.escape(str(n.get("furnizor", "") or ""))
+        try:
+            valoare = float(n.get("valoare", 0) or 0)
+        except (TypeError, ValueError):
+            valoare = 0.0
+        descriere = html_mod.escape(str(n.get("descriere", "") or ""))[:500]
+        data_neregula = html_mod.escape(str(n.get("data", "") or ""))
+        url = f"{BASE}/raport_transparenta.html#nereguli-{i}"
+        entry_id = f"{BASE}/raport_transparenta.html#nereguli-{i}-{updated}"
+
+        summary_html = (
+            f"&lt;p&gt;&lt;strong&gt;Furnizor:&lt;/strong&gt; {furnizor}"
+            f"&lt;br/&gt;&lt;strong&gt;Sumă:&lt;/strong&gt; {valoare:,.0f} RON"
+            f"&lt;br/&gt;&lt;strong&gt;Dată:&lt;/strong&gt; {data_neregula}"
+            f"&lt;/p&gt;&lt;p&gt;{descriere}&lt;/p&gt;"
+        )
+
+        entries.append(
+            "  <entry>\n"
+            f"    <title>[{sev}] {titlu}</title>\n"
+            f'    <link href="{url}"/>\n'
+            f"    <id>{entry_id}</id>\n"
+            f"    <updated>{updated}</updated>\n"
+            f'    <summary type="html">{summary_html}</summary>\n'
+            "  </entry>"
+        )
+
+    feed = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<feed xmlns="http://www.w3.org/2005/Atom">\n'
+        '  <title>Transparența Pantelimon — Nereguli detectate</title>\n'
+        '  <subtitle>Monitorizare cetățenească automată a achizițiilor publice</subtitle>\n'
+        f'  <link href="{BASE}/feed.xml" rel="self"/>\n'
+        f'  <link href="{BASE}/raport_transparenta.html"/>\n'
+        f"  <updated>{updated}</updated>\n"
+        f"  <id>{BASE}/feed.xml</id>\n"
+        "  <author><name>Inițiativă cetățenească independentă</name></author>\n"
+        + "\n".join(entries) + "\n"
+        "</feed>\n"
+    )
+    return feed
+
+
+# ==============================================================================
+# 7. TRIMITERE EMAIL ALERTĂ
 # ==============================================================================
 
 def trimite_email_alerta(flags_noi: list, raport_html: str, config: dict):
@@ -1376,6 +1445,12 @@ def main():
     with open(CONFIG["fisier_raport"], "w", encoding="utf-8") as f:
         f.write(raport_html)
     print(f"  ✓ Raport salvat: {CONFIG['fisier_raport']}")
+
+    # Export feed.xml (Atom) pentru cititori RSS / jurnaliști
+    feed_xml = genereaza_feed_atom(toate_flags, datetime.now())
+    with open("feed.xml", "w", encoding="utf-8") as f:
+        f.write(feed_xml)
+    print(f"  ✓ Feed Atom salvat: feed.xml (top {min(20, len(toate_flags))} nereguli)")
 
     # Export contracte.json pentru acces extern
     contracte_export = [{
