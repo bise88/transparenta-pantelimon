@@ -821,6 +821,11 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
     ordine_sev = {"CRITIC": 0, "MAJOR": 1, "MEDIU": 2}
     flags_sortate = sorted(flags, key=lambda f: ordine_sev.get(f.get("severitate", "MEDIU"), 2))
 
+    # Generăm JSON structurat al raportului (embed + fișier extern)
+    data_gen_dt = datetime.now()
+    raport_json_data = genereaza_raport_json(flags, contracte, config, data_gen_dt)
+    raport_json_embedded = json.dumps(raport_json_data, ensure_ascii=False)
+
     # Serializăm contractele ca JSON pentru embed în HTML (folosit de JS pentru "toate contractele firmei")
     contracte_json_embed = json.dumps([{
         "id": c["id"],
@@ -865,8 +870,24 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
         else:
             btn_firma = ''
 
+        sev_lower = f['severitate'].lower()
+        cui_furnizor = f.get('castigator_cui', '') or ''
+        # Escape double-quotes pentru atribute HTML
+        furnizor_esc = furnizor.replace('"', '&quot;')
+        contract_id_esc = contract_id.replace('"', '&quot;')
+        procedure_esc = (f.get('tip_procedura') or '').replace('"', '&quot;')
+
         flags_html += f"""
-        <div onclick="toggleFlag(this)"
+        <div class="tp-flag"
+             id="nereguli-{idx}"
+             data-severity="{f['severitate']}"
+             data-supplier="{furnizor_esc}"
+             data-supplier-cif="{cui_furnizor}"
+             data-sum-ron="{int(f.get('valoare', 0) or 0)}"
+             data-date="{f.get('data', '')}"
+             data-contract-id="{contract_id_esc}"
+             data-procedure="{procedure_esc}"
+             onclick="toggleFlag(this)"
              style="border-left:4px solid {culoare};background:#fff;padding:14px 18px;
                     border-radius:0 8px 8px 0;margin-bottom:10px;
                     box-shadow:0 1px 3px rgba(0,0,0,0.08);cursor:pointer"
@@ -875,8 +896,8 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
             <span style="font-size:12px;font-weight:700;color:#bbb;min-width:32px">#{idx}</span>
             <span style="font-size:16px">{emoji}</span>
-            <strong style="color:{culoare}">[{f['severitate']}]</strong>
-            <span style="font-weight:700">{f['titlu']}</span>
+            <span class="sev-badge sev-{sev_lower}" style="font-weight:700;color:{culoare}">[{f['severitate']}]</span>
+            <span class="flag-title" style="font-weight:700">{f['titlu']}</span>
             {nou_badge}
             <span class="flag-arrow" style="margin-left:auto;font-size:11px;color:#aaa">▼ detalii</span>
           </div>
@@ -1250,6 +1271,7 @@ function showFirmaContracts(firma, evt) {{
     Datele sunt extrase exclusiv din surse publice oficiale.
   </p>
 </footer>
+<script type="application/json" id="tp-data">{raport_json_embedded}</script>
 </body>
 </html>"""
     return html
@@ -1303,6 +1325,57 @@ Inițiativă cetățenească independentă · Date din surse publice oficiale.
 
 
 # ==============================================================================
+# EXPORT RAPORT.JSON (endpoint public + embed în HTML)
+# ==============================================================================
+
+def genereaza_raport_json(flags: list, contracte: list, config: dict,
+                           data_generare: "datetime") -> dict:
+    """Generează un dict structurat cu toate neregulile și totalurile.
+
+    Folosit ca:
+    - fișier ``raport.json`` (endpoint public pe GitHub Pages)
+    - embed în HTML ca ``<script type="application/json" id="tp-data">``
+    """
+    total_val = sum(c["valoare_ron"] for c in contracte)
+    return {
+        "schema_version": "1.0",
+        "generated_at": data_generare.isoformat(),
+        "entity": {
+            "name": config.get("nume_entitate", ""),
+            "cif": config.get("cui", ""),
+            "judet": "Ilfov",
+        },
+        "totals": {
+            "flags": len(flags),
+            "contracts_analyzed": len(contracte),
+            "total_value_ron": round(total_val, 2),
+            "by_severity": {
+                "CRITIC": sum(1 for n in flags if n.get("severitate") == "CRITIC"),
+                "MAJOR":  sum(1 for n in flags if n.get("severitate") == "MAJOR"),
+                "MEDIU":  sum(1 for n in flags if n.get("severitate") == "MEDIU"),
+            },
+        },
+        "flags": [
+            {
+                "id": i,
+                "severity": n.get("severitate", ""),
+                "title": n.get("titlu", ""),
+                "explanation": n.get("descriere", ""),
+                "supplier": n.get("furnizor", ""),
+                "supplier_cif": n.get("castigator_cui", "") or "",
+                "sum_ron": round(float(n.get("valoare", 0) or 0), 2),
+                "date": n.get("data", ""),
+                "contract_id": n.get("contract_id", "") or "",
+                "contract_numar": n.get("contract_numar", "") or "",
+                "procedure": n.get("tip_procedura", "") or "",
+                "anchor": f"nereguli-{i}",
+            }
+            for i, n in enumerate(flags, 1)
+        ],
+    }
+
+
+# ==============================================================================
 # MAIN
 # ==============================================================================
 
@@ -1346,6 +1419,12 @@ def main():
     with open(CONFIG["fisier_raport"], "w", encoding="utf-8") as f:
         f.write(raport_html)
     print(f"  ✓ Raport salvat: {CONFIG['fisier_raport']}")
+
+    # Export raport.json (endpoint public + sursa pentru enhance.js)
+    raport_json_data = genereaza_raport_json(toate_flags, contracte, CONFIG, datetime.now())
+    with open("raport.json", "w", encoding="utf-8") as f:
+        json.dump(raport_json_data, f, ensure_ascii=False, indent=2)
+    print(f"  ✓ raport.json exportat ({len(toate_flags)} flags, {len(contracte)} contracte)")
 
     # Export contracte.json pentru acces extern
     contracte_export = [{
