@@ -1754,6 +1754,19 @@ def main():
     print("\n[2/6] Fetchuiesc contracte din data.gov.ro...")
     contracte, seap_debug = fetch_contracts_seap(CONFIG["cui"], CONFIG["luni_analiza"])
 
+    # Fallback: dacă data.gov.ro nu e accesibil (ex. GitHub Actions blochează IP-urile Azure),
+    # încărcăm contracte.json deja existent în repo (actualizat la ultima rulare locală).
+    if not contracte:
+        fallback_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "contracte.json")
+        if os.path.exists(fallback_path):
+            try:
+                with open(fallback_path, encoding="utf-8") as _f:
+                    contracte = json.load(_f)
+                seap_debug.append(f"FALLBACK: loaded {len(contracte)} contracte din contracte.json")
+                print(f"  ↩ Fallback: {len(contracte)} contracte din contracte.json (data.gov.ro inaccesibil)")
+            except Exception as _fe:
+                seap_debug.append(f"FALLBACK FAIL: {_fe}")
+
     # 3. Hotărâri Consiliu Local
     print("\n[3/6] Analizez hotărârile Consiliului Local...")
     stare_ant = incarca_stare_anterioara(CONFIG["fisier_stare"])
