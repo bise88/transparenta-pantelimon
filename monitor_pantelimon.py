@@ -848,7 +848,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
     _val_totala = sum(c.get("valoare_ron", 0) for c in contracte)
     raport_json_obj = {
         "schema_version": "1.0",
-        "generated_at": data_generare.isoformat(),
+        "generated_at": datetime.now().isoformat(),
         "entity": {"name": config["nume_entitate"], "cif": config["cui"], "judet": "Ilfov"},
         "totals": {
             "flags": len(flags), "contracts_analyzed": _n_contracte, "total_value_ron": _val_totala,
