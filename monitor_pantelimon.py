@@ -843,6 +843,32 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
         "cui": c.get("castigator_cui", ""),
         "ofertanti": c["nr_ofertanti"],
     } for c in contracte], ensure_ascii=False)
+    # Construim raport_json pentru embed <script id="tp-data"> si raport.json
+    _n_contracte = len(contracte)
+    _val_totala = sum(c.get("valoare_ron", 0) for c in contracte)
+    raport_json_obj = {
+        "schema_version": "1.0",
+        "generated_at": data_generare.isoformat(),
+        "entity": {"name": config["nume_entitate"], "cif": config["cui"], "judet": "Ilfov"},
+        "totals": {
+            "flags": len(flags), "contracts_analyzed": _n_contracte, "total_value_ron": _val_totala,
+            "by_severity": {
+                "CRITIC": sum(1 for f in flags if f.get("severitate") == "CRITIC"),
+                "MAJOR":  sum(1 for f in flags if f.get("severitate") == "MAJOR"),
+                "MEDIU":  sum(1 for f in flags if f.get("severitate") == "MEDIU"),
+            },
+        },
+        "flags": [
+            {"id": i, "severity": fl.get("severitate",""), "title": fl.get("titlu",""),
+             "explanation": fl.get("descriere",""), "supplier": fl.get("furnizor",""),
+             "supplier_cif": fl.get("cif_furnizor",""), "sum_ron": fl.get("valoare",0) or 0,
+             "date": fl.get("data",""), "contract_id": (fl.get("contract_id") or fl.get("contract_numar") or ""),
+             "procedure": fl.get("tip_procedura",""), "type": fl.get("tip",""),
+             "anchor": f"nereguli-{i}"}
+            for i, fl in enumerate(flags_sortate, 1)
+        ],
+    }
+    raport_json_embedded = json.dumps(raport_json_obj, ensure_ascii=False)
 
     # Index: câte contracte are fiecare firmă
     nr_contracte_firma_map = {}
@@ -1294,6 +1320,7 @@ function showFirmaContracts(firma, evt) {{
     Inițiativă cetățenească independentă &nbsp;·&nbsp;
     Datele sunt extrase exclusiv din surse publice oficiale.
   </p>
+<script type="application/json" id="tp-data">{raport_json_embedded}</script>
 </footer>
 </body>
 </html>"""
@@ -1722,6 +1749,28 @@ def main():
         f.write(feed_xml)
     print(f"  ✓ Feed Atom salvat: feed.xml (top {min(20, len(toate_flags))} nereguli)")
 
+    # Export raport.json (endpoint public pentru jurnalisti / integari externe)
+    _n_main = len(contracte)
+    _val_main = sum(c.get("valoare_ron", 0) for c in contracte)
+    raport_json_main = {
+        "schema_version": "1.0",
+        "generated_at": datetime.now().isoformat(),
+        "entity": {"name": CONFIG["nume_entitate"], "cif": CONFIG["cui"], "judet": "Ilfov"},
+        "totals": {"flags": len(toate_flags), "contracts_analyzed": _n_main, "total_value_ron": _val_main,
+                   "by_severity": {"CRITIC": sum(1 for f in toate_flags if f.get("severitate") == "CRITIC"),
+                                   "MAJOR": sum(1 for f in toate_flags if f.get("severitate") == "MAJOR"),
+                                   "MEDIU": sum(1 for f in toate_flags if f.get("severitate") == "MEDIU")}},
+        "flags": [{"id": i, "severity": fl.get("severitate",""), "title": fl.get("titlu",""),
+                   "explanation": fl.get("descriere",""), "supplier": fl.get("furnizor",""),
+                   "sum_ron": fl.get("valoare",0) or 0, "date": fl.get("data",""),
+                   "contract_id": (fl.get("contract_id") or fl.get("contract_numar") or ""),
+                   "procedure": fl.get("tip_procedura",""), "type": fl.get("tip",""),
+                   "anchor": f"nereguli-{i}"}
+                  for i, fl in enumerate(toate_flags, 1)],
+    }
+    with open("raport.json", "w", encoding="utf-8") as fout:
+        json.dump(raport_json_main, fout, ensure_ascii=False, indent=2)
+    print(f"  ✓ Raport JSON salvat: raport.json ({len(toate_flags)} nereguli)")
     # Export contracte.json pentru acces extern
     contracte_export = [{
         "id": c["id"],
