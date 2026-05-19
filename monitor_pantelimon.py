@@ -188,7 +188,7 @@ def fetch_contracts_seap(cui: str, luni: int = 12) -> list:
             try:
                 # Verificăm dimensiunea fișierului înainte de descărcare
                 IS_CI = os.environ.get("GITHUB_ACTIONS") == "true"
-                MAX_FILE_MB = 6 if IS_CI else 200
+                MAX_FILE_MB = 50 if IS_CI else 200
                 try:
                     head = requests.head(url, timeout=10, headers=HEADERS, allow_redirects=True)
                     content_len = int(head.headers.get("Content-Length", 0))
@@ -254,7 +254,10 @@ def fetch_contracts_seap(cui: str, luni: int = 12) -> list:
                     rand_idx += 1
                     if not row or not row[idx_cui_ac]:
                         continue
-                    if str(row[idx_cui_ac]).strip() != str(cui):
+                    _cui_row = str(row[idx_cui_ac]).strip()
+                    if _cui_row.upper().startswith('RO'):
+                        _cui_row = _cui_row[2:]
+                    if _cui_row != str(cui).strip():
                         continue
 
                     # Valoare
