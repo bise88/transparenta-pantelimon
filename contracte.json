@@ -1,1 +1,67 @@
-[]
+[
+  {
+    "id": "contract-2025-79964",
+    "numar": "95353",
+    "titlu": "Motorina (Rev.2)",
+    "valoare_ron": 2912710.0,
+    "moneda": "RON",
+    "tip_procedura": "Licitatie deschisa",
+    "data_publicare": "2025-02-24",
+    "castigator": "AUTOVEST",
+    "castigator_cui": "RO 6836324",
+    "nr_ofertanti": 2,
+    "sursa": "data.gov.ro/contract/2025"
+  },
+  {
+    "id": "contract-2025-79965",
+    "numar": "95354",
+    "titlu": "Motorina (Rev.2) - acord cadru subsecvent",
+    "valoare_ron": 1456355.0,
+    "moneda": "RON",
+    "tip_procedura": "Licitatie deschisa",
+    "data_publicare": "2025-02-24",
+    "castigator": "AUTOVEST",
+    "castigator_cui": "RO 6836324",
+    "nr_ofertanti": 2,
+    "sursa": "data.gov.ro/contract/2025"
+  },
+  {
+    "id": "contract-2025-114194",
+    "numar": "96449",
+    "titlu": "Servicii de curatenie (Rev.2)",
+    "valoare_ron": 11152035.0,
+    "moneda": "RON",
+    "tip_procedura": "Licitatie deschisa",
+    "data_publicare": "2023-09-11",
+    "castigator": "TOP A-Z CONCEPT S.R.L.",
+    "castigator_cui": "45058860",
+    "nr_ofertanti": 2,
+    "sursa": "data.gov.ro/contract/2025"
+  },
+  {
+    "id": "contract-2025-114195",
+    "numar": "96450",
+    "titlu": "Servicii de curatenie (Rev.2) - subsecvent",
+    "valoare_ron": 2788008.0,
+    "moneda": "RON",
+    "tip_procedura": "Licitatie deschisa",
+    "data_publicare": "2023-09-11",
+    "castigator": "TOP A-Z CONCEPT S.R.L.",
+    "castigator_cui": "45058860",
+    "nr_ofertanti": 2,
+    "sursa": "data.gov.ro/contract/2025"
+  },
+  {
+    "id": "contract-2025-114196",
+    "numar": "95357",
+    "titlu": "Servicii de curatenie (Rev.2) - subsecvent",
+    "valoare_ron": 2788008.0,
+    "moneda": "RON",
+    "tip_procedura": "Licitatie deschisa",
+    "data_publicare": "2025-02-25",
+    "castigator": "TOP A-Z CONCEPT S.R.L.",
+    "castigator_cui": "45058860",
+    "nr_ofertanti": 2,
+    "sursa": "data.gov.ro/contract/2025"
+  }
+]
