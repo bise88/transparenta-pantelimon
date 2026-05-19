@@ -897,7 +897,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
     raport_json_obj = {
         "schema_version": "1.0",
         "generated_at": datetime.now().isoformat(),
-        "entity": {"name": config["nume_entitate"], "cif": config["cui"], "judet": "Ilfov"},
+        "entity": {"name": config["nume_entitate"], "cif": config["cui"], "judet": config.get("judet", "Ilfov")},
         "totals": {
             "flags": len(flags), "contracts_analyzed": _n_contracte, "total_value_ron": _val_totala,
             "by_severity": {
@@ -1694,7 +1694,7 @@ def main():
     _parser.add_argument("--judet", default=None)
     _parser.add_argument("--output-dir", default=None)
     _args, _ = _parser.parse_known_args()
-    if _args.cif: CONFIG["cif"] = _args.cif
+    if _args.cif: CONFIG["cui"] = _args.cif
     if _args.nume: CONFIG["nume_entitate"] = _args.nume
     if _args.judet: CONFIG["judet"] = _args.judet
     if _args.output_dir:
