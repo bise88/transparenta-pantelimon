@@ -864,6 +864,12 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
         # Escaping pentru JS (ghilimele simple în numele firmei)
         furnizor_js = furnizor.replace("'", "\\'").replace('"', '&quot;')
 
+        # Pre-compute atribute data-* pentru markup semantic
+        valoare_num = int(f.get('valoare', 0) or 0)
+        furnizor_attr = furnizor.replace('"', '&quot;')
+        tip_attr = (f.get('tip') or '').replace('"', '&quot;')
+        procedura_attr = (f.get('tip_procedura') or '').replace('"', '&quot;')
+
         # Pre-compute butonul firmei (evităm nested f-string cu același tip de ghilimele)
         if furnizor:
             btn_firma = (
@@ -881,13 +887,22 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
              style="border-left:4px solid {culoare};background:#fff;padding:14px 18px;
                     border-radius:0 8px 8px 0;margin-bottom:10px;
                     box-shadow:0 1px 3px rgba(0,0,0,0.08);cursor:pointer"
+             onmouseenter=flags_html += f"""
+        <div class="tp-flag"
+             onclick="toggleFlag(this)"
+             id="nereguli-{idx}"
+             data-severity="{f['severitate']}"
+             data-supplier="{furnizor_attr}"
+             data-sum-ron="{valoare_num}"
+             data-date="{f.get('data', '')}"
+             data-contract-id="{contract_id}"
+             data-type="{tip_attr}"
+             data-procedure="{procedura_attr}"
+             style="border-left:4px solid {culoare};background:#fff;padding:14px 18px;
+                    border-radius:0 8px 8px 0;margin-bottom:10px;
+                    box-shadow:0 1px 3px rgba(0,0,0,0.08);cursor:pointer"
              onmouseenter="this.style.boxShadow='0 4px 14px rgba(0,0,0,0.14)'"
-             onmouseleave="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.08)'">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-            <span style="font-size:12px;font-weight:700;color:#bbb;min-width:32px">#{idx}</span>
-            <span style="font-size:16px">{emoji}</span>
-            <strong style="color:{culoare}">[{f['severitate']}]</strong>
-            <span style="font-weight:700">{f['titlu']}</span>
+             onmouseleave="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.08)'">         <span style="font-weight:700">{f['titlu']}</span>
             {nou_badge}
             <span class="flag-arrow" style="margin-left:auto;font-size:11px;color:#aaa">▼ detalii</span>
           </div>
