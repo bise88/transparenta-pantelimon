@@ -883,11 +883,6 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
             btn_firma = ''
 
         flags_html += f"""
-        <div onclick="toggleFlag(this)"
-             style="border-left:4px solid {culoare};background:#fff;padding:14px 18px;
-                    border-radius:0 8px 8px 0;margin-bottom:10px;
-                    box-shadow:0 1px 3px rgba(0,0,0,0.08);cursor:pointer"
-             onmouseenter=flags_html += f"""
         <div class="tp-flag"
              onclick="toggleFlag(this)"
              id="nereguli-{idx}"
@@ -902,7 +897,12 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
                     border-radius:0 8px 8px 0;margin-bottom:10px;
                     box-shadow:0 1px 3px rgba(0,0,0,0.08);cursor:pointer"
              onmouseenter="this.style.boxShadow='0 4px 14px rgba(0,0,0,0.14)'"
-             onmouseleave="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.08)'">         <span style="font-weight:700">{f['titlu']}</span>
+             onmouseleave="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.08)'">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-size:12px;font-weight:700;color:#bbb;min-width:32px">#{idx}</span>
+            <span style="font-size:16px">{emoji}</span>
+            <strong style="color:{culoare}">[{f['severitate']}]</strong>
+                     <span style="font-weight:700">{f['titlu']}</span>
             {nou_badge}
             <span class="flag-arrow" style="margin-left:auto;font-size:11px;color:#aaa">▼ detalii</span>
           </div>
