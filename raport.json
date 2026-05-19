@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-05-19T10:06:54.366950",
+  "generated_at": "2026-05-19T10:42:12.686491",
   "entity": {
     "name": "Orașul Pantelimon",
     "cif": "4420759",
@@ -30,5 +30,25 @@
       "type": "sedinte_extraordinare_excesive",
       "anchor": "nereguli-1"
     }
-  ]
+  ],
+  "scor_transparenta": {
+    "scor": 75,
+    "componente": {
+      "achizitii_directe": 97,
+      "ofertant_unic": 70,
+      "sedinte_extraordinare": 57,
+      "fragmentare": 100,
+      "documente_publicate": 30,
+      "raspuns_544": 50
+    },
+    "ponderi": {
+      "achizitii_directe": 30,
+      "ofertant_unic": 20,
+      "sedinte_extraordinare": 15,
+      "fragmentare": 15,
+      "documente_publicate": 10,
+      "raspuns_544": 10
+    },
+    "data": "2026-05-19"
+  }
 }
