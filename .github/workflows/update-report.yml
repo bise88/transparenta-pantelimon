@@ -31,6 +31,9 @@ jobs:
       - name: 🔍 Rulare monitor transparență
         run: python monitor_pantelimon.py
 
+      - name: 🔍 Rulare monitor Oradea
+        run: python monitor_pantelimon.py --cif 4230487 --nume "Oradea" --judet "Bihor" --output-dir oradea
+
       - name: 💾 Commit raport actualizat
         run: |
           git config --local user.email "transparenta-bot@cetatenipantelimon.ro"
@@ -40,6 +43,7 @@ jobs:
           git add furnizori/ 2>/dev/null || true
           git add raport.json 2>/dev/null || true
           git add istoric_scor.json 2>/dev/null || true
+          git add oradea/ 2>/dev/null || true
           # Commit doar dacă există modificări
           git diff --staged --quiet || git commit -m "🚩 Raport actualizat $(date +'%d.%m.%Y')"
           git push
