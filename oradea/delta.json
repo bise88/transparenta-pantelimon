@@ -1,14 +1,8 @@
 {
-  "data_curenta": "2026-05-19T11:22:56.197602",
-  "data_anterioara": null,
-  "nereguli_noi": 1,
+  "data_curenta": "2026-05-19T11:28:33.223910",
+  "data_anterioara": "2026-05-19T11:22:56.198460",
+  "nereguli_noi": 0,
   "nereguli_rezolvate": 0,
   "scor_transparenta": 75,
-  "top_noi": [
-    {
-      "titlu": "Rată ridicată de ședințe extraordinare: 43%",
-      "severitate": "CRITIC",
-      "index": 1
-    }
-  ]
+  "top_noi": []
 }
