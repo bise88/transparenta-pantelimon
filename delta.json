@@ -1,8 +1,19 @@
 {
-  "data_curenta": "2026-05-19T14:25:58.997494",
-  "data_anterioara": "2026-05-19T14:02:21.292101",
-  "nereguli_noi": 0,
+  "data_curenta": "2026-05-19T14:37:17.788678",
+  "data_anterioara": "2026-05-19T14:25:58.998683",
+  "nereguli_noi": 2,
   "nereguli_rezolvate": 0,
-  "scor_transparenta": 75,
-  "top_noi": []
+  "scor_transparenta": 78,
+  "top_noi": [
+    {
+      "titlu": "Posibilă fragmentare artificială a contractelor",
+      "severitate": "CRITIC",
+      "index": 1
+    },
+    {
+      "titlu": "Furnizor dominant în achizițiile publice",
+      "severitate": "MEDIU",
+      "index": 2
+    }
+  ]
 }
