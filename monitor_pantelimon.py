@@ -1841,7 +1841,7 @@ def main():
     raport_json_main = {
         "schema_version": "1.0",
         "generated_at": datetime.now().isoformat(),
-        "entity": {"name": CONFIG["nume_entitate"], "cif": CONFIG["cui"], "judet": "Ilfov"},
+        "entity": {"name": CONFIG["nume_entitate"], "cif": CONFIG["cui"], "judet": CONFIG.get("judet", "Ilfov")},
         "totals": {"flags": len(toate_flags), "contracts_analyzed": _n_main, "total_value_ron": _val_main,
                    "by_severity": {"CRITIC": sum(1 for f in toate_flags if f.get("severitate") == "CRITIC"),
                                    "MAJOR": sum(1 for f in toate_flags if f.get("severitate") == "MAJOR"),
