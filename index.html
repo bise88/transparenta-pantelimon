@@ -255,6 +255,84 @@
     <a class="btn-secondary" href="transparenta_pantelimon.html">📊 Analiză Buget & Grafice</a>
   </div>
 </header>
+  <!-- SCOR TRANSPARENTA -->
+  <section id="scor-transparenta" style="background:#fff;border-bottom:1px solid #e2e8f0;padding:24px 40px;">
+    <div style="max-width:900px;margin:0 auto;display:flex;flex-wrap:wrap;gap:24px;align-items:center;">
+      <div id="scor-gauge" style="text-align:center;min-width:140px;">
+        <div id="scor-val" style="font-size:3rem;font-weight:700;color:#718096;">—</div>
+        <div style="font-size:.85rem;color:#718096;text-transform:uppercase;letter-spacing:.05em;margin-top:4px;">Scor transparență</div>
+        <div style="height:10px;border-radius:5px;background:#e2e8f0;margin-top:8px;overflow:hidden;">
+          <div id="scor-fill" style="height:100%;width:0;transition:width .6s ease;background:#38a169;"></div>
+        </div>
+        <div id="scor-data" style="font-size:.75rem;color:#a0aec0;margin-top:4px;"></div>
+      </div>
+      <div style="flex:1;min-width:200px;">
+        <canvas id="scor-chart" height="60"></canvas>
+        <div id="scor-no-history" style="display:none;font-size:.8rem;color:#a0aec0;text-align:center;padding:12px 0;">Istoricul va fi disponibil după prima rulare automată.</div>
+      </div>
+      <div id="scor-componente" style="font-size:.8rem;color:#4a5568;min-width:210px;"></div>
+    </div>
+  </section>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script>
+  (function(){
+    var ts = Date.now();
+    Promise.all([
+      fetch('raport.json?' + ts).then(function(r){return r.json();}).catch(function(){return null;}),
+      fetch('istoric_scor.json?' + ts).then(function(r){return r.json();}).catch(function(){return [];})
+    ]).then(function(results){
+      var raport = results[0], istoric = results[1];
+      var scorObj = raport && raport.scor_transparenta;
+      if (!scorObj) return;
+      var val = (typeof scorObj === 'object') ? scorObj.scor : scorObj;
+      if (val == null) return;
+      var color = val >= 75 ? '#38a169' : val >= 60 ? '#d69e2e' : val >= 40 ? '#dd6b20' : '#e53e3e';
+      var el = document.getElementById('scor-val');
+      if (el) { el.textContent = val; el.style.color = color; }
+      var fill = document.getElementById('scor-fill');
+      if (fill) { fill.style.width = val + '%'; fill.style.background = color; }
+      var dataEl = document.getElementById('scor-data');
+      if (dataEl && scorObj.data) dataEl.textContent = scorObj.data;
+      var labels = {achizitii_directe:'Achiziții directe',ofertant_unic:'Ofertant unic',sedinte_extraordinare:'Ședințe extraord.',fragmentare:'Fragmentare',documente_publicate:'Documente publicate',raspuns_544:'Răspuns L.544'};
+      var comp = scorObj.componente;
+      if (comp) {
+        var html = Object.keys(comp).map(function(k){
+          return '<div style="display:flex;justify-content:space-between;gap:8px;margin:3px 0"><span>' + (labels[k] || k) + '</span><strong style="color:' + (comp[k]>=75?'#38a169':comp[k]>=50?'#d69e2e':'#e53e3e') + '">' + comp[k] + '</strong></div>';
+        }).join('');
+        var compEl = document.getElementById('scor-componente');
+        if (compEl) compEl.innerHTML = html;
+      }
+      if (Array.isArray(istoric) && istoric.length > 1) {
+        var ctx = document.getElementById('scor-chart');
+        if (ctx) {
+          new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: istoric.map(function(x){ return x.luna || x.data || ''; }),
+              datasets: [{
+                data: istoric.map(function(x){ return x.scor; }),
+                borderColor: color,
+                backgroundColor: color + '33',
+                tension: 0.3,
+                pointRadius: 3,
+                fill: true
+              }]
+            },
+            options: {
+              plugins: { legend: { display: false }, tooltip: { callbacks: { title: function(items){ return items[0].label; }, label: function(item){ return 'Scor: ' + item.raw; } } } },
+              scales: { x: { display: false }, y: { min: 0, max: 100, display: true, ticks: { maxTicksLimit: 3 } } },
+              animation: { duration: 400 }
+            }
+          });
+        }
+      } else {
+        var noHist = document.getElementById('scor-no-history');
+        if (noHist) noHist.style.display = 'block';
+      }
+    });
+  })();
+  </script>
+
 
 <main>
 
