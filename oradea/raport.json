@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-05-19T11:28:33.224881",
+  "generated_at": "2026-05-19T11:41:51.034491",
   "entity": {
     "name": "Oradea",
     "cif": "4230487",
-    "judet": "Ilfov"
+    "judet": "Bihor"
   },
   "totals": {
     "flags": 1,
