@@ -1,9 +1,17 @@
 {
   "flags_anterioare": [
+    "contract-2025-114194,contract-2025-114195_FRAGMENTARE",
+    "global_FURNIZOR_DOMINANT",
     "HCL-META-001_sedinte_extraordinare_excesive"
   ],
-  "contracte_vazute": [],
+  "contracte_vazute": [
+    "contract-2025-79964",
+    "contract-2025-79965",
+    "contract-2025-114194",
+    "contract-2025-114195",
+    "contract-2025-114196"
+  ],
   "hcl_urls_vazute": [],
-  "data_ultima_rulare": "2026-05-19T14:25:58.998683",
-  "total_flags": 1
+  "data_ultima_rulare": "2026-05-19T14:37:17.790664",
+  "total_flags": 3
 }
