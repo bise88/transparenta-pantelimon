@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-05-19T10:06:54.366950",
+  "entity": {
+    "name": "Orașul Pantelimon",
+    "cif": "4420759",
+    "judet": "Ilfov"
+  },
+  "totals": {
+    "flags": 1,
+    "contracts_analyzed": 0,
+    "total_value_ron": 0,
+    "by_severity": {
+      "CRITIC": 1,
+      "MAJOR": 0,
+      "MEDIU": 0
+    }
+  },
+  "flags": [
+    {
+      "id": 1,
+      "severity": "CRITIC",
+      "title": "Rată ridicată de ședințe extraordinare: 43%",
+      "explanation": "Din 81 ședințe de Consiliu Local analizate, 35 (43%) sunt 'extraordinare cu convocare de îndată'. Norma legală implică urgențe reale — o rată peste 25% sugerează că procedura de urgență este folosită sistematic pentru a ocoli consultarea publică obligatorie (Legea 52/2003).",
+      "supplier": "Consiliul Local Pantelimon",
+      "sum_ron": 0,
+      "date": "2026-05-19",
+      "contract_id": "HCL-META-001",
+      "procedure": "Sedinta CL extraordinara",
+      "type": "sedinte_extraordinare_excesive",
+      "anchor": "nereguli-1"
+    }
+  ]
+}
