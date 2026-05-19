@@ -821,6 +821,17 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
     ordine_sev = {"CRITIC": 0, "MAJOR": 1, "MEDIU": 2}
     flags_sortate = sorted(flags, key=lambda f: ordine_sev.get(f.get("severitate", "MEDIU"), 2))
 
+    # ── SEO / Open Graph: numere dinamice din flags actuali ──────────────────
+    n_total = len(flags)
+    n_critic = sum(1 for f in flags if f.get("severitate") == "CRITIC")
+    n_major = sum(1 for f in flags if f.get("severitate") == "MAJOR")
+    seo_title = f"Raport Transparență — {n_total} Nereguli Detectate"
+    seo_description = (
+        f"{n_critic} critice, {n_major} majore din {n_total} nereguli detectate la "
+        f"{config['nume_entitate']}. Achiziții directe peste prag, fragmentare contracte, "
+        f"ofertanți unici. Date din SEAP și ANAF."
+    )
+
     # Serializăm contractele ca JSON pentru embed în HTML (folosit de JS pentru "toate contractele firmei")
     contracte_json_embed = json.dumps([{
         "id": c["id"],
@@ -982,7 +993,26 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Raport Transparență – {config['nume_entitate']} – {data_generare}</title>
+<title>{seo_title} — {config['nume_entitate']} — {data_generare}</title>
+
+<!-- SEO -->
+<meta name="description" content="{seo_description}">
+<meta name="keywords" content="transparență, Pantelimon, primărie, achiziții publice, SEAP, ANAF, monitorizare cetățenească, Ilfov, nereguli, raport">
+<meta name="author" content="Inițiativă cetățenească independentă">
+<link rel="canonical" href="https://bise88.github.io/transparenta-pantelimon/raport_transparenta.html">
+
+<!-- Open Graph (Facebook, LinkedIn) -->
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bise88.github.io/transparenta-pantelimon/raport_transparenta.html">
+<meta property="og:title" content="{seo_title}">
+<meta property="og:description" content="{seo_description}">
+<meta property="og:locale" content="ro_RO">
+<meta property="og:site_name" content="Transparența Pantelimon">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{seo_title}">
+<meta name="twitter:description" content="{seo_description}">
 <style>
   body{{font-family:'Segoe UI',Arial,sans-serif;background:#F4F6F9;color:#1A1A2E;margin:0;padding:0}}
   .wrap{{max-width:960px;margin:0 auto;padding:24px 16px 60px}}
@@ -1256,7 +1286,76 @@ function showFirmaContracts(firma, evt) {{
 
 
 # ==============================================================================
-# 6. TRIMITERE EMAIL ALERTĂ
+# 6. FEED ATOM
+# ==============================================================================
+
+def genereaza_feed_atom(nereguli: list, data_generare: datetime) -> str:
+    """Generează feed Atom cu cele mai noi N=20 nereguli (CRITIC > MAJOR > MEDIU, apoi valoare descendentă)."""
+    import html as html_mod
+    from datetime import timezone
+
+    BASE = "https://bise88.github.io/transparenta-pantelimon"
+    if data_generare.tzinfo is None:
+        updated = data_generare.replace(tzinfo=timezone.utc).isoformat()
+    else:
+        updated = data_generare.astimezone(timezone.utc).isoformat()
+
+    sev_order = {"CRITIC": 0, "MAJOR": 1, "MEDIU": 2}
+    sorted_nereguli = sorted(
+        nereguli,
+        key=lambda n: (sev_order.get(n.get("severitate", "MEDIU"), 99),
+                       -float(n.get("valoare", 0) or 0))
+    )[:20]
+
+    entries = []
+    for i, n in enumerate(sorted_nereguli, 1):
+        titlu = html_mod.escape(str(n.get("titlu", "Nereguă")))
+        sev = html_mod.escape(str(n.get("severitate", "MEDIU")))
+        furnizor = html_mod.escape(str(n.get("furnizor", "") or ""))
+        try:
+            valoare = float(n.get("valoare", 0) or 0)
+        except (TypeError, ValueError):
+            valoare = 0.0
+        descriere = html_mod.escape(str(n.get("descriere", "") or ""))[:500]
+        data_neregula = html_mod.escape(str(n.get("data", "") or ""))
+        url = f"{BASE}/raport_transparenta.html#nereguli-{i}"
+        entry_id = f"{BASE}/raport_transparenta.html#nereguli-{i}-{updated}"
+
+        summary_html = (
+            f"&lt;p&gt;&lt;strong&gt;Furnizor:&lt;/strong&gt; {furnizor}"
+            f"&lt;br/&gt;&lt;strong&gt;Sumă:&lt;/strong&gt; {valoare:,.0f} RON"
+            f"&lt;br/&gt;&lt;strong&gt;Dată:&lt;/strong&gt; {data_neregula}"
+            f"&lt;/p&gt;&lt;p&gt;{descriere}&lt;/p&gt;"
+        )
+
+        entries.append(
+            "  <entry>\n"
+            f"    <title>[{sev}] {titlu}</title>\n"
+            f'    <link href="{url}"/>\n'
+            f"    <id>{entry_id}</id>\n"
+            f"    <updated>{updated}</updated>\n"
+            f'    <summary type="html">{summary_html}</summary>\n'
+            "  </entry>"
+        )
+
+    feed = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<feed xmlns="http://www.w3.org/2005/Atom">\n'
+        '  <title>Transparența Pantelimon — Nereguli detectate</title>\n'
+        '  <subtitle>Monitorizare cetățenească automată a achizițiilor publice</subtitle>\n'
+        f'  <link href="{BASE}/feed.xml" rel="self"/>\n'
+        f'  <link href="{BASE}/raport_transparenta.html"/>\n'
+        f"  <updated>{updated}</updated>\n"
+        f"  <id>{BASE}/feed.xml</id>\n"
+        "  <author><name>Inițiativă cetățenească independentă</name></author>\n"
+        + "\n".join(entries) + "\n"
+        "</feed>\n"
+    )
+    return feed
+
+
+# ==============================================================================
+# 7. TRIMITERE EMAIL ALERTĂ
 # ==============================================================================
 
 def trimite_email_alerta(flags_noi: list, raport_html: str, config: dict):
@@ -1529,9 +1628,32 @@ def main():
     flags_contracte = analizeaza_red_flags(contracte, CONFIG)
     toate_flags = flags_contracte + flags_hcl
 
+    # 4b. Detectăm flags NOI față de rularea precedentă
+    flags_noi = detecteaza_flags_noi(toate_flags, stare_ant)
+    ids_curente = set(f["contract_id"] + "_" + f["tip"] for f in toate_flags)
+    ids_anterioare = set(stare_ant.get("flags_anterioare", []))
+    flags_rezolvate_n = len(ids_anterioare - ids_curente)
+    data_anterioara_str = stare_ant.get("data_ultima_rulare", None)
+
+    # Export delta.json — folosit de enhance.js pentru banner "ce e nou"
+    data_curenta = datetime.now()
+    delta = {
+        "data_curenta": data_curenta.isoformat(),
+        "data_anterioara": data_anterioara_str,
+        "nereguli_noi": len(flags_noi),
+        "nereguli_rezolvate": flags_rezolvate_n,
+        "top_noi": [
+            {"titlu": n["titlu"], "severitate": n["severitate"], "index": i}
+            for i, n in enumerate(flags_noi[:3], 1)
+        ],
+    }
+    with open("delta.json", "w", encoding="utf-8") as f:
+        json.dump(delta, f, ensure_ascii=False, indent=2)
+    print(f"  ✓ delta.json: {len(flags_noi)} nereguli noi, {flags_rezolvate_n} rezolvate")
+
     # 5. Raport HTML + export contracte.json
     print("\n[5/6] Generez raport HTML...")
-    raport_html = genereaza_raport_html(budget, contracte, toate_flags, [], CONFIG)
+    raport_html = genereaza_raport_html(budget, contracte, toate_flags, flags_noi, CONFIG)
     with open(CONFIG["fisier_raport"], "w", encoding="utf-8") as f:
         f.write(raport_html)
     print(f"  ✓ Raport salvat: {CONFIG['fisier_raport']}")
@@ -1579,6 +1701,11 @@ def main():
         print(f"  ✓ {len(index_furnizori)} pagini furnizori generate în furnizori/")
     else:
         print("  ℹ️  Niciun furnizor cu ≥3 contracte găsit.")
+    # Export feed.xml (Atom) pentru cititori RSS / jurnaliști
+    feed_xml = genereaza_feed_atom(toate_flags, datetime.now())
+    with open("feed.xml", "w", encoding="utf-8") as f:
+        f.write(feed_xml)
+    print(f"  ✓ Feed Atom salvat: feed.xml (top {min(20, len(toate_flags))} nereguli)")
 
     # Export contracte.json pentru acces extern
     contracte_export = [{
