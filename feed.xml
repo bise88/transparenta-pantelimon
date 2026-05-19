@@ -4,14 +4,28 @@
   <subtitle>Monitorizare cetățenească automată a achizițiilor publice</subtitle>
   <link href="https://bise88.github.io/transparenta-pantelimon/feed.xml" rel="self"/>
   <link href="https://bise88.github.io/transparenta-pantelimon/raport_transparenta.html"/>
-  <updated>2026-05-19T14:25:58.998263+00:00</updated>
+  <updated>2026-05-19T14:37:17.790119+00:00</updated>
   <id>https://bise88.github.io/transparenta-pantelimon/feed.xml</id>
   <author><name>Inițiativă cetățenească independentă</name></author>
   <entry>
-    <title>[CRITIC] Rată ridicată de ședințe extraordinare: 43%</title>
+    <title>[CRITIC] Posibilă fragmentare artificială a contractelor</title>
     <link href="https://bise88.github.io/transparenta-pantelimon/raport_transparenta.html#nereguli-1"/>
-    <id>https://bise88.github.io/transparenta-pantelimon/raport_transparenta.html#nereguli-1-2026-05-19T14:25:58.998263+00:00</id>
-    <updated>2026-05-19T14:25:58.998263+00:00</updated>
+    <id>https://bise88.github.io/transparenta-pantelimon/raport_transparenta.html#nereguli-1-2026-05-19T14:37:17.790119+00:00</id>
+    <updated>2026-05-19T14:37:17.790119+00:00</updated>
+    <summary type="html">&lt;p&gt;&lt;strong&gt;Furnizor:&lt;/strong&gt; TOP A-Z CONCEPT S.R.L.&lt;br/&gt;&lt;strong&gt;Sumă:&lt;/strong&gt; 13,940,043 RON&lt;br/&gt;&lt;strong&gt;Dată:&lt;/strong&gt; 2023-09-11&lt;/p&gt;&lt;p&gt;Furnizor &quot;TOP A-Z CONCEPT S.R.L.&quot; a primit 2 contracte similare la interval de 0 zile, valoare combinată 13.94 mil. RON (peste pragul de 130K RON). Notă: 11.15 mil. RON (primul contract depășește singur pragul); 2.79 mil. RON (al doilea contract depășește singur pragul). Posibilă încălcare art. 11 din Legea 98/2016.&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <title>[CRITIC] Rată ridicată de ședințe extraordinare: 43%</title>
+    <link href="https://bise88.github.io/transparenta-pantelimon/raport_transparenta.html#nereguli-2"/>
+    <id>https://bise88.github.io/transparenta-pantelimon/raport_transparenta.html#nereguli-2-2026-05-19T14:37:17.790119+00:00</id>
+    <updated>2026-05-19T14:37:17.790119+00:00</updated>
     <summary type="html">&lt;p&gt;&lt;strong&gt;Furnizor:&lt;/strong&gt; Consiliul Local Pantelimon&lt;br/&gt;&lt;strong&gt;Sumă:&lt;/strong&gt; 0 RON&lt;br/&gt;&lt;strong&gt;Dată:&lt;/strong&gt; 2026-05-19&lt;/p&gt;&lt;p&gt;Din 81 ședințe de Consiliu Local analizate, 35 (43%) sunt &#x27;extraordinare cu convocare de îndată&#x27;. Norma legală implică urgențe reale — o rată peste 25% sugerează că procedura de urgență este folosită sistematic pentru a ocoli consultarea publică obligatorie (Legea 52/2003).&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <title>[MEDIU] Furnizor dominant în achizițiile publice</title>
+    <link href="https://bise88.github.io/transparenta-pantelimon/raport_transparenta.html#nereguli-3"/>
+    <id>https://bise88.github.io/transparenta-pantelimon/raport_transparenta.html#nereguli-3-2026-05-19T14:37:17.790119+00:00</id>
+    <updated>2026-05-19T14:37:17.790119+00:00</updated>
+    <summary type="html">&lt;p&gt;&lt;strong&gt;Furnizor:&lt;/strong&gt; TOP A-Z CONCEPT S.R.L.&lt;br/&gt;&lt;strong&gt;Sumă:&lt;/strong&gt; 16,728,051 RON&lt;br/&gt;&lt;strong&gt;Dată:&lt;/strong&gt; 2026-05-19&lt;/p&gt;&lt;p&gt;&quot;TOP A-Z CONCEPT S.R.L.&quot; a primit 79% din totalul contractelor (16.73 mil. RON din 21.10 mil. RON). Concentrare excesivă – risc de conflict de interese sau specificații preferențiale.&lt;/p&gt;</summary>
   </entry>
 </feed>
