@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-05-19T14:02:21.291794",
+  "generated_at": "2026-05-19T14:25:58.998396",
   "entity": {
     "name": "Orașul Pantelimon",
     "cif": "4420759",
@@ -50,5 +50,11 @@
       "raspuns_544": 10
     },
     "data": "2026-05-19"
-  }
+  },
+  "seap_debug": [
+    "IS_CI=True MAX_FILE_MB=25MB cui=4420759",
+    "Pachet 2025 eroare: HTTPSConnectionPool(host='data.gov.ro', port=443): Max retries exceeded with url: /api/3/action/package_show?id=achizitii-publice-2025 (Caused by ConnectTimeoutError(<HTTPSConnection(host='data.gov.ro', port=443) at 0x7faf60cfac10>, 'Connection to data.gov.ro timed out. (connect timeout=20)'))",
+    "Pachet 2026 eroare: HTTPSConnectionPool(host='data.gov.ro', port=443): Max retries exceeded with url: /api/3/action/package_show?id=achizitii-publice-2026 (Caused by ConnectTimeoutError(<HTTPSConnection(host='data.gov.ro', port=443) at 0x7faf60cfd010>, 'Connection to data.gov.ro timed out. (connect timeout=20)'))",
+    "surse_ok=0 contracte=0"
+  ]
 }
