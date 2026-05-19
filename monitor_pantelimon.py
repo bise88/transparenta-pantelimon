@@ -1402,6 +1402,195 @@ Inițiativă cetățenească independentă · Date din surse publice oficiale.
 
 
 # ==============================================================================
+# PAGINI FURNIZORI
+# ==============================================================================
+
+import re as _re
+
+
+def _slugify(s: str) -> str:
+    """Transformă un nume de firmă în slug URL-safe (max 60 chars)."""
+    s = s.strip().lower()
+    s = _re.sub(r'[șş]', 's', s); s = _re.sub(r'[țţ]', 't', s)
+    s = _re.sub(r'[ăâ]', 'a', s); s = _re.sub(r'[î]', 'i', s)
+    s = _re.sub(r'[^a-z0-9\s-]', '', s)
+    s = _re.sub(r'\s+', '-', s)
+    s = _re.sub(r'-+', '-', s).strip('-')
+    return s[:60] or 'furnizor'
+
+
+def genereaza_pagina_furnizor(
+        nume: str, slug: str,
+        flags_firma: list, contracte_firma: list,
+        config: dict) -> str:
+    """Generează pagina HTML dedicată unui furnizor."""
+    import html as html_mod
+
+    valoare_totala = sum(c.get("valoare_ron", 0) for c in contracte_firma)
+    n_critic = sum(1 for f in flags_firma if f.get("severitate") == "CRITIC")
+    n_major  = sum(1 for f in flags_firma if f.get("severitate") == "MAJOR")
+    n_mediu  = sum(1 for f in flags_firma if f.get("severitate") == "MEDIU")
+    cui_f    = (contracte_firma[0].get("castigator_cui", "") or "") if contracte_firma else ""
+    base_url = "https://bise88.github.io/transparenta-pantelimon"
+    safe_name = html_mod.escape(nume)
+
+    culori = {"CRITIC": "#C0392B", "MAJOR": "#E67E22", "MEDIU": "#F39C12"}
+    emoji_sev = {"CRITIC": "🔴", "MAJOR": "🟠", "MEDIU": "🟡"}
+
+    flags_html = ""
+    for idx, f in enumerate(flags_firma, 1):
+        culoare = culori.get(f.get("severitate", ""), "#999")
+        emoji = emoji_sev.get(f.get("severitate", ""), "⚪")
+        flags_html += f"""
+      <div style="border-left:4px solid {culoare};background:#fff;padding:12px 16px;
+                  border-radius:0 6px 6px 0;margin-bottom:8px;
+                  box-shadow:0 1px 3px rgba(0,0,0,0.08)">
+        <div style="font-weight:700;color:{culoare}">{emoji} [{html_mod.escape(str(f.get("severitate","")))}] {html_mod.escape(str(f.get("titlu",""))[:120])}</div>
+        <div style="font-size:13px;color:#555;margin-top:4px">{html_mod.escape(str(f.get("descriere",""))[:400])}</div>
+        <div style="font-size:12px;color:#888;margin-top:4px">
+          📋 {html_mod.escape(str(f.get("contract_id","") or "–"))} &nbsp;|&nbsp;
+          💰 {_fmt_ron(float(f.get("valoare",0) or 0))} &nbsp;|&nbsp;
+          📅 {html_mod.escape(str(f.get("data","")))}
+        </div>
+      </div>"""
+
+    contracte_rows = ""
+    for c in sorted(contracte_firma, key=lambda x: x.get("data_publicare",""), reverse=True):
+        contracte_rows += f"""
+        <tr>
+          <td style="padding:7px 10px;border-bottom:1px solid #f0f2f5;font-size:13px">{html_mod.escape(c.get("titlu","")[:55])}</td>
+          <td style="padding:7px 10px;border-bottom:1px solid #f0f2f5;font-size:13px;font-weight:700">{_fmt_ron(c.get("valoare_ron",0))}</td>
+          <td style="padding:7px 10px;border-bottom:1px solid #f0f2f5;font-size:12px">{html_mod.escape(c.get("tip_procedura",""))}</td>
+          <td style="padding:7px 10px;border-bottom:1px solid #f0f2f5;font-size:12px">{html_mod.escape(c.get("data_publicare",""))}</td>
+        </tr>"""
+
+    onrc_link = f'https://termene.ro/firma/{cui_f}' if cui_f else '#'
+
+    return f"""<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{safe_name} — Transparența Pantelimon</title>
+  <meta name="description" content="Dosarul de transparență al {safe_name}: {len(contracte_firma)} contracte cu Primăria Pantelimon, valoare {_fmt_ron(valoare_totala)}, {len(flags_firma)} nereguli detectate.">
+  <meta property="og:title" content="{safe_name} — Transparența Pantelimon">
+  <meta property="og:description" content="{len(contracte_firma)} contracte, {_fmt_ron(valoare_totala)}, {len(flags_firma)} nereguli detectate automat.">
+  <meta property="og:url" content="{base_url}/furnizori/{slug}.html">
+  <meta property="og:type" content="article">
+  <link rel="canonical" href="{base_url}/furnizori/{slug}.html">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+  <script src="../enhance.js" defer></script>
+  <style>
+    body{{font-family:Inter,system-ui,sans-serif;margin:0;background:#f5f7fa;color:#1a1a1a}}
+    .container{{max-width:900px;margin:0 auto;padding:24px 16px}}
+    .back-link{{color:#0070C0;text-decoration:none;font-size:14px}}
+    .back-link:hover{{text-decoration:underline}}
+    h1{{font-size:1.6rem;margin:16px 0 4px}}
+    .meta{{color:#666;font-size:14px;margin-bottom:20px}}
+    .stats{{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:20px 0}}
+    .stat{{background:#fff;border-radius:8px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,.08);text-align:center}}
+    .stat-val{{font-size:1.5rem;font-weight:700;color:#00244A}}
+    .stat-lbl{{font-size:11px;color:#888;margin-top:4px}}
+    table{{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}}
+    th{{padding:10px 12px;text-align:left;background:#00244A;color:#fff;font-size:12px}}
+    h2{{font-size:1.1rem;margin:28px 0 12px;color:#00244A}}
+    .ext-btn{{display:inline-block;padding:8px 16px;background:#0070C0;color:#fff;
+              border-radius:6px;text-decoration:none;font-size:13px;margin-right:8px;margin-bottom:8px}}
+    .ext-btn:hover{{opacity:.85}}
+    footer{{text-align:center;color:#aaa;font-size:12px;padding:32px 0 16px}}
+  </style>
+</head>
+<body>
+<div class="container">
+  <a href="../raport_transparenta.html" class="back-link">← înapoi la raport</a>
+  <h1>{safe_name}</h1>
+  <div class="meta">
+    CUI: {html_mod.escape(cui_f) if cui_f else "—"} &nbsp;·&nbsp;
+    Furnizor în relație contractuală cu Primăria Pantelimon
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val">{len(contracte_firma)}</div><div class="stat-lbl">Contracte</div></div>
+    <div class="stat"><div class="stat-val">{_fmt_ron(valoare_totala)}</div><div class="stat-lbl">Valoare totală</div></div>
+    <div class="stat"><div class="stat-val" style="color:#C0392B">{n_critic}</div><div class="stat-lbl">Nereguli CRITIC</div></div>
+    <div class="stat"><div class="stat-val" style="color:#E67E22">{n_major}</div><div class="stat-lbl">Nereguli MAJOR</div></div>
+    <div class="stat"><div class="stat-val" style="color:#F39C12">{n_mediu}</div><div class="stat-lbl">Nereguli MEDIU</div></div>
+  </div>
+
+  <div style="margin-bottom:16px">
+    <a href="{onrc_link}" target="_blank" rel="noopener" class="ext-btn">🔍 Dosar ONRC (termene.ro)</a>
+    <a href="https://listafirme.ro/search/?q={html_mod.escape(cui_f or nome)}" target="_blank" rel="noopener" class="ext-btn">📋 Listafirme.ro</a>
+    <a href="../raport_transparenta.html" class="ext-btn" style="background:#1E8449">📊 Raport complet</a>
+  </div>
+
+  <h2>⚠️ Nereguli detectate ({len(flags_firma)})</h2>
+  {flags_html if flags_firma else '<p style="color:#888;font-size:14px">Nicio nereguă detectată pentru acest furnizor.</p>'}
+
+  <h2>📄 Contracte ({len(contracte_firma)})</h2>
+  <table>
+    <thead><tr><th>Titlu</th><th>Valoare</th><th>Procedură</th><th>Dată</th></tr></thead>
+    <tbody>{contracte_rows}</tbody>
+  </table>
+
+  <footer>
+    Date extrase din surse publice oficiale (SEAP / data.gov.ro) · Inițiativă cetățenească independentă
+  </footer>
+</div>
+</body>
+</html>"""
+
+
+def genereaza_index_furnizori(index: list) -> str:
+    """Generează furnizori/index.html cu lista A-Z a furnizorilor."""
+    rânduri = ""
+    for f in sorted(index, key=lambda x: x["nume"]):
+        rânduri += f"""
+      <tr>
+        <td style="padding:8px 12px;border-bottom:1px solid #f0f2f5">
+          <a href="{f['slug']}.html" style="color:#0070C0;font-weight:600">{f['nume']}</a>
+        </td>
+        <td style="padding:8px 12px;border-bottom:1px solid #f0f2f5;font-weight:700">{_fmt_ron(f['valoare'])}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #f0f2f5">{f['count']}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #f0f2f5;color:{'#C0392B' if f['flags_critic']>0 else '#E67E22' if f['flags_major']>0 else '#888'}">{f['flags_critic']}C / {f['flags_major']}M / {f['flags_mediu']}m</td>
+      </tr>"""
+
+    return f"""<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Furnizori Primăria Pantelimon — Transparența</title>
+  <meta name="description" content="Index A-Z al furnizorilor Primăriei Pantelimon cu nereguli detectate automat.">
+  <link rel="canonical" href="https://bise88.github.io/transparenta-pantelimon/furnizori/">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+  <script src="../enhance.js" defer></script>
+  <style>
+    body{{font-family:Inter,system-ui,sans-serif;margin:0;background:#f5f7fa;color:#1a1a1a}}
+    .container{{max-width:900px;margin:0 auto;padding:24px 16px}}
+    h1{{font-size:1.5rem;margin-bottom:4px}}
+    .sub{{color:#666;font-size:14px;margin-bottom:20px}}
+    table{{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}}
+    th{{padding:10px 12px;text-align:left;background:#00244A;color:#fff;font-size:12px}}
+    .back-link{{color:#0070C0;text-decoration:none;font-size:14px}}
+    footer{{text-align:center;color:#aaa;font-size:12px;padding:32px 0 16px}}
+  </style>
+</head>
+<body>
+<div class="container">
+  <a href="../raport_transparenta.html" class="back-link">← înapoi la raport</a>
+  <h1>🏢 Furnizori monitorizați</h1>
+  <div class="sub">Furnizori cu ≥3 contracte cu Primăria Pantelimon (sortare A-Z)</div>
+  <table>
+    <thead><tr><th>Firmă</th><th>Valoare totală</th><th>Contracte</th><th>Nereguli (C/M/m)</th></tr></thead>
+    <tbody>{rânduri}</tbody>
+  </table>
+  <footer>Date extrase din surse publice oficiale · Inițiativă cetățenească independentă</footer>
+</div>
+</body>
+</html>"""
+
+
+# ==============================================================================
 # MAIN
 # ==============================================================================
 
@@ -1469,6 +1658,49 @@ def main():
         f.write(raport_html)
     print(f"  ✓ Raport salvat: {CONFIG['fisier_raport']}")
 
+    # Pagini per furnizor (≥3 contracte)
+    print("  [Furnizori] Generez pagini per furnizor...")
+    from collections import defaultdict as _defaultdict
+    import os as _os
+
+    contracte_per_firma = _defaultdict(list)
+    for c in contracte:
+        if c.get("castigator"):
+            contracte_per_firma[c["castigator"]].append(c)
+
+    flags_per_firma = _defaultdict(list)
+    for f in toate_flags:
+        if f.get("furnizor") and f["furnizor"] != "Multiple":
+            flags_per_firma[f["furnizor"]].append(f)
+
+    _os.makedirs("furnizori", exist_ok=True)
+    index_furnizori = []
+    for firma, contracte_firma in contracte_per_firma.items():
+        if len(contracte_firma) < 3:
+            continue
+        slug = _slugify(firma)
+        if not slug:
+            continue
+        flags_firma = flags_per_firma.get(firma, [])
+        pagina_html = genereaza_pagina_furnizor(firma, slug, flags_firma, contracte_firma, CONFIG)
+        with open(f"furnizori/{slug}.html", "w", encoding="utf-8") as fh:
+            fh.write(pagina_html)
+        index_furnizori.append({
+            "nume": firma, "slug": slug,
+            "count": len(contracte_firma),
+            "valoare": sum(c.get("valoare_ron", 0) for c in contracte_firma),
+            "flags_critic": sum(1 for f in flags_firma if f.get("severitate") == "CRITIC"),
+            "flags_major":  sum(1 for f in flags_firma if f.get("severitate") == "MAJOR"),
+            "flags_mediu":  sum(1 for f in flags_firma if f.get("severitate") == "MEDIU"),
+        })
+
+    if index_furnizori:
+        index_html = genereaza_index_furnizori(index_furnizori)
+        with open("furnizori/index.html", "w", encoding="utf-8") as fh:
+            fh.write(index_html)
+        print(f"  ✓ {len(index_furnizori)} pagini furnizori generate în furnizori/")
+    else:
+        print("  ℹ️  Niciun furnizor cu ≥3 contracte găsit.")
     # Export feed.xml (Atom) pentru cititori RSS / jurnaliști
     feed_xml = genereaza_feed_atom(toate_flags, datetime.now())
     with open("feed.xml", "w", encoding="utf-8") as f:
