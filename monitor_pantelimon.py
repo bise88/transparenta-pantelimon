@@ -542,6 +542,54 @@ def analizeaza_hcl(stare_anterioara: dict) -> dict:
     print(f"    ✓ Analiză HCL finalizată. Red flags HCL: {len(flags_hcl)}")
     return {"flags": flags_hcl, "statistici": statistici, "hcl_list": hcl_list}
 
+def calculeaza_scor_transparenta(toate_flags: list, contracte: list, statistici_hcl: dict) -> dict:
+    """Calculeaza scorul de transparenta al UAT (0-100, mai mare = mai transparent)."""
+    ponderi = {
+        "achizitii_directe": 0.30,
+        "ofertant_unic": 0.20,
+        "sedinte_extraordinare": 0.15,
+        "fragmentare": 0.15,
+        "documente_publicate": 0.10,
+        "raspuns_544": 0.10,
+    }
+    # 1. Achizitii directe CRITIC (30%) — fiecare flag CRITIC scade cu 3p
+    n_critic = sum(1 for f in toate_flags if f.get("severitate") == "CRITIC")
+    s_achizitii = max(0, 100 - n_critic * 3)
+    # 2. Ofertant unic dominant (20%) — procent contracte cu un singur ofertant
+    if contracte:
+        n_unic = sum(1 for c in contracte if c.get("nr_ofertanti") == 1)
+        pct_unic = n_unic / len(contracte) * 100
+        s_ofertant = max(0, 100 - pct_unic * 2)
+    else:
+        s_ofertant = 70
+    # 3. Sedinte extraordinare (15%) — scad direct cu procentul
+    pct_extra = statistici_hcl.get("pct_extraordinare", 0)
+    s_extra = max(0, 100 - pct_extra)
+    # 4. Fragmentare contracte (15%) — fiecare flag FRAGMENTARE scade cu 10p
+    n_fragment = sum(1 for f in toate_flags if f.get("tip") == "FRAGMENTARE")
+    s_fragment = max(0, 100 - n_fragment * 10)
+    # 5. Documente publicate (10%) — pagina financiara e goala (confirmat manual)
+    s_documente = 30
+    # 6. Raspuns la cereri 544/2001 (10%) — necunoscut, default conservator
+    s_raspuns = 50
+    componente = {
+        "achizitii_directe": round(s_achizitii),
+        "ofertant_unic": round(s_ofertant),
+        "sedinte_extraordinare": round(s_extra),
+        "fragmentare": round(s_fragment),
+        "documente_publicate": s_documente,
+        "raspuns_544": s_raspuns,
+    }
+    scor_final = sum(componente[k] * ponderi[k] for k in ponderi)
+    return {
+        "scor": round(scor_final),
+        "componente": componente,
+        "ponderi": {k: round(v * 100) for k, v in ponderi.items()},
+        "data": datetime.now().strftime("%Y-%m-%d"),
+    }
+
+
+
 
 # ==============================================================================
 # 4. ALGORITMI DE DETECȚIE RED FLAGS (contracte SEAP)
@@ -867,6 +915,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
              "anchor": f"nereguli-{i}"}
             for i, fl in enumerate(flags_sortate, 1)
         ],
+        "scor_transparenta": config.get("_scor", {}).get("scor"),
     }
     raport_json_embedded = json.dumps(raport_json_obj, ensure_ascii=False)
 
@@ -1669,6 +1718,11 @@ def main():
     print("\n[4/6] Analizez red flags...")
     flags_contracte = analizeaza_red_flags(contracte, CONFIG)
     toate_flags = flags_contracte + flags_hcl
+    # Calculam scorul de transparenta
+    rezultat_scor = calculeaza_scor_transparenta(toate_flags, contracte, statistici_hcl)
+    CONFIG["_scor"] = rezultat_scor
+    print(f"  ✓ Scor transparenta calculat: {rezultat_scor['scor']}/100")
+
 
     # 4b. Detectăm flags NOI față de rularea precedentă
     flags_noi = detecteaza_flags_noi(toate_flags, stare_ant)
@@ -1684,6 +1738,7 @@ def main():
         "data_anterioara": data_anterioara_str,
         "nereguli_noi": len(flags_noi),
         "nereguli_rezolvate": flags_rezolvate_n,
+        "scor_transparenta": CONFIG.get("_scor", {}).get("scor"),
         "top_noi": [
             {"titlu": n["titlu"], "severitate": n["severitate"], "index": i}
             for i, n in enumerate(flags_noi[:3], 1)
@@ -1692,6 +1747,22 @@ def main():
     with open("delta.json", "w", encoding="utf-8") as f:
         json.dump(delta, f, ensure_ascii=False, indent=2)
     print(f"  ✓ delta.json: {len(flags_noi)} nereguli noi, {flags_rezolvate_n} rezolvate")
+    # Salvare/actualizare istoric_scor.json
+    _scor_r = CONFIG.get("_scor", {})
+    if _scor_r:
+        try:
+            with open("istoric_scor.json", "r", encoding="utf-8") as _fis:
+                _istoric = json.load(_fis)
+        except (FileNotFoundError, json.JSONDecodeError):
+            _istoric = {"puncte": []}
+        _luna = _scor_r["data"][:7]
+        _istoric["puncte"] = [p for p in _istoric.get("puncte", []) if not p["data"].startswith(_luna)]
+        _istoric["puncte"].append({"data": _scor_r["data"], "scor": _scor_r["scor"]})
+        _istoric["puncte"] = sorted(_istoric["puncte"], key=lambda x: x["data"])[-24:]
+        with open("istoric_scor.json", "w", encoding="utf-8") as _fis:
+            json.dump(_istoric, _fis, ensure_ascii=False, indent=2)
+        print(f"  ✓ Scor transparenta salvat: {_scor_r['scor']}/100 → istoric_scor.json")
+
 
     # 5. Raport HTML + export contracte.json
     print("\n[5/6] Generez raport HTML...")
@@ -1767,6 +1838,7 @@ def main():
                    "procedure": fl.get("tip_procedura",""), "type": fl.get("tip",""),
                    "anchor": f"nereguli-{i}"}
                   for i, fl in enumerate(toate_flags, 1)],
+        "scor_transparenta": CONFIG.get("_scor", {}),
     }
     with open("raport.json", "w", encoding="utf-8") as fout:
         json.dump(raport_json_main, fout, ensure_ascii=False, indent=2)
