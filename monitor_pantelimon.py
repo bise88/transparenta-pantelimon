@@ -1686,6 +1686,21 @@ def genereaza_index_furnizori(index: list) -> str:
 # ==============================================================================
 
 def main():
+    # --- CLI: parametrizare UAT ---
+    import argparse as _ap
+    _parser = _ap.ArgumentParser(add_help=False)
+    _parser.add_argument("--cif", default=None)
+    _parser.add_argument("--nume", default=None)
+    _parser.add_argument("--judet", default=None)
+    _parser.add_argument("--output-dir", default=None)
+    _args, _ = _parser.parse_known_args()
+    if _args.cif: CONFIG["cif"] = _args.cif
+    if _args.nume: CONFIG["nume_entitate"] = _args.nume
+    if _args.judet: CONFIG["judet"] = _args.judet
+    if _args.output_dir:
+        os.makedirs(_args.output_dir, exist_ok=True)
+        os.chdir(_args.output_dir)
+    # --- end CLI ---
     trimite_email = "--email" in sys.argv
     print("\n" + "="*60)
     print(f"  MONITOR TRANSPARENȚĂ BUGETARĂ — {CONFIG['nume_entitate']}")
