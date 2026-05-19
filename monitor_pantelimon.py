@@ -134,20 +134,26 @@ def fetch_budget_transparenta(cui: str) -> dict:
 # 2. DATE CONTRACTE DIN DATA.GOV.RO (export oficial SEAP trimestrial)
 # ==============================================================================
 
-def fetch_contracts_seap(cui: str, luni: int = 12) -> list:
+def fetch_contracts_seap(cui: str, luni: int = 12) -> tuple:
     """
     Descarcă contractele Primăriei Pantelimon din data.gov.ro — exportul oficial
     trimestrial al SEAP publicat de ANAP. Mult mai fiabil decât API-ul direct SEAP.
-    Returnează lista standardizată de contracte (licitații + achiziții directe).
+    Returnează (lista_contracte, lista_debug) pentru diagnosticare.
     """
-    import io
+    import io, time
     try:
         import openpyxl
     except ImportError:
-        print("    ✗ openpyxl lipsă. Rulează: pip install openpyxl")
-        return []
+        print("    \u2717 openpyxl lipsă. Rulează: pip install openpyxl")
+        return [], ["openpyxl lipsă"]
 
-    print(f"  [data.gov.ro] Caut contracte pentru CUI {cui}...")
+    IS_CI = os.environ.get("GITHUB_ACTIONS") == "true"
+    # Fișierele "Contracte" sunt ~10-15MB; "Achizitii directe" sunt >50MB.
+    # În CI limităm la 25MB — destul pentru Contracte, evităm descărcări uriașe.
+    MAX_FILE_MB = 25 if IS_CI else 200
+
+    debug_log = [f"IS_CI={IS_CI} MAX_FILE_MB={MAX_FILE_MB}MB cui={cui}"]
+    print(f"  [data.gov.ro] Caut contracte pentru CUI {cui} (IS_CI={IS_CI}, max={MAX_FILE_MB}MB)...")
 
     an_curent = datetime.now().year
     ani_de_verificat = sorted({an_curent - 1, an_curent})  # ultimii 2 ani
@@ -162,14 +168,20 @@ def fetch_contracts_seap(cui: str, luni: int = 12) -> list:
                 timeout=20, headers=HEADERS
             )
             if r.status_code != 200:
-                print(f"    ⚠ Pachet {an} indisponibil (HTTP {r.status_code})")
+                msg = f"Pachet {an} HTTP {r.status_code}"
+                print(f"    \u26a0 {msg}")
+                debug_log.append(msg)
                 continue
             resources = r.json()["result"]["resources"]
+            debug_log.append(f"an={an} resources={len(resources)}")
         except Exception as e:
-            print(f"    ⚠ Nu am putut accesa pachetul {an}: {e}")
+            msg = f"Pachet {an} eroare: {e}"
+            print(f"    \u26a0 {msg}")
+            debug_log.append(msg)
             continue
 
-        # Selectăm fișierele relevante: Contracte și Achiziții directe (nu notificări)
+        # Selectăm DOAR fișierele de tip "Contracte" — mai mici și conțin tot ce ne trebuie.
+        # Fișierele "Achizitii directe" sunt >50MB și exced limita CI.
         fisiere_relevante = []
         for res in resources:
             name = res.get("name", "").lower()
@@ -177,30 +189,36 @@ def fetch_contracts_seap(cui: str, luni: int = 12) -> list:
             if not (url.endswith(".xlsx") or url.endswith(".xls")):
                 continue
             este_contracte = "contracte" in name and "modificare" not in name
-            este_directe = "direct" in name and "notific" not in name and "atribuire" not in name
+            # Includem și achizitii directe NUMAI dacă nu suntem în CI (fișiere prea mari)
+            este_directe = (not IS_CI) and "direct" in name and "notific" not in name and "atribuire" not in name
             if este_contracte or este_directe:
                 tip = "contract" if este_contracte else "achizitie-directa"
                 fisiere_relevante.append((tip, url, res.get("name", "")))
 
-        print(f"    → {an}: {len(fisiere_relevante)} fișiere relevante găsite")
+        msg = f"an={an}: {len(fisiere_relevante)} fisiere selectate"
+        print(f"    \u2192 {msg}")
+        debug_log.append(msg)
 
         for tip_sursa, url, res_name in fisiere_relevante:
+            t_start = time.time()
             try:
-                # Verificăm dimensiunea fișierului înainte de descărcare
-                IS_CI = os.environ.get("GITHUB_ACTIONS") == "true"
-                MAX_FILE_MB = 50 if IS_CI else 200
+                # HEAD pentru dimensiune (data.gov.ro adesea nu trimite Content-Length)
                 try:
                     head = requests.head(url, timeout=10, headers=HEADERS, allow_redirects=True)
                     content_len = int(head.headers.get("Content-Length", 0))
                     if content_len > MAX_FILE_MB * 1024 * 1024:
-                        print(f"    ⏭ {res_name}: {content_len//1024//1024}MB > {MAX_FILE_MB}MB, sărim")
+                        msg = f"SKIP {res_name}: HEAD={content_len//1024//1024}MB>{MAX_FILE_MB}MB"
+                        print(f"    \u23ed {msg}")
+                        debug_log.append(msg)
                         continue
-                except Exception:
-                    pass  # HEAD eșuat — încercăm oricum
+                except Exception as he:
+                    debug_log.append(f"HEAD failed {res_name}: {he}")
 
-                # Descărcare cu streaming + limită de timp și dimensiune
-                resp = requests.get(url, timeout=30, headers=HEADERS, stream=True)
+                # Descărcare cu streaming; timeout=(connect=10s, read=60s per chunk)
+                resp = requests.get(url, timeout=(10, 60), headers=HEADERS, stream=True)
                 if resp.status_code != 200:
+                    msg = f"GET {res_name} HTTP {resp.status_code}"
+                    debug_log.append(msg)
                     continue
 
                 chunks = []
@@ -209,22 +227,31 @@ def fetch_contracts_seap(cui: str, luni: int = 12) -> list:
                 for chunk in resp.iter_content(chunk_size=65536):
                     downloaded += len(chunk)
                     if downloaded > LIMIT:
-                        print(f"    ⏭ {res_name}: depășit {MAX_FILE_MB}MB în descărcare, sărim")
+                        msg = f"SKIP {res_name}: stream>{MAX_FILE_MB}MB la {downloaded//1024//1024}MB"
+                        print(f"    \u23ed {msg}")
+                        debug_log.append(msg)
                         chunks = []
                         break
                     chunks.append(chunk)
                 resp.close()
 
+                elapsed = time.time() - t_start
                 if not chunks:
+                    debug_log.append(f"EMPTY {res_name} elapsed={elapsed:.1f}s")
                     continue
 
                 file_bytes = b"".join(chunks)
+                size_mb = len(file_bytes) / 1024 / 1024
+                debug_log.append(f"DL {res_name}: {size_mb:.1f}MB in {elapsed:.1f}s")
+                print(f"    \u2713 Descărcat {res_name}: {size_mb:.1f}MB în {elapsed:.1f}s")
+
                 wb = openpyxl.load_workbook(io.BytesIO(file_bytes), read_only=True)
                 ws = wb.active
                 rows_iter = ws.iter_rows(values_only=True)
                 headers_row = next(rows_iter, None)
                 if not headers_row:
                     wb.close()
+                    debug_log.append(f"NO_HEADERS {res_name}")
                     continue
 
                 hdrs = [str(h).strip() if h else "" for h in headers_row]
@@ -245,11 +272,15 @@ def fetch_contracts_seap(cui: str, luni: int = 12) -> list:
                 idx_cpv      = col_idx("Denumire CPV", "Denumire produs", "Obiect")
                 idx_numar    = col_idx("Numar contract", "Numar achizitie", "ID")
 
+                debug_log.append(f"COLS {res_name}: cui_ac={idx_cui_ac} val={idx_valoare} castig={idx_castig}")
+
                 if idx_cui_ac is None:
                     wb.close()
+                    debug_log.append(f"NO_CUI_COL {res_name} hdrs={hdrs[:5]}")
                     continue
 
                 rand_idx = 0
+                found_here = 0
                 for row in rows_iter:
                     rand_idx += 1
                     if not row or not row[idx_cui_ac]:
@@ -260,6 +291,7 @@ def fetch_contracts_seap(cui: str, luni: int = 12) -> list:
                     if _cui_row != str(cui).strip():
                         continue
 
+                    found_here += 1
                     # Valoare
                     valoare = 0.0
                     if idx_valoare is not None and row[idx_valoare]:
@@ -299,20 +331,24 @@ def fetch_contracts_seap(cui: str, luni: int = 12) -> list:
                         "sursa": f"data.gov.ro/{tip_sursa}/{an}",
                     })
 
+                debug_log.append(f"SCAN {res_name}: rows={rand_idx} matches={found_here}")
                 wb.close()
                 surse_ok += 1
 
             except Exception as e:
-                print(f"    ⚠ Eroare la {res_name}: {e}")
+                elapsed = time.time() - t_start
+                msg = f"ERR {res_name} ({elapsed:.1f}s): {e}"
+                print(f"    \u26a0 {msg}")
+                debug_log.append(msg)
 
-    print(f"    ✓ Procesate {surse_ok} fișiere. Găsite {len(contracte)} contracte Pantelimon.")
+    summary = f"surse_ok={surse_ok} contracte={len(contracte)}"
+    print(f"    \u2713 {summary}")
+    debug_log.append(summary)
 
     if not contracte:
-        print("    ✗ Nu s-au găsit contracte reale în data.gov.ro.")
+        print("    \u2717 Nu s-au găsit contracte reale în data.gov.ro.")
 
-    return contracte
-
-
+    return contracte, debug_log
 # ==============================================================================
 # 3. HOTĂRÂRI CONSILIU LOCAL — ANALIZĂ OCR
 # ==============================================================================
@@ -1716,7 +1752,7 @@ def main():
 
     # 2. Contracte din data.gov.ro
     print("\n[2/6] Fetchuiesc contracte din data.gov.ro...")
-    contracte = fetch_contracts_seap(CONFIG["cui"], CONFIG["luni_analiza"])
+    contracte, seap_debug = fetch_contracts_seap(CONFIG["cui"], CONFIG["luni_analiza"])
 
     # 3. Hotărâri Consiliu Local
     print("\n[3/6] Analizez hotărârile Consiliului Local...")
@@ -1857,6 +1893,7 @@ def main():
                    "anchor": f"nereguli-{i}"}
                   for i, fl in enumerate(toate_flags, 1)],
         "scor_transparenta": CONFIG.get("_scor", {}),
+        "seap_debug": seap_debug if 'seap_debug' in dir() else [],
     }
     with open("raport.json", "w", encoding="utf-8") as fout:
         json.dump(raport_json_main, fout, ensure_ascii=False, indent=2)
