@@ -225,6 +225,22 @@ html[data-tp-theme="dark"] {
   a[href^="#"]::after,
   a[href^="javascript"]::after { content: ""; }
 }
+
+/* Banner "ce e nou" */
+.tp-banner-whats-new {
+  background: var(--tp-accent, #dc2626); color: #fff;
+  padding: .6rem 1rem; text-align: center;
+  position: relative; font-size: .9rem;
+}
+.tp-banner-whats-new a { color: #fff; text-decoration: underline; margin: 0 .4rem; }
+.tp-banner-close {
+  position: absolute; right: 1rem; top: 50%;
+  transform: translateY(-50%);
+  background: transparent; border: 0; color: #fff;
+  font-size: 1.4rem; line-height: 1; cursor: pointer;
+  padding: 0 .2rem;
+}
+.tp-banner-close:hover { opacity: .8; }
 `;
 
   // ──────────────────────────────────────────────────────────────
@@ -894,10 +910,45 @@ html[data-tp-theme="dark"] {
   // ──────────────────────────────────────────────────────────────
   // BOOT
   // ──────────────────────────────────────────────────────────────
+  async function showWhatsNewBanner() {
+    try {
+      // Calea relativă funcționează atât pe GitHub Pages cât și local
+      const r = await fetch('delta.json', { cache: 'no-store' });
+      if (!r.ok) return;
+      const d = await r.json();
+      if (!d.nereguli_noi || d.nereguli_noi === 0) return;
+
+      // Nu afișa bannerul dacă a fost deja respins pentru acest raport
+      const dismissedFor = localStorage.getItem('tp-banner-dismissed');
+      if (dismissedFor === d.data_curenta) return;
+
+      const topNoi = (d.top_noi || []).slice(0, 2)
+        .map(n => `<strong>${n.severitate}</strong>: ${escapeHTML(n.titlu)}`).join('; ');
+      const link = 'raport_transparenta.html#nereguli-1';
+
+      const banner = document.createElement('div');
+      banner.className = 'tp-banner-whats-new';
+      banner.setAttribute('role', 'status');
+      banner.innerHTML =
+        `🚩 <strong>${d.nereguli_noi} nereguli noi</strong> detectate față de raportul anterior` +
+        (topNoi ? ` — ${topNoi}` : '') +
+        ` <a href="${link}">vezi raportul →</a>` +
+        `<button class="tp-banner-close" aria-label="Închide bannerul">×</button>`;
+
+      banner.querySelector('.tp-banner-close').addEventListener('click', () => {
+        try { localStorage.setItem('tp-banner-dismissed', d.data_curenta); } catch (e) {}
+        banner.remove();
+      });
+
+      document.body.insertBefore(banner, document.body.firstChild);
+    } catch (e) { /* fail silently — delta.json poate să nu existe */ }
+  }
+
   function boot() {
     injectStyle();
     injectNav();
     injectBackToTop();
+    showWhatsNewBanner();
 
     const path = location.pathname.toLowerCase();
     if (/raport_transparenta/.test(path)) {
