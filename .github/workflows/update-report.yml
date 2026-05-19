@@ -35,7 +35,7 @@ jobs:
         run: |
           git config --local user.email "transparenta-bot@cetatenipantelimon.ro"
           git config --local user.name "Monitor Transparență Cetățenesc Pantelimon"
-          git add raport_transparenta.html stare_anterioara.json delta.json contracte.json
+          git add raport_transparenta.html stare_anterioara.json feed.xml raport.json contracte.json delta.json furnizori/
           # Commit doar dacă există modificări
           git diff --staged --quiet || git commit -m "🚩 Raport actualizat $(date +'%d.%m.%Y')"
           git push
