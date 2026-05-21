@@ -1023,49 +1023,42 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
                 except Exception:
                     pass
 
-    # ── Algoritm 9c: Firmă fără angajați (0-1) cu contract >50K ─────────────────
-    # Folosește datele din openapi.ro (bilanț) dacă sunt disponibile
+    # ── Algoritm 9c: Firmă radiată la ORC (confirmare openapi.ro) ───────────────
+    # openapi.ro returnează câmpul `radiata: bool` care e mai fiabil decât
+    # parsing-ul textului din ANAF. Adaugă flag suplimentar dacă nu e deja detectat.
     if cui_furnizori and firme_openapi:
+        firme_deja_flagate = {f.get("cif_furnizor", "") for f in flags if f.get("tip") == "FIRMA_INACTIVA"}
         for c in contracte:
             cui_f = c.get("castigator_cui", "")
-            if not cui_f:
+            if not cui_f or cui_f in firme_deja_flagate:
                 continue
             info = firme_openapi.get(cui_f)
-            if not info:
+            if not info or not info.get("radiata"):
                 continue
-            nr = info.get("nr_angajati")
-            if nr is None:
-                continue
-            try:
-                nr = int(nr)
-            except (TypeError, ValueError):
-                continue
-            if nr <= 1 and c["valoare_ron"] >= 50_000:
-                furnizor     = c["castigator"]
-                valoare      = c["valoare_ron"]
-                termene_link = _termene_url(cui_f)
-                cui_display  = cui_f.lstrip("RO").lstrip("ro")
-                flags.append({
-                    "tip": "FIRMA_FARA_ANGAJATI",
-                    "severitate": "MAJOR",
-                    "titlu": f"Contract cu firmă de {nr} angajat(i)",
-                    "descriere": (
-                        f'Firma "{furnizor}" (CUI {cui_display}) a raportat <strong>{nr} angajat(i)</strong> '
-                        f'în ultimul bilanț disponibil, dar a primit contractul '
-                        f'"{c["titlu"][:60]}" în valoare de {_fmt_ron(valoare)}. '
-                        f'O firmă fără personal propriu nu poate executa lucrări/servicii fără subcontractare '
-                        f'nedeclarată (art. 218-220 Legea 98/2016). '
-                        + (_fmt_actionariat(info) + " " if _fmt_actionariat(info) else "")
-                        + f'Verifică: <a href="{termene_link}" target="_blank">termene.ro →</a>'
-                    ),
-                    "contract_id": c["id"],
-                    "contract_numar": c["numar"],
-                    "valoare": valoare,
-                    "furnizor": furnizor,
-                    "cif_furnizor": cui_f,
-                    "data": c["data_publicare"],
-                    "tip_procedura": c["tip_procedura"],
-                })
+            furnizor    = c["castigator"]
+            valoare     = c["valoare_ron"]
+            cui_display = cui_f.lstrip("RO").lstrip("ro")
+            flags.append({
+                "tip": "FIRMA_INACTIVA",
+                "severitate": "CRITIC",
+                "titlu": "Contract cu firmă radiată la Registrul Comerțului",
+                "descriere": (
+                    f'Firma "{furnizor}" (CUI {cui_display}) este marcată ca <strong>RADIATĂ</strong> '
+                    f'conform openapi.ro (sursă: ONRC). A primit contractul '
+                    f'"{c["titlu"][:60]}" în valoare de {_fmt_ron(valoare)}. '
+                    f'Firmele radiate nu mai au personalitate juridică. '
+                    f'Contractele cu firme radiate pot fi nule de drept (art. 220 alin. (1) L98/2016 '
+                    f'+ art. 248 Cod Civil). '
+                    + (_fmt_actionariat(info) + " " if _fmt_actionariat(info) else "")
+                ),
+                "contract_id": c["id"],
+                "contract_numar": c["numar"],
+                "valoare": valoare,
+                "furnizor": furnizor,
+                "cif_furnizor": cui_f,
+                "data": c["data_publicare"],
+                "tip_procedura": c["tip_procedura"],
+            })
 
     # Deduplicare (același furnizor poate apărea în mai mulți algoritmi)
     flags_unice = []
@@ -1219,14 +1212,16 @@ def _salveaza_cache_firme(fisier: str, cache: dict):
 
 def _get_actionariat_openapi(cui_list: list, api_key: str, fisier_cache: str) -> dict:
     """
-    Interoghează openapi.ro pentru date acționariat și administrator.
-    Folosește un cache local JSON pentru a nu re-interoga CUI-uri deja cunoscute.
+    Interoghează openapi.ro pentru date suplimentare despre firme.
+    API-ul returnează date ANAF îmbogățite: radiata (bool), numar_reg_com, stare, ultima_declaratie.
+    NU conține acționari/administrator (pentru acelea generăm link recom.ro din numar_reg_com).
 
     Returnează dict keyed by CUI (string) cu:
-      - administratori: [{nume, functie, data_start}]
-      - asociati:       [{nume, cota_participare}]
-      - caen_cod, caen_denumire
-      - nrAngajati (din bilanț, dacă disponibil)
+      - radiata: bool — firmă radiată (mai fiabil decât parsing ANAF text)
+      - numar_reg_com: str — ex. "J40/1234/2020" pentru link ONRC
+      - stare: str — text status complet
+      - ultima_declaratie: str — data ultimei declarații fiscale
+      - recom_url: str — link direct la recom.ro pentru verificare manuală acționari
     """
     if not api_key:
         return {}
@@ -1259,43 +1254,27 @@ def _get_actionariat_openapi(cui_list: list, api_key: str, fisier_cache: str) ->
                     continue
                 data = json.loads(resp.read())
         except Exception as exc:
-            # 404 = firmă negăsită, 403 = cheie invalidă
             if "403" in str(exc):
                 print(f"    ❌ openapi.ro: cheie API invalidă — verifică CONFIG['openapi_ro_key']")
                 break
             continue
 
-        # Normalizăm răspunsul (API clasic și internațional au structuri ușor diferite)
-        admins = []
-        for a in (data.get("administratori") or data.get("administrators") or []):
-            admins.append({
-                "nume": a.get("nume") or a.get("name") or "",
-                "functie": a.get("functie") or a.get("role") or "Administrator",
-                "data_start": a.get("dataStart") or a.get("data_start") or "",
-            })
+        if data.get("error"):
+            continue  # CUI invalid sau negăsit
 
-        asociati = []
-        for s in (data.get("asociati") or data.get("shareholders") or []):
-            asociati.append({
-                "nume": s.get("nume") or s.get("name") or "",
-                "cota": s.get("cota_participare") or s.get("percentage") or 0,
-            })
+        nr_reg = data.get("numar_reg_com") or ""
+        # Construim link recom.ro: dacă avem nr_reg_com îl folosim, altfel CUI
+        if nr_reg:
+            recom = f"https://www.recom.ro/companies_ro_company_detail.aspx?id={cui_clean}"
+        else:
+            recom = f"https://www.recom.ro/companies_ro_company_detail.aspx?id={cui_clean}"
 
-        # Număr angajați din ultimul bilanț disponibil
-        nr_angajati = None
-        bilant_list = data.get("bilanturi") or data.get("financials") or []
-        if bilant_list:
-            last = bilant_list[-1] if isinstance(bilant_list, list) else {}
-            nr_angajati = (last.get("nr_angajati") or last.get("employees")
-                           or last.get("numar_mediu_salariati"))
-
-        caen = data.get("caen") or {}
         entry = {
-            "administratori": admins,
-            "asociati": asociati,
-            "caen_cod": caen.get("cod") or data.get("codCaen") or "",
-            "caen_denumire": caen.get("denumire") or data.get("denumireCaen") or "",
-            "nr_angajati": nr_angajati,
+            "radiata": bool(data.get("radiata")),
+            "numar_reg_com": nr_reg,
+            "stare": data.get("stare", ""),
+            "ultima_declaratie": data.get("ultima_declaratie") or "",
+            "recom_url": recom,
             "sursa": "openapi.ro",
             "data_cache": datetime.now().strftime("%Y-%m-%d"),
         }
@@ -1303,42 +1282,41 @@ def _get_actionariat_openapi(cui_list: list, api_key: str, fisier_cache: str) ->
         result[orig]  = entry
         cache[cui_clean] = entry
         noi_in_cache += 1
-        time.sleep(0.1)  # politicos față de API
+        time.sleep(0.1)
 
     if noi_in_cache:
         _salveaza_cache_firme(fisier_cache, cache)
-        print(f"    ✓ openapi.ro: {noi_in_cache} firme noi adăugate în cache")
+        print(f"    ✓ openapi.ro: {noi_in_cache} firme adăugate în cache")
 
     return result
 
 
 def _fmt_actionariat(info: dict) -> str:
     """
-    Formatează datele de acționariat pentru inserare în descrierea unui flag HTML.
-    Returnează un bloc HTML compact cu administratori, asociați și angajați.
+    Formatează datele disponibile din openapi.ro pentru inserare în descrierea unui flag.
+    Afișează status radiat, număr ORC și link recom.ro pentru verificare manuală acționari.
     """
     if not info:
         return ""
     parts = []
 
-    admins = info.get("administratori", [])
-    if admins:
-        names = ", ".join(f'<strong>{a["nume"]}</strong>' + (f' ({a["functie"]})' if a.get("functie") and a["functie"] != "Administrator" else "") for a in admins[:3])
-        parts.append(f"👤 <u>Administrator</u>: {names}")
+    if info.get("radiata"):
+        parts.append('<span style="color:#C0392B;font-weight:700">⚠️ RADIATĂ în registrul comerțului</span>')
 
-    asociati = info.get("asociati", [])
-    if asociati:
-        names = ", ".join(f'{s["nume"]} ({s["cota"]}%)' if s.get("cota") else s["nume"] for s in asociati[:4])
-        parts.append(f"🏦 <u>Acționari</u>: {names}")
+    nr_reg = info.get("numar_reg_com", "")
+    if nr_reg:
+        parts.append(f"📋 <u>Nr. ORC</u>: <strong>{nr_reg}</strong>")
 
-    nr = info.get("nr_angajati")
-    if nr is not None:
-        color = "#C0392B" if int(nr) <= 1 else "#27AE60"
-        parts.append(f'<span style="color:{color}">👷 <u>Angajați</u>: <strong>{nr}</strong></span>')
+    ultima = info.get("ultima_declaratie", "")
+    if ultima:
+        parts.append(f"📅 <u>Ultima declarație fiscală</u>: {ultima}")
 
-    caen = info.get("caen_denumire", "")
-    if caen:
-        parts.append(f"🏭 <u>CAEN</u>: {caen}")
+    recom = info.get("recom_url", "")
+    if recom:
+        parts.append(
+            f'<a href="{recom}" target="_blank" ' +
+            'style="color:#0070C0;font-weight:600">🔍 Verifică acționari și administrator la ONRC →</a>'
+        )
 
     return (" &nbsp;|&nbsp; ".join(parts)) if parts else ""
 
@@ -1401,7 +1379,7 @@ def calculeaza_analiza_per_tip(flags: list, contracte: list) -> dict:
         "VALOARE_ROTUNDA_SUSPECTA":{"label": "Valoare rotundă suspectă","emoji": "🔢", "culoare": "#6C3483"},
         "FIRMA_INACTIVA":         {"label": "Firmă inactivă/radiată",   "emoji": "💀", "culoare": "#641E16"},
         "FIRMA_NOU_CREATA":       {"label": "Firmă nou înregistrată",   "emoji": "🆕", "culoare": "#1F618D"},
-        "FIRMA_FARA_ANGAJATI":    {"label": "Firmă fără angajați",       "emoji": "👻", "culoare": "#7D3C98"},
+
     }
 
     per_tip = defaultdict(lambda: {
