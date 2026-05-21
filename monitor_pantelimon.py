@@ -655,7 +655,7 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
 
     # ── Algoritm 1: Contracte cu un singur ofertant ──────────────────────────
     for c in contracte:
-        if c["nr_ofertanti"] == 1 and c["valoare_ron"] > 20_000:
+        if c.get("nr_ofertanti", 0) == 1 and c["valoare_ron"] > 20_000:
             severitate = "MAJOR" if c["valoare_ron"] > 200_000 else "MEDIU"
             flags.append({
                 "tip": "OFERTANT_UNIC",
@@ -1774,7 +1774,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
     total_val = sum(c["valoare_ron"] for c in contracte)
     directe = [c for c in contracte if "direct" in c["tip_procedura"].lower()
                or "negociere" in c["tip_procedura"].lower()]
-    unic_ofertant = [c for c in contracte if c["nr_ofertanti"] == 1]
+    unic_ofertant = [c for c in contracte if c.get("nr_ofertanti", 0) == 1]
 
     # Culori severitate
     culori = {"CRITIC": "#C0392B", "MAJOR": "#E67E22", "MEDIU": "#F39C12"}
@@ -1807,7 +1807,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
         "tip": c["tip_procedura"],
         "firma": c["castigator"],
         "cui": c.get("castigator_cui", ""),
-        "ofertanti": c["nr_ofertanti"],
+        "ofertanti": c.get("nr_ofertanti", 0),
     } for c in contracte], ensure_ascii=False)
     # Construim raport_json pentru embed <script id="tp-data"> si raport.json
     _n_contracte = len(contracte)
@@ -2117,7 +2117,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
     for c in contracte[:20]:  # primele 20
         badge_tip = ("🔴" if "direct" in c["tip_procedura"].lower() or "negociere" in c["tip_procedura"].lower()
                      else "🟢" if "deschis" in c["tip_procedura"].lower() else "🟡")
-        badge_ofertanti = f'<span style="color:{"#C0392B" if c["nr_ofertanti"]==1 else "#27AE60"};font-weight:700">{c["nr_ofertanti"]}</span>'
+        badge_ofertanti = f'<span style="color:{"#C0392B" if c.get(\"nr_ofertanti\",0)==1 else \"#27AE60\"};font-weight:700">{c.get("nr_ofertanti", 0)}</span>'
         nota_demo = ' <em style="color:#aaa;font-size:10px">(demo)</em>' if c.get("sursa") == "DEMO" else ""
         contracte_html += f"""
         <tr>
@@ -3139,7 +3139,7 @@ def main():
         "tip": c["tip_procedura"],
         "firma": c["castigator"],
         "cui": c.get("castigator_cui", ""),
-        "ofertanti": c["nr_ofertanti"],
+        "ofertanti": c.get("nr_ofertanti", 0),
     } for c in contracte]
     with open("contracte.json", "w", encoding="utf-8") as f:
         json.dump(contracte_export, f, ensure_ascii=False, indent=2)
