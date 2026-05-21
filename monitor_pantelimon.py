@@ -679,13 +679,26 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
         v = c["valoare_ron"]
         # Dacă o SINGURĂ achiziție directă depășește pragul → ilegal fără licitație
         if v > prag_s and ("direct" in c["tip_procedura"].lower() or c["tip_procedura"] == ""):
+            nr_of = c.get("nr_ofertanti", 0)
+            # Clarificare: chiar dacă sunt 2+ ofertanți (cerere de preț informală),
+            # asta NU echivalează cu o procedură competitivă legală.
+            if nr_of >= 2:
+                nota_ofertanti = (
+                    f' Notă: deși au fost solicitate {nr_of} oferte de preț, '
+                    f'o cerere informală de ofertă NU constituie o procedură competitivă '
+                    f'(licitație simplificată/deschisă) — Legea 98/2016, art. 68 impune '
+                    f'proceduri formale cu publicare în SEAP peste acest prag.'
+                )
+            else:
+                nota_ofertanti = ""
             flags.append({
                 "tip": "ACHIZITIE_DIRECTA_PESTE_PRAG",
                 "severitate": "CRITIC",
                 "titlu": "Achiziție directă peste pragul legal",
                 "descriere": (f'Contract "{c["titlu"][:70]}" ({_fmt_ron(v)}) '
                               f'depășește singur pragul de achiziție directă ({_fmt_ron(prag_s)}). '
-                              f'Valoarea ar fi impus licitație publică (Legea 98/2016, art. 7).'),
+                              f'Valoarea ar fi impus licitație publică (Legea 98/2016, art. 7).'
+                              + nota_ofertanti),
                 "contract_id": c["id"],
                 "contract_numar": c["numar"],
                 "valoare": v,
@@ -944,7 +957,8 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
         )
         # Date ONRC (reprezentanți legali din OD_REPREZENTANTI_LEGALI.CSV) — gratis, oficial
         firme_onrc = _get_reprezentanti_onrc(cui_furnizori, fisier_cache)
-        config["_firme_onrc"] = firme_onrc   # transmis la genereaza_raport_html
+        config["_firme_onrc"] = firme_onrc         # transmis la genereaza_raport_html
+        config["_firme_openapi"] = firme_openapi   # transmis la genereaza_raport_html
         azi        = datetime.now()
         for c in contracte:
             cui_f = c.get("castigator_cui", "")
@@ -2093,8 +2107,9 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
     }}
     </script>"""
 
-    # Includem și datele ONRC per firmă dacă sunt disponibile
-    firme_onrc = config.get("_firme_onrc", {})
+    # Includem și datele ONRC/openapi.ro per firmă dacă sunt disponibile
+    firme_onrc    = config.get("_firme_onrc", {})
+    firme_openapi = config.get("_firme_openapi", {})
     risc_firma_json = json.dumps({
         furn: {
             "cui": rd["cui"],
@@ -2109,6 +2124,13 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
                 "cod_inmatriculare": firme_onrc.get(rd["cui"], {}).get("cod_inmatriculare", ""),
                 "forma_juridica": firme_onrc.get(rd["cui"], {}).get("forma_juridica", ""),
                 "data_inmatriculare": firme_onrc.get(rd["cui"], {}).get("data_inmatriculare", ""),
+            },
+            "openapi": {
+                "numar_reg_com":    firme_openapi.get(rd["cui"], {}).get("numar_reg_com", ""),
+                "stare":            firme_openapi.get(rd["cui"], {}).get("stare", ""),
+                "ultima_declaratie": firme_openapi.get(rd["cui"], {}).get("ultima_declaratie", ""),
+                "recom_url":        firme_openapi.get(rd["cui"], {}).get("recom_url", ""),
+                "radiata":          firme_openapi.get(rd["cui"], {}).get("radiata", False),
             },
         } for furn, rd in risc_firma.items()
     }, ensure_ascii=False)
@@ -2588,9 +2610,30 @@ function openFirmaPanel(firma, evt) {{
             + '<tbody>' + rows + '</tbody></table></div>'
             + '<div style="font-size:11px;color:#777;margin-top:4px">Sursă: ONRC data.gov.ro (date oficiale) · ' + onrcLink + '</div>';
         }})()
-      : '<div style="margin:12px 0;padding:8px 12px;background:#F4F6F8;border-radius:6px;font-size:11px;color:#777">'
-        + '🏛 Reprezentanți legali: <a href="'+onrcUrl+'" target="_blank" style="color:#0070C0">verifică pe recom.ro →</a>'
-        + '</div>')
+      : (function() {{
+          var op = rd.openapi || {{}};
+          var hasOp = op.numar_reg_com || op.stare;
+          if (hasOp) {{
+            var cuiClean = cui.replace(/^RO/i, '');
+            return '<h4 style="margin:16px 0 8px;font-size:13px;color:#1E8449">🏛 Date firmă (ANAF/ONRC)</h4>'
+              + '<div style="background:#F4F6F8;border-radius:8px;padding:12px 14px;font-size:12px">'
+              + (op.stare ? '<div style="margin-bottom:4px">Stare: <strong' + (op.radiata ? ' style="color:#C0392B"' : '') + '>' + op.stare + (op.radiata ? ' ⚠️' : '') + '</strong></div>' : '')
+              + (op.numar_reg_com ? '<div style="margin-bottom:4px">Nr. reg. com.: <strong>' + op.numar_reg_com + '</strong></div>' : '')
+              + (op.ultima_declaratie ? '<div style="margin-bottom:8px;color:#777">Ultima declarație fiscală: ' + op.ultima_declaratie + '</div>' : '')
+              + '<div style="margin-top:6px">'
+              + '<a href="https://termene.ro/firma/' + cuiClean + '" target="_blank" style="color:#0070C0;font-weight:600;font-size:12px">📋 Administratori pe termene.ro →</a>'
+              + ' &nbsp;·&nbsp; '
+              + '<a href="https://www.recom.ro/companies_ro_company_detail.aspx?id=' + cuiClean + '" target="_blank" style="color:#1E8449;font-size:12px">🏛 recom.ro →</a>'
+              + '</div>'
+              + '<div style="font-size:10px;color:#aaa;margin-top:6px">Date ONRC complete: disponibile după procesare locală</div>'
+              + '</div>';
+          }} else {{
+            return '<div style="margin:12px 0;padding:8px 12px;background:#F4F6F8;border-radius:6px;font-size:11px;color:#777">'
+              + '🏛 Reprezentanți legali: <a href="' + onrcUrl + '" target="_blank" style="color:#0070C0">verifică pe recom.ro →</a>'
+              + ' sau <a href="https://termene.ro/firma/' + cui.replace(/^RO/i,'') + '" target="_blank" style="color:#0070C0">termene.ro →</a>'
+              + '</div>';
+          }}
+        }})())
 
     + (flagsHtml ? '<h4 style="margin:0 0 8px;font-size:13px;color:#C0392B">🚩 Nereguli detectate</h4>' + flagsHtml : '')
 
