@@ -904,6 +904,87 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
                     "tip_procedura": c["tip_procedura"],
                 })
 
+    # ── Algoritm 9: Firme suspecte (ANAF) ───────────────────────────────────
+    # Detectează: firme inactive/radiate, firme nou înregistrate (<2 ani), contracte cu firme
+    # ce ar trebui verificate pe listafirme.ro / termene.ro pentru administrator și angajați.
+    cui_furnizori = list({c["castigator_cui"] for c in contracte if c.get("castigator_cui")})
+    if cui_furnizori:
+        firme_anaf = _get_firme_anaf_batch(cui_furnizori)
+        azi        = datetime.now()
+        for c in contracte:
+            cui_f = c.get("castigator_cui", "")
+            if not cui_f:
+                continue
+            info = firme_anaf.get(cui_f)
+            if not info:
+                continue
+
+            stare          = info.get("stare", "NECUNOSCUT")
+            data_inf_str   = info.get("dataInregistrare") or ""
+            furnizor       = c["castigator"]
+            valoare        = c["valoare_ron"]
+            termene_link   = _termene_url(cui_f)
+            cui_display    = cui_f.lstrip("RO").lstrip("ro")
+
+            # 9a: Firmă inactivă / radiată cu contract activ → CRITIC
+            if stare in ("INACTIV", "RADIAT", "SUSPENDAT"):
+                flags.append({
+                    "tip": "FIRMA_INACTIVA",
+                    "severitate": "CRITIC",
+                    "titlu": f"Contract cu firmă {stare.lower()} la ANAF",
+                    "descriere": (
+                        f'Firma "{furnizor}" (CUI {cui_display}) are statut '
+                        f'<strong>{stare}</strong> în registrul ANAF, dar a câștigat '
+                        f'contractul "{c["titlu"][:60]}" în valoare de {_fmt_ron(valoare)}. '
+                        f'Contractele cu firme inactive/radiate pot fi nule de drept (art. 220 L98/2016). '
+                        f'Verifică administratorul și istoricul complet: '
+                        f'<a href="{termene_link}" target="_blank">termene.ro →</a>'
+                    ),
+                    "contract_id": c["id"],
+                    "contract_numar": c["numar"],
+                    "valoare": valoare,
+                    "furnizor": furnizor,
+                    "cif_furnizor": cui_f,
+                    "data": c["data_publicare"],
+                    "tip_procedura": c["tip_procedura"],
+                })
+
+            # 9b: Firmă nou înregistrată (<24 luni la data contractului) și valoare >50K → MAJOR
+            elif data_inf_str:
+                try:
+                    data_inf = datetime.strptime(data_inf_str[:10], "%Y-%m-%d")
+                    try:
+                        data_contract = datetime.strptime(c["data_publicare"][:10], "%Y-%m-%d")
+                    except Exception:
+                        data_contract = azi
+                    varsta_luni = (data_contract.year - data_inf.year) * 12 +                                   (data_contract.month - data_inf.month)
+                    if varsta_luni < 24 and valoare >= 50_000:
+                        sev = "CRITIC" if valoare >= config["prag_servicii_furnizare"] else "MAJOR"
+                        flags.append({
+                            "tip": "FIRMA_NOU_CREATA",
+                            "severitate": sev,
+                            "titlu": f"Contract cu firmă de {varsta_luni} luni vechime",
+                            "descriere": (
+                                f'Firma "{furnizor}" (CUI {cui_display}) a fost înregistrată pe '
+                                f'{data_inf_str[:10]} — cu doar <strong>{varsta_luni} luni</strong> '
+                                f'înainte de semnarea contractului. '
+                                f'Contractul "{c["titlu"][:60]}" are valoarea {_fmt_ron(valoare)}. '
+                                f'Firmele nou create pot fi vehicule de captare de fonduri publice. '
+                                f'Verifică administrator, acționari și angajați: '
+                                f'<a href="{termene_link}" target="_blank">termene.ro →</a>'
+                            ),
+                            "contract_id": c["id"],
+                            "contract_numar": c["numar"],
+                            "valoare": valoare,
+                            "furnizor": furnizor,
+                            "cif_furnizor": cui_f,
+                            "data": c["data_publicare"],
+                            "tip_procedura": c["tip_procedura"],
+                            "varsta_luni": varsta_luni,
+                        })
+                except Exception:
+                    pass
+
     # Deduplicare (același furnizor poate apărea în mai mulți algoritmi)
     flags_unice = []
     ids_vazute = set()
@@ -952,6 +1033,88 @@ def _similaritate_titlu(a: str, b: str) -> float:
     return len(wa & wb) / len(wa | wb)
 
 
+def _get_firme_anaf_batch(cui_list: list) -> dict:
+    """
+    Interoghează API-ul ANAF (v8) pentru informații despre firme furnizoare.
+    Returnează dict keyed by CUI (string) cu:
+      dataInregistrare, stare, denumire, nrRegCom, inactiv_tva
+    Procesează în batch-uri de 499 CUI-uri (limita ANAF).
+    """
+    result = {}
+    cui_clean, cui_map = [], {}
+    for cui_str in cui_list:
+        if not cui_str:
+            continue
+        c = str(cui_str).strip().upper().lstrip("RO")
+        try:
+            cui_int = int(c)
+            cui_clean.append(cui_int)
+            cui_map[cui_int] = str(cui_str).strip()
+        except ValueError:
+            continue
+
+    if not cui_clean:
+        return result
+
+    today  = datetime.now().strftime("%Y-%m-%d")
+    url    = "https://webservicesp.anaf.ro/PlatitorTvaRest/api/v8/ws/tva"
+    BATCH  = 499
+    total_found = 0
+
+    for i in range(0, len(cui_clean), BATCH):
+        batch   = cui_clean[i:i + BATCH]
+        payload = [{"cui": ci, "data": today} for ci in batch]
+        try:
+            resp = requests.post(url, json=payload, timeout=25,
+                                 headers={"Content-Type": "application/json",
+                                          "User-Agent": "MonitorCivic/1.0"})
+            if resp.status_code != 200:
+                print(f"    ⚠️  ANAF API status {resp.status_code} (batch {i//BATCH+1})")
+                continue
+            data = resp.json()
+        except Exception as exc:
+            print(f"    ⚠️  ANAF API eroare batch {i//BATCH+1}: {exc}")
+            continue
+
+        for item in data.get("found", []):
+            ci = item.get("cui")
+            if not ci:
+                continue
+            orig = cui_map.get(ci, str(ci))
+            dg   = item.get("date_generale", {})
+            si   = item.get("stare_inactiv", {})
+            stare_raw = (dg.get("stare_inregistrare") or "").upper()
+            if si.get("statusInactivi"):
+                stare = "INACTIV"
+            elif "RADIAT" in stare_raw:
+                stare = "RADIAT"
+            elif "SUSPENDAT" in stare_raw:
+                stare = "SUSPENDAT"
+            elif stare_raw:
+                stare = "ACTIV"
+            else:
+                stare = "NECUNOSCUT"
+            result[orig] = {
+                "dataInregistrare": dg.get("data_infiintare") or None,
+                "stare": stare,
+                "denumire": dg.get("denumire", ""),
+                "nrRegCom": dg.get("nrRegCom", ""),
+                "inactiv_tva": bool(si.get("statusInactivi")),
+            }
+            total_found += 1
+
+    print(f"    ✓ ANAF firme: {total_found}/{len(cui_clean)} găsite")
+    return result
+
+
+def _termene_url(cui: str) -> str:
+    """Link direct termene.ro pentru verificare administrator și angajați."""
+    c = str(cui).strip().upper().lstrip("RO")
+    if c.isdigit():
+        return f"https://termene.ro/firma/{c}"
+    return f"https://termene.ro/cauta?q={urllib.parse.quote(cui)}"
+
+
 # ==============================================================================
 # 4. TRACKING STARE (detectare flags NOI față de rularea anterioară)
 # ==============================================================================
@@ -990,6 +1153,69 @@ def detecteaza_flags_noi(flags_curente: list, stare_anterioara: dict) -> list:
 # 5. GENERARE RAPORT HTML
 # ==============================================================================
 
+def calculeaza_analiza_per_tip(flags: list, contracte: list) -> dict:
+    """
+    Calculează statistici detaliate per tip de flag pentru secțiunea
+    'Analiză complexă pe categorie' din raportul HTML.
+    Returnează dict cu lista de tipuri și datele aferente.
+    """
+    from collections import defaultdict
+
+    tip_meta = {
+        "OFERTANT_UNIC":          {"label": "Ofertant unic",            "emoji": "👤", "culoare": "#8E44AD"},
+        "ACHIZITIE_DIRECTA_PRAG": {"label": "Achiziție directă > prag", "emoji": "⚠️", "culoare": "#C0392B"},
+        "APROAPE_DE_PRAG":        {"label": "Aproape de prag",          "emoji": "🎯", "culoare": "#E67E22"},
+        "FRAGMENTARE":            {"label": "Fragmentare contracte",     "emoji": "✂️", "culoare": "#D35400"},
+        "PROCEDURA_NON_COMPETITIVA": {"label": "Procedură non-competitivă", "emoji": "🚫", "culoare": "#922B21"},
+        "FURNIZOR_DOMINANT":      {"label": "Furnizor dominant",        "emoji": "🏭", "culoare": "#1A5276"},
+        "CONTRACTE_CONSECUTIVE":  {"label": "Contracte consecutive",    "emoji": "📅", "culoare": "#117A65"},
+        "CRESTERE_BRUSCA_VALOARE":{"label": "Creștere bruscă valoare",  "emoji": "📈", "culoare": "#B7950B"},
+        "VALOARE_ROTUNDA_SUSPECTA":{"label": "Valoare rotundă suspectă","emoji": "🔢", "culoare": "#6C3483"},
+        "FIRMA_INACTIVA":         {"label": "Firmă inactivă/radiată",   "emoji": "💀", "culoare": "#641E16"},
+        "FIRMA_NOU_CREATA":       {"label": "Firmă nou înregistrată",   "emoji": "🆕", "culoare": "#1F618D"},
+    }
+
+    per_tip = defaultdict(lambda: {
+        "flags": [], "furnizori": defaultdict(float),
+        "luni": defaultdict(int), "valoare_totala": 0
+    })
+
+    for f in flags:
+        tip = f.get("tip", "ALTELE")
+        per_tip[tip]["flags"].append(f)
+        per_tip[tip]["valoare_totala"] += f.get("valoare", 0) or 0
+        furn = f.get("furnizor", "")
+        if furn:
+            per_tip[tip]["furnizori"][furn] += f.get("valoare", 0) or 0
+        data_str = f.get("data", "")
+        if data_str and len(data_str) >= 7:
+            luna = data_str[:7]  # "YYYY-MM"
+            per_tip[tip]["luni"][luna] += 1
+
+    result = []
+    for tip, d in sorted(per_tip.items(), key=lambda x: -len(x[1]["flags"])):
+        meta = tip_meta.get(tip, {"label": tip.replace("_", " ").title(), "emoji": "🔍", "culoare": "#555"})
+        top_furnizori = sorted(d["furnizori"].items(), key=lambda x: -x[1])[:5]
+        luni_sorted   = sorted(d["luni"].items())
+        n_critic = sum(1 for f in d["flags"] if f.get("severitate") == "CRITIC")
+        n_major  = sum(1 for f in d["flags"] if f.get("severitate") == "MAJOR")
+        n_mediu  = sum(1 for f in d["flags"] if f.get("severitate") == "MEDIU")
+        result.append({
+            "tip": tip,
+            "label": meta["label"],
+            "emoji": meta["emoji"],
+            "culoare": meta["culoare"],
+            "total": len(d["flags"]),
+            "n_critic": n_critic,
+            "n_major": n_major,
+            "n_mediu": n_mediu,
+            "valoare_totala": d["valoare_totala"],
+            "top_furnizori": top_furnizori,
+            "luni": luni_sorted,
+        })
+    return result
+
+
 def genereaza_raport_html(budget: dict, contracte: list, flags: list,
                            flags_noi: list, config: dict) -> str:
     """Generează raportul HTML complet."""
@@ -1008,6 +1234,9 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
     ordine_sev = {"CRITIC": 0, "MAJOR": 1, "MEDIU": 2}
     flags_sortate = sorted(flags, key=lambda f: ordine_sev.get(f.get("severitate", "MEDIU"), 2))
 
+    # ── Analiză complexă per tip de flag ─────────────────────────────────────
+    analiza_per_tip = calculeaza_analiza_per_tip(flags_sortate, contracte)
+
     # ── SEO / Open Graph: numere dinamice din flags actuali ──────────────────
     n_total = len(flags)
     n_critic = sum(1 for f in flags if f.get("severitate") == "CRITIC")
@@ -1016,7 +1245,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
     seo_description = (
         f"{n_critic} critice, {n_major} majore din {n_total} nereguli detectate la "
         f"{config['nume_entitate']}. Achiziții directe peste prag, fragmentare contracte, "
-        f"ofertanți unici. Date din SEAP și ANAF."
+        f"ofertanți unici, firme suspecte. Date din SEAP și ANAF. 9 algoritmi de detecție."
     )
 
     # Serializăm contractele ca JSON pentru embed în HTML (folosit de JS pentru "toate contractele firmei")
@@ -1163,6 +1392,110 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
             </div>
           </div>
         </div>"""
+
+    # ── HTML: Analiză pe categorie ───────────────────────────────────────────
+    analiza_per_tip_html = ""
+    if analiza_per_tip:
+        cards_html = ""
+        panels_html = ""
+        for d in analiza_per_tip:
+            tip_id = d["tip"].lower().replace("_", "-")
+            sev_badges = ""
+            if d["n_critic"]: sev_badges += f'<span style="background:#C0392B;color:#fff;font-size:10px;padding:2px 6px;border-radius:10px;font-weight:700">{d["n_critic"]} CRITIC</span> '
+            if d["n_major"]:  sev_badges += f'<span style="background:#E67E22;color:#fff;font-size:10px;padding:2px 6px;border-radius:10px;font-weight:700">{d["n_major"]} MAJOR</span> '
+            if d["n_mediu"]:  sev_badges += f'<span style="background:#F39C12;color:#fff;font-size:10px;padding:2px 6px;border-radius:10px;font-weight:700">{d["n_mediu"]} MEDIU</span>'
+            cards_html += f"""
+            <div class="atp-card" data-tip="{tip_id}"
+                 onclick="showAtp('{tip_id}', this)"
+                 style="background:#fff;border-radius:10px;padding:16px;cursor:pointer;
+                        border-top:4px solid {d["culoare"]};box-shadow:0 1px 4px rgba(0,0,0,.08);
+                        transition:box-shadow .15s"
+                 onmouseenter="this.style.boxShadow='0 4px 14px rgba(0,0,0,.15)'"
+                 onmouseleave="this.style.boxShadow='0 1px 4px rgba(0,0,0,.08)'">
+              <div style="font-size:22px;font-weight:800;color:{d["culoare"]}">{d["total"]}</div>
+              <div style="font-size:12px;font-weight:700;color:#333;margin:4px 0">{d["emoji"]} {d["label"]}</div>
+              <div style="font-size:11px;color:#777">{_fmt_ron(d["valoare_totala"])}</div>
+              <div style="margin-top:6px">{sev_badges}</div>
+            </div>"""
+
+            # Build top suppliers rows
+            furnizori_rows = ""
+            for rank, (furn, val) in enumerate(d["top_furnizori"], 1):
+                pct = (val / d["valoare_totala"] * 100) if d["valoare_totala"] else 0
+                furnizori_rows += f"""
+                <tr style="background:{"#fff" if rank%2==0 else "#f8f9fa"}">
+                  <td style="padding:6px 10px;font-size:12px;font-weight:700;color:#555">{rank}</td>
+                  <td style="padding:6px 10px;font-size:12px">{furn[:55]}</td>
+                  <td style="padding:6px 10px;font-size:12px;font-weight:700">{_fmt_ron(val)}</td>
+                  <td style="padding:6px 10px;font-size:12px">
+                    <div style="background:#e0e0e0;border-radius:4px;height:8px;width:120px">
+                      <div style="background:{d["culoare"]};height:8px;border-radius:4px;width:{min(pct,100):.0f}%"></div>
+                    </div>
+                    <span style="font-size:10px;color:#777">{pct:.0f}%</span>
+                  </td>
+                </tr>"""
+
+            # Build monthly timeline
+            luna_rows = ""
+            max_luna = max((v for _, v in d["luni"]), default=1) or 1
+            for luna_key, cnt in d["luni"]:
+                bar_w = int(cnt / max_luna * 120)
+                luna_rows += f"""
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                  <span style="font-size:11px;color:#555;min-width:56px">{luna_key}</span>
+                  <div style="background:#e0e0e0;border-radius:3px;height:14px;width:120px">
+                    <div style="background:{d["culoare"]};height:14px;border-radius:3px;width:{bar_w}px"></div>
+                  </div>
+                  <span style="font-size:11px;font-weight:700;color:#333">{cnt}</span>
+                </div>"""
+
+            panels_html += f"""
+            <div id="atp-panel-{tip_id}" style="display:none;margin-top:20px;
+                 background:#fff;border-radius:10px;border-left:4px solid {d["culoare"]};
+                 padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.08)">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+                <h3 style="margin:0;color:{d["culoare"]};font-size:16px">{d["emoji"]} {d["label"]}</h3>
+                <span onclick="hideAtp()" style="cursor:pointer;font-size:13px;color:#999;
+                       background:#f5f5f5;padding:4px 10px;border-radius:6px">✕ închide</span>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+                <div style="background:#f8f9fa;border-radius:8px;padding:12px">
+                  <div style="font-size:22px;font-weight:800;color:{d["culoare"]}">{d["total"]}</div>
+                  <div style="font-size:11px;color:#777;text-transform:uppercase">Flags detectate</div>
+                </div>
+                <div style="background:#f8f9fa;border-radius:8px;padding:12px">
+                  <div style="font-size:22px;font-weight:800;color:{d["culoare"]}">{_fmt_ron(d["valoare_totala"])}</div>
+                  <div style="font-size:11px;color:#777;text-transform:uppercase">Valoare totală expusă</div>
+                </div>
+              </div>
+              {"<h4 style='margin:12px 0 8px;font-size:13px;color:#555'>🏆 Top furnizori implicați</h4><div style='overflow-x:auto'><table style='width:100%;border-collapse:collapse;font-size:12px'><thead><tr style='background:" + d["culoare"] + ";color:#fff'><th style='padding:6px 10px'>#</th><th style='padding:6px 10px'>Firmă</th><th style='padding:6px 10px'>Valoare</th><th style='padding:6px 10px'>Pondere</th></tr></thead><tbody>" + furnizori_rows + "</tbody></table></div>" if furnizori_rows else ""}
+              {"<h4 style='margin:16px 0 8px;font-size:13px;color:#555'>📅 Evoluție lunară</h4>" + luna_rows if luna_rows else ""}
+            </div>"""
+
+        analiza_per_tip_html = f"""
+    <div style="margin-bottom:12px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:8px">
+        {cards_html}
+      </div>
+      <div id="atp-panels">{panels_html}</div>
+    </div>
+    <script>
+    function showAtp(tipId, cardEl) {{
+      document.querySelectorAll('.atp-card').forEach(function(c) {{ c.style.opacity='0.6'; c.style.transform=''; }});
+      if (cardEl) {{ cardEl.style.opacity='1'; cardEl.style.transform='translateY(-2px)'; }}
+      var panelId = 'atp-panel-' + tipId;
+      document.querySelectorAll('[id^="atp-panel-"]').forEach(function(p) {{
+        p.style.display = p.id === panelId && p.style.display === 'none' ? 'block' : 'none';
+      }});
+      var panel = document.getElementById(panelId);
+      if (panel && panel.style.display === 'block') {{ panel.scrollIntoView({{behavior:'smooth',block:'nearest'}}); }}
+      else {{ document.querySelectorAll('.atp-card').forEach(function(c) {{ c.style.opacity='1'; c.style.transform=''; }}); }}
+    }}
+    function hideAtp() {{
+      document.querySelectorAll('[id^="atp-panel-"]').forEach(function(p) {{ p.style.display='none'; }});
+      document.querySelectorAll('.atp-card').forEach(function(c) {{ c.style.opacity='1'; c.style.transform=''; }});
+    }}
+    </script>"""
 
     contracte_html = ""
     for c in contracte[:20]:  # primele 20
@@ -1331,6 +1664,20 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
   <p style="font-size:13px;color:#777;margin:0 0 16px">
     {sum(1 for f in flags if f['severitate']=='CRITIC')} CRITIC · {sum(1 for f in flags if f['severitate']=='MAJOR')} MAJOR · {sum(1 for f in flags if f['severitate']=='MEDIU')} MEDIU</p>
   {nota_demo_msg}
+
+  <!-- ANALIZĂ PE CATEGORIE -->
+  <details style="margin-bottom:20px;background:#F4F6F8;border-radius:10px;padding:14px 18px;border:1px solid #DDE1E7">
+    <summary style="cursor:pointer;font-size:14px;font-weight:700;color:#00427A;list-style:none;display:flex;align-items:center;gap:8px">
+      <span style="font-size:18px">📊</span>
+      Analiză complexă pe categorie de nereguli
+      <span style="margin-left:auto;font-size:12px;color:#999;font-weight:400">▼ extinde</span>
+    </summary>
+    <p style="font-size:12px;color:#777;margin:10px 0 14px">
+      Apasă pe o categorie pentru a vedea statistici detaliate: top furnizori implicați, valori totale expuse și evoluție lunară.
+    </p>
+    {analiza_per_tip_html}
+  </details>
+
   {flags_html if flags_html else '<div style="background:#E8F5E9;border-left:4px solid #27AE60;padding:14px 18px;border-radius:0 8px 8px 0"><span style="color:#27AE60;font-weight:700">✅ Nicio neregulă detectată în această perioadă.</span></div>'}
 
   <!-- HCL STATISTICI -->
@@ -2046,3 +2393,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
