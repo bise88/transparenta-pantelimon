@@ -804,6 +804,106 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
                     "tip_procedura": "Multiple",
                 })
 
+
+    # ── Algoritm 6: Contracte consecutive cu același furnizor (>3 în <30 zile) ──
+    # Diferit de Algoritm 3 (fragmentare): aceasta detectează VOLUMUL, nu titlurile similare
+    for cui_f, lista in pe_furnizor.items():
+        if len(lista) < 4:
+            continue
+        lista_sorted = sorted(lista, key=lambda x: x["data_publicare"])
+        # Căutăm ferestre de 30 zile cu >3 contracte
+        for i in range(len(lista_sorted)):
+            try:
+                d_start = datetime.strptime(lista_sorted[i]["data_publicare"], "%Y-%m-%d")
+            except ValueError:
+                continue
+            fereastra = [lista_sorted[i]]
+            for j in range(i + 1, len(lista_sorted)):
+                try:
+                    dj = datetime.strptime(lista_sorted[j]["data_publicare"], "%Y-%m-%d")
+                except ValueError:
+                    continue
+                if (dj - d_start).days <= 30:
+                    fereastra.append(lista_sorted[j])
+                else:
+                    break
+            if len(fereastra) >= 4:
+                valoare_totala = sum(c["valoare_ron"] for c in fereastra)
+                flags.append({
+                    "tip": "CONTRACTE_CONSECUTIVE",
+                    "severitate": "MAJOR",
+                    "titlu": "Contracte consecutive excesive cu același furnizor",
+                    "descriere": (f'Furnizor "{fereastra[0]["castigator"]}" a primit {len(fereastra)} contracte '
+                                 f'în interval de 30 de zile (între {fereastra[0]["data_publicare"]} și '
+                                 f'{fereastra[-1]["data_publicare"]}), valoare totală '
+                                 f'{_fmt_ron(valoare_totala)}. '
+                                 f'Pattern neobișnuit — posibilă relație privilegiată sau dependență exclusivă de furnizor.'),
+                    "contract_id": ",".join(c["id"] for c in fereastra[:3]),
+                    "contract_numar": f'{fereastra[0]["numar"]} + {len(fereastra)-1} altele',
+                    "valoare": valoare_totala,
+                    "furnizor": fereastra[0]["castigator"],
+                    "data": fereastra[0]["data_publicare"],
+                    "tip_procedura": fereastra[0]["tip_procedura"],
+                })
+                break  # O singură alertă per furnizor
+
+    # ── Algoritm 7: Creștere bruscă de valoare Rev.2 / Rev.3 (>50%) ─────────────
+    # Contractele revizuite (Rev.2, Rev.3) cu valoare mult mai mare decât originalul
+    # sunt un indicator de supraestimare deliberată sau modificare abuzivă a contractului
+    titluri_rev = defaultdict(list)
+    for c in contracte:
+        titlu_clean = c["titlu"].replace("(Rev.2)", "").replace("(Rev.3)", "").replace("(Rev.4)", "").strip()
+        titluri_rev[titlu_clean].append(c)
+
+    for titlu_base, versiuni in titluri_rev.items():
+        if len(versiuni) < 2:
+            continue
+        versiuni_sorted = sorted(versiuni, key=lambda x: x["valoare_ron"])
+        v_min = versiuni_sorted[0]["valoare_ron"]
+        v_max = versiuni_sorted[-1]["valoare_ron"]
+        if v_min > 0 and v_max > v_min * 1.5 and v_max > 50_000:
+            crestere_pct = (v_max / v_min - 1) * 100
+            flags.append({
+                "tip": "CRESTERE_BRUSCA_VALOARE",
+                "severitate": "MAJOR" if crestere_pct < 200 else "CRITIC",
+                "titlu": "Creștere bruscă de valoare în revizie contract",
+                "descriere": (f'Contractul "{titlu_base[:60]}" a crescut de la '
+                             f'{_fmt_ron(v_min)} la {_fmt_ron(v_max)} (+{crestere_pct:.0f}%) '
+                             f'între versiuni. Modificări substanțiale de preț după atribuire sunt '
+                             f'reglementate strict (art. 221 Legea 98/2016) și pot indica evitarea '
+                             f'procedurii competitive sau ajustare post-atribuire abuzivă.'),
+                "contract_id": versiuni_sorted[-1]["id"],
+                "contract_numar": versiuni_sorted[-1]["numar"],
+                "valoare": v_max,
+                "furnizor": versiuni_sorted[-1]["castigator"],
+                "data": versiuni_sorted[-1]["data_publicare"],
+                "tip_procedura": versiuni_sorted[-1]["tip_procedura"],
+            })
+
+    # ── Algoritm 8: Valori rotunde suspecte (posibilă pre-setare a bugetului) ────
+    # Contracte cu valori perfect rotunde (multiplu exact de 10.000) > 50K
+    # indică posibilă alocare forfetară fără studiu de piață real
+    for c in contracte:
+        v = c["valoare_ron"]
+        if v >= 50_000 and v % 10_000 == 0:
+            # Verificăm că NU e vorba de un prag cunoscut (130K, 300K, 500K, 1M)
+            praguri_standard = {130_000, 300_000, 500_000, 1_000_000, 2_000_000}
+            if v not in praguri_standard:
+                flags.append({
+                    "tip": "VALOARE_ROTUNDA_SUSPECTA",
+                    "severitate": "MEDIU",
+                    "titlu": "Valoare contract rotundă suspectă",
+                    "descriere": (f'Contract "{c["titlu"][:60]}" are valoare exact {_fmt_ron(v)} — '
+                                 f'sumă rotundă care poate indica o estimare forfetară fără studiu de piață real. '
+                                 f'Contractele legitimate au de obicei valori calculate precis (ex: 127.450 RON).'),
+                    "contract_id": c["id"],
+                    "contract_numar": c["numar"],
+                    "valoare": v,
+                    "furnizor": c["castigator"],
+                    "data": c["data_publicare"],
+                    "tip_procedura": c["tip_procedura"],
+                })
+
     # Deduplicare (același furnizor poate apărea în mai mulți algoritmi)
     flags_unice = []
     ids_vazute = set()
