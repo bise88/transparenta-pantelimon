@@ -1060,6 +1060,142 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
                 "tip_procedura": c["tip_procedura"],
             })
 
+    # ── Algoritm 10: Declarație fiscală veche (>2 ani) cu contract activ ───────
+    # Firma nu a mai depus declarație la ANAF de peste 2 ani dar e activă în SEAP
+    if cui_furnizori and firme_openapi:
+        azi = datetime.now()
+        for c in contracte:
+            cui_f = c.get("castigator_cui", "")
+            if not cui_f:
+                continue
+            info = firme_openapi.get(cui_f)
+            if not info:
+                continue
+            ultima = info.get("ultima_declaratie", "")
+            if not ultima:
+                continue
+            try:
+                data_ultima = datetime.strptime(ultima[:10], "%Y-%m-%d")
+                ani_vechime = (azi - data_ultima).days / 365
+                if ani_vechime >= 2 and c["valoare_ron"] >= 30_000:
+                    furnizor    = c["castigator"]
+                    valoare     = c["valoare_ron"]
+                    cui_display = cui_f.lstrip("RO").lstrip("ro")
+                    recom_link  = info.get("recom_url", _termene_url(cui_f))
+                    flags.append({
+                        "tip": "DECLARATIE_FISCALA_VECHE",
+                        "severitate": "MAJOR",
+                        "titlu": f"Firmă fără declarații fiscale de {ani_vechime:.0f} ani",
+                        "descriere": (
+                            f'Firma "{furnizor}" (CUI {cui_display}) nu a mai depus o declarație '
+                            f'fiscală la ANAF din <strong>{ultima[:10]}</strong> '
+                            f'({ani_vechime:.0f} ani în urmă), dar a primit contractul '
+                            f'"{c["titlu"][:60]}" în valoare de {_fmt_ron(valoare)}. '
+                            f'Firmele fără activitate fiscală recentă reprezintă un risc de neexecutare. '
+                            f'Legea 98/2016, art. 167 lit. b) permite excluderea ofertanților cu '
+                            f'obligații fiscale nerespectate. '
+                            + (_fmt_actionariat(info) + " " if _fmt_actionariat(info) else "")
+                            + f'<a href="{recom_link}" target="_blank">Verifică la ONRC →</a>'
+                        ),
+                        "contract_id": c["id"],
+                        "contract_numar": c["numar"],
+                        "valoare": valoare,
+                        "furnizor": furnizor,
+                        "cif_furnizor": cui_f,
+                        "data": c["data_publicare"],
+                        "tip_procedura": c["tip_procedura"],
+                    })
+            except Exception:
+                pass
+
+    # ── Algoritm 11: Contract câștigat în prima lună de la înregistrarea firmei ─
+    # Mai agresiv decât Alg 9b (<24 luni): detectează cazurile extreme (<30 zile)
+    if cui_furnizori:
+        for c in contracte:
+            cui_f = c.get("castigator_cui", "")
+            if not cui_f:
+                continue
+            anaf_info = firme_anaf.get(cui_f, {}) if cui_furnizori else {}
+            data_inf_str = anaf_info.get("dataInregistrare") or ""
+            if not data_inf_str:
+                continue
+            try:
+                data_inf     = datetime.strptime(data_inf_str[:10], "%Y-%m-%d")
+                data_contract = datetime.strptime(c["data_publicare"][:10], "%Y-%m-%d")
+                zile_varsta   = (data_contract - data_inf).days
+                if 0 <= zile_varsta <= 30 and c["valoare_ron"] >= 20_000:
+                    furnizor    = c["castigator"]
+                    valoare     = c["valoare_ron"]
+                    cui_display = cui_f.lstrip("RO").lstrip("ro")
+                    flags.append({
+                        "tip": "CONTRACT_IN_PRIMA_LUNA",
+                        "severitate": "CRITIC",
+                        "titlu": f"Contract la {zile_varsta} zile de la înregistrarea firmei",
+                        "descriere": (
+                            f'Firma "{furnizor}" (CUI {cui_display}) a fost înregistrată pe '
+                            f'<strong>{data_inf_str[:10]}</strong> și a primit contractul '
+                            f'"{c["titlu"][:60]}" ({_fmt_ron(valoare)}) '
+                            f'la doar <strong>{zile_varsta} zile</strong> după înregistrare. '
+                            f'Aceasta este un indicator clar de firmă creată special pentru '
+                            f'această achiziție (practică sancționată de DNA în multiple dosare). '
+                            f'Legea 98/2016, art. 163-171 (criterii de excludere) + '
+                            f'art. 179-187 (capacitate tehnică). '
+                            f'<a href="{_termene_url(cui_f)}" target="_blank">termene.ro →</a> '
+                            f'<a href="https://www.recom.ro/companies_ro_company_detail.aspx?id={cui_display}" target="_blank">ONRC →</a>'
+                        ),
+                        "contract_id": c["id"],
+                        "contract_numar": c["numar"],
+                        "valoare": valoare,
+                        "furnizor": furnizor,
+                        "cif_furnizor": cui_f,
+                        "data": c["data_publicare"],
+                        "tip_procedura": c["tip_procedura"],
+                        "zile_varsta": zile_varsta,
+                    })
+            except Exception:
+                pass
+
+    # ── Algoritm 12: Scor risc acumulat (firmă flagată de ≥3 algoritmi diferiți) ─
+    # O firmă care apare în mai mulți algoritmi = pattern sistematic, nu accident
+    from collections import Counter, defaultdict
+    flags_per_firma: dict = defaultdict(set)
+    valoare_per_firma: dict = defaultdict(float)
+    for f in flags:
+        furn = f.get("furnizor", "")
+        tip  = f.get("tip", "")
+        if furn and tip:
+            flags_per_firma[furn].add(tip)
+            valoare_per_firma[furn] += f.get("valoare", 0) or 0
+
+    for furnizor, tipuri in flags_per_firma.items():
+        if len(tipuri) >= 3:
+            cui_f   = next((c.get("castigator_cui","") for c in contracte if c["castigator"] == furnizor), "")
+            valoare = valoare_per_firma[furnizor]
+            cui_display = (cui_f.lstrip("RO").lstrip("ro")) if cui_f else "necunoscut"
+            tipuri_str  = ", ".join(sorted(tipuri))
+            flags.append({
+                "tip": "RISC_SISTEMIC_FIRMA",
+                "severitate": "CRITIC",
+                "titlu": f"Firmă cu risc sistemic — {len(tipuri)} tipuri de nereguli",
+                "descriere": (
+                    f'Firma <strong>"{furnizor}"</strong> (CUI {cui_display}) apare în '
+                    f'<strong>{len(tipuri)} categorii diferite</strong> de nereguli: {tipuri_str}. '
+                    f'Valoare totală contracte implicate: <strong>{_fmt_ron(valoare)}</strong>. '
+                    f'Apariția în multiple categorii de algoritmi indică un pattern sistematic, '
+                    f'nu un incident izolat — risc ridicat de corupție sau favoritism. '
+                    f'Recomandat sesizare urgentă la ANAP și Curtea de Conturi. '
+                    f'<a href="{_termene_url(cui_f)}" target="_blank">termene.ro →</a>'
+                ),
+                "contract_id": "global",
+                "contract_numar": "",
+                "valoare": valoare,
+                "furnizor": furnizor,
+                "cif_furnizor": cui_f,
+                "data": datetime.now().strftime("%Y-%m-%d"),
+                "tip_procedura": "Multiple",
+                "tipuri_detectate": list(tipuri),
+            })
+
     # Deduplicare (același furnizor poate apărea în mai mulți algoritmi)
     flags_unice = []
     ids_vazute = set()
@@ -1223,6 +1359,9 @@ def _get_actionariat_openapi(cui_list: list, api_key: str, fisier_cache: str) ->
       - ultima_declaratie: str — data ultimei declarații fiscale
       - recom_url: str — link direct la recom.ro pentru verificare manuală acționari
     """
+    # Also accept key from environment variable (GitHub Actions secret)
+    if not api_key:
+        api_key = os.environ.get("OPENAPI_RO_KEY", "")
     if not api_key:
         return {}
 
@@ -1378,7 +1517,10 @@ def calculeaza_analiza_per_tip(flags: list, contracte: list) -> dict:
         "CRESTERE_BRUSCA_VALOARE":{"label": "Creștere bruscă valoare",  "emoji": "📈", "culoare": "#B7950B"},
         "VALOARE_ROTUNDA_SUSPECTA":{"label": "Valoare rotundă suspectă","emoji": "🔢", "culoare": "#6C3483"},
         "FIRMA_INACTIVA":         {"label": "Firmă inactivă/radiată",   "emoji": "💀", "culoare": "#641E16"},
-        "FIRMA_NOU_CREATA":       {"label": "Firmă nou înregistrată",   "emoji": "🆕", "culoare": "#1F618D"},
+        "FIRMA_NOU_CREATA":          {"label": "Firmă nou înregistrată",    "emoji": "🆕", "culoare": "#1F618D"},
+        "CONTRACT_IN_PRIMA_LUNA":    {"label": "Contract în prima lună",    "emoji": "⚡", "culoare": "#922B21"},
+        "DECLARATIE_FISCALA_VECHE":  {"label": "Declarație fiscală veche",  "emoji": "📭", "culoare": "#7D3C98"},
+        "RISC_SISTEMIC_FIRMA":       {"label": "Risc sistemic firmă",       "emoji": "🔥", "culoare": "#641E16"},
 
     }
 
@@ -1504,6 +1646,17 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
         culoare = culori.get(f["severitate"], "#999")
         emoji = emoji_sev.get(f["severitate"], "⚪")
         nou_badge = ' <span style="background:#E8F5E9;color:#2E7D32;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700">NOU</span>' if f in flags_noi else ""
+        # Risk score badge for this company
+        rd_firma = risc_firma.get(furnizor, {})
+        scor_firma = rd_firma.get("scor", 0)
+        if scor_firma >= 50:
+            risc_badge = f' <span style="background:#C0392B;color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;cursor:pointer" onclick="openFirmaPanel(\'{furnizor_js}\', event)">🔥 RISC {scor_firma}</span>'
+        elif scor_firma >= 20:
+            risc_badge = f' <span style="background:#E67E22;color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;cursor:pointer" onclick="openFirmaPanel(\'{furnizor_js}\', event)">⚠️ RISC {scor_firma}</span>'
+        elif scor_firma >= 5:
+            risc_badge = f' <span style="background:#F39C12;color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;cursor:pointer" onclick="openFirmaPanel(\'{furnizor_js}\', event)">🟡 RISC {scor_firma}</span>'
+        else:
+            risc_badge = ""
 
         contract_id = (f.get('contract_id') or f.get('contract_numar') or '').strip()
         contract_numar_display = (f.get('contract_numar') or '').strip()
@@ -1527,6 +1680,11 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
                 f' style="background:#EBF5FB;color:#0070C0;padding:6px 14px;border-radius:6px;'
                 f'font-size:12px;font-weight:600;border:1px solid #AED6F1;cursor:pointer">'
                 f'📊 Toate contractele cu {firma_scurta} ({nr_firma} contracte)'
+                f'</button> '
+            f'<button onclick="openFirmaPanel(\'{furnizor_js}\', event)"'
+                f' style="background:#FDEDEC;color:#C0392B;padding:6px 14px;border-radius:6px;'
+                f'font-size:12px;font-weight:600;border:1px solid #F1948A;cursor:pointer">'
+                f'🔍 Profil complet firmă'
                 f'</button>'
             )
         else:
@@ -1553,7 +1711,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
             <span style="font-size:16px">{emoji}</span>
             <strong style="color:{culoare}">[{f['severitate']}]</strong>
                      <span style="font-weight:700">{f['titlu']}</span>
-            {nou_badge}
+            {nou_badge}{risc_badge}
             <span class="flag-arrow" style="margin-left:auto;font-size:11px;color:#aaa">▼ detalii</span>
           </div>
           <p style="font-size:13px;color:#444;margin:0 0 8px">{f['descriere']}</p>
@@ -1703,6 +1861,48 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
       document.querySelectorAll('.atp-card').forEach(function(c) {{ c.style.opacity='1'; c.style.transform=''; }});
     }}
     </script>"""
+
+    # ── Index risc per firmă (pentru panoul de profil interactiv) ────────────
+    risc_firma: dict = {}
+    for f in flags_sortate:
+        furn = f.get("furnizor", "")
+        if not furn:
+            continue
+        if furn not in risc_firma:
+            risc_firma[furn] = {
+                "cui": f.get("cif_furnizor", ""),
+                "flags": [],
+                "valoare_totala": 0,
+                "n_critic": 0, "n_major": 0, "n_mediu": 0,
+            }
+        risc_firma[furn]["flags"].append({
+            "tip": f.get("tip", ""),
+            "titlu": f.get("titlu", ""),
+            "severitate": f.get("severitate", ""),
+            "valoare": f.get("valoare", 0) or 0,
+            "data": f.get("data", ""),
+        })
+        risc_firma[furn]["valoare_totala"] += f.get("valoare", 0) or 0
+        sev = f.get("severitate", "")
+        if sev == "CRITIC": risc_firma[furn]["n_critic"] += 1
+        elif sev == "MAJOR": risc_firma[furn]["n_major"] += 1
+        else: risc_firma[furn]["n_mediu"] += 1
+
+    # Scor risc 0-100: CRITIC=10pt, MAJOR=5pt, MEDIU=2pt, cap 100
+    for furn_key, rd in risc_firma.items():
+        rd["scor"] = min(100, rd["n_critic"]*10 + rd["n_major"]*5 + rd["n_mediu"]*2)
+
+    risc_firma_json = json.dumps({
+        furn: {
+            "cui": rd["cui"],
+            "scor": rd["scor"],
+            "n_critic": rd["n_critic"],
+            "n_major": rd["n_major"],
+            "n_mediu": rd["n_mediu"],
+            "valoare_totala": rd["valoare_totala"],
+            "flags": rd["flags"][:20],
+        } for furn, rd in risc_firma.items()
+    }, ensure_ascii=False)
 
     contracte_html = ""
     for c in contracte[:20]:  # primele 20
@@ -1944,6 +2144,42 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
 </div>
 
 <script id="contracte-data" type="application/json">{contracte_json_embed}</script>
+<script id="risc-firma-data" type="application/json">{risc_firma_json}</script>
+
+<style>
+/* ── Profil firmă panou lateral ──────────────────────────────────── */
+#tp-firma-overlay {{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9000;
+  backdrop-filter:blur(2px);
+}}
+#tp-firma-panel {{
+  position:fixed;top:0;right:0;width:min(520px,100vw);height:100vh;
+  background:#fff;box-shadow:-4px 0 24px rgba(0,0,0,.18);z-index:9001;
+  overflow-y:auto;transform:translateX(100%);
+  transition:transform .25s cubic-bezier(.4,0,.2,1);
+}}
+#tp-firma-panel.open {{ transform:translateX(0); }}
+.tp-risc-badge {{
+  display:inline-block;padding:2px 8px;border-radius:10px;
+  font-size:11px;font-weight:700;color:#fff;
+}}
+</style>
+
+<!-- PANOU PROFIL FIRMĂ -->
+<div id="tp-firma-overlay" onclick="closeFirmaPanel()"></div>
+<div id="tp-firma-panel">
+  <div style="background:#00427A;color:#fff;padding:16px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:1">
+    <span style="font-size:20px">🏢</span>
+    <div style="flex:1">
+      <div id="tp-fp-name" style="font-size:15px;font-weight:700">—</div>
+      <div id="tp-fp-cui"  style="font-size:11px;opacity:.7">CUI: —</div>
+    </div>
+    <button onclick="closeFirmaPanel()"
+            style="background:rgba(255,255,255,.15);border:none;color:#fff;
+                   padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px">✕</button>
+  </div>
+  <div id="tp-fp-body" style="padding:16px 20px;font-size:13px"></div>
+</div>
 <script>
 // ── Date contracte ──────────────────────────────────────────────
 var _contracteData = null;
@@ -2051,6 +2287,104 @@ function showFirmaContracts(firma, evt) {{
     + '</div>';
 
   flagDiv.appendChild(panel);
+}}
+
+// ── Profil complet firmă ─────────────────────────────────────────────────────
+var _riscData = null;
+function _getRisc() {{
+  if (!_riscData) {{
+    try {{ _riscData = JSON.parse(document.getElementById('risc-firma-data').textContent); }}
+    catch(e) {{ _riscData = {{}}; }}
+  }}
+  return _riscData;
+}}
+
+function openFirmaPanel(firma, evt) {{
+  if (evt) evt.stopPropagation();
+  var rd   = _getRisc()[firma] || {{}};
+  var contracte = _getContracte().filter(function(c) {{
+    return (c.firma||'').toLowerCase().indexOf(firma.toLowerCase().substring(0,12)) !== -1;
+  }});
+  var cui  = rd.cui || '';
+  var scor = rd.scor || 0;
+  var scorColor = scor >= 50 ? '#C0392B' : scor >= 20 ? '#E67E22' : '#F39C12';
+  var scorLabel = scor >= 50 ? 'CRITIC' : scor >= 20 ? 'MAJOR' : 'MEDIU';
+
+  document.getElementById('tp-fp-name').textContent = firma;
+  document.getElementById('tp-fp-cui').textContent  = 'CUI: ' + (cui || '—');
+
+  var totalVal = contracte.reduce(function(s,c){{return s+(c.valoare||0);}},0);
+  function fmtV(v) {{ return v>=1000000?(v/1000000).toFixed(2)+' mil. RON':Math.round(v/1000)+'K RON'; }}
+
+  var flagsHtml = '';
+  (rd.flags||[]).forEach(function(f) {{
+    var fColor = f.severitate==='CRITIC'?'#C0392B':f.severitate==='MAJOR'?'#E67E22':'#F39C12';
+    flagsHtml += '<div style="border-left:3px solid '+fColor+';padding:6px 10px;margin-bottom:6px;background:#fafafa;border-radius:0 6px 6px 0">'
+      + '<span style="font-size:10px;font-weight:700;color:'+fColor+'">'+f.severitate+'</span>'
+      + ' <span style="font-size:12px;font-weight:600">'+f.titlu+'</span>'
+      + '<div style="font-size:11px;color:#777;margin-top:2px">'+fmtV(f.valoare||0)+' · '+f.data+'</div>'
+      + '</div>';
+  }});
+
+  var contracteHtml = '';
+  contracte.slice(0,10).forEach(function(c,i) {{
+    var bg = i%2===0?'#fff':'#f8f9fa';
+    contracteHtml += '<tr style="background:'+bg+'">'
+      + '<td style="padding:5px 8px;font-size:11px;white-space:nowrap">'+c.data+'</td>'
+      + '<td style="padding:5px 8px;font-size:11px;max-width:200px">'+c.titlu.substring(0,50)+'</td>'
+      + '<td style="padding:5px 8px;font-size:11px;font-weight:700;white-space:nowrap">'+fmtV(c.valoare)+'</td>'
+      + '</tr>';
+  }});
+
+  var termeneUrl = cui ? 'https://termene.ro/firma/'+cui.replace(/^RO/i,'') : '#';
+  var onrcUrl    = cui ? 'https://www.recom.ro/companies_ro_company_detail.aspx?id='+cui.replace(/^RO/i,'') : '#';
+  var seapUrl    = 'https://e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0';
+
+  document.getElementById('tp-fp-body').innerHTML =
+    '<div style="background:#FFF3E0;border-radius:8px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px">'
+    + '<div style="text-align:center">'
+    + '<div style="font-size:32px;font-weight:800;color:'+scorColor+'">'+scor+'</div>'
+    + '<div style="font-size:10px;font-weight:700;color:'+scorColor+'">SCOR RISC</div>'
+    + '</div>'
+    + '<div style="flex:1">'
+    + '<span class="tp-risc-badge" style="background:#C0392B">'+( rd.n_critic||0)+' CRITIC</span> '
+    + '<span class="tp-risc-badge" style="background:#E67E22">'+( rd.n_major||0)+' MAJOR</span> '
+    + '<span class="tp-risc-badge" style="background:#F39C12">'+( rd.n_mediu||0)+' MEDIU</span>'
+    + '<div style="font-size:11px;color:#555;margin-top:6px">Valoare totală expusă: <strong>'+fmtV(rd.valoare_totala||0)+'</strong></div>'
+    + '</div></div>'
+
+    + '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">'
+    + '<a href="'+termeneUrl+'" target="_blank" style="background:#0070C0;color:#fff;padding:6px 12px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600">🔍 termene.ro →</a>'
+    + '<a href="'+onrcUrl+'" target="_blank" style="background:#1E8449;color:#fff;padding:6px 12px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600">🏛 ONRC →</a>'
+    + '<a href="'+seapUrl+'" target="_blank" style="background:#8E44AD;color:#fff;padding:6px 12px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600">📋 SEAP →</a>'
+    + '</div>'
+
+    + (flagsHtml ? '<h4 style="margin:0 0 8px;font-size:13px;color:#C0392B">🚩 Nereguli detectate</h4>' + flagsHtml : '')
+
+    + (contracteHtml
+      ? '<h4 style="margin:16px 0 8px;font-size:13px;color:#00427A">📄 Contracte cu Primăria</h4>'
+        + '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse">'
+        + '<thead><tr style="background:#00427A;color:#fff"><th style="padding:5px 8px;font-size:11px">Data</th><th style="padding:5px 8px;font-size:11px">Obiect</th><th style="padding:5px 8px;font-size:11px">Valoare</th></tr></thead>'
+        + '<tbody>' + contracteHtml + '</tbody></table></div>'
+      : '')
+
+    + '<div style="margin-top:16px;padding:10px;background:#F4F6F8;border-radius:6px;font-size:11px;color:#777">'
+    + 'Date: ANAF · SEAP (data.gov.ro) · openapi.ro · Surse publice oficiale.<br>'
+    + 'Pentru acționari și administrator verifică la ONRC (recom.ro) — date actualizate zilnic.'
+    + '</div>';
+
+  document.getElementById('tp-firma-overlay').style.display = 'block';
+  document.getElementById('tp-firma-panel').classList.add('open');
+}}
+
+function closeFirmaPanel() {{
+  document.getElementById('tp-firma-overlay').style.display = 'none';
+  document.getElementById('tp-firma-panel').classList.remove('open');
+}}
+
+// Keyboard ESC closes panel
+document.addEventListener('keydown', function(e) {{ if (e.key==='Escape') closeFirmaPanel(); }});
+
 }}
 </script>
 <footer style="background:#00427A;color:rgba(255,255,255,.7);text-align:center;padding:16px;font-size:12px;margin-top:40px">
