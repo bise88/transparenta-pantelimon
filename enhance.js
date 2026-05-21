@@ -515,6 +515,7 @@ html[data-tp-theme="dark"] {
       supplier: '',
       sort: prefs.sort || 'idx-asc',
       shown: CFG.pageSize,
+      _domReordered: false,  // true când DOM-ul a fost sortat (nu idx-asc)
     };
 
     // ─── TOOLBAR ──────────────────────────────────────────────
@@ -571,6 +572,13 @@ html[data-tp-theme="dark"] {
     loadMore.className = 'tp-loadmore';
     loadMore.innerHTML = `<button class="tp-btn tp-btn-primary" id="tp-load-more">Încarcă încă ${CFG.pageSize} →</button>`;
     lastCard.parentElement.insertBefore(loadMore, lastCard.nextSibling);
+
+    // Sentinel invizibil — marchează poziția originală a cardurilor în DOM
+    // Folosit de applyFilters pentru insertBefore în loc de appendChild (care muta itemii la finalul wrap-ului)
+    const tpRestoreRef = document.createElement('span');
+    tpRestoreRef.style.cssText = 'display:none';
+    tpRestoreRef.setAttribute('data-tp-ref', '1');
+    loadMore.parentElement.insertBefore(tpRestoreRef, loadMore);
 
     const empty = document.createElement('div');
     empty.className = 'tp-empty tp-card-hidden';
@@ -717,15 +725,20 @@ html[data-tp-theme="dark"] {
 
     const sorted = visible.slice().sort(cmp);
 
-    // 3. Reordonare DOM (doar dacă sortarea nu e cea originală)
+    // 3. Reordonare DOM (doar dacă sortarea diferă de idx-asc)
+    // BUG FIX: folosim insertBefore(item, tpRestoreRef) în loc de appendChild(item)
+    // appendChild muta TOȚI itemii la finalul div.wrap (după statistici), spărgând paginarea.
+    const tpRef = document.querySelector('[data-tp-ref]');
+    const tpParent = tpRef ? tpRef.parentElement : items[0].el.parentElement;
     if (state.sort !== 'idx-asc') {
-      const parent = items[0].el.parentElement;
-      sorted.forEach(it => parent.appendChild(it.el));
-    } else {
-      // restaurăm ordinea originală
-      const parent = items[0].el.parentElement;
-      items.slice().sort((a, b) => a.idx - b.idx).forEach(it => parent.appendChild(it.el));
+      state._domReordered = true;
+      sorted.forEach(it => tpParent.insertBefore(it.el, tpRef));
+    } else if (state._domReordered) {
+      // Restaurăm ordinea originală NUMAI dacă am sortat anterior
+      state._domReordered = false;
+      items.slice().sort((a, b) => a.idx - b.idx).forEach(it => tpParent.insertBefore(it.el, tpRef));
     }
+    // else: idx-asc fără reordonare anterioară — nu mișcăm nimic, elementele sunt deja în ordine
 
     // 4. Show/hide + paginare
     const visibleSet = new Set(sorted.slice(0, state.shown).map(it => it.el));
