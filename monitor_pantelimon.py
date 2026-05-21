@@ -942,6 +942,9 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
         firme_openapi = _get_actionariat_openapi(
             cui_furnizori, config.get("openapi_ro_key", ""), fisier_cache
         )
+        # Date ONRC (reprezentanți legali din OD_REPREZENTANTI_LEGALI.CSV) — gratis, oficial
+        firme_onrc = _get_reprezentanti_onrc(cui_furnizori, fisier_cache)
+        config["_firme_onrc"] = firme_onrc   # transmis la genereaza_raport_html
         azi        = datetime.now()
         for c in contracte:
             cui_f = c.get("castigator_cui", "")
@@ -1460,6 +1463,204 @@ def _fmt_actionariat(info: dict) -> str:
     return (" &nbsp;|&nbsp; ".join(parts)) if parts else ""
 
 
+def _get_reprezentanti_onrc(cui_list: list, fisier_cache: str) -> dict:
+    """
+    Descarcă OD_FIRME.CSV și OD_REPREZENTANTI_LEGALI.CSV de pe ONRC/data.gov.ro
+    și extrage administratori/directori pentru CUI-urile date.
+    Rezultatele sunt cache-uite 30 zile în fisier_cache (cheia '_onrc_data').
+    Returnează: {cui: {reprezentanti: [{nume, calitate, localitate}],
+                        forma_juridica, data_inmatriculare, cod_inmatriculare}}
+    """
+    import time
+    if not cui_list:
+        return {}
+
+    cache = _incarca_cache_firme(fisier_cache)
+    onrc_cache = cache.get("_onrc_data", {})
+    TTL_ZILE = 30
+    now_ts = time.time()
+
+    needed = []
+    for cui in cui_list:
+        entry = onrc_cache.get(str(cui))
+        if not entry or (now_ts - entry.get("_ts", 0)) > TTL_ZILE * 86400:
+            needed.append(str(cui))
+
+    if not needed:
+        return {cui: onrc_cache[cui] for cui in cui_list if cui in onrc_cache}
+
+    print(f"  [ONRC] Caut reprezentanți pentru {len(needed)} CUI-uri din data.gov.ro…")
+    result = {cui: {"reprezentanti": [], "forma_juridica": "", "data_inmatriculare": "", "cod_inmatriculare": ""} for cui in needed}
+
+    # --- Descoperă URL-ul setului de date ONRC ---
+    try:
+        import urllib.request, json as _json
+        api_url = ("https://data.gov.ro/api/3/action/package_search"
+                   "?q=Firme+inregistrate+Registrul+Comertului&rows=1&sort=metadata_modified+desc")
+        with urllib.request.urlopen(api_url, timeout=20) as r:
+            meta = _json.loads(r.read())
+        resources = meta["result"]["results"][0]["resources"]
+        url_firme = url_reprezentanti = ""
+        for res in resources:
+            name_lower = res.get("name", "").lower()
+            url_res    = res.get("url", "")
+            if "od_firme" in name_lower and url_firme == "":
+                url_firme = url_res
+            if "od_reprezentanti_legali" in name_lower and url_reprezentanti == "":
+                url_reprezentanti = url_res
+        if not url_firme or not url_reprezentanti:
+            print("  [ONRC] Nu am găsit URL-urile CSV în data.gov.ro")
+            return {}
+    except Exception as exc:
+        print(f"  [ONRC] Eroare la descoperire URL: {exc}")
+        return {}
+
+    # --- Pasul 1: OD_FIRME.CSV — construiește CUI → COD_INMATRICULARE ---
+    cui_to_cod = {}
+    cod_to_cui = {}
+    cui_set = set(needed)
+    try:
+        with urllib.request.urlopen(url_firme, timeout=30) as resp:
+            buf = b""
+            header_skipped = False
+            col_cui = col_cod = col_forma = col_data = -1
+            for chunk in iter(lambda: resp.read(65536), b""):
+                buf += chunk
+                newline = b"\n"
+                lines_raw = buf.split(newline)
+                buf = lines_raw[-1]
+                for raw in lines_raw[:-1]:
+                    line = raw.decode("utf-8-sig", errors="replace").strip()
+                    if not line:
+                        continue
+                    parts = line.split("^")
+                    if not header_skipped:
+                        header_skipped = True
+                        for i, h in enumerate(parts):
+                            h = h.strip().upper()
+                            if h == "CUI":             col_cui   = i
+                            if h == "COD_INMATRICULARE": col_cod = i
+                            if h == "FORMA_JURIDICA":  col_forma = i
+                            if h == "DATA_INMATRICULARE": col_data = i
+                        continue
+                    if col_cui < 0 or col_cod < 0:
+                        continue
+                    cui_val = parts[col_cui].strip().lstrip("0") if col_cui < len(parts) else ""
+                    cod_val = parts[col_cod].strip() if col_cod < len(parts) else ""
+                    if cui_val in cui_set:
+                        cui_to_cod[cui_val] = cod_val
+                        cod_to_cui[cod_val] = cui_val
+                        if col_forma >= 0 and col_forma < len(parts):
+                            result[cui_val]["forma_juridica"] = parts[col_forma].strip()
+                        if col_data >= 0 and col_data < len(parts):
+                            result[cui_val]["data_inmatriculare"] = parts[col_data].strip()
+                        result[cui_val]["cod_inmatriculare"] = cod_val
+                if len(cui_to_cod) >= len(needed):
+                    break
+    except Exception as exc:
+        print(f"  [ONRC] Eroare la OD_FIRME.CSV: {exc}")
+
+    if not cui_to_cod:
+        print("  [ONRC] Nu am găsit CUI-urile în OD_FIRME.CSV")
+        return result
+
+    # --- Pasul 2: OD_REPREZENTANTI_LEGALI.CSV — extrage administratori/directori ---
+    calitati_dorite = {
+        "administrator", "director", "presedinte", "director general",
+        "asociat", "actionar", "cenzor", "lichidator", "manager",
+        "director executiv", "vicepresedinte",
+    }
+    cod_set = set(cui_to_cod.values())
+    cod_found = set()
+    try:
+        with urllib.request.urlopen(url_reprezentanti, timeout=30) as resp:
+            buf = b""
+            header_skipped = False
+            col_cod2 = col_persoana = col_calitate = col_loc = -1
+            for chunk in iter(lambda: resp.read(65536), b""):
+                buf += chunk
+                newline = b"\n"
+                lines_raw = buf.split(newline)
+                buf = lines_raw[-1]
+                for raw in lines_raw[:-1]:
+                    line = raw.decode("utf-8-sig", errors="replace").strip()
+                    if not line:
+                        continue
+                    parts = line.split("^")
+                    if not header_skipped:
+                        header_skipped = True
+                        for i, h in enumerate(parts):
+                            h = h.strip().upper()
+                            if h == "COD_INMATRICULARE":   col_cod2     = i
+                            if h == "PERSOANA_IMPUTERNICITA": col_persoana = i
+                            if h == "CALITATE":            col_calitate = i
+                            if h == "LOCALITATE":          col_loc      = i
+                        continue
+                    if col_cod2 < 0:
+                        continue
+                    cod_val = parts[col_cod2].strip() if col_cod2 < len(parts) else ""
+                    if cod_val not in cod_set:
+                        continue
+                    calitate = (parts[col_calitate].strip().lower() if col_calitate >= 0 and col_calitate < len(parts) else "")
+                    if not any(c in calitate for c in calitati_dorite):
+                        continue
+                    persoana = parts[col_persoana].strip() if col_persoana >= 0 and col_persoana < len(parts) else ""
+                    localitate = parts[col_loc].strip() if col_loc >= 0 and col_loc < len(parts) else ""
+                    cui_val = cod_to_cui.get(cod_val, "")
+                    if cui_val and persoana:
+                        result[cui_val]["reprezentanti"].append({
+                            "nume": persoana,
+                            "calitate": calitate.title(),
+                            "localitate": localitate,
+                        })
+                        cod_found.add(cod_val)
+                if len(cod_found) >= len(cod_set):
+                    break
+    except Exception as exc:
+        print(f"  [ONRC] Eroare la OD_REPREZENTANTI_LEGALI.CSV: {exc}")
+
+    # Salvează în cache
+    for cui in needed:
+        entry = result.get(cui, {})
+        entry["_ts"] = now_ts
+        onrc_cache[cui] = entry
+    cache["_onrc_data"] = onrc_cache
+    _salveaza_cache_firme(fisier_cache, cache)
+    print(f"  [ONRC] Done: {sum(1 for v in result.values() if v['reprezentanti'])} firme cu reprezentanți găsiți")
+    return result
+
+
+def _fmt_reprezentanti(onrc_info: dict) -> str:
+    """
+    Formatează lista de reprezentanți ONRC ca HTML pentru inserare în flag.
+    onrc_info = {'reprezentanti': [{nume, calitate, localitate}], 'cod_inmatriculare': ...}
+    """
+    if not onrc_info:
+        return ""
+    reps = onrc_info.get("reprezentanti", [])
+    if not reps:
+        return ""
+    items = []
+    for r in reps[:5]:
+        loc = f' <span style="color:#888;font-size:11px">({r["localitate"]})</span>' if r.get("localitate") else ""
+        items.append(
+            f'<span style="font-size:11px"><strong>{r["calitate"]}</strong>: {r["nume"]}{loc}</span>'
+        )
+    cod = onrc_info.get("cod_inmatriculare", "")
+    recom_link = ""
+    if cod:
+        recom_link = (
+            f' <a href="https://www.recom.ro/companies_ro_company_detail.aspx?id={cod}" '
+            'target="_blank" style="color:#0070C0;font-size:10px">recom.ro →</a>'
+        )
+    return (
+        '<div style="margin-top:4px;font-size:11px;color:#555">'
+        f'🏛 <u>Reprezentanți legali (ONRC)</u>:{recom_link}<br>'
+        + " &nbsp;·&nbsp; ".join(items)
+        + "</div>"
+    )
+
+
 # ==============================================================================
 # 4. TRACKING STARE (detectare flags NOI față de rularea anterioară)
 # ==============================================================================
@@ -1892,6 +2093,8 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
     for furn_key, rd in risc_firma.items():
         rd["scor"] = min(100, rd["n_critic"]*10 + rd["n_major"]*5 + rd["n_mediu"]*2)
 
+    # Includem și datele ONRC per firmă dacă sunt disponibile
+    firme_onrc = config.get("_firme_onrc", {})
     risc_firma_json = json.dumps({
         furn: {
             "cui": rd["cui"],
@@ -1901,6 +2104,12 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
             "n_mediu": rd["n_mediu"],
             "valoare_totala": rd["valoare_totala"],
             "flags": rd["flags"][:20],
+            "onrc": {
+                "reprezentanti": firme_onrc.get(rd["cui"], {}).get("reprezentanti", [])[:8],
+                "cod_inmatriculare": firme_onrc.get(rd["cui"], {}).get("cod_inmatriculare", ""),
+                "forma_juridica": firme_onrc.get(rd["cui"], {}).get("forma_juridica", ""),
+                "data_inmatriculare": firme_onrc.get(rd["cui"], {}).get("data_inmatriculare", ""),
+            },
         } for furn, rd in risc_firma.items()
     }, ensure_ascii=False)
 
@@ -2359,6 +2568,28 @@ function openFirmaPanel(firma, evt) {{
     + '<a href="'+seapUrl+'" target="_blank" style="background:#8E44AD;color:#fff;padding:6px 12px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600">📋 SEAP →</a>'
     + '</div>'
 
+    + (rd.onrc && rd.onrc.reprezentanti && rd.onrc.reprezentanti.length > 0
+      ? (function() {{
+          var rows = rd.onrc.reprezentanti.map(function(r) {{
+            return '<tr><td style="padding:5px 8px;font-size:12px;font-weight:600">' + r.calitate + '</td>'
+              + '<td style="padding:5px 8px;font-size:12px"><strong>' + r.nume + '</strong>'
+              + (r.localitate ? ' <span style="color:#888;font-size:11px">(' + r.localitate + ')</span>' : '')
+              + '</td></tr>';
+          }}).join('');
+          var cod = rd.onrc.cod_inmatriculare || '';
+          var onrcLink = cod
+            ? '<a href="https://www.recom.ro/companies_ro_company_detail.aspx?id='+encodeURIComponent(cod)+'" target="_blank" style="color:#0070C0;font-size:11px">recom.ro →</a>'
+            : '';
+          return '<h4 style="margin:16px 0 8px;font-size:13px;color:#1E8449">🏛 Reprezentanți legali (ONRC)</h4>'
+            + '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse">'
+            + '<thead><tr style="background:#1E8449;color:#fff"><th style="padding:5px 8px;font-size:11px">Calitate</th><th style="padding:5px 8px;font-size:11px">Nume</th></tr></thead>'
+            + '<tbody>' + rows + '</tbody></table></div>'
+            + '<div style="font-size:11px;color:#777;margin-top:4px">Sursă: ONRC data.gov.ro (date oficiale) · ' + onrcLink + '</div>';
+        }})()
+      : '<div style="margin:12px 0;padding:8px 12px;background:#F4F6F8;border-radius:6px;font-size:11px;color:#777">'
+        + '🏛 Reprezentanți legali: <a href="'+onrcUrl+'" target="_blank" style="color:#0070C0">verifică pe recom.ro →</a>'
+        + '</div>')
+
     + (flagsHtml ? '<h4 style="margin:0 0 8px;font-size:13px;color:#C0392B">🚩 Nereguli detectate</h4>' + flagsHtml : '')
 
     + (contracteHtml
@@ -2369,8 +2600,8 @@ function openFirmaPanel(firma, evt) {{
       : '')
 
     + '<div style="margin-top:16px;padding:10px;background:#F4F6F8;border-radius:6px;font-size:11px;color:#777">'
-    + 'Date: ANAF · SEAP (data.gov.ro) · openapi.ro · Surse publice oficiale.<br>'
-    + 'Pentru acționari și administrator verifică la ONRC (recom.ro) — date actualizate zilnic.'
+    + 'Date: ANAF · SEAP (data.gov.ro) · openapi.ro · ONRC data.gov.ro · Surse publice oficiale.<br>'
+    + 'Asociați/acționari: verifică manual la ONRC (recom.ro) — date actualizate lunar.'
     + '</div>';
 
   document.getElementById('tp-firma-overlay').style.display = 'block';

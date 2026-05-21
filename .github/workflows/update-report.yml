@@ -29,6 +29,8 @@ jobs:
         run: pip install requests beautifulsoup4 openpyxl pytesseract pdf2image
 
       - name: 🔍 Rulare monitor transparență
+        env:
+          OPENAPI_RO_KEY: ${{ secrets.OPENAPI_RO_KEY }}
         run: python monitor_pantelimon.py
 
 
@@ -36,7 +38,7 @@ jobs:
         run: |
           git config --local user.email "transparenta-bot@cetatenipantelimon.ro"
           git config --local user.name "Monitor Transparență Cetățenesc Pantelimon"
-          git add raport_transparenta.html stare_anterioara.json contracte.json delta.json
+          git add raport_transparenta.html stare_anterioara.json contracte.json delta.json cache_firme.json 2>/dev/null || true
           git add feed.xml 2>/dev/null || true
           git add furnizori/ 2>/dev/null || true
           git add raport.json 2>/dev/null || true
