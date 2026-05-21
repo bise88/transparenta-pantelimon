@@ -2117,7 +2117,9 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
     for c in contracte[:20]:  # primele 20
         badge_tip = ("🔴" if "direct" in c["tip_procedura"].lower() or "negociere" in c["tip_procedura"].lower()
                      else "🟢" if "deschis" in c["tip_procedura"].lower() else "🟡")
-        badge_ofertanti = f'<span style="color:{"#C0392B" if c.get(\"nr_ofertanti\",0)==1 else \"#27AE60\"};font-weight:700">{c.get("nr_ofertanti", 0)}</span>'
+        _nro = c.get("nr_ofertanti", 0)
+        _nro_color = "#C0392B" if _nro == 1 else "#27AE60"
+        badge_ofertanti = f'<span style="color:{_nro_color};font-weight:700">{_nro}</span>'
         nota_demo = ' <em style="color:#aaa;font-size:10px">(demo)</em>' if c.get("sursa") == "DEMO" else ""
         contracte_html += f"""
         <tr>
