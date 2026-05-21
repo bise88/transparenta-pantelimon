@@ -1842,12 +1842,51 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
     for c in contracte:
         nr_contracte_firma_map[c["castigator"]] = nr_contracte_firma_map.get(c["castigator"], 0) + 1
 
+    # ── Index risc per firmă (calculat ÎNAINTE de loop-ul flags_html) ────────
+    risc_firma: dict = {}
+    for _f in flags_sortate:
+        _furn = _f.get("furnizor", "")
+        if not _furn:
+            continue
+        if _furn not in risc_firma:
+            risc_firma[_furn] = {
+                "cui": _f.get("cif_furnizor", ""),
+                "flags": [],
+                "valoare_totala": 0,
+                "n_critic": 0, "n_major": 0, "n_mediu": 0,
+            }
+        risc_firma[_furn]["flags"].append({
+            "tip": _f.get("tip", ""),
+            "titlu": _f.get("titlu", ""),
+            "severitate": _f.get("severitate", ""),
+            "valoare": _f.get("valoare", 0) or 0,
+            "data": _f.get("data", ""),
+        })
+        risc_firma[_furn]["valoare_totala"] += _f.get("valoare", 0) or 0
+        _sev = _f.get("severitate", "")
+        if _sev == "CRITIC": risc_firma[_furn]["n_critic"] += 1
+        elif _sev == "MAJOR": risc_firma[_furn]["n_major"] += 1
+        else: risc_firma[_furn]["n_mediu"] += 1
+    for _fk, _rd in risc_firma.items():
+        _rd["scor"] = min(100, _rd["n_critic"]*10 + _rd["n_major"]*5 + _rd["n_mediu"]*2)
+
     flags_html = ""
     for idx, f in enumerate(flags_sortate, 1):
         culoare = culori.get(f["severitate"], "#999")
         emoji = emoji_sev.get(f["severitate"], "⚪")
         nou_badge = ' <span style="background:#E8F5E9;color:#2E7D32;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700">NOU</span>' if f in flags_noi else ""
-        # Risk score badge for this company
+
+        # Extragem furnizor ÎNAINTE de a-l folosi în risc_badge
+        contract_id = (f.get('contract_id') or f.get('contract_numar') or '').strip()
+        contract_numar_display = (f.get('contract_numar') or '').strip()
+        furnizor = (f.get('furnizor') or '').strip()
+        firma_scurta = furnizor[:35] + ('…' if len(furnizor) > 35 else '')
+        nr_firma = nr_contracte_firma_map.get(furnizor, 0)
+
+        # Escaping pentru JS (ghilimele simple în numele firmei)
+        furnizor_js = furnizor.replace("'", "\\'").replace('"', '&quot;')
+
+        # Risk score badge for this company (furnizor definit deja mai sus)
         rd_firma = risc_firma.get(furnizor, {})
         scor_firma = rd_firma.get("scor", 0)
         if scor_firma >= 50:
@@ -1858,15 +1897,6 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
             risc_badge = f' <span style="background:#F39C12;color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;cursor:pointer" onclick="openFirmaPanel(\'{furnizor_js}\', event)">🟡 RISC {scor_firma}</span>'
         else:
             risc_badge = ""
-
-        contract_id = (f.get('contract_id') or f.get('contract_numar') or '').strip()
-        contract_numar_display = (f.get('contract_numar') or '').strip()
-        furnizor = (f.get('furnizor') or '').strip()
-        firma_scurta = furnizor[:35] + ('…' if len(furnizor) > 35 else '')
-        nr_firma = nr_contracte_firma_map.get(furnizor, 0)
-
-        # Escaping pentru JS (ghilimele simple în numele firmei)
-        furnizor_js = furnizor.replace("'", "\\'").replace('"', '&quot;')
 
         # Pre-compute atribute data-* pentru markup semantic
         valoare_num = int(f.get('valoare', 0) or 0)
@@ -2062,36 +2092,6 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
       document.querySelectorAll('.atp-card').forEach(function(c) {{ c.style.opacity='1'; c.style.transform=''; }});
     }}
     </script>"""
-
-    # ── Index risc per firmă (pentru panoul de profil interactiv) ────────────
-    risc_firma: dict = {}
-    for f in flags_sortate:
-        furn = f.get("furnizor", "")
-        if not furn:
-            continue
-        if furn not in risc_firma:
-            risc_firma[furn] = {
-                "cui": f.get("cif_furnizor", ""),
-                "flags": [],
-                "valoare_totala": 0,
-                "n_critic": 0, "n_major": 0, "n_mediu": 0,
-            }
-        risc_firma[furn]["flags"].append({
-            "tip": f.get("tip", ""),
-            "titlu": f.get("titlu", ""),
-            "severitate": f.get("severitate", ""),
-            "valoare": f.get("valoare", 0) or 0,
-            "data": f.get("data", ""),
-        })
-        risc_firma[furn]["valoare_totala"] += f.get("valoare", 0) or 0
-        sev = f.get("severitate", "")
-        if sev == "CRITIC": risc_firma[furn]["n_critic"] += 1
-        elif sev == "MAJOR": risc_firma[furn]["n_major"] += 1
-        else: risc_firma[furn]["n_mediu"] += 1
-
-    # Scor risc 0-100: CRITIC=10pt, MAJOR=5pt, MEDIU=2pt, cap 100
-    for furn_key, rd in risc_firma.items():
-        rd["scor"] = min(100, rd["n_critic"]*10 + rd["n_major"]*5 + rd["n_mediu"]*2)
 
     # Includem și datele ONRC per firmă dacă sunt disponibile
     firme_onrc = config.get("_firme_onrc", {})
