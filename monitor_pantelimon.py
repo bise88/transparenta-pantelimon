@@ -53,6 +53,13 @@ CONFIG = {
     "email_smtp": "smtp.gmail.com",
     "email_port": 587,
     "email_parola": "",        # recomandăm App Password Google, nu parola reală
+
+    # openapi.ro — date acționariat/administrator firme (opțional, gratuit 100 cereri/lună)
+    # Înregistrare gratuită: https://openapi.ro/ro → Fă-ți un cont → generează cheie API
+    "openapi_ro_key": "",          # ex: "abc123xyz..."
+
+    # Fișier cache firme (evită re-interogarea acelorași CUI-uri la rulări consecutive)
+    "fisier_cache_firme": "cache_firme.json",
 }
 
 # ==============================================================================
@@ -923,12 +930,18 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
                     "tip_procedura": c["tip_procedura"],
                 })
 
-    # ── Algoritm 9: Firme suspecte (ANAF) ───────────────────────────────────
-    # Detectează: firme inactive/radiate, firme nou înregistrate (<2 ani), contracte cu firme
-    # ce ar trebui verificate pe listafirme.ro / termene.ro pentru administrator și angajați.
+    # ── Algoritm 9: Firme suspecte (ANAF + openapi.ro) ──────────────────────────
+    # Detectează: firme inactive/radiate, firme nou înregistrate (<2 ani).
+    # Îmbogățit cu date de acționariat/administrator din openapi.ro (dacă cheie configurată).
     cui_furnizori = list({c["castigator_cui"] for c in contracte if c.get("castigator_cui")})
     if cui_furnizori:
+        # Date ANAF (status, dată înregistrare)
         firme_anaf = _get_firme_anaf_batch(cui_furnizori)
+        # Date openapi.ro (acționari, administrator, angajați) — opțional
+        fisier_cache = config.get("fisier_cache_firme", "cache_firme.json")
+        firme_openapi = _get_actionariat_openapi(
+            cui_furnizori, config.get("openapi_ro_key", ""), fisier_cache
+        )
         azi        = datetime.now()
         for c in contracte:
             cui_f = c.get("castigator_cui", "")
@@ -958,7 +971,8 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
                         f'Contractele cu firme inactive/radiate pot fi nule de drept (art. 220 alin. (1) '
                         f'L98/2016 + art. 248 Cod Civil privind nulitatea actelor juridice). '
                         f'Risc de recuperare prejudiciu prin ANAF sau DNA. '
-                        f'Verifică administratorul și istoricul complet: '
+                        + (f'<br><small style="color:#555">{_fmt_actionariat(firme_openapi.get(cui_f))}</small><br>' if firme_openapi.get(cui_f) else '')
+                        + f'Verifică administrator și istoricul complet: '
                         f'<a href="{termene_link}" target="_blank">termene.ro →</a>'
                     ),
                     "contract_id": c["id"],
@@ -1008,6 +1022,50 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
                         })
                 except Exception:
                     pass
+
+    # ── Algoritm 9c: Firmă fără angajați (0-1) cu contract >50K ─────────────────
+    # Folosește datele din openapi.ro (bilanț) dacă sunt disponibile
+    if cui_furnizori and firme_openapi:
+        for c in contracte:
+            cui_f = c.get("castigator_cui", "")
+            if not cui_f:
+                continue
+            info = firme_openapi.get(cui_f)
+            if not info:
+                continue
+            nr = info.get("nr_angajati")
+            if nr is None:
+                continue
+            try:
+                nr = int(nr)
+            except (TypeError, ValueError):
+                continue
+            if nr <= 1 and c["valoare_ron"] >= 50_000:
+                furnizor     = c["castigator"]
+                valoare      = c["valoare_ron"]
+                termene_link = _termene_url(cui_f)
+                cui_display  = cui_f.lstrip("RO").lstrip("ro")
+                flags.append({
+                    "tip": "FIRMA_FARA_ANGAJATI",
+                    "severitate": "MAJOR",
+                    "titlu": f"Contract cu firmă de {nr} angajat(i)",
+                    "descriere": (
+                        f'Firma "{furnizor}" (CUI {cui_display}) a raportat <strong>{nr} angajat(i)</strong> '
+                        f'în ultimul bilanț disponibil, dar a primit contractul '
+                        f'"{c["titlu"][:60]}" în valoare de {_fmt_ron(valoare)}. '
+                        f'O firmă fără personal propriu nu poate executa lucrări/servicii fără subcontractare '
+                        f'nedeclarată (art. 218-220 Legea 98/2016). '
+                        + (_fmt_actionariat(info) + " " if _fmt_actionariat(info) else "")
+                        + f'Verifică: <a href="{termene_link}" target="_blank">termene.ro →</a>'
+                    ),
+                    "contract_id": c["id"],
+                    "contract_numar": c["numar"],
+                    "valoare": valoare,
+                    "furnizor": furnizor,
+                    "cif_furnizor": cui_f,
+                    "data": c["data_publicare"],
+                    "tip_procedura": c["tip_procedura"],
+                })
 
     # Deduplicare (același furnizor poate apărea în mai mulți algoritmi)
     flags_unice = []
@@ -1139,6 +1197,152 @@ def _termene_url(cui: str) -> str:
     return f"https://termene.ro/cauta?q={urllib.parse.quote(cui)}"
 
 
+def _incarca_cache_firme(fisier: str) -> dict:
+    """Încarcă cache-ul local de date firme (evită cereri repetate la API)."""
+    if Path(fisier).exists():
+        try:
+            with open(fisier, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {}
+
+
+def _salveaza_cache_firme(fisier: str, cache: dict):
+    """Salvează cache-ul local de date firme."""
+    try:
+        with open(fisier, "w", encoding="utf-8") as f:
+            json.dump(cache, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"    ⚠️  Nu am putut salva cache firme: {e}")
+
+
+def _get_actionariat_openapi(cui_list: list, api_key: str, fisier_cache: str) -> dict:
+    """
+    Interoghează openapi.ro pentru date acționariat și administrator.
+    Folosește un cache local JSON pentru a nu re-interoga CUI-uri deja cunoscute.
+
+    Returnează dict keyed by CUI (string) cu:
+      - administratori: [{nume, functie, data_start}]
+      - asociati:       [{nume, cota_participare}]
+      - caen_cod, caen_denumire
+      - nrAngajati (din bilanț, dacă disponibil)
+    """
+    if not api_key:
+        return {}
+
+    cache = _incarca_cache_firme(fisier_cache)
+    result = {}
+    de_interogat = []
+
+    for cui_str in cui_list:
+        if not cui_str:
+            continue
+        key = str(cui_str).strip().upper().lstrip("RO")
+        if key in cache:
+            result[str(cui_str).strip()] = cache[key]
+        else:
+            de_interogat.append((str(cui_str).strip(), key))
+
+    if de_interogat:
+        print(f"    [openapi.ro] Interoghez {len(de_interogat)} firme noi (cache: {len(cache)} deja cunoscute)...")
+
+    noi_in_cache = 0
+    for orig, cui_clean in de_interogat:
+        url = f"https://api.openapi.ro/api/companies/{cui_clean}"
+        try:
+            req = urllib.request.Request(url)
+            req.add_header("x-api-key", api_key)
+            req.add_header("User-Agent", "MonitorCivic/1.0")
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                if resp.status != 200:
+                    continue
+                data = json.loads(resp.read())
+        except Exception as exc:
+            # 404 = firmă negăsită, 403 = cheie invalidă
+            if "403" in str(exc):
+                print(f"    ❌ openapi.ro: cheie API invalidă — verifică CONFIG['openapi_ro_key']")
+                break
+            continue
+
+        # Normalizăm răspunsul (API clasic și internațional au structuri ușor diferite)
+        admins = []
+        for a in (data.get("administratori") or data.get("administrators") or []):
+            admins.append({
+                "nume": a.get("nume") or a.get("name") or "",
+                "functie": a.get("functie") or a.get("role") or "Administrator",
+                "data_start": a.get("dataStart") or a.get("data_start") or "",
+            })
+
+        asociati = []
+        for s in (data.get("asociati") or data.get("shareholders") or []):
+            asociati.append({
+                "nume": s.get("nume") or s.get("name") or "",
+                "cota": s.get("cota_participare") or s.get("percentage") or 0,
+            })
+
+        # Număr angajați din ultimul bilanț disponibil
+        nr_angajati = None
+        bilant_list = data.get("bilanturi") or data.get("financials") or []
+        if bilant_list:
+            last = bilant_list[-1] if isinstance(bilant_list, list) else {}
+            nr_angajati = (last.get("nr_angajati") or last.get("employees")
+                           or last.get("numar_mediu_salariati"))
+
+        caen = data.get("caen") or {}
+        entry = {
+            "administratori": admins,
+            "asociati": asociati,
+            "caen_cod": caen.get("cod") or data.get("codCaen") or "",
+            "caen_denumire": caen.get("denumire") or data.get("denumireCaen") or "",
+            "nr_angajati": nr_angajati,
+            "sursa": "openapi.ro",
+            "data_cache": datetime.now().strftime("%Y-%m-%d"),
+        }
+
+        result[orig]  = entry
+        cache[cui_clean] = entry
+        noi_in_cache += 1
+        time.sleep(0.1)  # politicos față de API
+
+    if noi_in_cache:
+        _salveaza_cache_firme(fisier_cache, cache)
+        print(f"    ✓ openapi.ro: {noi_in_cache} firme noi adăugate în cache")
+
+    return result
+
+
+def _fmt_actionariat(info: dict) -> str:
+    """
+    Formatează datele de acționariat pentru inserare în descrierea unui flag HTML.
+    Returnează un bloc HTML compact cu administratori, asociați și angajați.
+    """
+    if not info:
+        return ""
+    parts = []
+
+    admins = info.get("administratori", [])
+    if admins:
+        names = ", ".join(f'<strong>{a["nume"]}</strong>' + (f' ({a["functie"]})' if a.get("functie") and a["functie"] != "Administrator" else "") for a in admins[:3])
+        parts.append(f"👤 <u>Administrator</u>: {names}")
+
+    asociati = info.get("asociati", [])
+    if asociati:
+        names = ", ".join(f'{s["nume"]} ({s["cota"]}%)' if s.get("cota") else s["nume"] for s in asociati[:4])
+        parts.append(f"🏦 <u>Acționari</u>: {names}")
+
+    nr = info.get("nr_angajati")
+    if nr is not None:
+        color = "#C0392B" if int(nr) <= 1 else "#27AE60"
+        parts.append(f'<span style="color:{color}">👷 <u>Angajați</u>: <strong>{nr}</strong></span>')
+
+    caen = info.get("caen_denumire", "")
+    if caen:
+        parts.append(f"🏭 <u>CAEN</u>: {caen}")
+
+    return (" &nbsp;|&nbsp; ".join(parts)) if parts else ""
+
+
 # ==============================================================================
 # 4. TRACKING STARE (detectare flags NOI față de rularea anterioară)
 # ==============================================================================
@@ -1197,6 +1401,7 @@ def calculeaza_analiza_per_tip(flags: list, contracte: list) -> dict:
         "VALOARE_ROTUNDA_SUSPECTA":{"label": "Valoare rotundă suspectă","emoji": "🔢", "culoare": "#6C3483"},
         "FIRMA_INACTIVA":         {"label": "Firmă inactivă/radiată",   "emoji": "💀", "culoare": "#641E16"},
         "FIRMA_NOU_CREATA":       {"label": "Firmă nou înregistrată",   "emoji": "🆕", "culoare": "#1F618D"},
+        "FIRMA_FARA_ANGAJATI":    {"label": "Firmă fără angajați",       "emoji": "👻", "culoare": "#7D3C98"},
     }
 
     per_tip = defaultdict(lambda: {
