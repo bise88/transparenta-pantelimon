@@ -2983,6 +2983,26 @@ def main():
             try:
                 with open(fallback_path, encoding="utf-8") as _f:
                     contracte = json.load(_f)
+                # contracte.json foloseşte chei scurtate (valoare, firma, tip, etc.)
+                # → normalizăm la formatul intern aşteptat de analizeaza_red_flags şi genereaza_raport_html
+                contracte = [
+                    {
+                        "id":             c.get("id", ""),
+                        "titlu":          c.get("titlu", ""),
+                        "valoare_ron":    float(c.get("valoare_ron", c.get("valoare", 0)) or 0),
+                        "data_publicare": c.get("data_publicare", c.get("data", "")),
+                        "tip_procedura":  c.get("tip_procedura", c.get("tip", "")),
+                        "castigator":     c.get("castigator", c.get("firma", "")),
+                        "castigator_cui": c.get("castigator_cui", c.get("cui", "")),
+                        "nr_ofertanti":   int(c.get("nr_ofertanti", c.get("ofertanti", 0)) or 0),
+                        "numar":          c.get("numar", "–"),
+                        "data_start":     c.get("data_start", ""),
+                        "data_sfarsit":   c.get("data_sfarsit", ""),
+                        "autoritate":     c.get("autoritate", ""),
+                        "cpv":            c.get("cpv", ""),
+                    }
+                    for c in contracte
+                ]
                 seap_debug.append(f"FALLBACK: loaded {len(contracte)} contracte din contracte.json")
                 print(f"  ↩ Fallback: {len(contracte)} contracte din contracte.json (data.gov.ro inaccesibil)")
             except Exception as _fe:
