@@ -214,8 +214,10 @@ html[data-tp-theme="dark"] {
 /* Print */
 @media print {
   .tp-nav, .tp-toolbar, .tp-back-top,
-  .tp-loadmore, .tp-summary { display: none !important; }
+  .tp-loadmore, .tp-summary, .tp-banner-whats-new { display: none !important; }
   .tp-card-hidden { display: block !important; }
+  .flag-detail { display: block !important; }
+  .no-print { display: none !important; }
   details { page-break-inside: avoid; }
   details summary { font-weight: 700; }
   details:not([open]) > *:not(summary) { display: block !important; }
@@ -224,6 +226,7 @@ html[data-tp-theme="dark"] {
   a[href]::after { content: " (" attr(href) ")"; font-size: 9pt; color: #555; }
   a[href^="#"]::after,
   a[href^="javascript"]::after { content: ""; }
+  .tp-flag { page-break-inside: avoid; border: 1px solid #ddd !important; margin-bottom: 8pt !important; }
 }
 
 /* Banner "ce e nou" */
@@ -961,4 +964,36 @@ html[data-tp-theme="dark"] {
   } else {
     boot();
   }
+
+  // ──────────────────────────────────────────────────────────────
+  // PRINT / PDF — funcție apelată din raport_transparenta.html
+  // ──────────────────────────────────────────────────────────────
+  function printRaport() {
+    // 1. Colectăm elementele ascunse
+    const hiddenCards   = Array.from(document.querySelectorAll('.tp-card-hidden'));
+    const hiddenDetails = Array.from(document.querySelectorAll('.flag-detail'));
+
+    // 2. Afișăm tot
+    hiddenCards.forEach(el => el.classList.remove('tp-card-hidden'));
+    hiddenDetails.forEach(el => { el._origDisplay = el.style.display; el.style.display = 'block'; });
+
+    // 3. Printăm
+    window.print();
+
+    // 4. Restaurăm după închiderea dialogului de print
+    function restore() {
+      hiddenCards.forEach(el => el.classList.add('tp-card-hidden'));
+      hiddenDetails.forEach(el => { el.style.display = el._origDisplay || 'none'; delete el._origDisplay; });
+    }
+    // afterprint se declanșează când utilizatorul închide dialogul
+    window.addEventListener('afterprint', restore, { once: true });
+    // Fallback pentru browsere care nu suportă afterprint
+    setTimeout(() => {
+      window.removeEventListener('afterprint', restore);
+      restore();
+    }, 30000);
+  }
+  // Expunem global — butonul din raport_transparenta.html apelează printRaport()
+  window.printRaport = printRaport;
+
 })();
