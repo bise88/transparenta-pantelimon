@@ -1,6 +1,6 @@
-/*!
+﻿/*!
  * transparenta-enhance.js  v1.0
- * Progressive enhancement pentru https://bise88.github.io/transparenta-pantelimon/
+ * Progressive enhancement pentru https://aprindemlumina.eu/
  *
  * Funcționalități:
  *   - Bară de navigare unificată pe toate paginile (Acasă / Nereguli / Buget / surse)
@@ -340,7 +340,7 @@ html[data-tp-theme="dark"] {
         <div class="tp-nav-links">
           ${linksHTML}
           <a href="https://transparenta.eu/entities/4420759" target="_blank" rel="noopener">ANAF ↗</a>
-          <a href="https://github.com/bise88/transparenta-pantelimon" target="_blank" rel="noopener">GitHub ↗</a>
+          <a href="https://github.com/transparenta-locala/transparenta-pantelimon" target="_blank" rel="noopener">GitHub ↗</a>
         </div>
       </div>
     `;
