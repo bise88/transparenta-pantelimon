@@ -2201,11 +2201,11 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
 <meta name="description" content="{seo_description}">
 <meta name="keywords" content="transparență, Pantelimon, primărie, achiziții publice, SEAP, ANAF, monitorizare cetățenească, Ilfov, nereguli, raport">
 <meta name="author" content="Inițiativă cetățenească independentă">
-<link rel="canonical" href="https://bise88.github.io/transparenta-pantelimon/raport_transparenta.html">
+<link rel="canonical" href="https://aprindemlumina.eu/raport_transparenta.html">
 
 <!-- Open Graph (Facebook, LinkedIn) -->
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://bise88.github.io/transparenta-pantelimon/raport_transparenta.html">
+<meta property="og:url" content="https://aprindemlumina.eu/raport_transparenta.html">
 <meta property="og:title" content="{seo_title}">
 <meta property="og:description" content="{seo_description}">
 <meta property="og:locale" content="ro_RO">
@@ -2688,7 +2688,7 @@ def genereaza_feed_atom(nereguli: list, data_generare: datetime) -> str:
     import html as html_mod
     from datetime import timezone
 
-    BASE = "https://bise88.github.io/transparenta-pantelimon"
+    BASE = "https://aprindemlumina.eu"
     if data_generare.tzinfo is None:
         updated = data_generare.replace(tzinfo=timezone.utc).isoformat()
     else:
@@ -2773,7 +2773,7 @@ Monitor Transparență Bugetară — Pantelimon
 
 {flags_text}
 
-Raport complet: https://bise88.github.io/transparenta-pantelimon/raport_transparenta.html
+Raport complet: https://aprindemlumina.eu/raport_transparenta.html
 
 ---
 Inițiativă cetățenească independentă · Date din surse publice oficiale.
@@ -2825,7 +2825,7 @@ def genereaza_pagina_furnizor(
     n_major  = sum(1 for f in flags_firma if f.get("severitate") == "MAJOR")
     n_mediu  = sum(1 for f in flags_firma if f.get("severitate") == "MEDIU")
     cui_f    = (contracte_firma[0].get("castigator_cui", "") or "") if contracte_firma else ""
-    base_url = "https://bise88.github.io/transparenta-pantelimon"
+    base_url = "https://aprindemlumina.eu"
     safe_name = html_mod.escape(nume)
 
     culori = {"CRITIC": "#C0392B", "MAJOR": "#E67E22", "MEDIU": "#F39C12"}
@@ -2955,7 +2955,7 @@ def genereaza_index_furnizori(index: list) -> str:
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Furnizori Primăria Pantelimon — Transparența</title>
   <meta name="description" content="Index A-Z al furnizorilor Primăriei Pantelimon cu nereguli detectate automat.">
-  <link rel="canonical" href="https://bise88.github.io/transparenta-pantelimon/furnizori/">
+  <link rel="canonical" href="https://aprindemlumina.eu/furnizori/">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
   <script src="../enhance.js" defer></script>
   <style>
