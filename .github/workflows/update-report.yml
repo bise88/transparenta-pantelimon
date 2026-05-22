@@ -38,7 +38,12 @@ jobs:
         run: |
           git config --local user.email "transparenta-bot@cetatenipantelimon.ro"
           git config --local user.name "Monitor Transparență Cetățenesc Pantelimon"
-          git add raport_transparenta.html stare_anterioara.json contracte.json delta.json cache_firme.json 2>/dev/null || true
+          # fix: adăugăm fiecare fișier separat cu || true (cache_firme.json poate lipsi)
+          git add raport_transparenta.html 2>/dev/null || true
+          git add stare_anterioara.json 2>/dev/null || true
+          git add contracte.json 2>/dev/null || true
+          git add delta.json 2>/dev/null || true
+          git add cache_firme.json 2>/dev/null || true
           git add feed.xml 2>/dev/null || true
           git add furnizori/ 2>/dev/null || true
           git add raport.json 2>/dev/null || true
