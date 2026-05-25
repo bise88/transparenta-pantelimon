@@ -2201,11 +2201,11 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
 <meta name="description" content="{seo_description}">
 <meta name="keywords" content="transparență, Pantelimon, primărie, achiziții publice, SEAP, ANAF, monitorizare cetățenească, Ilfov, nereguli, raport">
 <meta name="author" content="Inițiativă cetățenească independentă">
-<link rel="canonical" href="https://bise88.github.io/transparenta-pantelimon/raport_transparenta.html">
+<link rel="canonical" href="https://aprindemlumina.eu/raport_transparenta.html">
 
 <!-- Open Graph (Facebook, LinkedIn) -->
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://bise88.github.io/transparenta-pantelimon/raport_transparenta.html">
+<meta property="og:url" content="https://aprindemlumina.eu/raport_transparenta.html">
 <meta property="og:title" content="{seo_title}">
 <meta property="og:description" content="{seo_description}">
 <meta property="og:locale" content="ro_RO">
@@ -2688,7 +2688,7 @@ def genereaza_feed_atom(nereguli: list, data_generare: datetime) -> str:
     import html as html_mod
     from datetime import timezone
 
-    BASE = "https://bise88.github.io/transparenta-pantelimon"
+    BASE = "https://aprindemlumina.eu"
     if data_generare.tzinfo is None:
         updated = data_generare.replace(tzinfo=timezone.utc).isoformat()
     else:
@@ -2773,7 +2773,7 @@ Monitor Transparență Bugetară — Pantelimon
 
 {flags_text}
 
-Raport complet: https://bise88.github.io/transparenta-pantelimon/raport_transparenta.html
+Raport complet: https://aprindemlumina.eu/raport_transparenta.html
 
 ---
 Inițiativă cetățenească independentă · Date din surse publice oficiale.
@@ -2813,6 +2813,119 @@ def _slugify(s: str) -> str:
     return s[:60] or 'furnizor'
 
 
+# ==============================================================================
+# §1.1 — TABEL CONTRACTE STATIC (fallback pentru fetch JS eșuat)
+# ==============================================================================
+
+def _detect_flag_simple(c: dict, firma_sums: dict) -> str:
+    """
+    Replică logica _detectFlag() din transparenta_pantelimon.html.
+    Folosit pentru generarea statică a rândurilor tabelului (§1.1).
+    """
+    _PRAG = 130_000
+    v = float(c.get('valoare', 0) or 0)
+    if v > _PRAG:
+        return 'CRITIC'
+    if v > _PRAG * 0.97:
+        return 'MAJOR'
+    firma = c.get('firma', '')
+    if firma_sums.get(firma, 0) > _PRAG and v > _PRAG * 0.5:
+        return 'MAJOR'
+    if (c.get('ofertanti', 0) or 0) == 1 and v > 50_000:
+        return 'MEDIU'
+    return 'OK'
+
+
+def render_contracte_tbody_rows(contracts: list, top_n: int = 20) -> str:
+    """
+    Generează rânduri <tr> statice pentru tabelul de contracte din
+    transparenta_pantelimon.html. Returnează HTML-ul rândurilor gata de injectat
+    în <tbody id="contracte-tbody">.
+
+    Rândurile sunt fallback vizibil chiar dacă fetch('contracte.json') din JS
+    eșuează (file://, CORS, blocare rețea). JS-ul suprascrie tbody-ul
+    dacă se încarcă cu succes (progresive enhancement).
+    """
+    import html as _html_mod
+
+    # Construiește suma per firmă (pentru detectarea fragmentării)
+    firma_sums: dict = {}
+    for c in contracts:
+        firma = c.get('firma', '')
+        firma_sums[firma] = firma_sums.get(firma, 0) + float(c.get('valoare', 0) or 0)
+
+    # Top N după valoare descrescătoare
+    top = sorted(contracts, key=lambda c: float(c.get('valoare', 0) or 0), reverse=True)[:top_n]
+
+    SEV_CLS = {'CRITIC': 'sev-critic', 'MAJOR': 'sev-major', 'MEDIU': 'sev-mediu', 'OK': 'sev-ok'}
+
+    rows = []
+    for c in top:
+        v = float(c.get('valoare', 0) or 0)
+        titlu = _html_mod.escape(str(c.get('titlu', '-'))[:80])
+        ofertanti = c.get('ofertanti') or '—'
+        flag = _detect_flag_simple(c, firma_sums)
+
+        prefix = '🚩 ' if flag != 'OK' else ''
+        data_flag = 'nereguli' if flag != 'OK' else 'ok'
+        ofertanti_attr = ' style="color:var(--rosu);font-weight:700"' if ofertanti == 1 else ''
+        v_fmt = f'{v:,.0f}'.replace(',', '.')  # format românesc: 1.234.567
+
+        rows.append(
+            f'<tr class="contract-row" data-flag="{data_flag}">'
+            f'<td>{prefix}{titlu}</td>'
+            f'<td><strong>{v_fmt}</strong></td>'
+            f'<td><span class="badge red">Cumpărare directă</span></td>'
+            f'<td{ofertanti_attr}>{ofertanti}</td>'
+            f'<td><span class="sev {SEV_CLS[flag]}">{flag}</span></td>'
+            f'<td><span class="badge green">Atribuit</span></td>'
+            f'</tr>'
+        )
+
+    if not rows:
+        return (
+            '<tr id="contracte-loading-row">'
+            '<td colspan="6" style="text-align:center;padding:30px;color:#888">'
+            'Nicio dată disponibilă.</td></tr>'
+        )
+    return '\n          '.join(rows)
+
+
+def actualizeaza_tabel_contracte(contracte_export: list) -> None:
+    """
+    Injectează rânduri statice în <tbody id="contracte-tbody"> din
+    transparenta_pantelimon.html. Apelat din main() după salvarea contracte.json.
+    """
+    import re as _re2
+    tp_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                           'transparenta_pantelimon.html')
+    if not os.path.exists(tp_path):
+        print('  ⚠ transparenta_pantelimon.html lipsă — skip actualizare tabel')
+        return
+
+    with open(tp_path, encoding='utf-8') as _f:
+        content = _f.read()
+
+    rows_html = render_contracte_tbody_rows(contracte_export, top_n=20)
+
+    new_content = _re2.sub(
+        r'(<tbody id="contracte-tbody">)(.*?)(</tbody>)',
+        lambda m: m.group(1) + '\n          ' + rows_html + '\n        ' + m.group(3),
+        content,
+        flags=_re2.DOTALL,
+        count=1,
+    )
+
+    if new_content == content:
+        print('  [INFO] tabel contracte: deja actualizat, nicio modificare')
+        return
+
+    with open(tp_path, 'w', encoding='utf-8') as _f:
+        _f.write(new_content)
+    print(f'  [OK] transparenta_pantelimon.html: tabel contracte actualizat static '
+          f'(top {min(20, len(contracte_export))} dupa valoare)')
+
+
 def genereaza_pagina_furnizor(
         nume: str, slug: str,
         flags_firma: list, contracte_firma: list,
@@ -2825,7 +2938,7 @@ def genereaza_pagina_furnizor(
     n_major  = sum(1 for f in flags_firma if f.get("severitate") == "MAJOR")
     n_mediu  = sum(1 for f in flags_firma if f.get("severitate") == "MEDIU")
     cui_f    = (contracte_firma[0].get("castigator_cui", "") or "") if contracte_firma else ""
-    base_url = "https://bise88.github.io/transparenta-pantelimon"
+    base_url = "https://aprindemlumina.eu"
     safe_name = html_mod.escape(nume)
 
     culori = {"CRITIC": "#C0392B", "MAJOR": "#E67E22", "MEDIU": "#F39C12"}
@@ -2955,7 +3068,7 @@ def genereaza_index_furnizori(index: list) -> str:
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Furnizori Primăria Pantelimon — Transparența</title>
   <meta name="description" content="Index A-Z al furnizorilor Primăriei Pantelimon cu nereguli detectate automat.">
-  <link rel="canonical" href="https://bise88.github.io/transparenta-pantelimon/furnizori/">
+  <link rel="canonical" href="https://aprindemlumina.eu/furnizori/">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
   <script src="../enhance.js" defer></script>
   <style>
@@ -3209,6 +3322,9 @@ def main():
     with open("contracte.json", "w", encoding="utf-8") as f:
         json.dump(contracte_export, f, ensure_ascii=False, indent=2)
     print(f"  ✓ Contracte exportate: contracte.json ({len(contracte_export)} intrări)")
+
+    # §1.1: Actualizează tabelul static din transparenta_pantelimon.html
+    actualizeaza_tabel_contracte(contracte_export)
 
     # 6. Salvare stare
     print("\n[6/6] Salvez starea...")
