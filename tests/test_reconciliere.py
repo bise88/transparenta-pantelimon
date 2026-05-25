@@ -169,6 +169,82 @@ def test_reco_nr_contracte_unice_expus():
 
 
 # ---------------------------------------------------------------------------
+# Teste HTML widget — supresia procentelor nonsens cand date_inconsistente
+# ---------------------------------------------------------------------------
+
+def _build_reco_html(buget, contracte, an=2025):
+    """
+    Apeleaza genereaza_raport_html() cu date minimale si extrage sectiunea
+    tp-reconciliation din HTML-ul rezultat.
+    """
+    import sys, os
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    from monitor_pantelimon import genereaza_raport_html
+    # Date minimale pentru a putea apela functia fara crash
+    dummy_flag = {
+        'severitate': 'MEDIU', 'titlu': 'Test', 'descriere': 'Test',
+        'furnizor': 'FIRMA_TEST', 'valoare': 1000, 'data': '2025-01-01',
+        'tip_procedura': 'Achizitie directa', 'tip': 'TEST', 'contract_id': 'test-1',
+        'contract_numar': 'test-1', 'cif_furnizor': '',
+    }
+    dummy_contract = {
+        'id': 'test-1', 'titlu': contracte[0]['titlu'] if contracte else 'Test',
+        'valoare_ron': contracte[0].get('valoare_ron', contracte[0].get('valoare', 0)) if contracte else 0,
+        'tip_procedura': 'Achizitie directa',
+        'data_publicare': contracte[0].get('data_publicare', contracte[0].get('data', '2025-01-01')) if contracte else '2025-01-01',
+        'castigator': contracte[0].get('castigator', contracte[0].get('firma', 'FIRMA')) if contracte else 'FIRMA',
+        'castigator_cui': contracte[0].get('castigator_cui', contracte[0].get('cui', '')) if contracte else '',
+        'nr_ofertanti': 1,
+    }
+    cfg = {
+        'nume_entitate': 'Test UAT', 'cui': '0000001', 'judet': 'Test',
+        'an': an, '_hcl_total': 0, '_hcl_ordinare': 0, '_hcl_extraordinare': 0,
+        '_hcl_pct': 0, '_hcl_ocr': False, '_scor': {'scor': 50, 'data': '2025-01-01'},
+    }
+    html = genereaza_raport_html(buget, [dummy_contract], [dummy_flag], [], cfg)
+    # Extrage doar sectiunea tp-reconciliation
+    start = html.find('<section class="tp-reconciliation"')
+    end = html.find('</section>', start) + len('</section>')
+    return html[start:end] if start != -1 else html
+
+
+def test_widget_inconsistent_no_percent():
+    """
+    Cand date_inconsistente=True (SEAP > ANAF), widget-ul NU afiseaza
+    procentul nonsens (ex: '175%') si NU afiseaza 'Doar X% din cheltuielile'.
+    """
+    # SEAP (200M) >> ANAF (10M) → date_inconsistente=True
+    contracte = [_c('Mare contract', 'FIRMA_K', 200_000_000)]
+    buget = {'cheltuieli_total': 10_000_000, 'an': 2025}
+    html = _build_reco_html(buget, contracte, an=2025)
+
+    # Nu trebuie sa apara procentul calculat (2000%)
+    assert '2000%' not in html, 'HTML contine procentul nonsens 2000%'
+    assert '2.000%' not in html, 'HTML contine procentul nonsens 2.000%'
+    # Nu trebuie sa apara fraza cu "Doar X%"
+    assert 'Doar <strong>' not in html, 'HTML contine fraza "Doar X%" desi date_inconsistente=True'
+    # Trebuie sa apara "procent indisponibil"
+    assert 'procent indisponibil' in html, 'HTML nu contine "procent indisponibil"'
+    # Trebuie sa apara avertismentul
+    assert 'n/a' in html, 'Celula GAP nu afiseaza n/a'
+
+
+def test_widget_consistent_show_percent():
+    """
+    Cand date_inconsistente=False (SEAP < ANAF), widget-ul afiseaza
+    procentul real si fraza 'Doar X% din cheltuielile'.
+    """
+    # SEAP (1M) << ANAF (100M) → date_inconsistente=False, procent ~1%
+    contracte = [_c('Contract mic', 'FIRMA_L', 1_000_000)]
+    buget = {'cheltuieli_total': 100_000_000, 'an': 2025}
+    html = _build_reco_html(buget, contracte, an=2025)
+
+    assert 'Doar <strong>' in html, 'HTML nu contine fraza "Doar X%" desi date sunt consistente'
+    assert 'procent indisponibil' not in html, 'HTML contine "procent indisponibil" desi datele sunt ok'
+    assert 'n/a' not in html, 'Celula GAP afiseaza n/a desi datele sunt consistente'
+
+
+# ---------------------------------------------------------------------------
 # Runner standalone (fara pytest)
 # ---------------------------------------------------------------------------
 
@@ -188,6 +264,8 @@ if __name__ == '__main__':
         test_reco_estimari_default,
         test_reco_estimari_explicite,
         test_reco_nr_contracte_unice_expus,
+        test_widget_inconsistent_no_percent,
+        test_widget_consistent_show_percent,
     ]
     passed = failed = 0
     for t in tests:
