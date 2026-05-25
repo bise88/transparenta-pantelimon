@@ -2311,8 +2311,9 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
         if _reco['estimari_default_folosite'] else ''
     )
 
-    # Celula GAP: avertisment daca date inconsistente (SEAP > ANAF chiar si dupa dedup)
+    # Celula GAP + celula SEAP (label) + nota principala — toate conditionate pe date_inconsistente
     if _reco['date_inconsistente']:
+        _seap_label = '<small>Vizibil in SEAP (procent indisponibil)</small>'
         _gap_cell = (
             '<div class="tp-reco-cell tp-reco-gap">'
             '<span style="font-size:.95rem">n/a</span>'
@@ -2321,13 +2322,15 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
             '</div>'
         )
         _nota_inconsistenta = (
-            ' <strong>Not&#259;:</strong> Suma contractelor SEAP dep&#259;&#351;e&#351;te '
+            '<strong>Not&#259;:</strong> Suma contractelor SEAP dep&#259;&#351;e&#351;te '
             'totalul cheltuielilor ANAF &mdash; semn c&#259; datele bugetare sunt par&#355;iale '
             'sau c&#259; SEAP include contracte multi-anuale publicate in acest an. '
             'Reconcilierea va fi disponibil&#259; dup&#259; ce prim&#259;ria public&#259; '
             'execu&#355;ia bugetar&#259; pe {an} in date.gov.ro.'.format(an=_an_reco)
         )
+        _nota_principala = ''
     else:
+        _seap_label = f'<small>Vizibil in SEAP ({_reco["procent_vizibil_in_seap"]}%)</small>'
         _gap_cell = (
             f'<div class="tp-reco-cell tp-reco-gap">'
             f'<span>~{_ro(_reco["gap_neexplicat_ron"])} RON</span>'
@@ -2335,6 +2338,12 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
             f'</div>'
         )
         _nota_inconsistenta = ''
+        _nota_principala = (
+            f'Doar <strong>{_reco["procent_vizibil_in_seap"]}%</strong> din cheltuielile '
+            f'primariei sunt vizibile public in SEAP pentru anul {_an_reco}. '
+            f'Procentul ramas nu se regaseste nici in salariile estimate, nici in transferuri, '
+            f'nici in contracte SEAP &mdash; este o diferenta calculata din surse publice oficiale.'
+        )
 
     reco_html = f"""
   <section class="tp-reconciliation" aria-labelledby="reco-h">
@@ -2354,17 +2363,12 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
       </div>
       <div class="tp-reco-cell tp-reco-visible">
         <span>{_ro(_reco['total_seap_ron'])} RON</span>
-        <small>Vizibil in SEAP ({_reco['procent_vizibil_in_seap']}%)</small>
+        {_seap_label}
       </div>
       {_gap_cell}
     </div>
     <p class="tp-reco-note">
-      Doar <strong>{_reco['procent_vizibil_in_seap']}%</strong> din cheltuielile
-      primariei sunt vizibile public in SEAP pentru anul {_an_reco}.
-      Procentul ramas nu se regaseste nici in salariile estimate, nici in transferuri,
-      nici in contracte SEAP &mdash; este o diferenta calculata din surse publice oficiale.
-      {_nota_inconsistenta}
-      {_reco_disclaimer}
+      {_nota_principala}{_nota_inconsistenta}{_reco_disclaimer}
     </p>
     <p class="tp-reco-note" style="margin-top:.5rem;font-size:.82rem;background:#f1f5f9;border-left-color:#64748b">
       <strong>De ce difer&#259; de tabel:</strong> SEAP republic&#259; valoarea integral&#259; a
