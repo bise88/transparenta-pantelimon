@@ -1,23 +1,23 @@
 {
-  "data_curenta": "2026-05-20T08:32:04.912215",
-  "data_anterioara": "2026-05-19T14:37:17.790664",
-  "nereguli_noi": 210,
-  "nereguli_rezolvate": 1,
+  "data_curenta": "2026-05-25T09:47:05.159520",
+  "data_anterioara": "2026-05-20T08:32:04.939020",
+  "nereguli_noi": 87,
+  "nereguli_rezolvate": 0,
   "scor_transparenta": 17,
   "top_noi": [
     {
-      "titlu": "Un singur ofertant",
-      "severitate": "MEDIU",
+      "titlu": "Contracte consecutive excesive cu același furnizor",
+      "severitate": "MAJOR",
       "index": 1
     },
     {
-      "titlu": "Un singur ofertant",
-      "severitate": "MEDIU",
+      "titlu": "Contracte consecutive excesive cu același furnizor",
+      "severitate": "MAJOR",
       "index": 2
     },
     {
-      "titlu": "Un singur ofertant",
-      "severitate": "MEDIU",
+      "titlu": "Contracte consecutive excesive cu același furnizor",
+      "severitate": "MAJOR",
       "index": 3
     }
   ]
