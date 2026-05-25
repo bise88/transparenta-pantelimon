@@ -1780,6 +1780,111 @@ def calculeaza_analiza_per_tip(flags: list, contracte: list) -> dict:
     return result
 
 
+# ==============================================================================
+# §1.2 — RECONCILIERE BUGET ANAF ↔ SEAP
+# ==============================================================================
+
+def _suma_seap_dedupata(contracte: list, an: int) -> tuple:
+    """
+    Deduplica contractele SEAP pe (titlu canonic, firma) intr-un an.
+
+    SEAP republica valoarea INTREAGA la fiecare modificare (Rev.2 = act aditional).
+    Algoritmul:
+      1. Scoate sufixul '(Rev.X)' din titlu → titlu canonic
+      2. Grupeaza dupa (titlu_canonic, identificator_firma)
+      3. Pastreaza valoarea MAX din grup (= revizia curenta, cu valoarea actualizata)
+
+    Accepta ambele scheme de campuri:
+      - schema interna Python: 'valoare_ron', 'data_publicare', 'castigator_cui', 'castigator'
+      - schema export contracte.json: 'valoare', 'data', 'cui', 'firma'
+
+    Returns:
+        (suma_dedup_ron: float, nr_contracte_unice: int)
+    """
+    import re as _re
+    _rev_re = _re.compile(r'\s*\(Rev\.\d+\)\s*$', _re.IGNORECASE)
+    seen: dict = {}
+    for c in contracte:
+        data = c.get('data_publicare') or c.get('data') or ''
+        if str(an) not in data:
+            continue
+        titlu = c.get('titlu') or ''
+        titlu_canonic = _rev_re.sub('', titlu).strip().lower()
+        # Preferam CUI ca identificator firma (stabil); fallback la nume
+        firma = (c.get('castigator_cui') or c.get('cui') or
+                 c.get('castigator') or c.get('firma') or '').strip()
+        if not titlu_canonic or not firma:
+            continue  # skip date murdare
+        key = (titlu_canonic, firma)
+        valoare = float(c.get('valoare_ron') or c.get('valoare') or 0)
+        if key not in seen or valoare > seen[key]:
+            seen[key] = valoare
+    return sum(seen.values()), len(seen)
+
+
+def reconciliere_buget_seap(buget_anaf: dict, contracte_seap: list, an: int = 2025) -> dict:
+    """
+    Reconciliaza cheltuielile ANAF cu contractele SEAP deduplicate pentru un an dat.
+
+    Args:
+        buget_anaf: dict cu cel putin una din cheile:
+                    - 'cheltuieli_total' (RON direct)
+                    - 'cheltuieli_mil_ron' (milioane RON, din fetch_budget_transparenta)
+                    Optional: 'cap_salarii', 'cap_transferuri', 'cap_investitii' (RON).
+        contracte_seap: lista de contracte — accepta schema interna si schema export.
+        an: anul de reconciliere (default 2025).
+
+    Returns:
+        Dict cu sumele agregate + procent vizibilitate + nr_contracte_unice +
+        date_inconsistente (True daca SEAP > ANAF chiar si dupa dedup).
+
+    Edge cases:
+        - total_anaf == 0  → procentele sunt 0, fara ZeroDivisionError
+        - gap < 0          → returnat ca 0; date_inconsistente = True
+        - estimari_default_folosite → True daca buget_anaf nu are capitole detaliate
+    """
+    # --- Totalul ANAF: accepta RON direct sau milioane ---
+    if buget_anaf.get('cheltuieli_total'):
+        total_anaf = float(buget_anaf['cheltuieli_total'])
+    elif buget_anaf.get('cheltuieli_mil_ron'):
+        total_anaf = float(buget_anaf['cheltuieli_mil_ron']) * 1_000_000
+    else:
+        total_anaf = 0.0
+
+    # --- Total SEAP dedupat: elimina Rev.X duplicate ---
+    total_seap, nr_contracte_unice = _suma_seap_dedupata(contracte_seap, an)
+
+    # --- Capitole non-SEAP ---
+    are_capitole_detaliate = bool(buget_anaf.get('cap_salarii'))
+    salarii = float(buget_anaf.get('cap_salarii') or total_anaf * 0.45)
+    transferuri = float(buget_anaf.get('cap_transferuri') or total_anaf * 0.15)
+    investitii = float(buget_anaf.get('cap_investitii') or 0)
+
+    # --- Gap si consistenta ---
+    gap_raw = total_anaf - salarii - transferuri - total_seap - investitii
+    gap = max(gap_raw, 0.0)
+    # Daca chiar si dupa dedup SEAP > ANAF, semnaleaza date inconsistente
+    date_inconsistente = (total_seap > total_anaf) if total_anaf else False
+
+    procent_seap = round((total_seap / total_anaf * 100), 1) if total_anaf else 0.0
+    procent_gap  = round((gap / total_anaf * 100), 1) if total_anaf else 0.0
+
+    return {
+        'an':                        an,
+        'total_anaf_ron':            total_anaf,
+        'total_seap_ron':            total_seap,
+        'nr_contracte_unice':        nr_contracte_unice,
+        'salarii_estimate_ron':      salarii,
+        'transferuri_ron':           transferuri,
+        'investitii_ron':            investitii,
+        'gap_neexplicat_ron':        gap,
+        'procent_vizibil_in_seap':   procent_seap,
+        'procent_gap':               procent_gap,
+        'estimari_default_folosite': not are_capitole_detaliate,
+        'date_inconsistente':        date_inconsistente,
+    }
+
+
 def genereaza_raport_html(budget: dict, contracte: list, flags: list,
                            flags_noi: list, config: dict) -> str:
     """Generează raportul HTML complet."""
@@ -2190,6 +2295,90 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
           <a href="https://www.e-licitatie.ro/pub" target="_blank">e-licitatie.ro</a>.
         </div>"""
 
+    # ── §4.1 — Widget reconciliere ANAF ↔ SEAP ──────────────────────────────
+    _an_reco = budget.get('an', 2025)
+    _reco = reconciliere_buget_seap(budget, contracte, an=_an_reco)
+
+    def _ro(n):
+        """Format numar in stil romanesc: separator mii = punct."""
+        return f'{n:,.0f}'.replace(',', '.')
+
+    _reco_disclaimer = (
+        ' <em style="font-size:.85em">Estimarile pentru salarii si transferuri '
+        'folosesc procente tipice de UAT (45% si 15%); valorile exacte vor fi '
+        'adaugate cand executia bugetara pe capitole va fi disponibila in '
+        'date.gov.ro.</em>'
+        if _reco['estimari_default_folosite'] else ''
+    )
+
+    # Celula GAP + celula SEAP (label) + nota principala — toate conditionate pe date_inconsistente
+    if _reco['date_inconsistente']:
+        _seap_label = '<small>Vizibil in SEAP (procent indisponibil)</small>'
+        _gap_cell = (
+            '<div class="tp-reco-cell tp-reco-gap">'
+            '<span style="font-size:.95rem">n/a</span>'
+            '<small>Suma SEAP dep&#259;&#351;e&#351;te ANAF &mdash; '
+            'date posibil incomplete sau in actualizare</small>'
+            '</div>'
+        )
+        _nota_inconsistenta = (
+            '<strong>Not&#259;:</strong> Suma contractelor SEAP dep&#259;&#351;e&#351;te '
+            'totalul cheltuielilor ANAF &mdash; semn c&#259; datele bugetare sunt par&#355;iale '
+            'sau c&#259; SEAP include contracte multi-anuale publicate in acest an. '
+            'Reconcilierea va fi disponibil&#259; dup&#259; ce prim&#259;ria public&#259; '
+            'execu&#355;ia bugetar&#259; pe {an} in date.gov.ro.'.format(an=_an_reco)
+        )
+        _nota_principala = ''
+    else:
+        _seap_label = f'<small>Vizibil in SEAP ({_reco["procent_vizibil_in_seap"]}%)</small>'
+        _gap_cell = (
+            f'<div class="tp-reco-cell tp-reco-gap">'
+            f'<span>~{_ro(_reco["gap_neexplicat_ron"])} RON</span>'
+            f'<small>GAP neexplicat ({_reco["procent_gap"]}%)</small>'
+            f'</div>'
+        )
+        _nota_inconsistenta = ''
+        _nota_principala = (
+            f'Doar <strong>{_reco["procent_vizibil_in_seap"]}%</strong> din cheltuielile '
+            f'primariei sunt vizibile public in SEAP pentru anul {_an_reco}. '
+            f'Procentul ramas nu se regaseste nici in salariile estimate, nici in transferuri, '
+            f'nici in contracte SEAP &mdash; este o diferenta calculata din surse publice oficiale.'
+        )
+
+    reco_html = f"""
+  <section class="tp-reconciliation" aria-labelledby="reco-h">
+    <h3 id="reco-h">&#x1F4CA; Reconciliere ANAF &#x2194; SEAP &mdash; {_an_reco}</h3>
+    <div class="tp-reco-grid">
+      <div class="tp-reco-cell tp-reco-total">
+        <span>{_ro(_reco['total_anaf_ron'])} RON</span>
+        <small>Cheltuieli totale ANAF {_an_reco}</small>
+      </div>
+      <div class="tp-reco-cell tp-reco-known">
+        <span>~{_ro(_reco['salarii_estimate_ron'])} RON</span>
+        <small>Salarii estimate (~45%)</small>
+      </div>
+      <div class="tp-reco-cell tp-reco-known">
+        <span>~{_ro(_reco['transferuri_ron'])} RON</span>
+        <small>Transferuri / subventii (~15%)</small>
+      </div>
+      <div class="tp-reco-cell tp-reco-visible">
+        <span>{_ro(_reco['total_seap_ron'])} RON</span>
+        {_seap_label}
+      </div>
+      {_gap_cell}
+    </div>
+    <p class="tp-reco-note">
+      {_nota_principala}{_nota_inconsistenta}{_reco_disclaimer}
+    </p>
+    <p class="tp-reco-note" style="margin-top:.5rem;font-size:.82rem;background:#f1f5f9;border-left-color:#64748b">
+      <strong>De ce difer&#259; de tabel:</strong> SEAP republic&#259; valoarea integral&#259; a
+      unui contract la fiecare modificare (Rev.2 = act adi&#355;ional). Aceast&#259; sum&#259;
+      elimin&#259; duplicatele canonic &mdash; grupare pe (titlu, firm&#259;), p&#259;strând
+      revizia cu valoarea cea mai mare.
+      Sunt <strong>{_reco['nr_contracte_unice']}</strong> contracte unice {_an_reco} dup&#259; deduplicare.
+    </p>
+  </section>"""
+
     html = f"""<!DOCTYPE html>
 <html lang="ro">
 <head>
@@ -2241,6 +2430,71 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
     thead {{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }}
     @page {{ margin:1.5cm; size:A4; }}
   }}
+
+  /* ---- §4.1 RECONCILIERE WIDGET ---- */
+  .tp-reconciliation {{
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+  }}
+  .tp-reconciliation h3 {{ margin: 0 0 .75rem; font-size: 1.05rem; color: #00427A; }}
+  .tp-reco-grid {{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: .75rem;
+    margin: 1rem 0;
+  }}
+  .tp-reco-cell {{
+    padding: 1rem;
+    border-radius: 8px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    text-align: center;
+  }}
+  .tp-reco-cell span {{
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #111;
+    line-height: 1.2;
+    word-break: break-word;
+  }}
+  .tp-reco-cell small {{
+    color: #6b7280;
+    font-size: .78rem;
+    display: block;
+    margin-top: .25rem;
+  }}
+  .tp-reco-total  {{ border-color: #94a3b8; }}
+  .tp-reco-known  {{ background: #f0fdf4; border-color: #bbf7d0; }}
+  .tp-reco-visible{{ background: #dbeafe; border-color: #93c5fd; }}
+  .tp-reco-gap    {{ background: #fee2e2; border-color: #fca5a5; }}
+  .tp-reco-gap span {{ color: #b91c1c; }}
+  .tp-reco-note {{
+    font-size: .9rem;
+    padding: .75rem 1rem;
+    background: #fef9c3;
+    border-left: 3px solid #ca8a04;
+    border-radius: 4px;
+    margin: 0;
+    line-height: 1.5;
+  }}
+  /* Dark mode */
+  [data-tp-theme="dark"] .tp-reconciliation {{
+    background: #1e293b; border-color: #334155;
+  }}
+  [data-tp-theme="dark"] .tp-reco-cell {{
+    background: #1e293b; border-color: #334155;
+  }}
+  [data-tp-theme="dark"] .tp-reco-cell span {{ color: #f1f5f9; }}
+  [data-tp-theme="dark"] .tp-reco-cell small {{ color: #94a3b8; }}
+  [data-tp-theme="dark"] .tp-reco-known  {{ background: #14532d; border-color: #166534; }}
+  [data-tp-theme="dark"] .tp-reco-visible{{ background: #1e3a8a; border-color: #1d4ed8; }}
+  [data-tp-theme="dark"] .tp-reco-gap    {{ background: #7f1d1d; border-color: #991b1b; }}
+  [data-tp-theme="dark"] .tp-reco-gap span {{ color: #fca5a5; }}
+  [data-tp-theme="dark"] .tp-reco-note   {{ background: #422006; border-left-color: #ca8a04; color: #fef3c7; }}
 </style>
 <script src="enhance.js" defer></script>
 </head>
@@ -2361,6 +2615,9 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
       <div style="font-size:11px;color:#777;text-transform:uppercase">Valoare totală</div>
     </div>
   </div>
+
+  <!-- §4.1 RECONCILIERE WIDGET -->
+  {reco_html}
 
   <!-- LISTA CONTRACTE -->
   <h2 style="color:#00427A;margin:28px 0 8px">📄 Lista contracte analizate (primele 20)</h2>
