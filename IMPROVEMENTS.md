@@ -1,4 +1,4 @@
-# Plan de îmbunătățiri — transparenta-pantelimon
+﻿# Plan de îmbunătățiri — transparenta-pantelimon
 
 Document master pentru Claude Code. Conține 9 îmbunătățiri grupate în 4 faze, cu instrucțiuni
 de implementare, dependențe, criterii de verificare și mesaje de commit sugerate.
@@ -30,7 +30,7 @@ de implementare, dependențe, criterii de verificare și mesaje de commit sugera
 
 ## CONTEXT REPO (pentru orientare)
 
-- **Repo**: `bise88/transparenta-pantelimon`, publicat pe GitHub Pages.
+- **Repo**: `transparenta-locala/transparenta-pantelimon`, publicat pe GitHub Pages.
 - **Script principal**: `monitor_pantelimon.py` — rulează lunar automat (probabil GitHub
   Actions; verifică `.github/workflows/`). Face scraping pe SEAP + transparenta.eu, aplică
   5 algoritmi de detecție nereguli, generează `raport_transparenta.html`.
@@ -117,14 +117,14 @@ Modificări mici, vizibile imediat, cu risc minim. Nu schimbă structura datelor
    <meta name="description" content="Monitorizare cetățenească a Primăriei Pantelimon: nereguli detectate automat în achiziții publice. Date din SEAP și ANAF.">
    <meta name="keywords" content="transparență, Pantelimon, primărie, achiziții publice, SEAP, ANAF, monitorizare cetățenească, Ilfov">
    <meta name="author" content="Inițiativă cetățenească independentă">
-   <link rel="canonical" href="https://bise88.github.io/transparenta-pantelimon/{filename}">
+   <link rel="canonical" href="https://aprindemlumina.eu/{filename}">
 
    <!-- Open Graph (Facebook, LinkedIn) -->
    <meta property="og:type" content="website">
-   <meta property="og:url" content="https://bise88.github.io/transparenta-pantelimon/{filename}">
+   <meta property="og:url" content="https://aprindemlumina.eu/{filename}">
    <meta property="og:title" content="{TITLU_SPECIFIC_PAGINII}">
    <meta property="og:description" content="{DESCRIERE_SPECIFICĂ}">
-   <meta property="og:image" content="https://bise88.github.io/transparenta-pantelimon/og-image.png">
+   <meta property="og:image" content="https://aprindemlumina.eu/og-image.png">
    <meta property="og:locale" content="ro_RO">
    <meta property="og:site_name" content="Transparența Pantelimon">
 
@@ -132,7 +132,7 @@ Modificări mici, vizibile imediat, cu risc minim. Nu schimbă structura datelor
    <meta name="twitter:card" content="summary_large_image">
    <meta name="twitter:title" content="{TITLU}">
    <meta name="twitter:description" content="{DESCRIERE}">
-   <meta name="twitter:image" content="https://bise88.github.io/transparenta-pantelimon/og-image.png">
+   <meta name="twitter:image" content="https://aprindemlumina.eu/og-image.png">
    ```
 
    Înlocuiește `{filename}`, `{TITLU_SPECIFIC_PAGINII}`, `{DESCRIERE_SPECIFICĂ}` cu valori
@@ -159,17 +159,17 @@ Modificări mici, vizibile imediat, cu risc minim. Nu schimbă structura datelor
    <?xml version="1.0" encoding="UTF-8"?>
    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
      <url>
-       <loc>https://bise88.github.io/transparenta-pantelimon/</loc>
+       <loc>https://aprindemlumina.eu/</loc>
        <changefreq>monthly</changefreq>
        <priority>1.0</priority>
      </url>
      <url>
-       <loc>https://bise88.github.io/transparenta-pantelimon/raport_transparenta.html</loc>
+       <loc>https://aprindemlumina.eu/raport_transparenta.html</loc>
        <changefreq>monthly</changefreq>
        <priority>0.9</priority>
      </url>
      <url>
-       <loc>https://bise88.github.io/transparenta-pantelimon/transparenta_pantelimon.html</loc>
+       <loc>https://aprindemlumina.eu/transparenta_pantelimon.html</loc>
        <changefreq>monthly</changefreq>
        <priority>0.8</priority>
      </url>
@@ -181,12 +181,12 @@ Modificări mici, vizibile imediat, cu risc minim. Nu schimbă structura datelor
    ```
    User-agent: *
    Allow: /
-   Sitemap: https://bise88.github.io/transparenta-pantelimon/sitemap.xml
+   Sitemap: https://aprindemlumina.eu/sitemap.xml
    ```
 
 **Verificare**:
 - Pe Google Search Console după 2-3 zile.
-- Live test: deschide `https://www.opengraph.xyz/url/https%3A%2F%2Fbise88.github.io%2Ftransparenta-pantelimon%2F`
+- Live test: deschide `https://www.opengraph.xyz/url/https%3A%2F%2Faprindemlumina.eu%2F`
   și verifică preview-ul.
 
 **Commit**: `feat(seo): adaugă meta tags Open Graph + sitemap + robots.txt`
@@ -210,7 +210,7 @@ noile nereguli detectate.
        from datetime import datetime, timezone
        import html
 
-       BASE = "https://bise88.github.io/transparenta-pantelimon"
+       BASE = "https://aprindemlumina.eu"
        updated = data_generare.astimezone(timezone.utc).isoformat()
 
        # Sortăm: CRITIC întâi, apoi MAJOR, apoi MEDIU
@@ -597,7 +597,7 @@ noile clase/data attributes, apoi B (JSON embedded).
    # API public — transparenta-pantelimon
 
    ## raport.json
-   URL: https://bise88.github.io/transparenta-pantelimon/raport.json
+   URL: https://aprindemlumina.eu/raport.json
    Schema: vezi mai jos.
    Frecvență: actualizat lunar.
    Licență: Creative Commons CC-BY 4.0 (atribuire la inițiativa cetățenească).
@@ -1212,7 +1212,7 @@ def genereaza_og_image(n_flags, n_critic, valoare_mil, scor=None):
            fill='#f59e0b', font=font_med)
     if scor is not None:
         d.text((60, 480), f"Scor transparență: {scor}/100", fill='#fff', font=font_med)
-    d.text((60, 570), "bise88.github.io/transparenta-pantelimon",
+    d.text((60, 570), "aprindemlumina.eu",
            fill='#6b7280', font=font_small)
 
     img.save('og-image.png', 'PNG', optimize=True)
