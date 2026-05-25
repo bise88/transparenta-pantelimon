@@ -1784,26 +1784,63 @@ def calculeaza_analiza_per_tip(flags: list, contracte: list) -> dict:
 # §1.2 — RECONCILIERE BUGET ANAF ↔ SEAP
 # ==============================================================================
 
+def _suma_seap_dedupata(contracte: list, an: int) -> tuple:
+    """
+    Deduplica contractele SEAP pe (titlu canonic, firma) intr-un an.
+
+    SEAP republica valoarea INTREAGA la fiecare modificare (Rev.2 = act aditional).
+    Algoritmul:
+      1. Scoate sufixul '(Rev.X)' din titlu → titlu canonic
+      2. Grupeaza dupa (titlu_canonic, identificator_firma)
+      3. Pastreaza valoarea MAX din grup (= revizia curenta, cu valoarea actualizata)
+
+    Accepta ambele scheme de campuri:
+      - schema interna Python: 'valoare_ron', 'data_publicare', 'castigator_cui', 'castigator'
+      - schema export contracte.json: 'valoare', 'data', 'cui', 'firma'
+
+    Returns:
+        (suma_dedup_ron: float, nr_contracte_unice: int)
+    """
+    import re as _re
+    _rev_re = _re.compile(r'\s*\(Rev\.\d+\)\s*$', _re.IGNORECASE)
+    seen: dict = {}
+    for c in contracte:
+        data = c.get('data_publicare') or c.get('data') or ''
+        if str(an) not in data:
+            continue
+        titlu = c.get('titlu') or ''
+        titlu_canonic = _rev_re.sub('', titlu).strip().lower()
+        # Preferam CUI ca identificator firma (stabil); fallback la nume
+        firma = (c.get('castigator_cui') or c.get('cui') or
+                 c.get('castigator') or c.get('firma') or '').strip()
+        if not titlu_canonic or not firma:
+            continue  # skip date murdare
+        key = (titlu_canonic, firma)
+        valoare = float(c.get('valoare_ron') or c.get('valoare') or 0)
+        if key not in seen or valoare > seen[key]:
+            seen[key] = valoare
+    return sum(seen.values()), len(seen)
+
+
 def reconciliere_buget_seap(buget_anaf: dict, contracte_seap: list, an: int = 2025) -> dict:
     """
-    Reconciliaza cheltuielile ANAF cu contractele SEAP vizibile pentru un an dat.
+    Reconciliaza cheltuielile ANAF cu contractele SEAP deduplicate pentru un an dat.
 
     Args:
         buget_anaf: dict cu cel putin una din cheile:
                     - 'cheltuieli_total' (RON direct)
                     - 'cheltuieli_mil_ron' (milioane RON, din fetch_budget_transparenta)
                     Optional: 'cap_salarii', 'cap_transferuri', 'cap_investitii' (RON).
-        contracte_seap: lista de contracte — accepta ambele scheme:
-                    - schema interna Python: 'valoare_ron', 'data_publicare'
-                    - schema export contracte.json: 'valoare', 'data'
+        contracte_seap: lista de contracte — accepta schema interna si schema export.
         an: anul de reconciliere (default 2025).
 
     Returns:
-        Dict cu sumele agregate + procent vizibilitate. Toate sumele in RON.
+        Dict cu sumele agregate + procent vizibilitate + nr_contracte_unice +
+        date_inconsistente (True daca SEAP > ANAF chiar si dupa dedup).
 
     Edge cases:
         - total_anaf == 0  → procentele sunt 0, fara ZeroDivisionError
-        - gap < 0          → returnat ca 0 (estimarile depasesc totalul, probabil date incomplete)
+        - gap < 0          → returnat ca 0; date_inconsistente = True
         - estimari_default_folosite → True daca buget_anaf nu are capitole detaliate
     """
     # --- Totalul ANAF: accepta RON direct sau milioane ---
@@ -1814,40 +1851,37 @@ def reconciliere_buget_seap(buget_anaf: dict, contracte_seap: list, an: int = 20
     else:
         total_anaf = 0.0
 
-    # --- Total SEAP vizibil pentru anul cerut ---
-    # Accepta ambele scheme de campuri (interna: valoare_ron/data_publicare;
-    # export: valoare/data)
-    total_seap = sum(
-        float(c.get('valoare_ron') or c.get('valoare') or 0)
-        for c in contracte_seap
-        if str(an) in (c.get('data_publicare') or c.get('data') or '')
-    )
+    # --- Total SEAP dedupat: elimina Rev.X duplicate ---
+    total_seap, nr_contracte_unice = _suma_seap_dedupata(contracte_seap, an)
 
     # --- Capitole non-SEAP ---
-    # Daca buget_anaf nu furnizeaza valori exacte, folosim praguri tipice UAT Ilfov.
     are_capitole_detaliate = bool(buget_anaf.get('cap_salarii'))
     salarii = float(buget_anaf.get('cap_salarii') or total_anaf * 0.45)
     transferuri = float(buget_anaf.get('cap_transferuri') or total_anaf * 0.15)
     investitii = float(buget_anaf.get('cap_investitii') or 0)
 
-    # --- Gap neexplicat ---
+    # --- Gap si consistenta ---
     gap_raw = total_anaf - salarii - transferuri - total_seap - investitii
-    gap = max(gap_raw, 0.0)  # nu raportam gap negativ
+    gap = max(gap_raw, 0.0)
+    # Daca chiar si dupa dedup SEAP > ANAF, semnaleaza date inconsistente
+    date_inconsistente = (total_seap > total_anaf) if total_anaf else False
 
     procent_seap = round((total_seap / total_anaf * 100), 1) if total_anaf else 0.0
     procent_gap  = round((gap / total_anaf * 100), 1) if total_anaf else 0.0
 
     return {
-        'an': an,
-        'total_anaf_ron':           total_anaf,
-        'total_seap_ron':           total_seap,
-        'salarii_estimate_ron':     salarii,
-        'transferuri_ron':          transferuri,
-        'investitii_ron':           investitii,
-        'gap_neexplicat_ron':       gap,
-        'procent_vizibil_in_seap':  procent_seap,
-        'procent_gap':              procent_gap,
+        'an':                        an,
+        'total_anaf_ron':            total_anaf,
+        'total_seap_ron':            total_seap,
+        'nr_contracte_unice':        nr_contracte_unice,
+        'salarii_estimate_ron':      salarii,
+        'transferuri_ron':           transferuri,
+        'investitii_ron':            investitii,
+        'gap_neexplicat_ron':        gap,
+        'procent_vizibil_in_seap':   procent_seap,
+        'procent_gap':               procent_gap,
         'estimari_default_folosite': not are_capitole_detaliate,
+        'date_inconsistente':        date_inconsistente,
     }
 
 
@@ -2276,6 +2310,32 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
         'date.gov.ro.</em>'
         if _reco['estimari_default_folosite'] else ''
     )
+
+    # Celula GAP: avertisment daca date inconsistente (SEAP > ANAF chiar si dupa dedup)
+    if _reco['date_inconsistente']:
+        _gap_cell = (
+            '<div class="tp-reco-cell tp-reco-gap">'
+            '<span style="font-size:.95rem">n/a</span>'
+            '<small>Suma SEAP dep&#259;&#351;e&#351;te ANAF &mdash; '
+            'date posibil incomplete sau in actualizare</small>'
+            '</div>'
+        )
+        _nota_inconsistenta = (
+            ' <strong>Not&#259;:</strong> Suma contractelor SEAP dep&#259;&#351;e&#351;te '
+            'totalul cheltuielilor ANAF &mdash; semn c&#259; datele bugetare sunt par&#355;iale '
+            'sau c&#259; SEAP include contracte multi-anuale publicate in acest an. '
+            'Reconcilierea va fi disponibil&#259; dup&#259; ce prim&#259;ria public&#259; '
+            'execu&#355;ia bugetar&#259; pe {an} in date.gov.ro.'.format(an=_an_reco)
+        )
+    else:
+        _gap_cell = (
+            f'<div class="tp-reco-cell tp-reco-gap">'
+            f'<span>~{_ro(_reco["gap_neexplicat_ron"])} RON</span>'
+            f'<small>GAP neexplicat ({_reco["procent_gap"]}%)</small>'
+            f'</div>'
+        )
+        _nota_inconsistenta = ''
+
     reco_html = f"""
   <section class="tp-reconciliation" aria-labelledby="reco-h">
     <h3 id="reco-h">&#x1F4CA; Reconciliere ANAF &#x2194; SEAP &mdash; {_an_reco}</h3>
@@ -2296,17 +2356,22 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
         <span>{_ro(_reco['total_seap_ron'])} RON</span>
         <small>Vizibil in SEAP ({_reco['procent_vizibil_in_seap']}%)</small>
       </div>
-      <div class="tp-reco-cell tp-reco-gap">
-        <span>~{_ro(_reco['gap_neexplicat_ron'])} RON</span>
-        <small>GAP neexplicat ({_reco['procent_gap']}%)</small>
-      </div>
+      {_gap_cell}
     </div>
     <p class="tp-reco-note">
       Doar <strong>{_reco['procent_vizibil_in_seap']}%</strong> din cheltuielile
       primariei sunt vizibile public in SEAP pentru anul {_an_reco}.
       Procentul ramas nu se regaseste nici in salariile estimate, nici in transferuri,
       nici in contracte SEAP &mdash; este o diferenta calculata din surse publice oficiale.
+      {_nota_inconsistenta}
       {_reco_disclaimer}
+    </p>
+    <p class="tp-reco-note" style="margin-top:.5rem;font-size:.82rem;background:#f1f5f9;border-left-color:#64748b">
+      <strong>De ce difer&#259; de tabel:</strong> SEAP republic&#259; valoarea integral&#259; a
+      unui contract la fiecare modificare (Rev.2 = act adi&#355;ional). Aceast&#259; sum&#259;
+      elimin&#259; duplicatele canonic &mdash; grupare pe (titlu, firm&#259;), p&#259;strând
+      revizia cu valoarea cea mai mare.
+      Sunt <strong>{_reco['nr_contracte_unice']}</strong> contracte unice {_an_reco} dup&#259; deduplicare.
     </p>
   </section>"""
 
