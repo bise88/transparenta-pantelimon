@@ -2261,6 +2261,55 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
           <a href="https://www.e-licitatie.ro/pub" target="_blank">e-licitatie.ro</a>.
         </div>"""
 
+    # ── §4.1 — Widget reconciliere ANAF ↔ SEAP ──────────────────────────────
+    _an_reco = budget.get('an', 2025)
+    _reco = reconciliere_buget_seap(budget, contracte, an=_an_reco)
+
+    def _ro(n):
+        """Format numar in stil romanesc: separator mii = punct."""
+        return f'{n:,.0f}'.replace(',', '.')
+
+    _reco_disclaimer = (
+        ' <em style="font-size:.85em">Estimarile pentru salarii si transferuri '
+        'folosesc procente tipice de UAT (45% si 15%); valorile exacte vor fi '
+        'adaugate cand executia bugetara pe capitole va fi disponibila in '
+        'date.gov.ro.</em>'
+        if _reco['estimari_default_folosite'] else ''
+    )
+    reco_html = f"""
+  <section class="tp-reconciliation" aria-labelledby="reco-h">
+    <h3 id="reco-h">&#x1F4CA; Reconciliere ANAF &#x2194; SEAP &mdash; {_an_reco}</h3>
+    <div class="tp-reco-grid">
+      <div class="tp-reco-cell tp-reco-total">
+        <span>{_ro(_reco['total_anaf_ron'])} RON</span>
+        <small>Cheltuieli totale ANAF {_an_reco}</small>
+      </div>
+      <div class="tp-reco-cell tp-reco-known">
+        <span>~{_ro(_reco['salarii_estimate_ron'])} RON</span>
+        <small>Salarii estimate (~45%)</small>
+      </div>
+      <div class="tp-reco-cell tp-reco-known">
+        <span>~{_ro(_reco['transferuri_ron'])} RON</span>
+        <small>Transferuri / subventii (~15%)</small>
+      </div>
+      <div class="tp-reco-cell tp-reco-visible">
+        <span>{_ro(_reco['total_seap_ron'])} RON</span>
+        <small>Vizibil in SEAP ({_reco['procent_vizibil_in_seap']}%)</small>
+      </div>
+      <div class="tp-reco-cell tp-reco-gap">
+        <span>~{_ro(_reco['gap_neexplicat_ron'])} RON</span>
+        <small>GAP neexplicat ({_reco['procent_gap']}%)</small>
+      </div>
+    </div>
+    <p class="tp-reco-note">
+      Doar <strong>{_reco['procent_vizibil_in_seap']}%</strong> din cheltuielile
+      primariei sunt vizibile public in SEAP pentru anul {_an_reco}.
+      Procentul ramas nu se regaseste nici in salariile estimate, nici in transferuri,
+      nici in contracte SEAP &mdash; este o diferenta calculata din surse publice oficiale.
+      {_reco_disclaimer}
+    </p>
+  </section>"""
+
     html = f"""<!DOCTYPE html>
 <html lang="ro">
 <head>
@@ -2312,6 +2361,71 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
     thead {{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }}
     @page {{ margin:1.5cm; size:A4; }}
   }}
+
+  /* ---- §4.1 RECONCILIERE WIDGET ---- */
+  .tp-reconciliation {{
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+  }}
+  .tp-reconciliation h3 {{ margin: 0 0 .75rem; font-size: 1.05rem; color: #00427A; }}
+  .tp-reco-grid {{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: .75rem;
+    margin: 1rem 0;
+  }}
+  .tp-reco-cell {{
+    padding: 1rem;
+    border-radius: 8px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    text-align: center;
+  }}
+  .tp-reco-cell span {{
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #111;
+    line-height: 1.2;
+    word-break: break-word;
+  }}
+  .tp-reco-cell small {{
+    color: #6b7280;
+    font-size: .78rem;
+    display: block;
+    margin-top: .25rem;
+  }}
+  .tp-reco-total  {{ border-color: #94a3b8; }}
+  .tp-reco-known  {{ background: #f0fdf4; border-color: #bbf7d0; }}
+  .tp-reco-visible{{ background: #dbeafe; border-color: #93c5fd; }}
+  .tp-reco-gap    {{ background: #fee2e2; border-color: #fca5a5; }}
+  .tp-reco-gap span {{ color: #b91c1c; }}
+  .tp-reco-note {{
+    font-size: .9rem;
+    padding: .75rem 1rem;
+    background: #fef9c3;
+    border-left: 3px solid #ca8a04;
+    border-radius: 4px;
+    margin: 0;
+    line-height: 1.5;
+  }}
+  /* Dark mode */
+  [data-tp-theme="dark"] .tp-reconciliation {{
+    background: #1e293b; border-color: #334155;
+  }}
+  [data-tp-theme="dark"] .tp-reco-cell {{
+    background: #1e293b; border-color: #334155;
+  }}
+  [data-tp-theme="dark"] .tp-reco-cell span {{ color: #f1f5f9; }}
+  [data-tp-theme="dark"] .tp-reco-cell small {{ color: #94a3b8; }}
+  [data-tp-theme="dark"] .tp-reco-known  {{ background: #14532d; border-color: #166534; }}
+  [data-tp-theme="dark"] .tp-reco-visible{{ background: #1e3a8a; border-color: #1d4ed8; }}
+  [data-tp-theme="dark"] .tp-reco-gap    {{ background: #7f1d1d; border-color: #991b1b; }}
+  [data-tp-theme="dark"] .tp-reco-gap span {{ color: #fca5a5; }}
+  [data-tp-theme="dark"] .tp-reco-note   {{ background: #422006; border-left-color: #ca8a04; color: #fef3c7; }}
 </style>
 <script src="enhance.js" defer></script>
 </head>
@@ -2432,6 +2546,9 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
       <div style="font-size:11px;color:#777;text-transform:uppercase">Valoare totală</div>
     </div>
   </div>
+
+  <!-- §4.1 RECONCILIERE WIDGET -->
+  {reco_html}
 
   <!-- LISTA CONTRACTE -->
   <h2 style="color:#00427A;margin:28px 0 8px">📄 Lista contracte analizate (primele 20)</h2>
