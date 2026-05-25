@@ -1780,6 +1780,77 @@ def calculeaza_analiza_per_tip(flags: list, contracte: list) -> dict:
     return result
 
 
+# ==============================================================================
+# §1.2 — RECONCILIERE BUGET ANAF ↔ SEAP
+# ==============================================================================
+
+def reconciliere_buget_seap(buget_anaf: dict, contracte_seap: list, an: int = 2025) -> dict:
+    """
+    Reconciliaza cheltuielile ANAF cu contractele SEAP vizibile pentru un an dat.
+
+    Args:
+        buget_anaf: dict cu cel putin una din cheile:
+                    - 'cheltuieli_total' (RON direct)
+                    - 'cheltuieli_mil_ron' (milioane RON, din fetch_budget_transparenta)
+                    Optional: 'cap_salarii', 'cap_transferuri', 'cap_investitii' (RON).
+        contracte_seap: lista de contracte — accepta ambele scheme:
+                    - schema interna Python: 'valoare_ron', 'data_publicare'
+                    - schema export contracte.json: 'valoare', 'data'
+        an: anul de reconciliere (default 2025).
+
+    Returns:
+        Dict cu sumele agregate + procent vizibilitate. Toate sumele in RON.
+
+    Edge cases:
+        - total_anaf == 0  → procentele sunt 0, fara ZeroDivisionError
+        - gap < 0          → returnat ca 0 (estimarile depasesc totalul, probabil date incomplete)
+        - estimari_default_folosite → True daca buget_anaf nu are capitole detaliate
+    """
+    # --- Totalul ANAF: accepta RON direct sau milioane ---
+    if buget_anaf.get('cheltuieli_total'):
+        total_anaf = float(buget_anaf['cheltuieli_total'])
+    elif buget_anaf.get('cheltuieli_mil_ron'):
+        total_anaf = float(buget_anaf['cheltuieli_mil_ron']) * 1_000_000
+    else:
+        total_anaf = 0.0
+
+    # --- Total SEAP vizibil pentru anul cerut ---
+    # Accepta ambele scheme de campuri (interna: valoare_ron/data_publicare;
+    # export: valoare/data)
+    total_seap = sum(
+        float(c.get('valoare_ron') or c.get('valoare') or 0)
+        for c in contracte_seap
+        if str(an) in (c.get('data_publicare') or c.get('data') or '')
+    )
+
+    # --- Capitole non-SEAP ---
+    # Daca buget_anaf nu furnizeaza valori exacte, folosim praguri tipice UAT Ilfov.
+    are_capitole_detaliate = bool(buget_anaf.get('cap_salarii'))
+    salarii = float(buget_anaf.get('cap_salarii') or total_anaf * 0.45)
+    transferuri = float(buget_anaf.get('cap_transferuri') or total_anaf * 0.15)
+    investitii = float(buget_anaf.get('cap_investitii') or 0)
+
+    # --- Gap neexplicat ---
+    gap_raw = total_anaf - salarii - transferuri - total_seap - investitii
+    gap = max(gap_raw, 0.0)  # nu raportam gap negativ
+
+    procent_seap = round((total_seap / total_anaf * 100), 1) if total_anaf else 0.0
+    procent_gap  = round((gap / total_anaf * 100), 1) if total_anaf else 0.0
+
+    return {
+        'an': an,
+        'total_anaf_ron':           total_anaf,
+        'total_seap_ron':           total_seap,
+        'salarii_estimate_ron':     salarii,
+        'transferuri_ron':          transferuri,
+        'investitii_ron':           investitii,
+        'gap_neexplicat_ron':       gap,
+        'procent_vizibil_in_seap':  procent_seap,
+        'procent_gap':              procent_gap,
+        'estimari_default_folosite': not are_capitole_detaliate,
+    }
+
+
 def genereaza_raport_html(budget: dict, contracte: list, flags: list,
                            flags_noi: list, config: dict) -> str:
     """Generează raportul HTML complet."""
