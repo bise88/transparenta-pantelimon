@@ -25,6 +25,14 @@ from pathlib import Path
 import requests
 from bs4 import BeautifulSoup
 
+# Optional: risc_firma.py — indicatori financiari firme furnizoare (SQLite cache, TTL 30 zile)
+try:
+    from risc_firma import fetch_firma_anaf as _fetch_firma_anaf
+    from risc_firma import get_risk_panel_html as _get_risk_panel_html
+    _RISC_FIRMA_OK = True
+except ImportError:
+    _RISC_FIRMA_OK = False
+
 # ==============================================================================
 # CONFIGURARE — EDITEAZĂ ACESTE VALORI
 # ==============================================================================
@@ -2485,6 +2493,17 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
     for _fk, _rd in risc_firma.items():
         _rd["scor"] = min(100, _rd["n_critic"]*10 + _rd["n_major"]*5 + _rd["n_mediu"]*2)
 
+    # ── Pre-fetch date financiare firme furnizoare (opțional, cu cache SQLite) ──
+    _firma_profile: dict[str, dict] = {}
+    if _RISC_FIRMA_OK:
+        _cui_unici = {f.get('cif_furnizor', '') for f in flags_sortate if f.get('cif_furnizor')}
+        for _cui in sorted(_cui_unici):   # sorted → ordine deterministă în logs
+            try:
+                _firma_profile[_cui] = _fetch_firma_anaf(_cui)
+            except Exception as _e:
+                print(f"  [risc_firma] Eroare la fetch CUI {_cui}: {_e}")
+                _firma_profile[_cui] = {}
+
     flags_html = ""
     for idx, f in enumerate(flags_sortate, 1):
         culoare = culori.get(f["severitate"], "#999")
@@ -2536,6 +2555,16 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
         else:
             btn_firma = ''
 
+        # Panel date financiare firmă (risc_firma.py — opțional)
+        _cif_f = f.get('cif_furnizor', '')
+        if _RISC_FIRMA_OK and _cif_f and _cif_f in _firma_profile:
+            _firma_panel_html = _get_risk_panel_html(
+                _cif_f, _firma_profile[_cif_f],
+                f.get('data', ''), f.get('valoare', 0) or 0,
+            )
+        else:
+            _firma_panel_html = ''
+
         flags_html += f"""
         <div class="tp-flag"
              onclick="toggleFlag(this)"
@@ -2547,6 +2576,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
              data-contract-id="{contract_id}"
              data-type="{tip_attr}"
              data-procedure="{procedura_attr}"
+             data-supplier-cif="{_cif_f}"
              style="border-left:4px solid {culoare};background:#fff;padding:14px 18px;
                     border-radius:0 8px 8px 0;margin-bottom:10px;
                     box-shadow:0 1px 3px rgba(0,0,0,0.08);cursor:pointer"
@@ -2590,6 +2620,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
               </a>
               {btn_firma}
             </div>
+            {_firma_panel_html}
             <div style="margin-top:10px;padding:8px 12px;background:#F4F6F8;border-radius:6px;
                         font-size:11px;color:#666;line-height:1.6">
               ℹ️ <strong>Cum verifici în SEAP:</strong> apasă „Deschide în SEAP" de mai sus.
