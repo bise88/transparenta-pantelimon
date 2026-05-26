@@ -1,0 +1,157 @@
+# Monitor Transparență Bugetară — Pantelimon
+## Context proiect (pentru Claude Code)
+
+Acest proiect este o **inițiativă civică independentă** a unui membru USR Pantelimon (Alexandru, office@valisblue.com).
+Monitorizează automat contractele și achizițiile publice ale Primăriei Pantelimon (CUI 4420759) și publică un raport HTML pe GitHub Pages.
+
+---
+
+## Structura fișierelor
+
+```
+github-repo/
+├── monitor_pantelimon.py       # Scriptul principal — trage date SEAP, detectează red flags, generează HTML
+├── raport_transparenta.html    # Raportul generat (output-ul monitorului) — publicat pe GitHub Pages
+├── transparenta_pantelimon.html # Site static de prezentare (pagina principală)
+├── stare_anterioara.json       # State persistence — pentru a detecta flags NOI față de rularea anterioară
+├── contracte.json              # Export contracte (folosit de JS în HTML pentru "toate contractele firmei")
+├── requirements.txt            # Dependențe Python
+├── fix_si_push.bat             # RULEAZĂ MONITORUL + commit + push (scriptul principal de folosit pe Windows)
+├── push_acum.bat               # Doar push (fără a rula monitorul)
+├── ruleaza_monitor.bat         # Doar rulează monitorul, fără git
+├── CLAUDE.md                   # Acest fișier
+└── .github/workflows/          # GitHub Actions pentru rulare automată
+```
+
+**GitHub Pages URL:** `https://bise88.github.io/transparenta-pantelimon/`
+**Raport live:** `https://bise88.github.io/transparenta-pantelimon/raport_transparenta.html`
+
+---
+
+## Cum se rulează
+
+### Normal (recomandat pe Windows):
+```
+Double-click fix_si_push.bat
+```
+Sau din terminal:
+```bash
+py monitor_pantelimon.py
+git add raport_transparenta.html stare_anterioara.json contracte.json monitor_pantelimon.py transparenta_pantelimon.html
+git commit -m "Raport actualizat $(date +%d.%m.%Y)"
+git push origin main
+```
+
+### Atenție Python versiune:
+- Scriptul folosește f-string syntax compatibil cu **Python 3.10+**
+- Pe Windows rulează cu `py` (nu `python3`)
+- Nu rula din sandbox Linux — face request-uri de rețea care expiră
+
+---
+
+## Ce face monitor_pantelimon.py
+
+1. **Fetch date buget** din transparenta.eu (ANAF/MF) pentru CUI 4420759
+2. **Fetch contracte** din data.gov.ro (export oficial SEAP trimestrial, fișiere .xlsx)
+3. **Analizează HCL-uri** (Hotărâri Consiliu Local) de pe site-ul primăriei
+4. **Detectează red flags** — algoritmi de detectare a neregulilor:
+   - Algoritm 1: Achiziții directe aproape de prag (>97% din 130.000 RON)
+   - Algoritm 1b: Achiziție directă individuală PESTE pragul legal (>130.000 RON) → flag CRITIC
+   - Algoritm 2: Furnizor monopol (singur ofertant repetat)
+   - Algoritm 3: Fragmentare artificială (același furnizor, contracte similare, sumă combinată > prag)
+   - Algoritm 4: Contracte fără licitație (achiziție directă pentru valori mari)
+   - Algoritmi HCL: ședințe extraordinare excesive, hotărâri fără transparență
+5. **Generează raport HTML** cu:
+   - Statistici generale (nr. flags, nr. contracte, valoare totală)
+   - Lista flags sortată după severitate (CRITIC → MAJOR → MEDIU)
+   - Tabel contracte (primele 20)
+   - Grafice Chart.js (buget pe categorii, evoluție, distribuție proceduri)
+   - **Buton PDF/Print** (🖨️ Salvează ca PDF / Tipărește) — deschide toate detaliile și apelează window.print()
+   - **Buton SEAP** per flag — link direct la contractul specific în e-licitatie.ro
+
+---
+
+## Modificări recente importante (sesiunile anterioare)
+
+### Flag nou: ACHIZITIE_DIRECTA_PESTE_PRAG
+- Adăugat **Algoritm 1b** care detectează când un singur contract depășește individual pragul de 130.000 RON
+- Anterior existau doar flags pentru valoare combinată (fragmentare) — acum și pentru contract individual
+- Locație în cod: funcția `analizeaza_red_flags()`, imediat înainte de Algoritm 2
+
+### Fix buton SEAP
+- Anterior linkul ducea la pagina generică de list (`/list/0/0`) — apărea blank
+- Acum extrage ID-ul numeric din `contract_id` (ex: `achizitie-directa-2025-489392` → `489392`)
+- Construiește URL direct: `https://e-licitatie.ro/pub/notices/da-direct-acquisition/view/489392`
+- Funcție helper: `_seap_url(contract_id)` — definită înainte de `_fmt_ron`
+
+### Fix grafice Chart.js (transparenta_pantelimon.html)
+- Canvas-urile nu aveau înălțime explicită → Chart.js 4.x nu randiza nimic
+- Fix: `min-height: 280px` pe canvas, `maintainAspectRatio: false` în opțiunile chart-ului
+- Înălțimi explicite pe fiecare canvas: `style="height:320px"` etc.
+
+### Export PDF
+- Adăugat buton galben în header-ul raportului: "🖨️ Salvează ca PDF / Tipărește"
+- CSS `@media print` ascunde elementele interactive (`.no-print`) și afișează toate detaliile flag-urilor
+- Funcție JS `printRaport()` — deschide toate `.flag-detail`, ascunde `.flag-arrow`, apelează `window.print()`
+- Pentru a salva ca PDF: din dialogul de print alege "Salvare ca PDF" / "Save as PDF"
+
+### Faza 3 — Detectori batch 1 (PR #13, commit 40fee9e)
+
+4 funcții pure de detecție adăugate înainte de `analizeaza_red_flags()`:
+
+- **`detect_fragmentare_temporara(contracte, config)`** — §2.1: grupare (CUI, prefix 4 cuvinte), fereastră 90 zile, normalizare Rev.X; CRITIC dacă suma sub-prag > prag; acceptă schema internă și export
+- **`detect_concentrare_furnizor(contracte, config)`** — §2.2: top-3 furnizori; MAJOR >60%, CRITIC >80%; minim 3 furnizori distincți
+- **`detect_sedinte_extraordinare(statistici_hcl)`** — §2.6: funcție pură (refactorizat din `analizeaza_hcl()`); MAJOR >25%, CRITIC ≥40%; minim 3 ședințe
+- **`detect_publicare_intarziata(contracte, zile_prag=11)`** — §2.7: zile lucrătoare cu `holidays.Romania()`; MEDIU 12-20, MAJOR 21-30, CRITIC >30; graceful no-op fără `data_atribuire`
+
+Hooks integrate în `analizeaza_red_flags()` și `analizeaza_hcl()`.
+20/20 teste în `tests/test_detectors.py`. `requirements.txt`: adăugat `holidays>=0.46`.
+
+### Fix Python 3.10 compatibility
+- Înlocuit nested f-strings (`f"""..."""` în alt `f"""..."""`) cu variabila `btn_firma` pre-computată
+- Fișierul avea CRLF endings (Windows) — compatibil, nu schimba
+
+---
+
+## Praguri legale folosite (Legea 98/2016)
+
+```python
+"prag_servicii_furnizare": 130_000,   # RON — sub acest prag = cumpărare directă legală
+"prag_lucrari": 500_000,              # RON — sub acest prag = procedură simplificată
+"marja_fragmentare_pct": 0.97,        # dacă valoarea > 97% din prag = suspect
+```
+
+---
+
+## Status git (la data generării acestui fișier)
+
+- **Ultimul push reușit:** commit `40fee9e` (PR #13) — "Faza 3: 4 detectori noi (batch 1)"
+- **Branch main:** la zi după merge PR #12 (Faza 2.5) + PR #13 (Faza 3 batch 1)
+- **De făcut:** run `fix_si_push.bat` pentru a regenera `raport_transparenta.html` cu noii detectori activi
+
+---
+
+## Instituții la care pot fi depuse sesizări (context civic)
+
+Neregulile detectate de monitor pot fi sesizate la:
+- **Curtea de Conturi** — control financiar, achiziții publice (curteadeconturi.ro)
+- **ANAP** — Agenția Națională Achiziții Publice (anap.gov.ro) — specific achiziții
+- **ANI** — Agenția Națională de Integritate — conflict de interese
+- **DNA** — pentru fapte penale (corupție, frauda fonduri publice)
+- **Prefectura Ilfov** — control legalitate acte administrative locale
+- **Consiliul Județean Ilfov** — tutela administrativă
+
+---
+
+## Dependențe Python
+
+```
+requests
+beautifulsoup4
+openpyxl
+PyMuPDF (fitz)     # OCR PDF-uri digitale
+pytesseract        # OCR PDF-uri scanate
+Pillow
+```
+
+Instalare: `pip install -r requirements.txt`
