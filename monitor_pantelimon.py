@@ -1118,6 +1118,65 @@ def detect_semnare_zile_nelucratoare(contracte: list,
     return sorted(flags, key=lambda f: f["valoare"], reverse=True)
 
 
+# Județe adiacente Ilfov (considerate acceptabile pentru servicii locale)
+_JUDETE_ADIACENTE_ILFOV = frozenset({'IF', 'B', 'GR', 'CL', 'IL', 'PH', 'DB'})
+# Cuvinte-cheie care indică servicii cu caracter local (în mod normal contractate din zonă)
+_KEYWORDS_LOCAL = [
+    'curatenie', 'paza', 'mentenanta', 'salubrizare', 'deszapezire',
+    'iluminat', 'spatii verzi', 'spatii publice', 'cosit', 'deratizare',
+    'dezinfectie', 'dezinsectie', 'gunoi', 'ghenare', 'salubritate',
+]
+
+
+def detect_geographic_anomaly(contracte: list, firme_openapi: dict) -> list:
+    """
+    §2.5 AUDIT.md — Servicii locale atribuite firmelor cu sediu departe de Ilfov.
+
+    Necesită date din openapi.ro (CONFIG['openapi_ro_key']): câmpul 'judet' în firme_openapi.
+    Dacă openapi.ro nu e configurat sau nu returnează 'judet', funcția returnează [].
+
+    Acceptă schema internă (castigator_cui / valoare_ron) și export (cui / valoare).
+    """
+    flags = []
+    for c in contracte:
+        obiect = (c.get('titlu') or c.get('obiect') or '').lower()
+        if not any(k in obiect for k in _KEYWORDS_LOCAL):
+            continue
+
+        cui = (c.get('castigator_cui') or c.get('cui') or '').strip().lstrip('RO')
+        if not cui:
+            continue
+        info = firme_openapi.get(cui) or firme_openapi.get('RO' + cui)
+        if not info:
+            continue
+
+        judet = (info.get('judet') or '').upper().strip()
+        if not judet or judet in _JUDETE_ADIACENTE_ILFOV:
+            continue  # fără date sau în zonă acceptabilă → nu e anomalie
+
+        furnizor = (c.get('castigator') or c.get('furnizor') or '')
+        valoare  = float(c.get('valoare_ron') or c.get('valoare') or 0)
+
+        flags.append({
+            'tip': 'GEOGRAFIE_ANORMALA',
+            'severitate': 'MEDIU',
+            'titlu': f'Servicii locale de la firmă din {judet}',
+            'descriere': (
+                f'Servicii de tip "{obiect[:60]}" atribuite firmei {furnizor[:55]} '
+                f'cu sediu în {judet}. Serviciile locale se contractează de obicei '
+                f'cu firme din Ilfov sau județele limitrofe.'
+            ),
+            'furnizor': furnizor,
+            'cif_furnizor': cui,
+            'valoare': valoare,
+            'data': c.get('data_publicare') or c.get('data') or '',
+            'contract_id': c.get('contract_id') or c.get('contract_numar') or '',
+            'tip_procedura': c.get('tip_procedura') or '',
+        })
+
+    return sorted(flags, key=lambda f: f['valoare'], reverse=True)
+
+
 def analizeaza_red_flags(contracte: list, config: dict) -> list:
     """
     Rulează toți algoritmii de detecție pe lista de contracte.
@@ -1708,6 +1767,11 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
     # ── §2.7-audit Semnare în zile nelucrătoare (weekend / sărbătoare legală)
     flags.extend(detect_semnare_zile_nelucratoare(contracte))
 
+    # ── §2.5-audit Anomalie geografică (servicii locale de la firme din alt județ)
+    # Necesită openapi.ro key în config → firme_openapi conține câmpul 'judet'
+    if firme_openapi:
+        flags.extend(detect_geographic_anomaly(contracte, firme_openapi))
+
     # Deduplicare (același furnizor poate apărea în mai mulți algoritmi)
     flags_unice = []
     ids_vazute = set()
@@ -1935,6 +1999,8 @@ def _get_actionariat_openapi(cui_list: list, api_key: str, fisier_cache: str) ->
             "stare": data.get("stare", ""),
             "ultima_declaratie": data.get("ultima_declaratie") or "",
             "recom_url": recom,
+            "judet": data.get("judet") or data.get("judet_cod") or "",   # pentru §2.5
+            "adresa": data.get("adresa") or "",                            # pentru §2.5
             "sursa": "openapi.ro",
             "data_cache": datetime.now().strftime("%Y-%m-%d"),
         }
@@ -2240,6 +2306,7 @@ def calculeaza_analiza_per_tip(flags: list, contracte: list) -> dict:
         "CONTRACT_IN_PRIMA_LUNA":    {"label": "Contract în prima lună",    "emoji": "⚡", "culoare": "#922B21"},
         "DECLARATIE_FISCALA_VECHE":  {"label": "Declarație fiscală veche",  "emoji": "📭", "culoare": "#7D3C98"},
         "RISC_SISTEMIC_FIRMA":       {"label": "Risc sistemic firmă",       "emoji": "🔥", "culoare": "#641E16"},
+        "GEOGRAFIE_ANORMALA":        {"label": "Anomalie geografică",       "emoji": "🗺️", "culoare": "#117A65"},
 
     }
 
