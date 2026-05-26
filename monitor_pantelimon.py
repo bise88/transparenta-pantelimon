@@ -527,24 +527,12 @@ def analizeaza_hcl(stare_anterioara: dict) -> dict:
 
     flags_hcl = []
 
-    # FLAG 1: Rată ridicată de ședințe extraordinare
-    if pct_extra > 25:
-        flags_hcl.append({
-            "tip": "sedinte_extraordinare_excesive",
-            "severitate": "MAJOR" if pct_extra < 40 else "CRITIC",
-            "titlu": f"Rată ridicată de ședințe extraordinare: {pct_extra}%",
-            "descriere": (
-                f"Din {total} ședințe de Consiliu Local analizate, {len(extraordinare)} ({pct_extra}%) "
-                f"sunt 'extraordinare cu convocare de îndată'. Norma legală implică urgențe reale — "
-                f"o rată peste 25% sugerează că procedura de urgență este folosită sistematic "
-                f"pentru a ocoli consultarea publică obligatorie (Legea 52/2003)."
-            ),
-            "contract_id": "HCL-META-001",
-            "valoare": 0,
-            "furnizor": "Consiliul Local Pantelimon",
-            "data": datetime.now().strftime("%Y-%m-%d"),
-            "tip_procedura": "Sedinta CL extraordinara",
-        })
+    # FLAG 1: Rată ridicată de ședințe extraordinare (§2.6 — funcție pură)
+    flags_hcl.extend(detect_sedinte_extraordinare({
+        "total_hcl": total,
+        "extraordinare": len(extraordinare),
+        "pct_extraordinare": pct_extra,
+    }))
 
     # FLAG 2: OCR pe HCL-urile noi
     if ocr_disponibil:
@@ -640,6 +628,279 @@ def calculeaza_scor_transparenta(toate_flags: list, contracte: list, statistici_
 # ==============================================================================
 # 4. ALGORITMI DE DETECȚIE RED FLAGS (contracte SEAP)
 # ==============================================================================
+
+# ──────────────────────────────────────────────────────────────────────────────
+# §2.1  Detector fragmentare temporară
+# ──────────────────────────────────────────────────────────────────────────────
+
+def detect_fragmentare_temporara(contracte: list, config: dict) -> list:
+    """
+    §2.1 — Fragmentare temporară: contracte individuale sub-prag ale aceluiași furnizor
+    cu titlu similar, în fereastră de 90 de zile, cu sumă combinată > prag legal.
+    Diferit de Algoritm 3 (perechi consecutive): agregă TOATE contractele din fereastră.
+    Acceptă atât schema internă (valoare_ron/castigator_cui) cât și schema export (valoare/cui).
+    """
+    import re as _re2
+    from collections import defaultdict as _ddict2
+    _rev_re = _re2.compile(r'\s*\(Rev\.\d+\)\s*', _re2.IGNORECASE)
+    prag = config.get("prag_servicii_furnizare", 130_000)
+
+    def _val(c):
+        return float(c.get("valoare_ron") or c.get("valoare") or 0)
+
+    def _data_str(c):
+        return (c.get("data_publicare") or c.get("data") or "").strip()
+
+    grupe = _ddict2(list)
+    for c in contracte:
+        cui = (c.get("castigator_cui") or c.get("cui") or "").strip()
+        if not cui:
+            continue
+        titlu_canonic = _rev_re.sub("", c.get("titlu", "")).strip().lower()
+        prefix = " ".join(titlu_canonic.split()[:4])
+        if not prefix:
+            continue
+        try:
+            data_c = datetime.strptime(_data_str(c)[:10], "%Y-%m-%d")
+        except ValueError:
+            continue
+        grupe[(cui, prefix)].append((data_c, c))
+
+    flags = []
+    for (cui, prefix), items in grupe.items():
+        if len(items) < 2:
+            continue
+        items_sorted = sorted(items, key=lambda x: x[0])
+
+        best_fereastra = None
+        best_suma = 0.0
+
+        for i in range(len(items_sorted)):
+            d_start = items_sorted[i][0]
+            fereastra = [c for d, c in items_sorted[i:] if (d - d_start).days <= 90]
+            sub_prag = [c for c in fereastra if _val(c) < prag]
+            if len(sub_prag) < 2:
+                continue
+            suma = sum(_val(c) for c in sub_prag)
+            if suma > prag and suma > best_suma:
+                best_suma = suma
+                best_fereastra = sub_prag
+
+        if best_fereastra is None:
+            continue
+
+        furnizor = (best_fereastra[0].get("castigator") or
+                    best_fereastra[0].get("firma") or cui)
+        ids = ",".join((c.get("id") or "") for c in best_fereastra[:3])
+        numar0 = best_fereastra[0].get("numar") or best_fereastra[0].get("id") or "–"
+        d0 = _data_str(best_fereastra[0])
+        d1 = _data_str(best_fereastra[-1])
+        flags.append({
+            "tip": "FRAGMENTARE_TEMPORARA",
+            "severitate": "CRITIC",
+            "titlu": (f"Fragmentare temporară: {len(best_fereastra)} contracte sub-prag, "
+                      f"sumă combinată {_fmt_ron(best_suma)}"),
+            "descriere": (
+                f'Furnizor "{furnizor}" (CUI {cui}) a primit {len(best_fereastra)} contracte '
+                f'individuale sub pragul de {_fmt_ron(prag)}, cu titluri similare '
+                f'("{prefix[:50]}"), în fereastră de 90 de zile ({d0} – {d1}). '
+                f'Sumă combinată: {_fmt_ron(best_suma)}, care depășește pragul legal. '
+                f'Fiecare contract individual evită licitația, dar suma combinată ar fi impus '
+                f'o procedură competitivă. Art. 11 alin. (1) Legea 98/2016 interzice '
+                f'fragmentarea artificială pentru eludarea pragurilor. '
+                f'Sancțiuni: contravenție art. 224 L98/2016, amendă 2.000–15.000 RON.'
+            ),
+            "contract_id": ids,
+            "contract_numar": f"{numar0} + {len(best_fereastra) - 1} altele",
+            "valoare": best_suma,
+            "furnizor": furnizor,
+            "cif_furnizor": cui,
+            "data": d0,
+            "tip_procedura": (best_fereastra[0].get("tip_procedura") or
+                               best_fereastra[0].get("tip") or ""),
+            "nr_contracte": len(best_fereastra),
+        })
+    return sorted(flags, key=lambda f: f["valoare"], reverse=True)
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# §2.2  Detector concentrare furnizor
+# ──────────────────────────────────────────────────────────────────────────────
+
+def detect_concentrare_furnizor(contracte: list, config: dict) -> list:
+    """
+    §2.2 — Concentrare furnizor: top 3 furnizori dețin > 60% din valoarea totală.
+    Diferit de Algoritm 5 (FURNIZOR_DOMINANT per-firmă): analizează concentrarea agregată.
+    Acceptă schema internă (valoare_ron/castigator_cui) și export (valoare/cui).
+    """
+    from collections import defaultdict as _ddict3
+    valori = _ddict3(float)
+    cui_to_name: dict = {}
+    for c in contracte:
+        cui = (c.get("castigator_cui") or c.get("cui") or "").strip()
+        if not cui:
+            continue
+        val = float(c.get("valoare_ron") or c.get("valoare") or 0)
+        valori[cui] += val
+        if cui not in cui_to_name:
+            cui_to_name[cui] = c.get("castigator") or c.get("firma") or cui
+
+    total = sum(valori.values())
+    if total <= 0 or len(valori) < 3:
+        return []
+
+    top3 = sorted(valori.items(), key=lambda x: x[1], reverse=True)[:3]
+    suma_top3 = sum(v for _, v in top3)
+    pct_top3 = suma_top3 / total * 100
+
+    if pct_top3 < 60.0:
+        return []
+
+    severitate = "CRITIC" if pct_top3 > 80 else "MAJOR"
+    top3_desc = ", ".join(
+        f'"{cui_to_name.get(cui, cui)}" ({v / total * 100:.0f}%)'
+        for cui, v in top3
+    )
+    return [{
+        "tip": "CONCENTRARE_FURNIZOR",
+        "severitate": severitate,
+        "titlu": f"Concentrare ridicată: top 3 furnizori dețin {pct_top3:.0f}% din contracte",
+        "descriere": (
+            f"Primii 3 furnizori ({top3_desc}) dețin împreună {pct_top3:.0f}% "
+            f"din valoarea totală contractată ({_fmt_ron(suma_top3)} din {_fmt_ron(total)}). "
+            f"Concentrare ridicată indică posibile specificații preferențiale sau relații "
+            f"privilegiate (art. 57-64 Legea 98/2016 — conflicte de interese). "
+            f"Referință: concentrare top-3 > 60% din valoarea totală este considerată "
+            f"indicator de risc pentru achizițiile publice ale UAT."
+        ),
+        "contract_id": "global",
+        "contract_numar": "–",
+        "valoare": suma_top3,
+        "furnizor": "Multiple",
+        "cif_furnizor": "",
+        "data": datetime.now().strftime("%Y-%m-%d"),
+        "tip_procedura": "Multiple",
+        "top3_furnizori": [
+            {"cui": cui, "valoare": v, "pct": round(v / total * 100, 1)}
+            for cui, v in top3
+        ],
+    }]
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# §2.6  Detector ședințe extraordinare excesive (funcție pură testabilă)
+# ──────────────────────────────────────────────────────────────────────────────
+
+def detect_sedinte_extraordinare(statistici_hcl: dict) -> list:
+    """
+    §2.6 — Rată ridicată ședințe extraordinare (funcție pură, testabilă).
+    Input: dict cu cheile total_hcl, extraordinare, pct_extraordinare.
+    Prag: > 25% → MAJOR; >= 40% → CRITIC (Legea 52/2003, art. 7).
+    """
+    total = statistici_hcl.get("total_hcl", 0)
+    n_extra = statistici_hcl.get("extraordinare", 0)
+    pct_extra = statistici_hcl.get("pct_extraordinare", 0)
+
+    if total < 3 or pct_extra <= 25:
+        return []
+
+    severitate = "CRITIC" if pct_extra >= 40 else "MAJOR"
+    return [{
+        "tip": "SEDINTE_EXTRAORDINARE_EXCESIVE",
+        "severitate": severitate,
+        "titlu": f"Rată ridicată de ședințe extraordinare: {pct_extra}%",
+        "descriere": (
+            f"Din {total} ședințe de Consiliu Local analizate, {n_extra} ({pct_extra}%) "
+            f"sunt 'extraordinare cu convocare de îndată'. O rată peste 25% sugerează că "
+            f"procedura de urgență este folosită sistematic pentru a ocoli consultarea "
+            f"publică obligatorie (Legea 52/2003, art. 7 — transparența decizională). "
+            f"Norma tipică: sub 15% ședințe extraordinare per an."
+        ),
+        "contract_id": "HCL-META",
+        "contract_numar": "–",
+        "valoare": 0,
+        "furnizor": "Consiliul Local",
+        "cif_furnizor": "",
+        "data": datetime.now().strftime("%Y-%m-%d"),
+        "tip_procedura": "Sedinta CL",
+        "pct_extraordinare": pct_extra,
+        "total_hcl": total,
+    }]
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# §2.7  Detector publicare contract întârziată
+# ──────────────────────────────────────────────────────────────────────────────
+
+def detect_publicare_intarziata(contracte: list, zile_prag: int = 11) -> list:
+    """
+    §2.7 — Publicare tardivă: data_publicare − data_atribuire > zile_prag zile lucrătoare.
+    Legea 98/2016, art. 219: publicare în max 11 zile lucrătoare de la semnarea contractului.
+    Contractele fără câmpul data_atribuire sunt sarite (câmp opțional, va fi adăugat
+    în schema SEAP când fetch-ul permite extragerea datei de atribuire).
+    Necesită pachetul `holidays` (pip install holidays).
+    """
+    try:
+        import holidays as _holidays
+        _ro_holidays = _holidays.Romania()
+    except ImportError:
+        _ro_holidays = set()
+
+    def _zile_lucratoare(d_start, d_end):
+        if d_end <= d_start:
+            return 0
+        zile = 0
+        d = d_start
+        while d < d_end:
+            if d.weekday() < 5 and d not in _ro_holidays:
+                zile += 1
+            d += timedelta(days=1)
+        return zile
+
+    flags = []
+    for c in contracte:
+        data_attr_str = (c.get("data_atribuire") or "").strip()
+        data_pub_str  = (c.get("data_publicare") or c.get("data") or "").strip()
+        if not data_attr_str or not data_pub_str:
+            continue
+        try:
+            d_attr = datetime.strptime(data_attr_str[:10], "%Y-%m-%d")
+            d_pub  = datetime.strptime(data_pub_str[:10], "%Y-%m-%d")
+        except ValueError:
+            continue
+        if d_pub <= d_attr:
+            continue
+        zl = _zile_lucratoare(d_attr, d_pub)
+        if zl <= zile_prag:
+            continue
+        v = float(c.get("valoare_ron") or c.get("valoare") or 0)
+        if v < 10_000:
+            continue
+        severitate = "CRITIC" if zl > 30 else "MAJOR" if zl > 20 else "MEDIU"
+        flags.append({
+            "tip": "PUBLICARE_INTARZIATA",
+            "severitate": severitate,
+            "titlu": f"Contract publicat cu {zl} zile lucrătoare întârziere",
+            "descriere": (
+                f'Contractul "{(c.get("titlu") or "")[:60]}" ({_fmt_ron(v)}) '
+                f'atribuit la {data_attr_str} a fost publicat în SEAP la {data_pub_str}: '
+                f'{zl} zile lucrătoare întârziere (prag legal: {zile_prag} z.l.). '
+                f'Legea 98/2016, art. 219 impune publicarea în cel mult 11 zile lucrătoare '
+                f'de la data încheierii contractului. Publicarea tardivă diminuează '
+                f'transparența și poate fi sancționată conform art. 224 L98/2016.'
+            ),
+            "contract_id": c.get("id") or "",
+            "contract_numar": c.get("numar") or "",
+            "valoare": v,
+            "furnizor": c.get("castigator") or c.get("firma") or "",
+            "cif_furnizor": c.get("castigator_cui") or c.get("cui") or "",
+            "data": data_pub_str,
+            "data_atribuire": data_attr_str,
+            "tip_procedura": c.get("tip_procedura") or c.get("tip") or "",
+            "zile_lucratoare_intarziere": zl,
+        })
+    return sorted(flags, key=lambda f: f["zile_lucratoare_intarziere"], reverse=True)
+
 
 def analizeaza_red_flags(contracte: list, config: dict) -> list:
     """
@@ -1212,6 +1473,15 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
                 "tip_procedura": "Multiple",
                 "tipuri_detectate": list(tipuri),
             })
+
+    # ── §2.1 Fragmentare temporară (fereastră 90 zile, toate contractele)
+    flags.extend(detect_fragmentare_temporara(contracte, config))
+
+    # ── §2.2 Concentrare furnizor (top-3 > 60% din valoare totală)
+    flags.extend(detect_concentrare_furnizor(contracte, config))
+
+    # ── §2.7 Publicare întârziată (necesită data_atribuire — graceful no-op dacă lipsește)
+    flags.extend(detect_publicare_intarziata(contracte))
 
     # Deduplicare (același furnizor poate apărea în mai mulți algoritmi)
     flags_unice = []
