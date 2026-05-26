@@ -902,6 +902,214 @@ def detect_publicare_intarziata(contracte: list, zile_prag: int = 11) -> list:
     return sorted(flags, key=lambda f: f["zile_lucratoare_intarziere"], reverse=True)
 
 
+def detect_valori_identice_aceeasi_zi(contracte: list,
+                                       min_firme: int = 2,
+                                       min_valoare_ron: float = 100_000) -> list:
+    """§2.1-audit — Contracte cu valoare EXACT identică atribuite la firme DIFERITE
+    în aceeași zi. Indicator clasic de împărțire artificială a unui lot.
+
+    Acceptă schema internă (valoare_ron / castigator_cui / data_publicare)
+    și schema export (valoare / cui / data).
+    """
+    from collections import defaultdict as _dd2
+    from datetime import datetime as _dt2
+
+    def _val(c):
+        return c.get("valoare_ron") or c.get("valoare") or 0.0
+
+    def _cui(c):
+        return c.get("castigator_cui") or c.get("cui") or ""
+
+    def _data(c):
+        raw = c.get("data_publicare") or c.get("data") or ""
+        return raw[:10]
+
+    def _firma(c):
+        return c.get("castigator") or c.get("firma") or ""
+
+    grupe = _dd2(list)
+    for c in contracte:
+        val = float(_val(c))
+        cui = _cui(c)
+        data = _data(c)
+        if not data or not cui or val < min_valoare_ron:
+            continue
+        try:
+            _dt2.strptime(data, "%Y-%m-%d")
+        except ValueError:
+            continue
+        grupe[(data, val)].append(c)
+
+    flags = []
+    for (data, val), ctrs in grupe.items():
+        firme_unice = {_cui(c) for c in ctrs}
+        if len(firme_unice) < min_firme:
+            continue
+        firme_names = sorted({_firma(c) for c in ctrs})
+        flags.append({
+            "tip": "VALORI_IDENTICE_ACEEASI_ZI",
+            "severitate": "CRITIC",
+            "titlu": f"{len(ctrs)} contracte de valoare identică ({val:,.0f} RON) în aceeași zi",
+            "descriere": (
+                f"În data de {data}, {len(firme_unice)} firme diferite au primit contracte cu "
+                f"valoare EXACT identică ({val:,.0f} RON fiecare). "
+                f"Total: {val * len(ctrs):,.0f} RON. "
+                f"Firme: {', '.join(firme_names[:5])}{'...' if len(firme_names) > 5 else ''}. "
+                f"Pattern clasic de împărțire artificială a unui lot (art. 11 alin. (1) L98/2016)."
+            ),
+            "data": data,
+            "valoare": val * len(ctrs),
+            "valoare_per_contract": val,
+            "nr_firme": len(firme_unice),
+            "nr_contracte": len(ctrs),
+            "firme": firme_names,
+            "legi": ["L98/2016 art.11 (interzicerea fragmentării artificiale)"],
+        })
+    return sorted(flags, key=lambda f: f["valoare"], reverse=True)
+
+
+def detect_burst_contracte(contracte: list,
+                            prag_nr: int = 5,
+                            min_valoare_ron: float = 50_000) -> list:
+    """§2.2-audit — Detectează zile cu volum anormal de contracte (burst).
+
+    Semnalează:
+    - zile cu ≥ prag_nr contracte și valoare totală ≥ min_valoare_ron
+    - weekend-uri cu contracte semnificative (valoare totală > 200.000 RON)
+
+    Acceptă schema internă și schema export.
+    """
+    from collections import defaultdict as _dd3
+    from datetime import datetime as _dt3
+
+    def _val(c):
+        return float(c.get("valoare_ron") or c.get("valoare") or 0)
+
+    def _data(c):
+        return (c.get("data_publicare") or c.get("data") or "")[:10]
+
+    pe_zi = _dd3(list)
+    for c in contracte:
+        data = _data(c)
+        if data and float(_val(c)) > 0:
+            try:
+                _dt3.strptime(data, "%Y-%m-%d")
+                pe_zi[data].append(c)
+            except ValueError:
+                pass
+
+    flags = []
+    for data, ctrs in pe_zi.items():
+        valoare_zi = sum(_val(c) for c in ctrs)
+        try:
+            zi_sapt = _dt3.strptime(data, "%Y-%m-%d").weekday()
+        except ValueError:
+            continue
+        este_weekend = zi_sapt >= 5  # 5=Sâmbătă, 6=Duminică
+
+        # Burst volum mare (≥ prag_nr contracte)
+        if len(ctrs) >= prag_nr and valoare_zi >= min_valoare_ron:
+            flags.append({
+                "tip": "BURST_CONTRACTE",
+                "severitate": "MAJOR" if len(ctrs) >= 10 else "MEDIU",
+                "titlu": f"{len(ctrs)} contracte semnate într-o singură zi ({data})",
+                "descriere": (
+                    f"În {data} s-au semnat {len(ctrs)} contracte cu valoare totală "
+                    f"{valoare_zi:,.0f} RON."
+                    + (" Atribuire în weekend — zi nelucrătoare." if este_weekend else "")
+                ),
+                "data": data,
+                "valoare": valoare_zi,
+                "nr_contracte": len(ctrs),
+                "weekend": este_weekend,
+            })
+        # Weekend cu valoare mare (chiar sub prag_nr)
+        elif este_weekend and valoare_zi >= 200_000:
+            flags.append({
+                "tip": "BURST_CONTRACTE",
+                "severitate": "MEDIU",
+                "titlu": f"Contracte semnificative semnate în weekend ({data})",
+                "descriere": (
+                    f"În {data} (weekend) s-au semnat {len(ctrs)} contracte "
+                    f"cu valoare totală {valoare_zi:,.0f} RON. "
+                    f"Semnarea în zile nelucrătoare ridică întrebări despre urgența declarată."
+                ),
+                "data": data,
+                "valoare": valoare_zi,
+                "nr_contracte": len(ctrs),
+                "weekend": True,
+            })
+    return sorted(flags, key=lambda f: f["valoare"], reverse=True)
+
+
+def detect_semnare_zile_nelucratoare(contracte: list,
+                                      min_valoare_ron: float = 50_000) -> list:
+    """§2.7-audit — Contracte semnate în weekend sau sărbătoare legală românească.
+
+    Acceptă schema internă (valoare_ron / data_publicare) și export (valoare / data).
+    Folosește `holidays` cu fallback la set gol dacă pachetul nu e instalat.
+    """
+    from datetime import datetime as _dt4
+
+    try:
+        import holidays as _hol
+        _ro_holidays = _hol.Romania()
+    except ImportError:
+        _ro_holidays = set()
+
+    def _val(c):
+        return float(c.get("valoare_ron") or c.get("valoare") or 0)
+
+    def _data(c):
+        return (c.get("data_publicare") or c.get("data") or "")[:10]
+
+    def _firma(c):
+        return c.get("castigator") or c.get("firma") or ""
+
+    flags = []
+    for c in contracte:
+        val = _val(c)
+        if val < min_valoare_ron:
+            continue
+        data_str = _data(c)
+        if not data_str:
+            continue
+        try:
+            d = _dt4.strptime(data_str, "%Y-%m-%d").date()
+        except ValueError:
+            continue
+
+        este_weekend = d.weekday() >= 5
+        este_sarbatoare = d in _ro_holidays
+        if not (este_weekend or este_sarbatoare):
+            continue
+
+        tip_zi = "weekend" if este_weekend else "sărbătoare legală"
+        tip_sarbatoare = _ro_holidays.get(d, "") if este_sarbatoare else ""
+        descriere_zi = f" ({tip_sarbatoare})" if tip_sarbatoare else ""
+
+        flags.append({
+            "tip": "SEMNARE_ZI_NELUCRATOARE",
+            "severitate": "MEDIU",
+            "titlu": f"Contract semnat în {tip_zi} — {data_str}",
+            "descriere": (
+                f"Contractul de {val:,.0f} RON"
+                + (f' (firmă: {_firma(c)})' if _firma(c) else '')
+                + f" a fost semnat în {tip_zi}{descriere_zi}. "
+                f"Semnarea în zile nelucrătoare poate indica urgență nejustificată "
+                f"sau proceduri grăbite pentru a evita controlul. "
+                f"Verificați dacă a existat o situație de urgență documentată."
+            ),
+            "data": data_str,
+            "valoare": val,
+            "furnizor": _firma(c),
+            "tip_zi": tip_zi,
+            "weekend": este_weekend,
+            "sarbatoare": este_sarbatoare,
+        })
+    return sorted(flags, key=lambda f: f["valoare"], reverse=True)
+
+
 def analizeaza_red_flags(contracte: list, config: dict) -> list:
     """
     Rulează toți algoritmii de detecție pe lista de contracte.
@@ -1482,6 +1690,15 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
 
     # ── §2.7 Publicare întârziată (necesită data_atribuire — graceful no-op dacă lipsește)
     flags.extend(detect_publicare_intarziata(contracte))
+
+    # ── §2.1-audit Valori identice la firme diferite în aceeași zi
+    flags.extend(detect_valori_identice_aceeasi_zi(contracte))
+
+    # ── §2.2-audit Burst contracte — volum anormal într-o singură zi
+    flags.extend(detect_burst_contracte(contracte))
+
+    # ── §2.7-audit Semnare în zile nelucrătoare (weekend / sărbătoare legală)
+    flags.extend(detect_semnare_zile_nelucratoare(contracte))
 
     # Deduplicare (același furnizor poate apărea în mai mulți algoritmi)
     flags_unice = []
