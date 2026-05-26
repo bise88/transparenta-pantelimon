@@ -350,6 +350,7 @@ html[data-tp-theme="dark"] .tp-anap-btn {
       { href: 'index.html',                 label: '🏠 Acasă' },
       { href: 'raport_transparenta.html',   label: '🚩 Nereguli' },
       { href: 'transparenta_pantelimon.html', label: '📊 Buget' },
+      { href: 'despre.html',                label: 'ℹ️ Despre' },
     ];
 
     const linksHTML = links.map(l => {
