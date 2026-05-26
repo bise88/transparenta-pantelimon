@@ -400,8 +400,12 @@ html[data-tp-theme="dark"] .tp-anap-btn {
   // DETECȚIE CARDURI (raport_transparenta.html)
   // ──────────────────────────────────────────────────────────────
   function detectCards() {
+    // Strategie 0 (NOUĂ, prioritară): clasa semantică explicită .tp-flag
+    let cards = $$('.tp-flag[data-severity]');
+    if (cards.length >= 5) return cards;
+
     // Strategie 1: <details> care conțin severitate
-    let cards = $$('details').filter(d => /CRITIC|MAJOR|MEDIU/.test(d.textContent));
+    cards = $$('details').filter(d => /CRITIC|MAJOR|MEDIU/.test(d.textContent));
     if (cards.length >= 5) return cards;
 
     // Strategie 2: orice element cu clasă conținând "card"/"nereg"/"issue"/"flag"
@@ -432,6 +436,27 @@ html[data-tp-theme="dark"] .tp-anap-btn {
   }
 
   function parseCard(el, idx) {
+    // Cale rapidă: data attributes semantice (generate de monitor_pantelimon.py)
+    if (el.dataset.severity) {
+      const sumRaw = parseFloat(el.dataset.sumRon || '0') || 0;
+      return {
+        idx,
+        el,
+        severity: el.dataset.severity,
+        title: (el.querySelector('[class*="flag-title"]') || el.querySelector('strong, b')
+               )?.textContent.trim() || el.textContent.trim().slice(0, 80),
+        supplier: el.dataset.supplier || '',
+        supplierCif: el.dataset.supplierCif || '',
+        sum: sumRaw,
+        date: el.dataset.date || '',
+        contract: el.dataset.contractId || '',
+        procedure: el.dataset.procedure || '',
+        type: el.dataset.type || '',
+        haystack: el.textContent.toLowerCase().replace(/\s+/g, ' ').slice(0, 4000),
+      };
+    }
+
+    // Cale veche (fallback regex) — pentru HTML generat fără data attributes
     const txt = el.textContent;
     let sev = 'MEDIU';
     if (/\bCRITIC\b/.test(txt))      sev = 'CRITIC';
@@ -491,6 +516,36 @@ html[data-tp-theme="dark"] .tp-anap-btn {
   }
 
   // ──────────────────────────────────────────────────────────────
+  // CITIRE DATE DIN <script id="tp-data"> (Faza 2-B)
+  // ──────────────────────────────────────────────────────────────
+  function loadDataFromJson() {
+    const tag = document.getElementById('tp-data');
+    if (!tag) return null;
+    try {
+      const data = JSON.parse(tag.textContent);
+      if (!data.flags || !data.flags.length) return null;
+      return data.flags.map((f, i) => ({
+        idx: i,
+        el: document.getElementById(f.anchor) || null,
+        severity: f.severity || 'MEDIU',
+        title: f.title || '',
+        supplier: f.supplier || '',
+        supplierCif: f.supplier_cif || '',
+        sum: f.sum_ron || 0,
+        date: f.date || '',
+        contract: f.contract_id || '',
+        procedure: f.procedure || '',
+        type: f.type || '',
+        haystack: ((f.title || '') + ' ' + (f.supplier || '') + ' ' +
+                   (f.explanation || '') + ' ' + (f.contract_id || '')).toLowerCase(),
+      })).filter(it => it.el);
+    } catch (e) {
+      console.warn('[tp-enhance] tp-data invalid JSON, fallback la DOM parsing:', e);
+      return null;
+    }
+  }
+
+  // ──────────────────────────────────────────────────────────────
   // PAGINA RAPORT
   // ──────────────────────────────────────────────────────────────
   function enhanceReport() {
@@ -500,8 +555,11 @@ html[data-tp-theme="dark"] .tp-anap-btn {
       return;
     }
 
-    // Indexare
-    const items = cardEls.map((el, i) => parseCard(el, i));
+    // Indexare — preferă tp-data JSON (Faza 2-B), fallback la DOM parsing
+    const jsonItems = loadDataFromJson();
+    const items = jsonItems && jsonItems.length >= cardEls.length * 0.8
+      ? jsonItems
+      : cardEls.map((el, i) => parseCard(el, i));
 
     // Butoane sesizare ANAP pe fiecare card
     injectAnapButtons(items);
