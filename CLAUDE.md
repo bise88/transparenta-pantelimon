@@ -121,6 +121,27 @@ git push origin main
 - `state.shellFilter` exclusiv; degradare graceful fără panele
 - items[] îmbogățiți cu `riskCount` + `riskText` din `.supplier-risk-panel`
 
+### PR #24 — Sitemap dinamic + mențiuni presă pe paginile furnizori
+
+**`genereaza_sitemap(index_furnizori)`** — funcție nouă în `monitor_pantelimon.py`:
+- Scrie `sitemap.xml` la fiecare rulare a monitorului
+- 6 URL-uri statice (homepage, raport, transparenta, despre, presa, furnizori/index) + toate `furnizori/{slug}.html`
+- Fiecare `<url>` conține `<lastmod>` (data rulării), `<changefreq>`, `<priority>` (0.5 pentru furnizori)
+- Furnizori sortați A-Z după slug
+
+**`genereaza_pagina_furnizor(..., mentiuni=None)`** — param nou:
+- Citit din `mentiuni_media.json` (cheile non-`_`, curatoriale, adăugate MANUAL)
+- Secțiunea `📰 Mențiuni în presă (N)` apare pe pagina firmei dacă există intrări
+- Fiecare mențiune: link titlu, 🗞️ outlet, 📅 dată, rezumat (XSS escape corect)
+- `mentiuni=None` sau `mentiuni=[]` → nicio secțiune (graceful)
+
+**`main()`**:
+- Încarcă `mentiuni_media.json` la start (FileNotFoundError silențios, alte erori → WARN)
+- Pasează `_mentiuni_media.get(firma, [])` la `genereaza_pagina_furnizor()`
+- Apelează `genereaza_sitemap(index_furnizori)` + scrie `sitemap.xml` după generarea paginilor
+
+**`tests/test_sitemap_mentiuni.py`** — 20 teste unitare noi (10 sitemap + 10 mentiuni), 0 network
+
 ---
 
 ### Faza 3 — Detectori batch 1 (PR #13, commit 40fee9e)
@@ -164,9 +185,9 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 
 ## Status git (la data generării acestui fișier)
 
-- **Ultimul push reușit:** PR #23 — "§2.5 Anomalie geografică"
-- **Branch main:** la zi după merge PR #20–23
-- **Suite de teste:** 91 teste, 5 fișiere, 0 erori
+- **Ultimul push reușit:** PR #24 — "sitemap dinamic + mențiuni presă"
+- **Branch main:** la zi după merge PR #20–24
+- **Suite de teste:** 111 teste, 6 fișiere, 0 erori
 - **De făcut:** run `fix_si_push.bat` pentru a regenera `raport_transparenta.html` cu toți detectori activi
 
 ## Stare roadmap IMPROVEMENTS.md + AUDIT.md (la zi)
@@ -193,6 +214,8 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 | §4.2 | Dark mode toggle | enhance.js |
 | §5.1 | Pagină jurnaliști (presa.html + API.md) | PR #19 |
 | Faza 5-J | Filtre shell company în toolbar | PR #22 |
+| Sitemap dinamic | sitemap.xml regenerat la fiecare rulare cu furnizori | PR #24 |
+| Mențiuni presă | `mentiuni_media.json` → secțiune 📰 pe paginile furnizori | PR #24 |
 
 ### ❌ Nu e posibil / Nu ataca fără discuție
 
