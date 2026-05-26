@@ -351,6 +351,7 @@ html[data-tp-theme="dark"] .tp-anap-btn {
       { href: 'raport_transparenta.html',   label: '🚩 Nereguli' },
       { href: 'transparenta_pantelimon.html', label: '📊 Buget' },
       { href: 'despre.html',                label: 'ℹ️ Despre' },
+      { href: 'presa.html',                 label: '🗞️ Presă' },
     ];
 
     const linksHTML = links.map(l => {
