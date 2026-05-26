@@ -1252,6 +1252,15 @@ def _fmt_ron(valoare: float) -> str:
     return f"{valoare:.0f} RON"
 
 
+def _format_kpi(x: float) -> str:
+    """Formatează suma KPI în română: '12,3M RON', '500K RON', '150 RON'."""
+    if x >= 1_000_000:
+        return f"{x / 1_000_000:.1f}M RON".replace('.', ',')
+    elif x >= 1_000:
+        return f"{x / 1_000:.0f}K RON"
+    return f"{x:.0f} RON"
+
+
 def _similaritate_titlu(a: str, b: str) -> float:
     """Similaritate simplă între două titluri (Jaccard pe cuvinte)."""
     wa = set(a.lower().split())
@@ -3183,6 +3192,67 @@ def actualizeaza_tabel_contracte(contracte_export: list) -> None:
           f'(top {min(20, len(contracte_export))} dupa valoare)')
 
 
+def actualizeaza_kpi_seap(contracte_export: list) -> None:
+    """
+    Actualizeaza KPI-ul 'Valoare contracte' din transparenta_pantelimon.html
+    cu suma deduplicata canonic pentru anul curent (fix BUG-1 + BUG-2 + BUG-3).
+    Injecteaza atributul data-total-ron folosit de JS ca sursa unica de adevar.
+    """
+    import re as _re3
+    an_curent = datetime.now().year
+    total_dedupat, nr_unice = _suma_seap_dedupata(contracte_export, an_curent)
+    kpi_text = _format_kpi(total_dedupat)
+    total_ron_int = int(round(total_dedupat))
+
+    def _ro_int(n: float) -> str:
+        return f'{int(round(n)):,}'.replace(',', '.')
+
+    tp_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                           'transparenta_pantelimon.html')
+    if not os.path.exists(tp_path):
+        print('  [WARN] transparenta_pantelimon.html lipsa -- skip actualizare KPI')
+        return
+
+    with open(tp_path, encoding='utf-8') as _f:
+        content = _f.read()
+    original = content
+
+    # BUG-1a: <span class="val" id="kpi-val-total">...</span>
+    # Adauga data-an, data-total-ron ca sursa de adevar pentru JS; actualizeaza textul static
+    content = _re3.sub(
+        r'<span class="val" id="kpi-val-total"[^>]*>[^<]*</span>',
+        (f'<span class="val" id="kpi-val-total"'
+         f' data-an="{an_curent}" data-total-ron="{total_ron_int}">{kpi_text}</span>'),
+        content,
+        count=1,
+    )
+
+    # BUG-1b: heading in KPI detail panel
+    content = _re3.sub(
+        r'💰 Valoare totală contracte \d{4} — [\d\.]+ RON',
+        f'💰 Valoare totală contracte {an_curent} — {_ro_int(total_dedupat)} RON',
+        content,
+        count=1,
+    )
+
+    # BUG-1c: row in reconciliere table
+    content = _re3.sub(
+        r'<tr><td>Valoare totală contracte \d{4}</td><td>[\d\.]+ RON</td>',
+        f'<tr><td>Valoare totală contracte {an_curent}</td><td>{_ro_int(total_dedupat)} RON</td>',
+        content,
+        count=1,
+    )
+
+    if content == original:
+        print('  [INFO] KPI seap: deja actualizat, nicio modificare')
+        return
+
+    with open(tp_path, 'w', encoding='utf-8') as _f:
+        _f.write(content)
+    print(f'  [OK] transparenta_pantelimon.html: KPI actualizat -- '
+          f'{kpi_text} ({nr_unice} contracte unice {an_curent})')
+
+
 def genereaza_pagina_furnizor(
         nume: str, slug: str,
         flags_firma: list, contracte_firma: list,
@@ -3582,6 +3652,8 @@ def main():
 
     # §1.1: Actualizează tabelul static din transparenta_pantelimon.html
     actualizeaza_tabel_contracte(contracte_export)
+    # §2.5: Actualizează KPI valoare contracte (fix BUG-1/2/3)
+    actualizeaza_kpi_seap(contracte_export)
 
     # 6. Salvare stare
     print("\n[6/6] Salvez starea...")
