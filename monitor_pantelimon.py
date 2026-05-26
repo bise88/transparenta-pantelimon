@@ -2992,6 +2992,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
   [data-tp-theme="dark"] .tp-reco-gap span {{ color: #fca5a5; }}
   [data-tp-theme="dark"] .tp-reco-note   {{ background: #422006; border-left-color: #ca8a04; color: #fef3c7; }}
 </style>
+<link rel="alternate" type="application/atom+xml" title="Nereguli noi — Transparența Pantelimon" href="https://aprindemlumina.eu/feed.xml">
 <script src="enhance.js" defer></script>
 </head>
 <body>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Despre proiect — Transparența Pantelimon</title>
+
+<!-- SEO -->
+<meta name="description" content="Despre monitorul civic de transparență bugetară al Primăriei Pantelimon: metodologie, algoritmi de detecție, surse de date, cum poți contribui.">
+<meta name="keywords" content="despre, metodologie, transparență, Pantelimon, algoritmi detecție, surse date, contribuie">
+<meta name="author" content="Inițiativă cetățenească independentă">
+<link rel="canonical" href="https://aprindemlumina.eu/despre.html">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aprindemlumina.eu/despre.html">
+<meta property="og:title" content="Despre proiect — Transparența Pantelimon">
+<meta property="og:description" content="Metodologie, surse de date și cum poți contribui la monitorizarea cetățenească a Primăriei Pantelimon.">
+<meta property="og:locale" content="ro_RO">
+<meta property="og:site_name" content="Transparența Pantelimon">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Despre proiect — Transparența Pantelimon">
+<meta name="twitter:description" content="Metodologie, surse de date și cum poți contribui la monitorizarea cetățenească.">
+
+<link rel="alternate" type="application/atom+xml" title="Nereguli noi — Transparența Pantelimon" href="https://aprindemlumina.eu/feed.xml">
+<script src="enhance.js" defer></script>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #ffffff; color: #1a1a1a; line-height: 1.7;
+}
+.page-wrap { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+h1 { font-size: 2rem; font-weight: 800; margin-bottom: .5rem; color: #1a1a1a; }
+h2 { font-size: 1.35rem; font-weight: 700; margin: 2.5rem 0 .75rem; color: #1a1a1a;
+     padding-bottom: .4rem; border-bottom: 2px solid #e5e7eb; }
+h3 { font-size: 1.05rem; font-weight: 600; margin: 1.5rem 0 .4rem; color: #374151; }
+p  { margin: .75rem 0; color: #374151; }
+ul, ol { padding-left: 1.5rem; margin: .75rem 0; color: #374151; }
+li { margin: .35rem 0; }
+a  { color: #2563eb; }
+a:hover { text-decoration: underline; }
+code {
+  font-family: 'Courier New', monospace; font-size: .88rem;
+  background: #f3f4f6; padding: .15rem .4rem; border-radius: 4px;
+  color: #1a1a1a;
+}
+.hero-sub { color: #6b7280; font-size: 1.05rem; margin-top: .25rem; }
+.tag {
+  display: inline-block; padding: .15rem .6rem; border-radius: 999px;
+  font-size: .75rem; font-weight: 700; margin-right: .25rem;
+}
+.tag-critic { background: #fef2f2; color: #dc2626; }
+.tag-major  { background: #fffbeb; color: #b45309; }
+.tag-mediu  { background: #fefce8; color: #854d0e; }
+.note {
+  background: #eff6ff; border-left: 3px solid #3b82f6;
+  padding: .75rem 1rem; border-radius: 0 8px 8px 0;
+  margin: 1rem 0; font-size: .92rem; color: #1e40af;
+}
+.warn {
+  background: #fef3c7; border-left: 3px solid #f59e0b;
+  padding: .75rem 1rem; border-radius: 0 8px 8px 0;
+  margin: 1rem 0; font-size: .92rem; color: #92400e;
+}
+table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .9rem; }
+th, td { text-align: left; padding: .5rem .75rem; border: 1px solid #e5e7eb; }
+th { background: #f9fafb; font-weight: 600; }
+tr:hover td { background: #f9fafb; }
+
+@media (max-width: 640px) {
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.15rem; }
+  .page-wrap { padding: 1rem 1rem 3rem; }
+}
+</style>
+</head>
+<body>
+
+<main class="page-wrap" id="main-content">
+
+  <h1>🏛️ Despre proiect</h1>
+  <p class="hero-sub">Monitorizare cetățenească automată a achizițiilor publice ale Primăriei Pantelimon</p>
+
+  <!-- ──────────────────────────── CE E ───────────────────────────────── -->
+  <h2 id="ce-este">Ce este acest proiect</h2>
+
+  <p>
+    <strong>Transparența Pantelimon</strong> este o inițiativă civică independentă care monitorizează
+    automat contractele și achizițiile publice ale Primăriei Pantelimon (CUI 4420759, județul Ilfov).
+  </p>
+  <p>
+    Un script Python rulează lunar, descarcă datele publice din SEAP și ANAF, aplică algoritmi de
+    detecție pentru pattern-uri de risc și generează un raport HTML publicat automat pe GitHub Pages.
+  </p>
+  <p>
+    <strong>Site:</strong> <a href="https://aprindemlumina.eu">aprindemlumina.eu</a><br>
+    <strong>Raport nereguli:</strong> <a href="raport_transparenta.html">raport_transparenta.html</a><br>
+    <strong>Cod sursă:</strong> <a href="https://github.com/transparenta-locala/transparenta-pantelimon" target="_blank" rel="noopener">github.com/transparenta-locala/transparenta-pantelimon</a>
+  </p>
+
+  <!-- ──────────────────────────── CINE ───────────────────────────────── -->
+  <h2 id="cine">Cine suntem</h2>
+
+  <p>
+    Proiectul este inițiat de un cetățean din Pantelimon, fără afiliere politică sau comercială
+    cu furnizorii sau instituțiile monitorizate.
+  </p>
+
+  <div class="note">
+    <strong>Conflict de interese:</strong> Autorul nu are, la data publicării, niciun contract,
+    relație de angajare sau interes financiar față de Primăria Pantelimon, furnizorii menționați
+    în raport sau partidele politice locale. Dacă aceasta se schimbă, vom actualiza această pagină.
+  </div>
+
+  <p>
+    Proiectul nu reprezintă un partid politic. Datele afișate sunt fapte publice —
+    interpretarea și concluziile aparțin cititorului.
+  </p>
+
+  <!-- ──────────────────────────── METODOLOGIE ──────────────────────────── -->
+  <h2 id="metodologie">Metodologie</h2>
+
+  <h3>Surse de date</h3>
+  <table>
+    <thead>
+      <tr><th>Sursă</th><th>Date extrase</th><th>Frecvență</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="https://www.e-licitatie.ro" target="_blank" rel="noopener">SEAP (e-licitatie.ro)</a></td>
+        <td>Contracte directe: titlu, valoare, furnizor, CUI, tip procedură, nr. ofertanți</td>
+        <td>Lunar</td>
+      </tr>
+      <tr>
+        <td><a href="https://transparenta.eu/entities/4420759" target="_blank" rel="noopener">transparenta.eu / ANAF</a></td>
+        <td>Execuție bugetară pe capitole, cheltuieli totale</td>
+        <td>Lunar</td>
+      </tr>
+      <tr>
+        <td><a href="https://www.anaf.ro" target="_blank" rel="noopener">ANAF (registru firme)</a></td>
+        <td>Status firmă (activ/inactiv/radiat), dată înregistrare</td>
+        <td>La cerere, cache 30 zile</td>
+      </tr>
+      <tr>
+        <td><a href="https://primariapantelimon.ro" target="_blank" rel="noopener">Primăria Pantelimon (site oficial)</a></td>
+        <td>Hotărâri Consiliu Local (HCL): tip ședință, număr, dată</td>
+        <td>Lunar</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Algoritmi de detecție</h3>
+  <p>
+    Scriptul aplică 17 algoritmi independenți. Fiecare generează un <strong>flag</strong> cu severitate
+    <span class="tag tag-critic">CRITIC</span>, <span class="tag tag-major">MAJOR</span>
+    sau <span class="tag tag-mediu">MEDIU</span>:
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>Flag</th><th>Ce detectează</th><th>Bază legală</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>ACHIZITIE_DIRECTA_PESTE_PRAG</code></td><td>Contract individual &gt; 130.000 RON prin achiziție directă</td><td>L98/2016 art.7</td></tr>
+      <tr><td><code>FRAGMENTARE</code></td><td>Același furnizor, titluri similare, valoare combinată &gt; prag</td><td>L98/2016 art.11</td></tr>
+      <tr><td><code>FRAGMENTARE_TEMPORARA</code></td><td>Fereastră 90 zile, suma sub-prag &gt; prag</td><td>L98/2016 art.11</td></tr>
+      <tr><td><code>OFERTANT_UNIC</code></td><td>Contract fără competiție reală (1 singur ofertant)</td><td>L98/2016 art.2</td></tr>
+      <tr><td><code>CONCENTRARE_FURNIZOR</code></td><td>Top-3 furnizori &gt; 60% / &gt; 80% din valoarea totală</td><td>L98/2016 art.2</td></tr>
+      <tr><td><code>PROCEDURI_NON_COMPETITIVE</code></td><td>&gt; 40% din contracte prin proceduri directe</td><td>L98/2016 art.7</td></tr>
+      <tr><td><code>FURNIZOR_DOMINANT</code></td><td>Un furnizor &gt; 35% din totalul contractelor</td><td>L98/2016 art.57-64</td></tr>
+      <tr><td><code>VALORI_IDENTICE_ACEEASI_ZI</code></td><td>Valoare exact identică la firme diferite în aceeași zi</td><td>L98/2016 art.11</td></tr>
+      <tr><td><code>BURST_CONTRACTE</code></td><td>≥ 5 contracte semnate într-o singură zi</td><td>—</td></tr>
+      <tr><td><code>SEMNARE_ZI_NELUCRATOARE</code></td><td>Contract semnat în weekend sau sărbătoare legală</td><td>—</td></tr>
+      <tr><td><code>CRESTERE_BRUSCA_VALOARE</code></td><td>Revizie contract cu creștere &gt; 50% de valoare</td><td>L98/2016 art.221</td></tr>
+      <tr><td><code>VALOARE_ROTUNDA_SUSPECTA</code></td><td>Valori rotunde (multiplu de 10k) — posibil fără studiu de piață</td><td>HG 395/2016 art.131</td></tr>
+      <tr><td><code>FIRMA_INACTIVA</code></td><td>Contract cu firmă inactivă/radiată la ANAF sau ORC</td><td>L98/2016 art.220</td></tr>
+      <tr><td><code>FIRMA_NOU_CREATA</code></td><td>Firmă cu &lt; 24 luni vechime la data contractului</td><td>L98/2016 art.163</td></tr>
+      <tr><td><code>RISC_SISTEMIC_FIRMA</code></td><td>Firmă apărută în ≥ 3 categorii diferite de nereguli</td><td>—</td></tr>
+      <tr><td><code>SEDINTE_EXTRAORDINARE_EXCESIVE</code></td><td>Rată &gt; 25% ședințe extraordinare (HCL)</td><td>L215/2001 art.39</td></tr>
+      <tr><td><code>PUBLICARE_INTARZIATA</code></td><td>Publicare contract &gt; 11 zile lucrătoare de la atribuire</td><td>L98/2016 art.55</td></tr>
+    </tbody>
+  </table>
+
+  <div class="warn">
+    <strong>Limitări:</strong> Algoritmii detectează <em>pattern-uri statistice</em> care pot indica
+    nereguli, nu dovedesc intenție sau vinovăție. False-positive-urile sunt posibile.
+    Datele ANAF au un decalaj de 6-12 luni față de realitate.
+    Concluziile juridice și civice aparțin exclusiv cititorului.
+  </div>
+
+  <h3>Praguri legale folosite</h3>
+  <ul>
+    <li><strong>130.000 RON</strong> — prag achiziție directă servicii/furnizare (L98/2016 art.7)</li>
+    <li><strong>500.000 RON</strong> — prag procedură simplificată lucrări (L98/2016 art.7)</li>
+    <li><strong>97%</strong> din prag — marjă de suspiciune fragmentare</li>
+  </ul>
+
+  <!-- ──────────────────────────── DATE DESCHISE ─────────────────────────── -->
+  <h2 id="date-deschise">Date deschise</h2>
+
+  <p>Toate datele generate sunt publice:</p>
+  <ul>
+    <li>
+      <strong>JSON flags:</strong>
+      <a href="raport.json">raport.json</a> — toate neregulile detectate, structurat (schema v1.0)
+    </li>
+    <li>
+      <strong>Contracte:</strong>
+      <a href="contracte.json">contracte.json</a> — toate contractele extrase din SEAP
+    </li>
+    <li>
+      <strong>RSS/Atom feed:</strong>
+      <a href="feed.xml">feed.xml</a> — top 20 nereguli noi, compatibil Feedly/Inoreader
+    </li>
+    <li>
+      <strong>Raport HTML:</strong>
+      <a href="raport_transparenta.html">raport_transparenta.html</a> — raport complet, printabil ca PDF
+    </li>
+  </ul>
+
+  <p>
+    <strong>Licență date:</strong> <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC-BY 4.0</a>
+    — poți reutiliza cu atribuire: <em>„Transparența Pantelimon — aprindemlumina.eu"</em>
+  </p>
+
+  <!-- ──────────────────────────── CONTRIBUIE ───────────────────────────── -->
+  <h2 id="contribuie">Cum poți contribui</h2>
+
+  <h3>Dacă ești cetățean</h3>
+  <ul>
+    <li>Trimite o sesizare la ANAP sau Curtea de Conturi dacă găsești o neregulă relevantă
+        (butonul <strong>📧 Sesizare ANAP</strong> de pe fiecare card pre-completează emailul)</li>
+    <li>Distribuie raportul jurnaliștilor locali sau pe rețele sociale</li>
+    <li>Solicită informații suplimentare de la primărie în baza
+        <a href="https://legislatie.just.ro/Public/DetaliiDocument/29249" target="_blank" rel="noopener">Legii 544/2001</a></li>
+  </ul>
+
+  <h3>Dacă ești developer</h3>
+  <ul>
+    <li>
+      <a href="https://github.com/transparenta-locala/transparenta-pantelimon/issues" target="_blank" rel="noopener">Deschide un Issue</a>
+      pentru bug-uri sau idei noi
+    </li>
+    <li>
+      <a href="https://github.com/transparenta-locala/transparenta-pantelimon/pulls" target="_blank" rel="noopener">Trimite un Pull Request</a>
+      — vezi <a href="https://github.com/transparenta-locala/transparenta-pantelimon/blob/main/IMPROVEMENTS.md" target="_blank" rel="noopener">IMPROVEMENTS.md</a> pentru roadmap
+    </li>
+    <li>
+      Fork-uiește pentru altă localitate — codul funcționează pentru orice CUI de primărie:
+      <br><code>git clone https://github.com/transparenta-locala/transparenta-pantelimon</code>
+      <br>Editează configurația din <code>monitor_pantelimon.py</code> (secțiunea CONFIG)
+    </li>
+  </ul>
+
+  <h3>Dacă ești jurnalist</h3>
+  <ul>
+    <li>Datele sunt disponibile ca JSON (<a href="raport.json">raport.json</a>) și RSS (<a href="feed.xml">feed.xml</a>)</li>
+    <li>Metodologia completă este documentată pe această pagină și în codul sursă</li>
+    <li>Contact: <a href="https://github.com/transparenta-locala/transparenta-pantelimon/issues" target="_blank" rel="noopener">GitHub Issues</a></li>
+  </ul>
+
+  <!-- ──────────────────────────── DISCLAIMER ───────────────────────────── -->
+  <h2 id="disclaimer">Disclaimer și GDPR</h2>
+
+  <p>
+    Toate datele afișate provin din surse publice oficiale (SEAP, ANAF, ONRC, site primărie).
+    Site-ul nu face afirmații despre intenții sau vinovăție — prezintă exclusiv fapte statistice
+    și posibile încălcări ale legii, lăsând concluziile la latitudinea cititorului.
+  </p>
+  <p>
+    <strong>Bază legală GDPR</strong> pentru afișarea numelor de firme și persoane publice:
+    Art. 6(1)(e) GDPR + Legea 363/2018 (interes public) + Legea 544/2001 (informații publice).
+    Datele personale afișate se limitează la calitatea de administrator/asociat al firmelor
+    cu contracte publice — calitate publică prin natura ei.
+  </p>
+  <p>
+    Pentru solicitări de rectificare sau ștergere a datelor, deschide un
+    <a href="https://github.com/transparenta-locala/transparenta-pantelimon/issues" target="_blank" rel="noopener">Issue pe GitHub</a>.
+    Răspundem în maximum 30 de zile.
+  </p>
+  <p>
+    <strong>Cookie-uri:</strong> Site-ul folosește <code>localStorage</code> exclusiv pentru preferințe
+    de interfață (temă, filtre active). Nu există cookie-uri de tracking, reclame sau analytics terți.
+  </p>
+
+  <hr style="margin: 3rem 0; border: 0; border-top: 1px solid #e5e7eb;">
+  <p style="color: #6b7280; font-size: .85rem; text-align: center;">
+    <a href="index.html">Acasă</a> ·
+    <a href="raport_transparenta.html">Raport nereguli</a> ·
+    <a href="transparenta_pantelimon.html">Buget</a> ·
+    <a href="feed.xml">📡 RSS</a> ·
+    <a href="https://github.com/transparenta-locala/transparenta-pantelimon" target="_blank" rel="noopener">GitHub</a>
+  </p>
+
+</main>
+</body>
+</html>
