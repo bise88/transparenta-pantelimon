@@ -57,17 +57,17 @@ def test_sitemap_structura_xml_valida():
     assert '</urlset>' in xml
 
 
-def test_sitemap_fara_furnizori_contine_6_url():
-    """Fără furnizori, sitemap-ul are exact 6 URL-uri (statice)."""
+def test_sitemap_fara_furnizori_contine_8_url():
+    """Fără furnizori, sitemap-ul are exact 8 URL-uri statice (incl. gdpr + petitie)."""
     xml = genereaza_sitemap([])
-    assert xml.count('<url>') == 6
+    assert xml.count('<url>') == 8
 
 
 def test_sitemap_cu_furnizori_creste_numaratoarea():
-    """Cu 3 furnizori, sitemap-ul are 6 + 3 = 9 URL-uri."""
+    """Cu 3 furnizori, sitemap-ul are 8 + 3 = 11 URL-uri."""
     index = [_idx(f'firma-{i}') for i in range(3)]
     xml = genereaza_sitemap(index)
-    assert xml.count('<url>') == 9
+    assert xml.count('<url>') == 11
 
 
 def test_sitemap_contine_slug_furnizor():

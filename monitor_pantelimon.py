@@ -2991,6 +2991,9 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
 <meta property="og:url" content="https://aprindemlumina.eu/raport_transparenta.html">
 <meta property="og:title" content="{seo_title}">
 <meta property="og:description" content="{seo_description}">
+<meta property="og:image" content="https://aprindemlumina.eu/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:locale" content="ro_RO">
 <meta property="og:site_name" content="Transparența Pantelimon">
 
@@ -2998,6 +3001,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{seo_title}">
 <meta name="twitter:description" content="{seo_description}">
+<meta name="twitter:image" content="https://aprindemlumina.eu/og-image.png">
 <style>
   body{{font-family:'Segoe UI',Arial,sans-serif;background:#F4F6F9;color:#1A1A2E;margin:0;padding:0}}
   .wrap{{max-width:960px;margin:0 auto;padding:24px 16px 60px}}
@@ -3839,6 +3843,80 @@ def actualizeaza_kpi_seap(contracte_export: list) -> None:
           f'{kpi_text} ({nr_unice} contracte unice {an_curent})')
 
 
+def genereaza_og_image(n_flags: int, n_critic: int, valoare_mil: float,
+                       scor: int = None, output: str = "og-image.png") -> bool:
+    """
+    §5.7 AUDIT.md — Generează og-image.png (1200×630px) cu statisticile curente.
+    Returnează True dacă imaginea a fost creată, False dacă Pillow nu e disponibil.
+    """
+    try:
+        from PIL import Image, ImageDraw, ImageFont
+    except ImportError:
+        print("  [WARN] Pillow nu e instalat — og-image.png nu a fost generat.")
+        return False
+
+    img = Image.new('RGB', (1200, 630), '#0a1628')
+    d = ImageDraw.Draw(img)
+
+    # Bandă de accent
+    d.rectangle([(0, 0), (8, 630)], fill='#dc2626')
+
+    # Încercăm fonturi sistem; fallback la default
+    def _font(size):
+        for path in [
+            r'C:\Windows\Fonts\calibrib.ttf',
+            r'C:\Windows\Fonts\arialbd.ttf',
+            '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',
+            '/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf',
+        ]:
+            try:
+                return ImageFont.truetype(path, size)
+            except (OSError, IOError):
+                continue
+        return ImageFont.load_default()
+
+    def _font_reg(size):
+        for path in [
+            r'C:\Windows\Fonts\calibri.ttf',
+            r'C:\Windows\Fonts\arial.ttf',
+            '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',
+            '/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf',
+        ]:
+            try:
+                return ImageFont.truetype(path, size)
+            except (OSError, IOError):
+                continue
+        return ImageFont.load_default()
+
+    # Header
+    d.text((40, 40), 'Transparența Pantelimon', fill='#94a3b8', font=_font_reg(30))
+    d.text((40, 90), 'aprindemlumina.eu', fill='#64748b', font=_font_reg(22))
+
+    # Numărul mare de nereguli
+    d.text((40, 150), f'{n_flags}', fill='#dc2626', font=_font(130))
+    d.text((40, 290), 'nereguli detectate', fill='#ffffff', font=_font(44))
+
+    # Statistici secundare
+    d.text((40, 370), f'{n_critic} CRITICE', fill='#f59e0b', font=_font(36))
+    d.text((40, 420), f'{valoare_mil:.0f} mil. RON contracte analizate', fill='#cbd5e1', font=_font_reg(28))
+
+    # Scor (dacă disponibil)
+    if scor is not None:
+        d.rectangle([(40, 480), (500, 540)], fill='#1e3a5f')
+        d.text((55, 490), f'Scor transparență: {scor}/100', fill='#ffffff', font=_font_reg(30))
+
+    # Siglă
+    d.text((900, 560), '🏛️ USR Pantelimon', fill='#475569', font=_font_reg(22))
+
+    try:
+        img.save(output, 'PNG', optimize=True)
+        print(f"  [OK] og-image.png generat ({n_flags} nereguli, {n_critic} critice)")
+        return True
+    except Exception as e:
+        print(f"  [WARN] og-image.png: eroare la salvare: {e}")
+        return False
+
+
 def genereaza_sitemap(index_furnizori: list) -> str:
     """Regenerează sitemap.xml cu paginile statice + toate paginile furnizori."""
     BASE = "https://aprindemlumina.eu"
@@ -3849,6 +3927,8 @@ def genereaza_sitemap(index_furnizori: list) -> str:
         ("/transparenta_pantelimon.html", "0.8", "monthly"),
         ("/despre.html",                  "0.7", "monthly"),
         ("/presa.html",                   "0.7", "monthly"),
+        ("/gdpr.html",                    "0.5", "yearly"),
+        ("/petitie.html",                 "0.6", "monthly"),
         ("/furnizori/index.html",         "0.6", "weekly"),
     ]
     urls = ""
@@ -3965,6 +4045,11 @@ def genereaza_pagina_furnizor(
   <meta property="og:description" content="{len(contracte_firma)} contracte, {_fmt_ron(valoare_totala)}, {len(flags_firma)} nereguli detectate automat.">
   <meta property="og:url" content="{base_url}/furnizori/{slug}.html">
   <meta property="og:type" content="article">
+  <meta property="og:image" content="{base_url}/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="{base_url}/og-image.png">
   <link rel="canonical" href="{base_url}/furnizori/{slug}.html">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
   <script src="../enhance.js" defer></script>
@@ -4284,7 +4369,17 @@ def main():
     sitemap_xml = genereaza_sitemap(index_furnizori)
     with open("sitemap.xml", "w", encoding="utf-8") as fh:
         fh.write(sitemap_xml)
-    print(f"  ✓ sitemap.xml actualizat ({len(index_furnizori)} pagini furnizori + 6 statice)")
+    print(f"  ✓ sitemap.xml actualizat ({len(index_furnizori)} pagini furnizori + 8 statice)")
+
+    # §5.7 Generare og-image.png cu statisticile curente (pentru share social media)
+    _scor_val = CONFIG.get("_scor", {}).get("scor")
+    _val_mil = round(sum(c.get("valoare_ron", 0) for c in contracte) / 1_000_000, 1)
+    genereaza_og_image(
+        n_flags=len(toate_flags),
+        n_critic=sum(1 for f in toate_flags if f.get("severitate") == "CRITIC"),
+        valoare_mil=_val_mil,
+        scor=_scor_val,
+    )
 
     # Export feed.xml (Atom) pentru cititori RSS / jurnaliști
     feed_xml = genereaza_feed_atom(toate_flags, datetime.now())
