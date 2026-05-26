@@ -3839,10 +3839,49 @@ def actualizeaza_kpi_seap(contracte_export: list) -> None:
           f'{kpi_text} ({nr_unice} contracte unice {an_curent})')
 
 
+def genereaza_sitemap(index_furnizori: list) -> str:
+    """Regenerează sitemap.xml cu paginile statice + toate paginile furnizori."""
+    BASE = "https://aprindemlumina.eu"
+    azi = datetime.now().strftime("%Y-%m-%d")
+    statice = [
+        ("",                              "1.0", "weekly"),
+        ("/raport_transparenta.html",     "0.9", "daily"),
+        ("/transparenta_pantelimon.html", "0.8", "monthly"),
+        ("/despre.html",                  "0.7", "monthly"),
+        ("/presa.html",                   "0.7", "monthly"),
+        ("/furnizori/index.html",         "0.6", "weekly"),
+    ]
+    urls = ""
+    for path, prio, freq in statice:
+        urls += (
+            f"  <url>\n"
+            f"    <loc>{BASE}{path}</loc>\n"
+            f"    <lastmod>{azi}</lastmod>\n"
+            f"    <changefreq>{freq}</changefreq>\n"
+            f"    <priority>{prio}</priority>\n"
+            f"  </url>\n"
+        )
+    for f in sorted(index_furnizori, key=lambda x: x["slug"]):
+        urls += (
+            f"  <url>\n"
+            f"    <loc>{BASE}/furnizori/{f['slug']}.html</loc>\n"
+            f"    <lastmod>{azi}</lastmod>\n"
+            f"    <changefreq>monthly</changefreq>\n"
+            f"    <priority>0.5</priority>\n"
+            f"  </url>\n"
+        )
+    return (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        + urls
+        + '</urlset>\n'
+    )
+
+
 def genereaza_pagina_furnizor(
         nume: str, slug: str,
         flags_firma: list, contracte_firma: list,
-        config: dict) -> str:
+        config: dict, mentiuni: list = None) -> str:
     """Generează pagina HTML dedicată unui furnizor."""
     import html as html_mod
 
@@ -3885,6 +3924,35 @@ def genereaza_pagina_furnizor(
         </tr>"""
 
     onrc_link = f'https://termene.ro/firma/{cui_f}' if cui_f else '#'
+
+    # Secțiune mențiuni media (din mentiuni_media.json, curatorial)
+    mentiuni_html = ""
+    if mentiuni:
+        rands_m = ""
+        for m in mentiuni:
+            rezumat_row = (
+                f'<div style="font-size:13px;color:#555;margin-top:4px">'
+                f'{html_mod.escape(str(m.get("rezumat",""))[:300])}</div>'
+            ) if m.get("rezumat") else ""
+            rands_m += f"""
+      <div style="border-left:3px solid #2874A6;padding:8px 14px;margin-bottom:8px;
+                  background:#fff;border-radius:0 6px 6px 0;
+                  box-shadow:0 1px 3px rgba(0,0,0,.06)">
+        <div style="font-weight:600;font-size:14px">
+          <a href="{html_mod.escape(str(m.get('url','#')))}" target="_blank" rel="noopener"
+             style="color:#2874A6;text-decoration:none">
+            {html_mod.escape(str(m.get('titlu',''))[:120])}
+          </a>
+        </div>
+        <div style="font-size:12px;color:#888;margin-top:3px">
+          🗞️ {html_mod.escape(str(m.get('outlet','')))} &nbsp;·&nbsp;
+          📅 {html_mod.escape(str(m.get('data','')))}
+        </div>
+        {rezumat_row}
+      </div>"""
+        mentiuni_html = f"""
+  <h2>📰 Mențiuni în presă ({len(mentiuni)})</h2>
+  {rands_m}"""
 
     return f"""<!DOCTYPE html>
 <html lang="ro">
@@ -3952,6 +4020,7 @@ def genereaza_pagina_furnizor(
     <tbody>{contracte_rows}</tbody>
   </table>
 
+  {mentiuni_html}
   <footer>
     Date extrase din surse publice oficiale (SEAP / data.gov.ro) · Inițiativă cetățenească independentă
   </footer>
@@ -4030,6 +4099,22 @@ def main():
         os.makedirs(_args.output_dir, exist_ok=True)
         os.chdir(_args.output_dir)
     # --- end CLI ---
+
+    # Încarcă mențiuni media curatoriale (opțional — fișier mentiuni_media.json)
+    _mentiuni_media: dict = {}
+    try:
+        with open("mentiuni_media.json", encoding="utf-8") as _fmm:
+            _raw_mm = json.load(_fmm)
+        # Excludem cheile de metadate (prefixate cu _)
+        _mentiuni_media = {k: v for k, v in _raw_mm.items() if not k.startswith("_")}
+        _total_mm = sum(len(v) for v in _mentiuni_media.values())
+        if _total_mm:
+            print(f"  ✓ mentiuni_media.json: {_total_mm} mențiuni pentru {len(_mentiuni_media)} firme")
+    except FileNotFoundError:
+        pass
+    except Exception as _e_mm:
+        print(f"  [WARN] mentiuni_media.json: {_e_mm}")
+
     trimite_email = "--email" in sys.argv
     print("\n" + "="*60)
     print(f"  MONITOR TRANSPARENȚĂ BUGETARĂ — {CONFIG['nume_entitate']}")
@@ -4172,7 +4257,10 @@ def main():
         if not slug:
             continue
         flags_firma = flags_per_firma.get(firma, [])
-        pagina_html = genereaza_pagina_furnizor(firma, slug, flags_firma, contracte_firma, CONFIG)
+        pagina_html = genereaza_pagina_furnizor(
+            firma, slug, flags_firma, contracte_firma, CONFIG,
+            mentiuni=_mentiuni_media.get(firma, []),
+        )
         with open(f"furnizori/{slug}.html", "w", encoding="utf-8") as fh:
             fh.write(pagina_html)
         index_furnizori.append({
@@ -4191,6 +4279,13 @@ def main():
         print(f"  ✓ {len(index_furnizori)} pagini furnizori generate în furnizori/")
     else:
         print("  ℹ️  Niciun furnizor cu ≥3 contracte găsit.")
+
+    # Regenerare sitemap.xml cu toate paginile (statice + furnizori)
+    sitemap_xml = genereaza_sitemap(index_furnizori)
+    with open("sitemap.xml", "w", encoding="utf-8") as fh:
+        fh.write(sitemap_xml)
+    print(f"  ✓ sitemap.xml actualizat ({len(index_furnizori)} pagini furnizori + 6 statice)")
+
     # Export feed.xml (Atom) pentru cititori RSS / jurnaliști
     feed_xml = genereaza_feed_atom(toate_flags, datetime.now())
     with open("feed.xml", "w", encoding="utf-8") as f:
