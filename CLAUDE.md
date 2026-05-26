@@ -151,11 +151,58 @@ Hooks integrate în `analizeaza_red_flags()` și `analizeaza_hcl()`.
 
 ---
 
+### §2.5 Anomalie geografică (PR #23)
+
+Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
+- Flag `GEOGRAFIE_ANORMALA` / MEDIU când servicii locale (curățenie, pază, salubrizare, deszăpezire etc.) sunt atribuite firmelor cu sediu în afara Ilfovului + județe limitrofe
+- `_JUDETE_ADIACENTE_ILFOV = {IF, B, GR, CL, IL, PH, DB}` — 13 keywords locale
+- Hooked în `analizeaza_red_flags()` — graceful (skip dacă firme_openapi e gol)
+- `_get_actionariat_openapi()` extins cu câmpurile `judet` + `adresa`
+- 16 teste unitare în `tests/test_geographic.py` — 16/16 pass
+
+---
+
 ## Status git (la data generării acestui fișier)
 
-- **Ultimul push reușit:** PR #22 — "Faza 5-J: filtre shell company în toolbar"
-- **Branch main:** la zi după merge PR #20 (risc_firma.py) + PR #21 (integrare monitor) + PR #22 (Faza 5-J enhance.js)
-- **De făcut:** run `fix_si_push.bat` pentru a regenera `raport_transparenta.html` cu noii detectori și panelele risc_firma active
+- **Ultimul push reușit:** PR #23 — "§2.5 Anomalie geografică"
+- **Branch main:** la zi după merge PR #20–23
+- **Suite de teste:** 91 teste, 5 fișiere, 0 erori
+- **De făcut:** run `fix_si_push.bat` pentru a regenera `raport_transparenta.html` cu toți detectori activi
+
+## Stare roadmap IMPROVEMENTS.md + AUDIT.md (la zi)
+
+### ✅ Complet
+
+| Faza | Item | PR/Status |
+|---|---|---|
+| Faza 1-G | SEO + OG tags + robots.txt + sitemap.xml | done |
+| Faza 1-H | RSS/Atom feed.xml | generat de monitor |
+| Faza 1-I | Banner „ce e nou" (delta.json + enhance.js) | done |
+| Faza 2-A | Markup semantic `.tp-flag[data-severity]` | PR #18 |
+| Faza 2-B | JSON embedded `<script id="tp-data">` + raport.json | done |
+| Faza 3-D | Pagini per furnizor (47 pagini `furnizori/`) | done |
+| Faza 3-E | Scor transparență + widget | done |
+| §2.1 | Valori identice aceeași zi | PR #13 |
+| §2.2 | Burst detection + concentrare furnizor | PR #13 |
+| §2.3 | Shell company detector (`risc_firma.py`) | PR #20–22 |
+| §2.5 | Anomalie geografică | PR #23 |
+| §2.6 | Valori rotunde suspecte | Algoritm 8 |
+| §2.7 | Publicare întârziată + semnare zile nelucrătoare | PR #13 |
+| §2.8 | CA sub valoarea contractului | risc_firma.py |
+| §4.1 | Widget reconciliere ANAF ↔ SEAP | done |
+| §4.2 | Dark mode toggle | enhance.js |
+| §5.1 | Pagină jurnaliști (presa.html + API.md) | PR #19 |
+| Faza 5-J | Filtre shell company în toolbar | PR #22 |
+
+### ❌ Nu e posibil / Nu ataca fără discuție
+
+| Item | Motiv |
+|---|---|
+| §2.4 Repeat-loser pattern | Necesită date toți ofertanți — SEAP exportă doar câștigător |
+| §2.9 / Faza 5-K Network analysis | ~2-4 săptămâni, scraping termene.ro + NetworkX + Cytoscape |
+| Faza 5-L PNRR tracking | Sursă de date nouă complexă |
+| Faza 4-F Comparator multi-UAT | "Nu ataca fără discuție cu userul" explicit în IMPROVEMENTS.md |
+| §4.3 Service Worker | Prematur până testăm nevoile offline ale userilor |
 
 ---
 
