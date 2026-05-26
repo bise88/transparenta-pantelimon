@@ -229,6 +229,29 @@ html[data-tp-theme="dark"] {
   .tp-flag { page-break-inside: avoid; border: 1px solid #ddd !important; margin-bottom: 8pt !important; }
 }
 
+/* Dark mode toggle */
+.tp-theme-toggle {
+  padding: .35rem .6rem; border-radius: 6px;
+  background: transparent; border: 1px solid var(--tp-border);
+  color: var(--tp-fg); cursor: pointer; font-size: 1rem; line-height: 1;
+  flex-shrink: 0;
+}
+.tp-theme-toggle:hover { background: var(--tp-card-bg); }
+
+/* Buton sesizare ANAP pe carduri */
+.tp-anap-btn {
+  display: inline-flex; align-items: center; gap: .3rem;
+  margin-top: .5rem;
+  padding: .35rem .75rem;
+  background: #fef2f2; border: 1px solid #fca5a5; border-radius: 6px;
+  color: #b91c1c; text-decoration: none; font-size: .82rem;
+  cursor: pointer; font-family: inherit;
+}
+.tp-anap-btn:hover { background: #fee2e2; }
+html[data-tp-theme="dark"] .tp-anap-btn {
+  background: #3f1515; border-color: #7f1d1d; color: #fca5a5;
+}
+
 /* Banner "ce e nou" */
 .tp-banner-whats-new {
   background: var(--tp-accent, #dc2626); color: #fff;
@@ -342,9 +365,18 @@ html[data-tp-theme="dark"] {
           <a href="https://transparenta.eu/entities/4420759" target="_blank" rel="noopener">ANAF ↗</a>
           <a href="https://github.com/transparenta-locala/transparenta-pantelimon" target="_blank" rel="noopener">GitHub ↗</a>
         </div>
+        <button class="tp-theme-toggle" id="tp-theme-btn" aria-label="Comută temă luminoasă/întunecată" title="Comută temă">🌓</button>
       </div>
     `;
     document.body.insertBefore(nav, document.body.firstChild);
+
+    // Toggle dark/light mode
+    $('#tp-theme-btn').addEventListener('click', () => {
+      const cur = document.documentElement.dataset.tpTheme || 'light';
+      const next = cur === 'light' ? 'dark' : 'light';
+      document.documentElement.dataset.tpTheme = next;
+      try { localStorage.setItem('tp-theme', next); } catch (e) {}
+    });
   }
 
   // ──────────────────────────────────────────────────────────────
@@ -469,6 +501,9 @@ html[data-tp-theme="dark"] {
 
     // Indexare
     const items = cardEls.map((el, i) => parseCard(el, i));
+
+    // Butoane sesizare ANAP pe fiecare card
+    injectAnapButtons(items);
 
     // Ancore + permalink
     items.forEach(item => {
@@ -924,6 +959,55 @@ html[data-tp-theme="dark"] {
   }
 
   // ──────────────────────────────────────────────────────────────
+  // EMAIL SESIZARE ANAP (§5.2)
+  // ──────────────────────────────────────────────────────────────
+  function generateAnapEmail(card) {
+    const subject = encodeURIComponent(
+      `Sesizare achiziții publice — Primăria Pantelimon${card.contract ? ' — ' + card.contract : ''}`
+    );
+    const cardUrl = location.origin + location.pathname + '#nereguli-' + (card.idx + 1);
+    const body = encodeURIComponent([
+      'Subsemnatul/a [NUMELE TĂU], domiciliat în [ADRESA], CNP [CNP],',
+      'în calitate de cetățean, sesizez următoarea posibilă neregulă:',
+      '',
+      'OBIECT: ' + card.title,
+      '',
+      'DETALII:',
+      '- Autoritate contractantă: Primăria Pantelimon (CIF 4420759)',
+      card.contract   ? '- Cod contract: ' + card.contract : '',
+      card.sum        ? '- Valoare: ' + fmtRON(card.sum)   : '',
+      card.supplier   ? '- Furnizor: ' + card.supplier     : '',
+      card.date       ? '- Data: ' + card.date              : '',
+      '- Severitate detectată: ' + card.severity,
+      '',
+      'SURSĂ DATE:',
+      '- Analiză automată: ' + cardUrl,
+      '- Date publice SEAP (e-licitatie.ro) și ANAF',
+      '',
+      'Solicit verificarea acestei achiziții și comunicarea rezultatelor.',
+      '',
+      'Data: ' + new Date().toLocaleDateString('ro-RO'),
+      'Semnătura: [SEMNĂTURĂ OLOGRAFĂ]',
+    ].filter(Boolean).join('\n'));
+
+    return 'mailto:sesizari@anap.gov.ro?subject=' + subject + '&body=' + body;
+  }
+
+  function injectAnapButtons(items) {
+    items.forEach(card => {
+      // Nu adăugăm dacă există deja
+      if (card.el.querySelector('.tp-anap-btn')) return;
+      const btn = document.createElement('a');
+      btn.className = 'tp-anap-btn';
+      btn.href = generateAnapEmail(card);
+      btn.textContent = '📧 Sesizare ANAP';
+      btn.title = 'Deschide client email cu sesizare pre-completată pentru ANAP';
+      // Inserăm la finalul cardului (după ultimul copil al <details> sau la finalul containerului)
+      card.el.appendChild(btn);
+    });
+  }
+
+  // ──────────────────────────────────────────────────────────────
   // BOOT
   // ──────────────────────────────────────────────────────────────
   async function showWhatsNewBanner() {
@@ -960,7 +1044,19 @@ html[data-tp-theme="dark"] {
     } catch (e) { /* fail silently — delta.json poate să nu existe */ }
   }
 
+  function applyTheme() {
+    try {
+      const saved = localStorage.getItem('tp-theme');
+      if (saved) {
+        document.documentElement.dataset.tpTheme = saved;
+      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.dataset.tpTheme = 'dark';
+      }
+    } catch (e) {}
+  }
+
   function boot() {
+    applyTheme();
     injectStyle();
     injectNav();
     injectBackToTop();
