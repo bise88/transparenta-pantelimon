@@ -112,6 +112,8 @@ html[data-tp-theme="dark"] {
 .tp-chip[data-sev="CRITIC"].active { background: #dc2626; border-color: #dc2626; color: #fff; }
 .tp-chip[data-sev="MAJOR"].active  { background: #f59e0b; border-color: #f59e0b; color: #1a1a1a; }
 .tp-chip[data-sev="MEDIU"].active  { background: #eab308; border-color: #eab308; color: #1a1a1a; }
+.tp-chip[data-shell].active        { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+#tp-shell-row { display: none; }  /* ascuns până confirmăm că există panele */
 
 .tp-btn {
   padding: .45rem .85rem;
@@ -611,6 +613,7 @@ html[data-tp-theme="dark"] .tp-anap-btn {
       sort: prefs.sort || 'idx-asc',
       shown: CFG.pageSize,
       _domReordered: false,  // true când DOM-ul a fost sortat (nu idx-asc)
+      shellFilter: '',       // '' | 'zero-sal' | 'zero-ca' | 'any-risk'
     };
 
     // ─── TOOLBAR ──────────────────────────────────────────────
@@ -646,11 +649,41 @@ html[data-tp-theme="dark"] .tp-anap-btn {
           <button class="tp-btn" id="tp-export-json" title="Descarcă rezultatele filtrate ca JSON">⬇ JSON</button>
           <button class="tp-btn" id="tp-reset" title="Curăță toate filtrele">✕ Reset</button>
         </div>
+        <div class="tp-toolbar-row" id="tp-shell-row">
+          <span style="font-size:.78rem;color:var(--tp-muted);margin-right:.25rem">🏢 Profil firmă:</span>
+          <button class="tp-chip" data-shell="zero-sal" aria-pressed="false"
+                  title="Arată doar nereguli unde furnizorul are 0 angajați declarați la ANAF">👥 0 angajați</button>
+          <button class="tp-chip" data-shell="zero-ca" aria-pressed="false"
+                  title="Arată doar nereguli unde furnizorul are cifra de afaceri 0 RON">📉 CA = 0 RON</button>
+          <button class="tp-chip" data-shell="any-risk" aria-pressed="false"
+                  title="Arată doar nereguli unde furnizorul are cel puțin un indicator de risc financiar">⚠️ Orice risc</button>
+        </div>
         <div class="tp-toolbar-row">
           <div class="tp-stats" id="tp-stats" aria-live="polite"></div>
         </div>
       </div>
     `;
+
+    // ─── ÎMBOGĂȚIRE ITEMS CU DATE RISC FIRMĂ ─────────────────
+    // Citim panelul .supplier-risk-panel injectat de risc_firma.py (opțional)
+    let shellPanelsFound = 0;
+    items.forEach(it => {
+      if (!it.el) { it.riskCount = 0; it.riskText = ''; return; }
+      const panel = it.el.querySelector('.supplier-risk-panel');
+      if (panel) {
+        it.riskCount = parseInt(panel.dataset.riskCount || '0', 10) || 0;
+        it.riskText  = panel.textContent.toUpperCase();
+        shellPanelsFound++;
+      } else {
+        it.riskCount = 0;
+        it.riskText  = '';
+      }
+    });
+    // Afișăm rândul de filtre shell doar dacă există cel puțin un panel
+    if (shellPanelsFound > 0) {
+      const shellRow = toolbar.querySelector('#tp-shell-row');
+      if (shellRow) shellRow.style.display = '';
+    }
 
     // ─── SUMMARY WIDGET ───────────────────────────────────────
     const summary = buildSummaryWidget(items, suppliers);
@@ -693,12 +726,26 @@ html[data-tp-theme="dark"] .tp-anap-btn {
       state.shown = CFG.pageSize;
       apply();
     });
-    toolbar.querySelectorAll('.tp-chip').forEach(chip => {
+    toolbar.querySelectorAll('.tp-chip[data-sev]').forEach(chip => {
       chip.addEventListener('click', () => {
         const s = chip.dataset.sev;
         state.sev[s] = !state.sev[s];
         chip.classList.toggle('active', state.sev[s]);
         chip.setAttribute('aria-pressed', state.sev[s] ? 'true' : 'false');
+        state.shown = CFG.pageSize;
+        apply();
+      });
+    });
+    toolbar.querySelectorAll('.tp-chip[data-shell]').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const s = chip.dataset.shell;
+        const isActive = state.shellFilter === s;
+        // Toggle: click activ → dezactivare; click inactiv → activare (exclusiv)
+        state.shellFilter = isActive ? '' : s;
+        toolbar.querySelectorAll('.tp-chip[data-shell]').forEach(c => {
+          c.classList.toggle('active', c.dataset.shell === state.shellFilter);
+          c.setAttribute('aria-pressed', c.dataset.shell === state.shellFilter ? 'true' : 'false');
+        });
         state.shown = CFG.pageSize;
         apply();
       });
@@ -714,14 +761,18 @@ html[data-tp-theme="dark"] .tp-anap-btn {
       apply();
     });
     $('#tp-reset').addEventListener('click', () => {
-      state.q = ''; state.supplier = '';
+      state.q = ''; state.supplier = ''; state.shellFilter = '';
       state.sev = { CRITIC: true, MAJOR: true, MEDIU: true };
       state.shown = CFG.pageSize;
       $('#tp-q').value = '';
       $('#tp-supplier').value = '';
-      toolbar.querySelectorAll('.tp-chip').forEach(c => {
+      toolbar.querySelectorAll('.tp-chip[data-sev]').forEach(c => {
         c.classList.add('active');
         c.setAttribute('aria-pressed', 'true');
+      });
+      toolbar.querySelectorAll('.tp-chip[data-shell]').forEach(c => {
+        c.classList.remove('active');
+        c.setAttribute('aria-pressed', 'false');
       });
       apply();
     });
@@ -804,6 +855,15 @@ html[data-tp-theme="dark"] .tp-anap-btn {
         if (!it.haystack.includes(q) &&
             !it.supplier.toLowerCase().includes(q) &&
             !it.title.toLowerCase().includes(q)) return false;
+      }
+      // Filtre shell company (bazate pe panelul risc_firma.py)
+      if (state.shellFilter) {
+        const f = state.shellFilter;
+        if (f === 'any-risk'  && it.riskCount <= 0) return false;
+        if (f === 'zero-sal'  && !(it.riskText.includes('ZERO ANGAJATI') ||
+                                    it.riskText.includes('PUTINI ANGAJATI'))) return false;
+        if (f === 'zero-ca'   && !(it.riskText.includes('CIFRA AFACERI ZERO') ||
+                                    it.riskText.includes('AFACERI MULT SUB'))) return false;
       }
       return true;
     });
