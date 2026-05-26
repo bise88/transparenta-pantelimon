@@ -245,6 +245,39 @@ def test_widget_consistent_show_percent():
 
 
 # ---------------------------------------------------------------------------
+# Teste _format_kpi + consistenta KPI (Faza 2.5)
+# ---------------------------------------------------------------------------
+
+def test_kpi_format_helper():
+    """`_format_kpi` produce formate corecte in romana."""
+    from monitor_pantelimon import _format_kpi
+    assert _format_kpi(12_300_000) == '12,3M RON', f'got {_format_kpi(12_300_000)}'
+    assert _format_kpi(500_000) == '500K RON', f'got {_format_kpi(500_000)}'
+    assert _format_kpi(150) == '150 RON', f'got {_format_kpi(150)}'
+    assert _format_kpi(0) == '0 RON', f'got {_format_kpi(0)}'
+
+
+def test_kpi_consistency_with_widget():
+    """
+    _suma_seap_dedupata si reconciliere_buget_seap lucreaza cu acelasi set de date
+    si produc valori consistente (total_seap_ron == suma calculata direct).
+    """
+    contracte = [
+        _c('Contract A (Rev.2)', 'FIRMA_X', 100_000),
+        _c('Contract A', 'FIRMA_X', 80_000),   # acelasi titlu/firma -> dedup, pastram max 100k
+        _c('Contract B', 'FIRMA_Y', 50_000),    # diferit -> ramane
+    ]
+    total, n = _suma_seap_dedupata(contracte, 2025)
+    assert total == 150_000.0, f'Asteptat 150000, got {total}'
+    assert n == 2, f'Asteptat 2 contracte unice, got {n}'
+
+    # Acelasi total trebuie sa apara in reconciliere
+    r = reconciliere_buget_seap({'cheltuieli_total': 1_000_000}, contracte, an=2025)
+    assert r['total_seap_ron'] == 150_000.0, f'Asteptat 150000 in reconciliere, got {r["total_seap_ron"]}'
+    assert r['nr_contracte_unice'] == 2, f'Asteptat 2 in reconciliere, got {r["nr_contracte_unice"]}'
+
+
+# ---------------------------------------------------------------------------
 # Runner standalone (fara pytest)
 # ---------------------------------------------------------------------------
 
@@ -266,6 +299,8 @@ if __name__ == '__main__':
         test_reco_nr_contracte_unice_expus,
         test_widget_inconsistent_no_percent,
         test_widget_consistent_show_percent,
+        test_kpi_format_helper,
+        test_kpi_consistency_with_widget,
     ]
     passed = failed = 0
     for t in tests:

@@ -1134,7 +1134,7 @@ document.addEventListener('scroll', function() {
     <div class="cards-row">
 
       <div class="card kpi-card-interactive" onclick="toggleKpiDetail('kpi-valoare')">
-        <span class="val" id="kpi-val-total">4,2M RON</span>
+        <span class="val" id="kpi-val-total" data-an="2026" data-total-ron="12286283">12,3M RON</span>
         <span class="lbl">Valoare contracte atribuite 2025</span>
         <div class="sub" id="kpi-sub-total">Din proceduri publicate în SEAP</div>
         <span class="expand-hint">▼ detalii</span>
@@ -1165,7 +1165,7 @@ document.addEventListener('scroll', function() {
 
     <!-- KPI DETAIL PANELS -->
     <div id="kpi-valoare" class="kpi-detail-panel">
-      <strong style="font-size:14px;color:#00427A">💰 Valoare totală contracte 2025 — 4.200.000 RON</strong>
+      <strong style="font-size:14px;color:#00427A">💰 Valoare totală contracte 2026 — 12.286.283 RON</strong>
       <div class="detail-grid" style="margin-top:12px">
         <div class="d-item"><div class="d-lbl">Contracte lucrări</div><div class="d-val">2.420.000 RON</div></div>
         <div class="d-item"><div class="d-lbl">Servicii & furnizări</div><div class="d-val">1.780.000 RON</div></div>
@@ -2388,7 +2388,19 @@ function _flagChips(flag, c) {
 }
 
 function _renderKpi(data) {
-  const total = data.reduce(function(s,c){ return s+c.valoare; }, 0);
+  // BUG-2 fix: citeste totalul pre-calculat de Python (data-total-ron) ca sursa unica de adevar.
+  // Fallback: filtreaza pe anul curent pentru a evita insumarea contractelor multi-anuale.
+  var kpiEl = document.getElementById('kpi-val-total');
+  var totalAttr = kpiEl ? kpiEl.getAttribute('data-total-ron') : null;
+  var anCurent = kpiEl ? parseInt(kpiEl.getAttribute('data-an') || String(new Date().getFullYear()), 10) : new Date().getFullYear();
+  var total;
+  if (totalAttr) {
+    total = parseInt(totalAttr, 10);
+  } else {
+    var anStr = String(anCurent);
+    var dataAn = data.filter(function(c){ return (c.data||'').startsWith(anStr); });
+    total = dataAn.reduce(function(s,c){ return s+c.valoare; }, 0);
+  }
   const unic = data.filter(function(c){ return c.ofertanti===1; }).length;
   const directe = data.filter(function(c){ return c.id.includes('achizitie-directa'); }).length;
   const altele = data.length - directe;
@@ -2679,7 +2691,7 @@ function printCitizenReport() {
   <tr><td>Contracte cu ofertant unic</td><td class="flag">67%</td><td>~45% (media națională)</td><td class="flag">RISC MAJOR</td></tr>
   <tr><td>Achiziții prin cumpărare directă</td><td class="flag">43%</td><td>&lt;30% recomandat</td><td class="flag">RIDICAT</td></tr>
   <tr><td>Licitații deschise în 2025</td><td class="flag">3 din 66 contracte (4,5%)</td><td>&gt;50% din valoare</td><td class="flag">EXTREM DE REDUS</td></tr>
-  <tr><td>Valoare totală contracte 2025</td><td>4.200.000 RON</td><td>—</td><td>—</td></tr>
+  <tr><td>Valoare totală contracte 2026</td><td>12.286.283 RON</td><td>—</td><td>—</td></tr>
 </table>
 
 <h2>3. NEREGULI IDENTIFICATE</h2>
