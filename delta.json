@@ -1,24 +1,8 @@
 {
-  "data_curenta": "2026-05-25T09:47:05.159520",
-  "data_anterioara": "2026-05-20T08:32:04.939020",
-  "nereguli_noi": 87,
+  "data_curenta": "2026-05-26T06:55:32.178669",
+  "data_anterioara": "2026-05-25T09:47:05.199069",
+  "nereguli_noi": 0,
   "nereguli_rezolvate": 0,
   "scor_transparenta": 17,
-  "top_noi": [
-    {
-      "titlu": "Contracte consecutive excesive cu același furnizor",
-      "severitate": "MAJOR",
-      "index": 1
-    },
-    {
-      "titlu": "Contracte consecutive excesive cu același furnizor",
-      "severitate": "MAJOR",
-      "index": 2
-    },
-    {
-      "titlu": "Contracte consecutive excesive cu același furnizor",
-      "severitate": "MAJOR",
-      "index": 3
-    }
-  ]
+  "top_noi": []
 }
