@@ -172,6 +172,37 @@ Hooks integrate în `analizeaza_red_flags()` și `analizeaza_hcl()`.
 
 ---
 
+### PR #25 — OG image · GDPR · Petiție · Accesibilitate (§5.7 + §5.8 + §5.5 + §4.4)
+
+**`genereaza_og_image(n_flags, n_critic, valoare_mil, scor, output)`** — funcție nouă în `monitor_pantelimon.py`:
+- Generează `og-image.png` (1200×630) cu Pillow la fiecare rulare a monitorului
+- Afișează: număr nereguli, critice, valoare totală mil. RON, scor transparență
+- Font fallback Windows + Linux (calibri/arial → DejaVu/Liberation)
+- `try/except ImportError` — monitor continuă și fără Pillow instalat
+- `og-image.png` static (placeholder 47 flags) inclus în repo pentru preview imediat
+
+**og:image meta tags** adăugate pe toate paginile: `transparenta_pantelimon.html`, `despre.html`, `presa.html`, `gdpr.html`, `petitie.html`; și în template-urile HTML din `monitor_pantelimon.py` (raport + furnizori).
+
+**`gdpr.html`** — pagină completă de politică de confidențialitate:
+- Tabel surse date (SEAP/ANAF/primărie/ONRC/mfinante) cu baza legală
+- Temei GDPR: Art. 6(1)(e) + Legea 363/2018 + Legea 544/2001
+- Declarație ne-colectare, hosting GitHub Pages, drepturi GDPR, contact ANSPDCP
+
+**`petitie.html`** — pagină petiție cetățenească (§5.5):
+- 4 revendicări concrete (motivații achiziții, registru contracte, declarații avere, dezbatere publică)
+- Formular cu Formspree (endpoint configurat în `action=`): nume, email, localitate, mesaj, GDPR consent
+- Contor semnături + progress bar față de obiectiv 500
+- Honeypot anti-spam, mesaj de mulțumire la `?multumim=1`
+- Baza legală: Art. 51-52 Constituție + Legea 233/2002
+
+**Accesibilitate §4.4** în `enhance.js`:
+- Skip-link `.tp-skip-link` (CSS + inject) — "Salt la conținut" vizibil la focus, transparent altfel
+- `aria-hidden="true"` pe toate emoji-urile decorative din nav (nav brand, link-uri, dark toggle)
+- `--tp-muted: #6b7280` → `#4b5563` (contrast WCAG AA: ~4.6:1 pe fond alb)
+- `injectMainId()` — adaugă `id="main-content"` pe `.page-wrap` / `<main>` / primul sibling non-nav
+
+**`genereaza_sitemap()`** extins: adăugate `gdpr.html` (priority 0.5, yearly) și `petitie.html` (priority 0.6, monthly) → total 8 pagini statice.
+
 ### §2.5 Anomalie geografică (PR #23)
 
 Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
@@ -185,8 +216,8 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 
 ## Status git (la data generării acestui fișier)
 
-- **Ultimul push reușit:** PR #24 — "sitemap dinamic + mențiuni presă"
-- **Branch main:** la zi după merge PR #20–24
+- **Ultimul push reușit:** PR #25 — "OG image + GDPR + petiție + accesibilitate"
+- **Branch main:** la zi după merge PR #20–25
 - **Suite de teste:** 111 teste, 6 fișiere, 0 erori
 - **De făcut:** run `fix_si_push.bat` pentru a regenera `raport_transparenta.html` cu toți detectori activi
 
@@ -216,6 +247,10 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 | Faza 5-J | Filtre shell company în toolbar | PR #22 |
 | Sitemap dinamic | sitemap.xml regenerat la fiecare rulare cu furnizori | PR #24 |
 | Mențiuni presă | `mentiuni_media.json` → secțiune 📰 pe paginile furnizori | PR #24 |
+| §5.7 OG image | `genereaza_og_image()` → og-image.png 1200×630 cu Pillow | PR #25 |
+| §5.8 GDPR | `gdpr.html` — politică de confidențialitate completă | PR #25 |
+| §5.5 Petiție | `petitie.html` — formular cetățenesc cu Formspree | PR #25 |
+| §4.4 Accesibilitate | skip-link, aria-hidden emojis, contrast fix, main landmark | PR #25 |
 
 ### ❌ Nu e posibil / Nu ataca fără discuție
 

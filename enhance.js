@@ -39,7 +39,7 @@
   // ──────────────────────────────────────────────────────────────
   const CSS = `
 :root {
-  --tp-bg:#ffffff; --tp-fg:#1a1a1a; --tp-muted:#6b7280;
+  --tp-bg:#ffffff; --tp-fg:#1a1a1a; --tp-muted:#4b5563;
   --tp-border:#e5e7eb; --tp-card-bg:#fafafa; --tp-link:#2563eb;
   --tp-accent:#dc2626; --tp-warn:#f59e0b; --tp-info:#eab308;
 }
@@ -48,6 +48,16 @@ html[data-tp-theme="dark"] {
   --tp-border:#2a2a2a; --tp-card-bg:#141414; --tp-link:#60a5fa;
   color-scheme: dark;
 }
+
+/* Skip link (keyboard accessibility) */
+.tp-skip-link {
+  position: absolute; top: -100%; left: 1rem;
+  background: var(--tp-accent); color: #fff;
+  padding: .5rem 1.1rem; border-radius: 0 0 6px 6px;
+  font-size: .9rem; font-weight: 600; z-index: 9999;
+  text-decoration: none; transition: top .15s;
+}
+.tp-skip-link:focus { top: 0; outline: 2px solid #fff; outline-offset: 2px; }
 
 /* Sticky nav */
 .tp-nav {
@@ -341,6 +351,14 @@ html[data-tp-theme="dark"] .tp-anap-btn {
 
   function injectNav() {
     if ($('.tp-nav')) return;
+
+    // §4.4 Skip link — keyboard users jump past nav directly to content
+    const skipLink = document.createElement('a');
+    skipLink.className = 'tp-skip-link';
+    skipLink.href = '#main-content';
+    skipLink.textContent = 'Salt la conținut';
+    document.body.insertBefore(skipLink, document.body.firstChild);
+
     const nav = document.createElement('nav');
     nav.className = 'tp-nav';
     nav.setAttribute('aria-label', 'Navigare principală');
@@ -348,31 +366,32 @@ html[data-tp-theme="dark"] .tp-anap-btn {
     const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
     const base = location.pathname.replace(/\/[^/]*$/, '/');
 
+    // §4.4 aria-hidden on decorative emojis — screen readers announce link text only
     const links = [
-      { href: 'index.html',                 label: '🏠 Acasă' },
-      { href: 'raport_transparenta.html',   label: '🚩 Nereguli' },
-      { href: 'transparenta_pantelimon.html', label: '📊 Buget' },
-      { href: 'despre.html',                label: 'ℹ️ Despre' },
-      { href: 'presa.html',                 label: '🗞️ Presă' },
+      { href: 'index.html',                   emoji: '🏠', text: 'Acasă' },
+      { href: 'raport_transparenta.html',      emoji: '🚩', text: 'Nereguli' },
+      { href: 'transparenta_pantelimon.html',  emoji: '📊', text: 'Buget' },
+      { href: 'despre.html',                   emoji: 'ℹ️', text: 'Despre' },
+      { href: 'presa.html',                    emoji: '🗞️', text: 'Presă' },
     ];
 
     const linksHTML = links.map(l => {
       const active = l.href.toLowerCase() === here || (here === '' && l.href === 'index.html');
-      return `<a href="${base}${l.href}"${active ? ' class="active" aria-current="page"' : ''}>${l.label}</a>`;
+      return `<a href="${base}${l.href}"${active ? ' class="active" aria-current="page"' : ''}><span aria-hidden="true">${l.emoji}</span> ${l.text}</a>`;
     }).join('');
 
     nav.innerHTML = `
       <div class="tp-nav-inner">
-        <a href="${base}index.html" class="tp-nav-brand">🏛️ Transparența Pantelimon</a>
+        <a href="${base}index.html" class="tp-nav-brand"><span aria-hidden="true">🏛️</span> Transparența Pantelimon</a>
         <div class="tp-nav-links">
           ${linksHTML}
           <a href="https://transparenta.eu/entities/4420759" target="_blank" rel="noopener">ANAF ↗</a>
           <a href="https://github.com/transparenta-locala/transparenta-pantelimon" target="_blank" rel="noopener">GitHub ↗</a>
         </div>
-        <button class="tp-theme-toggle" id="tp-theme-btn" aria-label="Comută temă luminoasă/întunecată" title="Comută temă">🌓</button>
+        <button class="tp-theme-toggle" id="tp-theme-btn" aria-label="Comută temă luminoasă/întunecată" title="Comută temă"><span aria-hidden="true">🌓</span></button>
       </div>
     `;
-    document.body.insertBefore(nav, document.body.firstChild);
+    document.body.insertBefore(nav, skipLink.nextSibling);
 
     // Toggle dark/light mode
     $('#tp-theme-btn').addEventListener('click', () => {
@@ -381,6 +400,23 @@ html[data-tp-theme="dark"] .tp-anap-btn {
       document.documentElement.dataset.tpTheme = next;
       try { localStorage.setItem('tp-theme', next); } catch (e) {}
     });
+  }
+
+  // ──────────────────────────────────────────────────────────────
+  // §4.4 MAIN LANDMARK — id="main-content" pentru skip-link
+  // ──────────────────────────────────────────────────────────────
+  function injectMainId() {
+    // Dacă există deja un element cu id="main-content" sau un <main>, nu facem nimic
+    if (document.getElementById('main-content') || document.querySelector('main[id]')) return;
+    const mainEl = document.querySelector('main');
+    if (mainEl) { mainEl.id = 'main-content'; return; }
+    // Fallback: prima div.page-wrap sau primul child al body după nav/banner
+    const wrap = document.querySelector('.page-wrap, [role="main"], article, #content, #main');
+    if (wrap) { wrap.id = 'main-content'; return; }
+    // Ultimul fallback: primul sibling non-nav după nav
+    const nav = document.querySelector('.tp-nav');
+    const sibling = nav ? nav.nextElementSibling : document.body.firstElementChild;
+    if (sibling && !sibling.id) sibling.id = 'main-content';
   }
 
   // ──────────────────────────────────────────────────────────────
@@ -1179,6 +1215,7 @@ html[data-tp-theme="dark"] .tp-anap-btn {
     applyTheme();
     injectStyle();
     injectNav();
+    injectMainId();
     injectBackToTop();
     showWhatsNewBanner();
 
