@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-05-26T06:55:32.206608",
+  "generated_at": "2026-05-26T12:59:48.757413",
   "entity": {
     "name": "Orașul Pantelimon",
     "cif": "4420759",
@@ -3927,8 +3927,8 @@
   },
   "seap_debug": [
     "IS_CI=True MAX_FILE_MB=25MB cui=4420759",
-    "Pachet 2025 eroare: HTTPSConnectionPool(host='data.gov.ro', port=443): Max retries exceeded with url: /api/3/action/package_show?id=achizitii-publice-2025 (Caused by ConnectTimeoutError(<HTTPSConnection(host='data.gov.ro', port=443) at 0x7f3378302010>, 'Connection to data.gov.ro timed out. (connect timeout=20)'))",
-    "Pachet 2026 eroare: HTTPSConnectionPool(host='data.gov.ro', port=443): Max retries exceeded with url: /api/3/action/package_show?id=achizitii-publice-2026 (Caused by ConnectTimeoutError(<HTTPSConnection(host='data.gov.ro', port=443) at 0x7f3378310250>, 'Connection to data.gov.ro timed out. (connect timeout=20)'))",
+    "Pachet 2025 eroare: HTTPSConnectionPool(host='data.gov.ro', port=443): Max retries exceeded with url: /api/3/action/package_show?id=achizitii-publice-2025 (Caused by ConnectTimeoutError(<HTTPSConnection(host='data.gov.ro', port=443) at 0x7f71583ba6d0>, 'Connection to data.gov.ro timed out. (connect timeout=20)'))",
+    "Pachet 2026 eroare: HTTPSConnectionPool(host='data.gov.ro', port=443): Max retries exceeded with url: /api/3/action/package_show?id=achizitii-publice-2026 (Caused by ConnectTimeoutError(<HTTPSConnection(host='data.gov.ro', port=443) at 0x7f715761ce10>, 'Connection to data.gov.ro timed out. (connect timeout=20)'))",
     "surse_ok=0 contracte=0",
     "FALLBACK: loaded 506 contracte din contracte.json"
   ]
