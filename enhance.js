@@ -373,6 +373,7 @@ html[data-tp-theme="dark"] .tp-anap-btn {
       { href: 'transparenta_pantelimon.html',  emoji: '📊', text: 'Buget' },
       { href: 'despre.html',                   emoji: 'ℹ️', text: 'Despre' },
       { href: 'presa.html',                    emoji: '🗞️', text: 'Presă' },
+      { href: 'petitie.html',                  emoji: '✍️', text: 'Petiție' },
     ];
 
     const linksHTML = links.map(l => {
