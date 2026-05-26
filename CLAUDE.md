@@ -95,6 +95,34 @@ git push origin main
 - Funcție JS `printRaport()` — deschide toate `.flag-detail`, ascunde `.flag-arrow`, apelează `window.print()`
 - Pentru a salva ca PDF: din dialogul de print alege "Salvare ca PDF" / "Save as PDF"
 
+### risc_firma.py — modul detector shell companies (PR #20, #21, #22)
+
+**PR #20** — `risc_firma.py` + `tests/test_risc_firma.py` (20 teste unitare, 0 rețea)
+
+- `fetch_firma_anaf(cif)` — scrape mfinante.gov.ro, User-Agent bot, rate limit 1.2s, cache SQLite TTL 30 zile
+- `evaluate_shell_risk(firma_data, contract_date, contract_value)` → indicatori factuali:
+  - `CIFRA_AFACERI_ZERO` / CRITIC — CA = 0 RON în anul anterior contractului
+  - `CIFRA_AFACERI_MULT_SUB_CONTRACT` / MAJOR — CA < 10% din valoarea contractului
+  - `CIFRA_AFACERI_SUB_CONTRACT` / MEDIU — CA < 50% din valoarea contractului
+  - `ZERO_ANGAJATI` / MAJOR — 0 angajați declarați la ANAF
+  - `FOARTE_PUTINI_ANGAJATI` / MEDIU — 1-2 angajați
+- `get_risk_panel_html(cif, firma_data, contract_date, contract_value)` → bloc HTML
+
+**PR #21** — Integrare în `monitor_pantelimon.py`
+
+- Import opțional cu try/except — monitor funcționează și fără risc_firma
+- Pre-fetch pentru toți furnizorii unici înainte de loop (evită request-uri inutile)
+- Panel HTML injectat în secțiunea `flag-detail` a fiecărui card de nereguă
+- Atribut `data-supplier-cif` adăugat pe `.tp-flag` pentru enhance.js
+
+**PR #22** — Faza 5-J: filtre shell company în `enhance.js`
+
+- Rând nou de chips în toolbar (afișat doar dacă raportul conține panele): `👥 0 angajați` | `📉 CA = 0 RON` | `⚠️ Orice risc`
+- `state.shellFilter` exclusiv; degradare graceful fără panele
+- items[] îmbogățiți cu `riskCount` + `riskText` din `.supplier-risk-panel`
+
+---
+
 ### Faza 3 — Detectori batch 1 (PR #13, commit 40fee9e)
 
 4 funcții pure de detecție adăugate înainte de `analizeaza_red_flags()`:
@@ -125,9 +153,9 @@ Hooks integrate în `analizeaza_red_flags()` și `analizeaza_hcl()`.
 
 ## Status git (la data generării acestui fișier)
 
-- **Ultimul push reușit:** commit `40fee9e` (PR #13) — "Faza 3: 4 detectori noi (batch 1)"
-- **Branch main:** la zi după merge PR #12 (Faza 2.5) + PR #13 (Faza 3 batch 1)
-- **De făcut:** run `fix_si_push.bat` pentru a regenera `raport_transparenta.html` cu noii detectori activi
+- **Ultimul push reușit:** PR #22 — "Faza 5-J: filtre shell company în toolbar"
+- **Branch main:** la zi după merge PR #20 (risc_firma.py) + PR #21 (integrare monitor) + PR #22 (Faza 5-J enhance.js)
+- **De făcut:** run `fix_si_push.bat` pentru a regenera `raport_transparenta.html` cu noii detectori și panelele risc_firma active
 
 ---
 
