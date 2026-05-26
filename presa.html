@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kit presă — Transparența Pantelimon</title>
+<meta name="description" content="Date actualizate lunar pentru jurnaliști: statistici, top nereguli, metodologie, contact și date deschise despre achizițiile Primăriei Pantelimon.">
+<link rel="canonical" href="https://aprindemlumina.eu/presa.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aprindemlumina.eu/presa.html">
+<meta property="og:title" content="Kit presă — Transparența Pantelimon">
+<meta property="og:description" content="Statistici, top nereguli, metodologie și date deschise pentru jurnaliști. Actualizate lunar din SEAP și ANAF.">
+<meta property="og:locale" content="ro_RO">
+<meta property="og:site_name" content="Transparența Pantelimon">
+<link rel="alternate" type="application/atom+xml" title="Nereguli noi — Transparența Pantelimon" href="https://aprindemlumina.eu/feed.xml">
+<script src="enhance.js" defer></script>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 0; padding: 0; background: #f9fafb; color: #1a1a1a; }
+  .page-wrap { max-width: 960px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+  h1 { font-size: 1.9rem; margin: 1.5rem 0 .4rem; }
+  h2 { font-size: 1.2rem; margin: 2rem 0 .75rem; border-bottom: 2px solid #e5e7eb; padding-bottom: .4rem; }
+  h3 { font-size: 1rem; margin: 1.25rem 0 .5rem; color: #374151; }
+  p { margin: .5rem 0; line-height: 1.65; }
+  a { color: #2563eb; }
+  .badge { display: inline-block; padding: .15rem .55rem; border-radius: 999px; font-size: .75rem; font-weight: 700; }
+  .badge-critic { background: #fef2f2; color: #dc2626; border: 1px solid #fca5a5; }
+  .badge-major  { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+  .badge-mediu  { background: #fefce8; color: #854d0e; border: 1px solid #fef08a; }
+
+  /* KPI grid */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1rem; margin: 1.25rem 0; }
+  .kpi-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 1rem 1.2rem; text-align: center; }
+  .kpi-card .num { font-size: 2rem; font-weight: 800; color: #dc2626; display: block; }
+  .kpi-card .label { font-size: .78rem; color: #6b7280; }
+  .kpi-card.critic .num { color: #dc2626; }
+  .kpi-card.major  .num { color: #f59e0b; }
+  .kpi-card.mediu  .num { color: #eab308; }
+  .kpi-card.neutral .num { color: #2563eb; }
+
+  /* Table */
+  .tp-table { width: 100%; border-collapse: collapse; font-size: .88rem; margin: .75rem 0; }
+  .tp-table th { background: #f3f4f6; text-align: left; padding: .6rem .8rem; font-size: .8rem; font-weight: 600; color: #374151; }
+  .tp-table td { padding: .55rem .8rem; border-bottom: 1px solid #f3f4f6; vertical-align: top; }
+  .tp-table tr:hover td { background: #f9fafb; }
+  .tp-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* Press kit box */
+  .pk-box { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 1.5rem; margin: 1rem 0; }
+  .pk-actions { display: flex; gap: .75rem; flex-wrap: wrap; margin-top: 1rem; }
+  .pk-btn { padding: .5rem 1rem; border-radius: 6px; font-size: .88rem; font-weight: 600; text-decoration: none; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: .4rem; }
+  .pk-btn-primary { background: #dc2626; color: #fff; }
+  .pk-btn-primary:hover { background: #b91c1c; }
+  .pk-btn-secondary { background: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; }
+  .pk-btn-secondary:hover { background: #e5e7eb; }
+
+  /* Data sources */
+  .sources-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .75rem; margin: .75rem 0; }
+  .source-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1rem; font-size: .88rem; }
+  .source-card strong { display: block; margin-bottom: .3rem; }
+  .source-card a { display: block; font-size: .8rem; margin-top: .5rem; }
+
+  /* Contact */
+  .contact-list { list-style: none; padding: 0; margin: .5rem 0; }
+  .contact-list li { padding: .4rem 0; border-bottom: 1px solid #f3f4f6; font-size: .9rem; }
+  .contact-list li:last-child { border: 0; }
+
+  /* Skeleton loader */
+  .skeleton { background: #e5e7eb; border-radius: 4px; animation: skPulse 1.4s ease-in-out infinite; display: inline-block; }
+  @keyframes skPulse { 0%,100% { opacity:1; } 50% { opacity:.4; } }
+
+  @media print { .pk-actions, nav, .pk-btn { display: none !important; } }
+  @media (max-width: 600px) { h1 { font-size: 1.4rem; } .kpi-card .num { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <p style="font-size:.85rem;color:#6b7280;margin-bottom:.25rem">📰 Date pentru jurnaliști &amp; cercetători</p>
+  <h1>🗞️ Kit presă — Transparența Pantelimon</h1>
+  <p style="color:#6b7280;font-size:.9rem">Actualizat lunar · Sursa: SEAP (e-licitatie.ro) + ANAF (transparenta.eu) · Ultima actualizare: <span id="pk-date" class="skeleton" style="width:120px;height:1em">&nbsp;</span></p>
+
+  <!-- ── STATISTICI LA ZI ── -->
+  <h2>📊 Statistici la zi</h2>
+  <div class="kpi-grid">
+    <div class="kpi-card critic"><span class="num" id="pk-critic">–</span><span class="label">🔴 Nereguli CRITICE</span></div>
+    <div class="kpi-card major"> <span class="num" id="pk-major">–</span> <span class="label">🟠 Nereguli MAJORE</span></div>
+    <div class="kpi-card mediu"> <span class="num" id="pk-mediu">–</span> <span class="label">🟡 Nereguli MEDIU</span></div>
+    <div class="kpi-card neutral"><span class="num" id="pk-contracts">–</span><span class="label">📋 Contracte analizate</span></div>
+    <div class="kpi-card neutral"><span class="num" id="pk-value">–</span><span class="label">💰 Valoare totală (mil. RON)</span></div>
+    <div class="kpi-card neutral"><span class="num" id="pk-scor">–</span><span class="label">⭐ Scor transparență (/100)</span></div>
+  </div>
+
+  <!-- ── TOP 10 NEREGULI ── -->
+  <h2>🚩 Top 10 cele mai mari nereguli</h2>
+  <div id="pk-top10-wrap">
+    <table class="tp-table" id="pk-top10">
+      <thead><tr>
+        <th>#</th><th>Severitate</th><th>Neregulă</th><th>Furnizor</th><th class="num">Valoare (RON)</th><th>Data</th>
+      </tr></thead>
+      <tbody id="pk-top10-body">
+        <tr><td colspan="6" style="text-align:center;padding:2rem;color:#9ca3af">⏳ Se încarcă…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── TOP 10 FURNIZORI ── -->
+  <h2>🏢 Top 10 furnizori după valoare contracte cu nereguli</h2>
+  <table class="tp-table" id="pk-top-firms">
+    <thead><tr>
+      <th>#</th><th>Firmă</th><th class="num">Nereguli</th><th class="num">Valoare totală (RON)</th>
+    </tr></thead>
+    <tbody id="pk-firms-body">
+      <tr><td colspan="4" style="text-align:center;padding:2rem;color:#9ca3af">⏳ Se încarcă…</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ── PRESS KIT DOWNLOADABLE ── -->
+  <h2>📥 Press kit descărcabil</h2>
+  <div class="pk-box">
+    <p>Text predefinit pentru articol — copiați și editați valorile în paranteze pătrate:</p>
+    <textarea id="pk-text" style="width:100%;min-height:260px;font-size:.82rem;font-family:monospace;border:1px solid #e5e7eb;border-radius:6px;padding:.75rem;color:#374151;background:#f9fafb;resize:vertical" readonly>Se generează…</textarea>
+    <div class="pk-actions">
+      <button class="pk-btn pk-btn-primary" onclick="copyPressKit()">📋 Copiază</button>
+      <button class="pk-btn pk-btn-secondary" onclick="downloadPressKit()">⬇️ Descarcă .txt</button>
+      <a class="pk-btn pk-btn-secondary" href="raport.json" target="_blank" rel="noopener">📊 API JSON ↗</a>
+      <a class="pk-btn pk-btn-secondary" href="feed.xml" target="_blank" rel="noopener">📡 Feed RSS ↗</a>
+    </div>
+  </div>
+
+  <!-- ── DATE DESCHISE ── -->
+  <h2>🔓 Date deschise</h2>
+  <div class="sources-grid">
+    <div class="source-card">
+      <strong>📊 raport.json</strong>
+      <span>Toate neregulile + totaluri + scor de transparență.</span>
+      <a href="raport.json" target="_blank" rel="noopener">aprindemlumina.eu/raport.json ↗</a>
+    </div>
+    <div class="source-card">
+      <strong>📋 contracte.json</strong>
+      <span>Lista completă a contractelor analizate din SEAP.</span>
+      <a href="contracte.json" target="_blank" rel="noopener">aprindemlumina.eu/contracte.json ↗</a>
+    </div>
+    <div class="source-card">
+      <strong>📡 feed.xml (Atom/RSS)</strong>
+      <span>Top 20 nereguli noi. Compatible cu Feedly, Inoreader.</span>
+      <a href="feed.xml" target="_blank" rel="noopener">aprindemlumina.eu/feed.xml ↗</a>
+    </div>
+    <div class="source-card">
+      <strong>📖 Schema API (API.md)</strong>
+      <span>Documentație completă a câmpurilor JSON.</span>
+      <a href="https://github.com/transparenta-locala/transparenta-pantelimon/blob/main/API.md" target="_blank" rel="noopener">GitHub → API.md ↗</a>
+    </div>
+  </div>
+  <p style="font-size:.82rem;color:#6b7280"><strong>Licență:</strong> Creative Commons CC-BY 4.0 — atribuire obligatorie: „Transparența Pantelimon / aprindemlumina.eu"</p>
+
+  <!-- ── METODOLOGIE ── -->
+  <h2>🔬 Metodologie</h2>
+  <p>Datele sunt extrase automat lunar din surse publice oficiale. Se aplică 12+ algoritmi de detecție a pattern-urilor de risc:</p>
+  <table class="tp-table" style="font-size:.82rem">
+    <thead><tr><th>Algoritm</th><th>Ce detectează</th><th>Bază legală</th></tr></thead>
+    <tbody>
+      <tr><td>Achiziție directă peste prag</td><td>Contract individual >130.000 RON fără licitație</td><td>L98/2016 art.7</td></tr>
+      <tr><td>Achiziție directă aproape de prag</td><td>Valoare >97% din pragul legal (>126.100 RON)</td><td>L98/2016 art.7</td></tr>
+      <tr><td>Ofertant unic</td><td>Un singur ofertant — lipsă concurență</td><td>L98/2016 art.2, art.209</td></tr>
+      <tr><td>Fragmentare temporară</td><td>Contracte similare sub prag, sumă combinată >130.000 RON</td><td>L98/2016 art.11 alin.(1)</td></tr>
+      <tr><td>Concentrare furnizor</td><td>Top 3 furnizori >60% din valoarea totală</td><td>L98/2016 art.2 (concurență)</td></tr>
+      <tr><td>Contracte consecutive</td><td>Același furnizor, ≥4 contracte în 30 de zile</td><td>L98/2016 art.11</td></tr>
+      <tr><td>Ședințe extraordinare excesive</td><td>Rata ședințelor extraordinare CL >25%</td><td>L215/2001 art.39</td></tr>
+      <tr><td>Publicare întârziată</td><td>Publicare SEAP >11 zile lucrătoare de la atribuire</td><td>L98/2016 art.122</td></tr>
+      <tr><td>Valori identice aceeași zi</td><td>Aceeași valoare exactă la firme diferite în aceeași zi</td><td>L98/2016 art.11</td></tr>
+      <tr><td>Burst contracte</td><td>Volum anormal de contracte într-o singură zi</td><td>–</td></tr>
+      <tr><td>Semnare zile nelucrătoare</td><td>Contract semnat în weekend sau sărbătoare legală</td><td>–</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:.85rem">Metodologie completă: <a href="despre.html">aprindemlumina.eu/despre.html</a> · Cod sursă: <a href="https://github.com/transparenta-locala/transparenta-pantelimon" target="_blank" rel="noopener">GitHub</a></p>
+
+  <!-- ── CONTACT ── -->
+  <h2>📬 Contact</h2>
+  <div class="pk-box">
+    <p><strong>Inițiativă cetățenească independentă</strong>, membrii USR Pantelimon</p>
+    <ul class="contact-list">
+      <li>💬 <strong>GitHub Issues</strong> (recomandat): <a href="https://github.com/transparenta-locala/transparenta-pantelimon/issues" target="_blank" rel="noopener">github.com/transparenta-locala/transparenta-pantelimon/issues</a></li>
+      <li>📰 Nu suntem o redacție — pentru verificarea faptelor, contactați direct instituțiile de mai jos</li>
+    </ul>
+    <h3>Instituții la care pot fi depuse sesizări</h3>
+    <ul class="contact-list">
+      <li>🏛️ <strong>ANAP</strong> — Agenția Națională Achiziții Publice: <a href="https://www.anap.gov.ro" target="_blank" rel="noopener">anap.gov.ro</a> · sesizari@anap.gov.ro</li>
+      <li>🏛️ <strong>Curtea de Conturi</strong>: <a href="https://www.curteadeconturi.ro" target="_blank" rel="noopener">curteadeconturi.ro</a></li>
+      <li>🏛️ <strong>ANI</strong> — Agenția Națională de Integritate (conflict de interese): <a href="https://www.integritate.eu" target="_blank" rel="noopener">integritate.eu</a></li>
+      <li>🏛️ <strong>DNA</strong> — Direcția Națională Anticorupție (fapte penale): <a href="https://www.pna.ro" target="_blank" rel="noopener">pna.ro</a></li>
+      <li>🏛️ <strong>Prefectura Ilfov</strong> — control legalitate acte administrative</li>
+    </ul>
+  </div>
+
+  <!-- ── DISCLAIMER ── -->
+  <h2>⚖️ Disclaimer</h2>
+  <div class="pk-box" style="background:#fef2f2;border-color:#fca5a5">
+    <p style="margin:0;font-size:.88rem">Datele afișate sunt fapte publice extrase automat din surse oficiale (SEAP, ANAF). <strong>Neregulile detectate sunt indicatori de risc factuali</strong>, nu concluzii juridice definitive. Concluziile privind intenția sau vinovăția rămân la latitudinea autorităților competente și a cititorului. Datele SEAP au un decalaj de 1–3 luni față de realitate. Inițiativa operează exclusiv în baza dreptului la informare publică (Legea 544/2001) și transparenței bugetare (Legea 273/2006).</p>
+  </div>
+
+  <p style="text-align:center;font-size:.82rem;color:#9ca3af;margin-top:3rem">
+    <a href="index.html">🏠 Acasă</a> &nbsp;·&nbsp;
+    <a href="raport_transparenta.html">🚩 Raport nereguli</a> &nbsp;·&nbsp;
+    <a href="despre.html">ℹ️ Despre proiect</a> &nbsp;·&nbsp;
+    <a href="https://github.com/transparenta-locala/transparenta-pantelimon" target="_blank" rel="noopener">GitHub ↗</a>
+  </p>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  function fmtRON(n) {
+    if (!n) return '0';
+    return new Intl.NumberFormat('ro-RO').format(Math.round(n));
+  }
+  function fmtMil(n) {
+    return (n / 1_000_000).toFixed(1);
+  }
+  function sev(s) {
+    const cls = { CRITIC: 'critic', MAJOR: 'major', MEDIU: 'mediu' }[s] || 'mediu';
+    return `<span class="badge badge-${cls}">${s}</span>`;
+  }
+  function esc(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  async function loadData() {
+    let data;
+    try {
+      const r = await fetch('raport.json', { cache: 'no-store' });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      data = await r.json();
+    } catch (e) {
+      console.warn('[presa] Nu am putut încărca raport.json:', e);
+      document.getElementById('pk-date').textContent = '(date indisponibile)';
+      return;
+    }
+
+    // ── Data generare ──
+    const genAt = data.generated_at ? new Date(data.generated_at) : null;
+    document.getElementById('pk-date').textContent = genAt
+      ? genAt.toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' })
+      : '–';
+
+    // ── KPI ──
+    const t = data.totals || {};
+    document.getElementById('pk-critic').textContent    = t.by_severity?.CRITIC ?? '–';
+    document.getElementById('pk-major').textContent     = t.by_severity?.MAJOR  ?? '–';
+    document.getElementById('pk-mediu').textContent     = t.by_severity?.MEDIU  ?? '–';
+    document.getElementById('pk-contracts').textContent = t.contracts_analyzed  ?? '–';
+    document.getElementById('pk-value').textContent     = t.total_value_ron ? fmtMil(t.total_value_ron) : '–';
+    const scor = data.scor_transparenta?.scor ?? data.scor_transparenta;
+    document.getElementById('pk-scor').textContent = (scor != null && scor !== '') ? scor : '–';
+
+    // ── Top 10 nereguli (după sum_ron desc) ──
+    const flags = (data.flags || []).slice().sort((a, b) => (b.sum_ron || 0) - (a.sum_ron || 0));
+    const top10 = flags.slice(0, 10);
+    const tbody10 = document.getElementById('pk-top10-body');
+    if (top10.length) {
+      tbody10.innerHTML = top10.map((f, i) => `
+        <tr>
+          <td style="color:#9ca3af;font-size:.8rem">${i + 1}</td>
+          <td>${sev(f.severity)}</td>
+          <td><a href="raport_transparenta.html#${esc(f.anchor)}" style="color:#1a1a1a;font-weight:600;text-decoration:none">${esc(f.title)}</a></td>
+          <td style="font-size:.82rem;color:#374151">${esc(f.supplier || '–')}</td>
+          <td class="num">${fmtRON(f.sum_ron)}</td>
+          <td style="font-size:.8rem;color:#9ca3af">${esc(f.date || '–')}</td>
+        </tr>`).join('');
+    } else {
+      tbody10.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#9ca3af;padding:1.5rem">Nicio nereguă găsită</td></tr>';
+    }
+
+    // ── Top 10 furnizori ──
+    const firmMap = new Map();
+    (data.flags || []).forEach(f => {
+      if (!f.supplier) return;
+      const cur = firmMap.get(f.supplier) || { count: 0, total: 0 };
+      cur.count++;
+      cur.total += f.sum_ron || 0;
+      firmMap.set(f.supplier, cur);
+    });
+    const topFirms = Array.from(firmMap.entries())
+      .sort((a, b) => b[1].total - a[1].total)
+      .slice(0, 10);
+    const tbodyF = document.getElementById('pk-firms-body');
+    if (topFirms.length) {
+      tbodyF.innerHTML = topFirms.map(([name, v], i) => `
+        <tr>
+          <td style="color:#9ca3af;font-size:.8rem">${i + 1}</td>
+          <td style="font-weight:600">${esc(name)}</td>
+          <td class="num">${v.count}</td>
+          <td class="num">${fmtRON(v.total)}</td>
+        </tr>`).join('');
+    } else {
+      tbodyF.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#9ca3af;padding:1.5rem">–</td></tr>';
+    }
+
+    // ── Press kit text ──
+    const dataStr = genAt ? genAt.toLocaleDateString('ro-RO') : '–';
+    const valMil  = t.total_value_ron ? fmtMil(t.total_value_ron) : '–';
+    const top5txt = flags.slice(0, 5).map((f, i) =>
+      `  ${i+1}. [${f.severity}] ${f.title} — ${f.supplier || '–'} — ${fmtRON(f.sum_ron)} RON (${f.date || '–'})`
+    ).join('\n');
+
+    const pkText = `PRESS KIT — Transparența Pantelimon
+Data: ${dataStr}
+URL: https://aprindemlumina.eu/presa.html
+
+== STATISTICI ==
+Total nereguli detectate: ${t.flags ?? '–'}
+  - CRITICE: ${t.by_severity?.CRITIC ?? '–'}
+  - MAJORE:  ${t.by_severity?.MAJOR  ?? '–'}
+  - MEDIU:   ${t.by_severity?.MEDIU  ?? '–'}
+Contracte analizate: ${t.contracts_analyzed ?? '–'}
+Valoare totală contracte: ${valMil} milioane RON
+Scor transparență: ${(scor != null && scor !== '') ? scor + '/100' : '–'}
+
+== TOP 5 CELE MAI MARI NEREGULI ==
+${top5txt}
+
+== DATE DESCHISE ==
+API JSON:       https://aprindemlumina.eu/raport.json
+Contracte JSON: https://aprindemlumina.eu/contracte.json
+Feed RSS/Atom:  https://aprindemlumina.eu/feed.xml
+Schema API:     https://github.com/transparenta-locala/transparenta-pantelimon/blob/main/API.md
+
+== SESIZĂRI ==
+ANAP:           sesizari@anap.gov.ro
+Curtea Conturi: https://www.curteadeconturi.ro
+ANI:            https://www.integritate.eu
+DNA:            https://www.pna.ro
+
+== CONTACT ==
+GitHub Issues: https://github.com/transparenta-locala/transparenta-pantelimon/issues
+
+== METODOLOGIE ==
+https://aprindemlumina.eu/despre.html
+Cod sursă: https://github.com/transparenta-locala/transparenta-pantelimon
+
+== DISCLAIMER ==
+Datele afișate sunt fapte publice extrase automat din surse oficiale (SEAP, ANAF).
+Neregulile detectate sunt indicatori de risc factuali, nu concluzii juridice definitive.
+Licență date: Creative Commons CC-BY 4.0 — atribuire: "Transparența Pantelimon / aprindemlumina.eu"
+`.trim();
+
+    document.getElementById('pk-text').value = pkText;
+    window._pkText = pkText;
+  }
+
+  function copyPressKit() {
+    const ta = document.getElementById('pk-text');
+    ta.select();
+    try {
+      navigator.clipboard.writeText(ta.value).then(() => {
+        const btn = document.querySelector('button[onclick="copyPressKit()"]');
+        if (btn) { const orig = btn.textContent; btn.textContent = '✅ Copiat!'; setTimeout(() => btn.textContent = orig, 2000); }
+      });
+    } catch (e) {
+      document.execCommand('copy');
+    }
+  }
+
+  function downloadPressKit() {
+    const text = window._pkText || document.getElementById('pk-text').value;
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'press-kit-transparenta-pantelimon.txt';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  window.copyPressKit = copyPressKit;
+  window.downloadPressKit = downloadPressKit;
+
+  loadData();
+})();
+</script>
+</body>
+</html>
