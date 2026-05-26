@@ -1,0 +1,26 @@
+name: 🧪 Teste unitare
+
+on:
+  push:
+    branches: [main, 'feat/**']
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🐍 Configurare Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Instalare dependente
+        run: pip install -r requirements.txt pytest
+
+      - name: 🧪 Rulare teste
+        run: pytest tests/ -v --tb=short
