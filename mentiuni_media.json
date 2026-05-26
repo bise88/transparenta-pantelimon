@@ -1,0 +1,25 @@
+{
+  "_comentariu": "Fișier curatorial — adaugă MANUAL după verificare. NU automatiza prin Google News (risc false-positive).",
+  "_format": {
+    "DENUMIRE_FIRMA_EXACT": [
+      {
+        "titlu": "Titlul articolului jurnalistic",
+        "url": "https://...",
+        "data": "YYYY-MM-DD",
+        "outlet": "rise.ro",
+        "rezumat": "Scurtă descriere a relevanței pentru această firmă (1-2 propoziții)."
+      }
+    ]
+  },
+  "_exemple": {
+    "MIDAS ROAD S.R.L.": [
+      {
+        "titlu": "Exemplu: Investigație despre achizițiile Pantelimon",
+        "url": "https://rise.ro/exemplu",
+        "data": "2026-01-15",
+        "outlet": "rise.ro",
+        "rezumat": "Articol care menționează firma în contextul achizițiilor directe la Pantelimon."
+      }
+    ]
+  }
+}
