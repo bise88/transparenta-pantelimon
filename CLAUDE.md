@@ -216,8 +216,8 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 
 ## Status git (la data generării acestui fișier)
 
-- **Ultimul push reușit:** PR #25 — "OG image + GDPR + petiție + accesibilitate"
-- **Branch main:** la zi după merge PR #20–25
+- **Ultimul push reușit:** PR #26 — "nav petitie + cross-linking gdpr/petitie"
+- **Branch main:** la zi după merge PR #20–26
 - **Suite de teste:** 111 teste, 6 fișiere, 0 erori
 - **De făcut:** run `fix_si_push.bat` pentru a regenera `raport_transparenta.html` cu toți detectori activi
 
@@ -251,6 +251,7 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 | §5.8 GDPR | `gdpr.html` — politică de confidențialitate completă | PR #25 |
 | §5.5 Petiție | `petitie.html` — formular cetățenesc cu Formspree | PR #25 |
 | §4.4 Accesibilitate | skip-link, aria-hidden emojis, contrast fix, main landmark | PR #25 |
+| Nav + cross-linking | petitie.html în nav; CTA petiție în index/transparenta; gdpr în footere | PR #26 |
 
 ### ❌ Nu e posibil / Nu ataca fără discuție
 
