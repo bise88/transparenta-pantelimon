@@ -216,9 +216,9 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 
 ## Status git (la data generării acestui fișier)
 
-- **Ultimul push reușit:** PR #33 — ".gitignore extins + AUDIT.md + config.json.template"
-- **Branch main:** la zi după merge PR #20–33
-- **Suite de teste:** 153 teste, 10 fișiere, 0 erori
+- **Ultimul push reușit:** PR #34 — "§4.3 Service Worker PWA + §3.3 PNRR + §5.6-CLI"
+- **Branch main:** la zi după merge PR #20–34
+- **Suite de teste:** 180 teste, 12 fișiere, 0 erori
 - **De făcut:** run `fix_si_push.bat` pentru a regenera `raport_transparenta.html` cu toți detectori activi
 
 ## Stare roadmap IMPROVEMENTS.md + AUDIT.md (la zi)
@@ -264,6 +264,8 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 | §5.1 Press kit auto-generat | `genereaza_press_kit()` → `press_kit.json` + `press_kit.md`; `presa.html` descărcare `.md` + `loadPressKitJson()` | PR #31 |
 | Docs README | Test count 37→153, tabel 19 algoritmi, tabel surse externe, structura repo completă | PR #32 |
 | Repo hygiene | `.gitignore` extins (*.bat, scripturi locale, 201.html); `AUDIT.md` + `config.json.template` adăugate | PR #33 |
+| §4.3 Service Worker | `sw.js` (Cache-First static + Network-First JSON) + `manifest.webmanifest` + iconuri PWA + SW registration în `enhance.js` | PR #34 |
+| §3.3 PNRR | `fetch_pnrr_projects()` + SQLite cache 7z + `pnrr_projects.json` — proiecte.pnrr.gov.ro | PR #34 |
 
 ### ❌ Nu e posibil / Nu ataca fără discuție
 
