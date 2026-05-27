@@ -54,3 +54,32 @@ dist/
 build/
 *.egg-info/
 .eggs/
+.pytest_cache/
+
+# ============================================================
+# Scripturi locale Windows (utilitate locala, nu apartin repo)
+# ============================================================
+*.bat
+*.cmd
+fix_si_push.bat
+push_acum.bat
+ruleaza_monitor.bat
+align_git.bat
+commit_fix.bat
+push_fix_*.bat
+push_onrc.bat
+instaleaza_ocr.bat
+
+# ============================================================
+# Scripturi utilitare locale (nu apartin repo-ului public)
+# ============================================================
+monitor_tmp.py
+check_cui.py
+test_seap_api.py
+upload_contracte.py
+fetch_seap_cron.py
+
+# ============================================================
+# Backup-uri HTML stale
+# ============================================================
+201.html
