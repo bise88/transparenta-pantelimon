@@ -1,0 +1,116 @@
+/**
+ * sw.js — Service Worker §4.3
+ * Transparența Pantelimon — https://aprindemlumina.eu
+ *
+ * Strategie: Cache-First pentru resurse statice, Network-First pentru date JSON.
+ * Permite consultare offline a raportului și paginii principale.
+ */
+
+const CACHE_VERSION = 'tp-v1';
+const CACHE_STATIC = 'tp-static-v1';
+const CACHE_DATA   = 'tp-data-v1';
+
+// Resurse core — pre-cached la install
+const CORE_URLS = [
+  '/',
+  '/index.html',
+  '/raport_transparenta.html',
+  '/transparenta_pantelimon.html',
+  '/enhance.js',
+  '/harta.html',
+  '/presa.html',
+  '/despre.html',
+  '/petitie.html',
+  '/gdpr.html',
+];
+
+// Date JSON — Network-First cu fallback cache
+const DATA_URLS = [
+  '/raport.json',
+  '/delta.json',
+  '/contracte.json',
+  '/press_kit.json',
+  '/firme_geocoded.json',
+];
+
+// ── Install: pre-cache resurse core ───────────────────────────────────────────
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_STATIC).then(cache => {
+      return cache.addAll(CORE_URLS).catch(err => {
+        // Dacă o resursă lipsește, ignorăm eroarea (graceful)
+        console.warn('[SW] Pre-cache parțial:', err.message);
+      });
+    }).then(() => self.skipWaiting())
+  );
+});
+
+// ── Activate: șterge cache-uri vechi ─────────────────────────────────────────
+self.addEventListener('activate', event => {
+  const KEEP = [CACHE_STATIC, CACHE_DATA];
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.filter(k => !KEEP.includes(k)).map(k => caches.delete(k))
+      )
+    ).then(() => self.clients.claim())
+  );
+});
+
+// ── Fetch: strategii diferite per tip resursă ─────────────────────────────────
+self.addEventListener('fetch', event => {
+  const { request } = event;
+  const url = new URL(request.url);
+
+  // Ignorăm request-uri non-GET și cross-origin
+  if (request.method !== 'GET') return;
+  if (url.origin !== self.location.origin) return;
+
+  // Date JSON — Network-First (vrem date proaspete)
+  if (DATA_URLS.some(u => url.pathname === u) || url.pathname.endsWith('.json')) {
+    event.respondWith(networkFirstJson(request));
+    return;
+  }
+
+  // Pagini HTML și resurse statice — Cache-First
+  event.respondWith(cacheFirstStatic(request));
+});
+
+// ── Cache-First pentru resurse statice ───────────────────────────────────────
+async function cacheFirstStatic(request) {
+  const cached = await caches.match(request);
+  if (cached) return cached;
+
+  try {
+    const response = await fetch(request);
+    if (response.ok) {
+      const cache = await caches.open(CACHE_STATIC);
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch {
+    // Offline și nu în cache — returnăm pagina principală dacă există
+    const fallback = await caches.match('/index.html');
+    return fallback || new Response('Offline — deschideți https://aprindemlumina.eu pentru a accesa datele salvate.', {
+      status: 503,
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+    });
+  }
+}
+
+// ── Network-First pentru date JSON ────────────────────────────────────────────
+async function networkFirstJson(request) {
+  try {
+    const response = await fetch(request);
+    if (response.ok) {
+      const cache = await caches.open(CACHE_DATA);
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch {
+    const cached = await caches.match(request);
+    return cached || new Response('{}', {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+}
