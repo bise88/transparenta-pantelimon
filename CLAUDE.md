@@ -216,9 +216,9 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 
 ## Status git (la data generării acestui fișier)
 
-- **Ultimul push reușit:** PR #41 — "teste genereaza_og_image + genereaza_index_furnizori: 20 teste noi"
-- **Branch main:** la zi după merge PR #20–41
-- **Suite de teste:** 285 teste, 16 fișiere, 0 erori
+- **Ultimul push reușit:** PR #42 — "teste funcții utilitare: 45 teste noi (_seap_url, _fmt_ron, _format_kpi, _similaritate_titlu, etc.)"
+- **Branch main:** la zi după merge PR #20–42
+- **Suite de teste:** 330 teste, 17 fișiere, 0 erori
 - **De făcut:** run `fix_si_push.bat` pentru a regenera `raport_transparenta.html` cu toți detectori activi
 
 ## Stare roadmap IMPROVEMENTS.md + AUDIT.md (la zi)
@@ -273,6 +273,7 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 | sw.js CSV cache | `/contracte.csv` în DATA_URLS; `networkFirstCsv()` cu fallback CSV; CACHE_STATIC bump v2; 3 teste noi | PR #39 |
 | Teste state/analytics | 46 teste noi: `incarca_stare_anterioara`, `salveaza_stare`, `detecteaza_flags_noi`, `calculeaza_analiza_per_tip`, `_slugify`, `_detect_flag_simple`, `render_contracte_tbody_rows` | PR #40 |
 | Teste og_image + index furnizori | 20 teste noi: `genereaza_og_image` (PNG 1200×630, Pillow mock, cale invalida) + `genereaza_index_furnizori` (sortare A-Z, linkuri, flags, canonical) | PR #41 |
+| Teste funcții utilitare | 45 teste noi: `_seap_url`, `_fmt_ron`, `_format_kpi`, `_similaritate_titlu`, `_termene_url`, `_incarca_cache_firme`, `_salveaza_cache_firme`, `_fmt_actionariat`, `_fmt_reprezentanti` | PR #42 |
 
 ### ❌ Nu e posibil / Nu ataca fără discuție
 
