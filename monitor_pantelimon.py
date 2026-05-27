@@ -3929,6 +3929,7 @@ def genereaza_sitemap(index_furnizori: list) -> str:
         ("/presa.html",                   "0.7", "monthly"),
         ("/gdpr.html",                    "0.5", "yearly"),
         ("/petitie.html",                 "0.6", "monthly"),
+        ("/harta.html",                   "0.6", "weekly"),
         ("/furnizori/index.html",         "0.6", "weekly"),
     ]
     urls = ""
@@ -3956,6 +3957,159 @@ def genereaza_sitemap(index_furnizori: list) -> str:
         + urls
         + '</urlset>\n'
     )
+
+
+def geocodeaza_firme(
+    firme_openapi: dict,
+    cui_valori: dict,
+    cui_contracte: dict,
+    index_furnizori: list,
+    cache_db: str = "geocoding_cache.db",
+    ttl_zile: int = 180,
+) -> list:
+    """§3.6 Geocodare adrese firme furnizoare via Nominatim (OpenStreetMap).
+
+    Returnează lista de dict-uri cu coordonate pentru harta Leaflet.
+    Foloseşte SQLite cache cu TTL 180 zile pentru a nu supraîncărca API-ul.
+
+    Args:
+        firme_openapi: dict CUI -> {adresa, judet, ...} de la openapi.ro
+        cui_valori:    dict CUI -> valoare totală RON contractate
+        cui_contracte: dict CUI -> număr contracte
+        index_furnizori: list [{nume, slug, ...}] pentru link-uri
+        cache_db:      cale fișier SQLite cache
+        ttl_zile:      TTL cache în zile (implicit 180)
+
+    Returns:
+        list [{name, cif, adresa, lat, lng, valoare, nr_contracte, slug}]
+        Scrie firme_geocoded.json cu rezultatele.
+    """
+    import sqlite3
+    import time
+    import urllib.request
+    import urllib.parse
+    import json as json_mod
+    from datetime import datetime, timedelta
+
+    USER_AGENT = "transparenta-pantelimon-bot (contact: office@valisblue.com)"
+    NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
+    RATE_LIMIT = 1.2  # secunde între requests
+
+    # Inițializare cache SQLite
+    def _init_geocache(db_path: str):
+        conn = sqlite3.connect(db_path)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS geocoding (
+                adresa     TEXT PRIMARY KEY,
+                lat        REAL,
+                lng        REAL,
+                geocodat_la TEXT
+            )
+        """)
+        conn.commit()
+        return conn
+
+    def _cache_get_geo(conn, adresa: str, ttl_zile: int):
+        row = conn.execute(
+            "SELECT lat, lng, geocodat_la FROM geocoding WHERE adresa=?",
+            (adresa,)
+        ).fetchone()
+        if not row:
+            return None
+        lat, lng, geocodat_la = row
+        if geocodat_la:
+            try:
+                data_cache = datetime.fromisoformat(geocodat_la)
+                if datetime.now() - data_cache < timedelta(days=ttl_zile):
+                    return {"lat": lat, "lng": lng}
+            except ValueError:
+                pass
+        return None
+
+    def _cache_set_geo(conn, adresa: str, lat, lng):
+        conn.execute(
+            "INSERT OR REPLACE INTO geocoding (adresa, lat, lng, geocodat_la) VALUES (?,?,?,?)",
+            (adresa, lat, lng, datetime.now().isoformat())
+        )
+        conn.commit()
+
+    def _nominatim_query(adresa: str) -> tuple:
+        """Returnează (lat, lng) sau (None, None) dacă nu găsit."""
+        query = urllib.parse.urlencode({"q": adresa + ", Romania", "format": "json", "limit": "1"})
+        url = f"{NOMINATIM_URL}?{query}"
+        req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+        try:
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                data = json_mod.loads(resp.read().decode("utf-8"))
+            if data:
+                return float(data[0]["lat"]), float(data[0]["lon"])
+        except Exception:
+            pass
+        return None, None
+
+    # Construiește slug map din index_furnizori
+    slug_map = {f["nume"]: f["slug"] for f in index_furnizori}
+
+    conn = _init_geocache(cache_db)
+    rezultate = []
+    ultima_req = 0.0
+
+    for cui, info in firme_openapi.items():
+        adresa = (info.get("adresa") or "").strip()
+        if not adresa:
+            continue
+        # Adaugă județ la adresă pentru precizie mai bună
+        judet = (info.get("judet") or "").strip()
+        adresa_query = f"{adresa}, {judet}" if judet and judet.lower() not in adresa.lower() else adresa
+
+        cached = _cache_get_geo(conn, adresa_query, ttl_zile)
+        if cached:
+            lat, lng = cached["lat"], cached["lng"]
+        else:
+            # Rate limiting Nominatim (1 req/sec policy)
+            elapsed = time.time() - ultima_req
+            if elapsed < RATE_LIMIT:
+                time.sleep(RATE_LIMIT - elapsed)
+            lat, lng = _nominatim_query(adresa_query)
+            ultima_req = time.time()
+            _cache_set_geo(conn, adresa_query, lat, lng)
+
+        if lat is None or lng is None:
+            continue
+
+        # Găsim numele firmei din firme_openapi sau din contracte
+        # CUI din openapi poate fi cu sau fără prefix "RO"
+        cui_clean = cui.lstrip("RO").lstrip("0") if cui.startswith("RO") else cui
+        valoare = cui_valori.get(cui, 0) or cui_valori.get("RO" + cui, 0)
+        nr_contracte = cui_contracte.get(cui, 0) or cui_contracte.get("RO" + cui, 0)
+
+        # Găsim slug din index_furnizori prin cui sau la potrivire inexactă
+        firma_slug = ""
+        firma_name = info.get("_nume", "")
+        if firma_name in slug_map:
+            firma_slug = slug_map[firma_name]
+
+        if valoare == 0 and nr_contracte == 0:
+            continue  # firmă necunoscută în contracte, skip
+
+        rezultate.append({
+            "name": firma_name or cui,
+            "cif": cui,
+            "adresa": adresa,
+            "lat": lat,
+            "lng": lng,
+            "valoare": valoare,
+            "nr_contracte": nr_contracte,
+            "slug": firma_slug,
+        })
+
+    conn.close()
+
+    # Scriere firme_geocoded.json
+    with open("firme_geocoded.json", "w", encoding="utf-8") as fout:
+        json_mod.dump(rezultate, fout, ensure_ascii=False, indent=2)
+    print(f"  ✓ geocodare completă: {len(rezultate)} firme cu coordonate → firme_geocoded.json")
+    return rezultate
 
 
 def genereaza_pagina_furnizor(
@@ -4365,11 +4519,35 @@ def main():
     else:
         print("  ℹ️  Niciun furnizor cu ≥3 contracte găsit.")
 
+    # §3.6 Geocodare firme furnizoare → firme_geocoded.json (folosit de harta.html)
+    if firme_openapi:
+        # Construiește cui_valori și cui_contracte din index_furnizori și contracte
+        cui_valori_map: dict = {}
+        cui_contracte_map: dict = {}
+        for c in contracte:
+            cui_c = c.get("castigator_cui", "")
+            if cui_c:
+                cui_valori_map[cui_c] = cui_valori_map.get(cui_c, 0) + c.get("valoare_ron", 0)
+                cui_contracte_map[cui_c] = cui_contracte_map.get(cui_c, 0) + 1
+        geocodeaza_firme(
+            firme_openapi=firme_openapi,
+            cui_valori=cui_valori_map,
+            cui_contracte=cui_contracte_map,
+            index_furnizori=index_furnizori,
+        )
+    else:
+        # Fără openapi.ro key → scriem placeholder gol pentru a nu rupe harta.html
+        import json as _json_geo
+        if not os.path.exists("firme_geocoded.json"):
+            with open("firme_geocoded.json", "w", encoding="utf-8") as _fg:
+                _json_geo.dump([], _fg)
+            print("  ℹ️  firme_geocoded.json placeholder gol (lipsă openapi.ro key)")
+
     # Regenerare sitemap.xml cu toate paginile (statice + furnizori)
     sitemap_xml = genereaza_sitemap(index_furnizori)
     with open("sitemap.xml", "w", encoding="utf-8") as fh:
         fh.write(sitemap_xml)
-    print(f"  ✓ sitemap.xml actualizat ({len(index_furnizori)} pagini furnizori + 8 statice)")
+    print(f"  ✓ sitemap.xml actualizat ({len(index_furnizori)} pagini furnizori + 9 statice)")
 
     # §5.7 Generare og-image.png cu statisticile curente (pentru share social media)
     _scor_val = CONFIG.get("_scor", {}).get("scor")

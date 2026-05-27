@@ -201,7 +201,7 @@ Hooks integrate în `analizeaza_red_flags()` și `analizeaza_hcl()`.
 - `--tp-muted: #6b7280` → `#4b5563` (contrast WCAG AA: ~4.6:1 pe fond alb)
 - `injectMainId()` — adaugă `id="main-content"` pe `.page-wrap` / `<main>` / primul sibling non-nav
 
-**`genereaza_sitemap()`** extins: adăugate `gdpr.html` (priority 0.5, yearly) și `petitie.html` (priority 0.6, monthly) → total 8 pagini statice.
+**`genereaza_sitemap()`** extins: adăugate `gdpr.html`, `petitie.html`, `harta.html` → total 9 pagini statice.
 
 ### §2.5 Anomalie geografică (PR #23)
 
@@ -216,9 +216,9 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 
 ## Status git (la data generării acestui fișier)
 
-- **Ultimul push reușit:** PR #27 — "og:image index.html + lazy images + §6.5 audit secrete"
-- **Branch main:** la zi după merge PR #20–27
-- **Suite de teste:** 111 teste, 6 fișiere, 0 erori
+- **Ultimul push reușit:** PR #28 — "§4.6 harta.html Leaflet + §3.6 geocodare Nominatim"
+- **Branch main:** la zi după merge PR #20–28
+- **Suite de teste:** 119 teste, 7 fișiere, 0 erori
 - **De făcut:** run `fix_si_push.bat` pentru a regenera `raport_transparenta.html` cu toți detectori activi
 
 ## Stare roadmap IMPROVEMENTS.md + AUDIT.md (la zi)
@@ -254,6 +254,8 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 | Nav + cross-linking | petitie.html în nav; CTA petiție în index/transparenta; gdpr în footere | PR #26 |
 | §4.5 Core Web Vitals | `loading="lazy"` automat pe imagini (enhance.js); og:image pe index.html | PR #27 |
 | §6.5 Audit secrete | git log grep — 0 secrete hardcodate găsite în istoricul repo | PR #27 |
+| §4.6 Hartă Leaflet | `harta.html` — hartă interactivă furnizori cu circle markers Leaflet.js | PR #28 |
+| §3.6 Geocodare | `geocodeaza_firme()` + SQLite cache 180z + Nominatim → `firme_geocoded.json` | PR #28 |
 
 ### ❌ Nu e posibil / Nu ataca fără discuție
 
