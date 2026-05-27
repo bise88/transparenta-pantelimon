@@ -40,11 +40,14 @@ CONFIG_TEST = {'cui': '4420759', 'nume_entitate': 'Test', '_scor': {}}
 # ──────────────────────────────────────────────────────────────────────────────
 
 def test_sitemap_contine_paginile_statice():
-    """Sitemap-ul conține cele 6 URL-uri statice."""
+    """Sitemap-ul conține cele 9 URL-uri statice (incl. gdpr, petitie, harta)."""
     xml = genereaza_sitemap([])
     assert 'raport_transparenta.html' in xml
     assert 'transparenta_pantelimon.html' in xml
     assert 'presa.html' in xml
+    assert 'gdpr.html' in xml
+    assert 'petitie.html' in xml
+    assert 'harta.html' in xml
     assert 'furnizori/index.html' in xml
     assert 'aprindemlumina.eu' in xml
 
@@ -57,17 +60,17 @@ def test_sitemap_structura_xml_valida():
     assert '</urlset>' in xml
 
 
-def test_sitemap_fara_furnizori_contine_8_url():
-    """Fără furnizori, sitemap-ul are exact 8 URL-uri statice (incl. gdpr + petitie)."""
+def test_sitemap_fara_furnizori_contine_9_url():
+    """Fără furnizori, sitemap-ul are exact 9 URL-uri statice (incl. gdpr + petitie + harta)."""
     xml = genereaza_sitemap([])
-    assert xml.count('<url>') == 8
+    assert xml.count('<url>') == 9
 
 
 def test_sitemap_cu_furnizori_creste_numaratoarea():
-    """Cu 3 furnizori, sitemap-ul are 8 + 3 = 11 URL-uri."""
+    """Cu 3 furnizori, sitemap-ul are 9 + 3 = 12 URL-uri."""
     index = [_idx(f'firma-{i}') for i in range(3)]
     xml = genereaza_sitemap(index)
-    assert xml.count('<url>') == 11
+    assert xml.count('<url>') == 12
 
 
 def test_sitemap_contine_slug_furnizor():
@@ -222,7 +225,7 @@ if __name__ == '__main__':
     tests = [
         test_sitemap_contine_paginile_statice,
         test_sitemap_structura_xml_valida,
-        test_sitemap_fara_furnizori_contine_6_url,
+        test_sitemap_fara_furnizori_contine_9_url,
         test_sitemap_cu_furnizori_creste_numaratoarea,
         test_sitemap_contine_slug_furnizor,
         test_sitemap_furnizori_au_priority_05,
