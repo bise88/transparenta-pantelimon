@@ -216,8 +216,8 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 
 ## Status git (la data generării acestui fișier)
 
-- **Ultimul push reușit:** PR #46 — "fix(js): inlatura } orfan care bloca toggleFlag si openFirmaPanel"
-- **Branch main:** la zi după merge PR #20–46
+- **Ultimul push reușit:** commit direct pe main — "fix(sw): bump cache la tp-v3 + test_pwa actualizat"
+- **Branch main:** la zi după merge PR #20–46 + hotfix SW v3
 - **Suite de teste:** 359 teste, 18 fișiere, 0 erori
 - **De făcut:** run `fix_si_push.bat` pentru a regenera `raport_transparenta.html` cu toți detectori activi
 
