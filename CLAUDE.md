@@ -278,6 +278,7 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 | README la zi | 216→359 teste, 14→18 fișiere, 4 fisiere noi adaugate la lista | PR #44 |
 | CI coverage | `pytest-cov` în CI; branch triggers extinse (docs/**, chore/**, fix/**); coverage report ca artifact | PR #45 |
 | Fix JS toggleFlag | Șters `}` orfan din `<script>` inline → SyntaxError bloca `toggleFlag`, `openFirmaPanel`, `_getContracte` etc. Fix în template + fișier generat | PR #46 |
+| Fix shell filter chips | BUG-6: `enhance.js` citea `.supplier-risk-panel` (neexistent) → `#tp-shell-row` ascuns, `any-risk` returna 0/299. Fix: citește `scor` din `#risc-firma-data` JSON | PR #47 |
 
 ### ❌ Nu e posibil / Nu ataca fără discuție
 
