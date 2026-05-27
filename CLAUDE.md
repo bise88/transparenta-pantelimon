@@ -216,9 +216,9 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 
 ## Status git (la data generării acestui fișier)
 
-- **Ultimul push reușit:** PR #29 — "§3.1 Curtea de Conturi + §3.2 ANI declarații avere"
-- **Branch main:** la zi după merge PR #20–29
-- **Suite de teste:** 130 teste, 8 fișiere, 0 erori
+- **Ultimul push reușit:** PR #30 — "§3.4 TED Europa + §3.5 MOL primărie"
+- **Branch main:** la zi după merge PR #20–30
+- **Suite de teste:** 141 teste, 9 fișiere, 0 erori
 - **De făcut:** run `fix_si_push.bat` pentru a regenera `raport_transparenta.html` cu toți detectori activi
 
 ## Stare roadmap IMPROVEMENTS.md + AUDIT.md (la zi)
@@ -258,6 +258,9 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 | §3.6 Geocodare | `geocodeaza_firme()` + SQLite cache 180z + Nominatim → `firme_geocoded.json` | PR #28 |
 | §3.1 Curtea de Conturi | `fetch_curtea_de_conturi()` + SQLite cache + `curtea_de_conturi.json` | PR #29 |
 | §3.2 ANI declarații avere | `fetch_declaratii_avere()` + SQLite cache + `ani_declaratii.json` | PR #29 |
+| §3.4 TED Europa | `search_ted_for_buyer()` + SQLite cache 7z + `ted_notices.json` | PR #30 |
+| §3.5 MOL primărie | `fetch_mol_primarie()` + SQLite cache 7z + `mol_primarie.json` | PR #30 |
+| §4.2 Dark mode toggle | Buton + localStorage + prefers-color-scheme (deja în enhance.js) | PR #30 |
 
 ### ❌ Nu e posibil / Nu ataca fără discuție
 
