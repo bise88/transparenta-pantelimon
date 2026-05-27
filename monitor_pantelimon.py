@@ -68,6 +68,9 @@ CONFIG = {
 
     # Fișier cache firme (evită re-interogarea acelorași CUI-uri la rulări consecutive)
     "fisier_cache_firme": "cache_firme.json",
+
+    # §3.1 / §3.2 — cuvânt de căutat pe Curtea de Conturi + ANI integritate.eu
+    "uat_search": "Pantelimon",
 }
 
 # ==============================================================================
@@ -583,6 +586,337 @@ def analizeaza_hcl(stare_anterioara: dict) -> dict:
 
     print(f"    ✓ Analiză HCL finalizată. Red flags HCL: {len(flags_hcl)}")
     return {"flags": flags_hcl, "statistici": statistici, "hcl_list": hcl_list}
+
+
+# ==============================================================================
+# §3.1  CURTEA DE CONTURI — rapoarte de audit UAT
+# ==============================================================================
+
+def fetch_curtea_de_conturi(
+    uat_nume: str = "Pantelimon",
+    cache_db: str = "curtea_conturi_cache.db",
+    ttl_zile: int = 30,
+    timeout: int = 20,
+) -> list:
+    """§3.1 Caută rapoarte de audit Curtea de Conturi pentru UAT.
+
+    Strategia: caută pe curteadeconturi.ro după numele UAT + filtrează
+    rezultatele HTML cu BeautifulSoup. Returnează lista de rapoarte găsite.
+    Foloseşte SQLite cache cu TTL 30 zile (rapoartele CC apar anual).
+
+    Args:
+        uat_nume:  Numele UAT de căutat (ex: "Pantelimon")
+        cache_db:  Cale fișier SQLite cache
+        ttl_zile:  TTL cache în zile
+        timeout:   Timeout HTTP în secunde
+
+    Returns:
+        list [{titlu, url, an, tip, data_publicare}]
+        Scrie curtea_de_conturi.json cu rezultatele.
+    """
+    import sqlite3
+    import json as json_mod
+    import re
+    from datetime import datetime, timedelta
+
+    SEARCH_URL = "https://www.curteadeconturi.ro/Publicatii/Rapoarte_de_audit"
+    UA = "transparenta-pantelimon-bot (contact: contact@transparenta-pantelimon.eu)"
+
+    # ── Cache SQLite ──────────────────────────────────────────────
+    def _init_cache(db_path):
+        conn = sqlite3.connect(db_path)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS cc_rapoarte (
+                uat       TEXT,
+                extras_la TEXT,
+                date_json TEXT
+            )
+        """)
+        conn.execute("""
+            CREATE UNIQUE INDEX IF NOT EXISTS cc_uat_idx ON cc_rapoarte(uat)
+        """)
+        conn.commit()
+        return conn
+
+    def _cache_get(conn, uat: str):
+        row = conn.execute(
+            "SELECT date_json, extras_la FROM cc_rapoarte WHERE uat=?", (uat,)
+        ).fetchone()
+        if not row:
+            return None
+        date_json, extras_la = row
+        try:
+            if datetime.now() - datetime.fromisoformat(extras_la) < timedelta(days=ttl_zile):
+                return json_mod.loads(date_json)
+        except (ValueError, TypeError):
+            pass
+        return None
+
+    def _cache_set(conn, uat: str, rapoarte: list):
+        conn.execute(
+            "INSERT OR REPLACE INTO cc_rapoarte (uat, extras_la, date_json) VALUES (?,?,?)",
+            (uat, datetime.now().isoformat(), json_mod.dumps(rapoarte, ensure_ascii=False))
+        )
+        conn.commit()
+
+    # ── Fetch și parse HTML ───────────────────────────────────────
+    def _fetch_rapoarte(uat: str) -> list:
+        """Caută rapoartele pe curteadeconturi.ro."""
+        try:
+            from bs4 import BeautifulSoup as BS
+            import urllib.request, urllib.parse
+
+            # Pagina principală rapoarte de audit
+            req = urllib.request.Request(
+                SEARCH_URL,
+                headers={"User-Agent": UA, "Accept": "text/html"}
+            )
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                html = resp.read().decode("utf-8", errors="replace")
+
+            soup = BS(html, "html.parser")
+            rapoarte = []
+
+            # Căutăm linkuri care conțin UAT-ul (case-insensitive)
+            uat_lower = uat.lower()
+            for a in soup.find_all("a", href=True):
+                text = a.get_text(strip=True)
+                href = a["href"]
+                if uat_lower not in text.lower() and uat_lower not in href.lower():
+                    continue
+                if not href.startswith("http"):
+                    href = "https://www.curteadeconturi.ro" + href
+
+                # Extrage anul din text sau href (4 cifre consecutiv)
+                ani = re.findall(r'\b(20\d{2})\b', text + " " + href)
+                an = max(ani) if ani else ""
+
+                rapoarte.append({
+                    "titlu":           text[:200],
+                    "url":             href,
+                    "an":              an,
+                    "tip":             "Raport audit",
+                    "data_publicare":  an + "-01-01" if an else "",
+                    "sursa":           "curteadeconturi.ro",
+                })
+
+            # Fallback: căutare generică dacă pagina principală nu conține UAT
+            if not rapoarte:
+                search_url = (
+                    "https://www.curteadeconturi.ro/search?q="
+                    + urllib.parse.quote(uat + " audit")
+                )
+                req2 = urllib.request.Request(
+                    search_url,
+                    headers={"User-Agent": UA, "Accept": "text/html"}
+                )
+                try:
+                    with urllib.request.urlopen(req2, timeout=timeout) as resp2:
+                        html2 = resp2.read().decode("utf-8", errors="replace")
+                    soup2 = BS(html2, "html.parser")
+                    for a in soup2.find_all("a", href=True):
+                        text = a.get_text(strip=True)
+                        href = a["href"]
+                        if uat_lower not in text.lower():
+                            continue
+                        if not href.startswith("http"):
+                            href = "https://www.curteadeconturi.ro" + href
+                        ani = re.findall(r'\b(20\d{2})\b', text + " " + href)
+                        an = max(ani) if ani else ""
+                        rapoarte.append({
+                            "titlu":          text[:200],
+                            "url":            href,
+                            "an":             an,
+                            "tip":            "Raport audit (search)",
+                            "data_publicare": an + "-01-01" if an else "",
+                            "sursa":          "curteadeconturi.ro/search",
+                        })
+                except Exception:
+                    pass
+
+            return rapoarte
+
+        except ImportError:
+            # BeautifulSoup nu e disponibilă — returnăm lista goală cu avertisment
+            print("  ⚠️  §3.1 CC: BeautifulSoup lipsă (pip install beautifulsoup4)")
+            return []
+        except Exception as exc:
+            print(f"  ⚠️  §3.1 CC: eroare fetch curteadeconturi.ro — {exc}")
+            return []
+
+    # ── Main logic ───────────────────────────────────────────────
+    conn = _init_cache(cache_db)
+    rapoarte = _cache_get(conn, uat_nume)
+
+    if rapoarte is None:
+        print(f"  [CC] Fetch rapoarte audit pentru UAT '{uat_nume}'…")
+        rapoarte = _fetch_rapoarte(uat_nume)
+        _cache_set(conn, uat_nume, rapoarte)
+        print(f"  ✓ CC: {len(rapoarte)} rapoarte găsite → cache actualizat")
+    else:
+        print(f"  ✓ CC: {len(rapoarte)} rapoarte (din cache) pentru '{uat_nume}'")
+
+    conn.close()
+
+    # Scriere curtea_de_conturi.json
+    with open("curtea_de_conturi.json", "w", encoding="utf-8") as fout:
+        json_mod.dump(rapoarte, fout, ensure_ascii=False, indent=2)
+
+    return rapoarte
+
+
+# ==============================================================================
+# §3.2  ANI — declarații de avere aleși locali
+# ==============================================================================
+
+def fetch_declaratii_avere(
+    uat: str = "Pantelimon",
+    cache_db: str = "ani_cache.db",
+    ttl_zile: int = 30,
+    timeout: int = 20,
+) -> list:
+    """§3.2 Scraping declarații de avere aleși locali de pe integritate.eu (ANI).
+
+    Caută pe https://www.integritate.eu/Search?cuvinte={uat} și extrage
+    lista de aleși cu linkuri la declarațiile PDF.
+
+    Notă GDPR: afișează doar funcții publice + nume; NU CNP / adresă personală.
+
+    Args:
+        uat:       Cuvânt de căutat (ex: "Pantelimon")
+        cache_db:  Cale fișier SQLite cache
+        ttl_zile:  TTL cache în zile
+        timeout:   Timeout HTTP în secunde
+
+    Returns:
+        list [{nume, functie, an, url_declaratie, tip}]
+        Scrie ani_declaratii.json cu rezultatele.
+    """
+    import sqlite3
+    import json as json_mod
+    import re
+    from datetime import datetime, timedelta
+
+    SEARCH_URL = f"https://www.integritate.eu/Search?cuvinte={uat}"
+    UA = "transparenta-pantelimon-bot (contact: contact@transparenta-pantelimon.eu)"
+
+    # ── Cache SQLite ──────────────────────────────────────────────
+    def _init_ani_cache(db_path):
+        conn = sqlite3.connect(db_path)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS ani_declaratii (
+                uat       TEXT,
+                extras_la TEXT,
+                date_json TEXT
+            )
+        """)
+        conn.execute("""
+            CREATE UNIQUE INDEX IF NOT EXISTS ani_uat_idx ON ani_declaratii(uat)
+        """)
+        conn.commit()
+        return conn
+
+    def _cache_get(conn, uat_key: str):
+        row = conn.execute(
+            "SELECT date_json, extras_la FROM ani_declaratii WHERE uat=?", (uat_key,)
+        ).fetchone()
+        if not row:
+            return None
+        date_json, extras_la = row
+        try:
+            if datetime.now() - datetime.fromisoformat(extras_la) < timedelta(days=ttl_zile):
+                return json_mod.loads(date_json)
+        except (ValueError, TypeError):
+            pass
+        return None
+
+    def _cache_set(conn, uat_key: str, declaratii: list):
+        conn.execute(
+            "INSERT OR REPLACE INTO ani_declaratii (uat, extras_la, date_json) VALUES (?,?,?)",
+            (uat_key, datetime.now().isoformat(), json_mod.dumps(declaratii, ensure_ascii=False))
+        )
+        conn.commit()
+
+    # ── Fetch și parse HTML ───────────────────────────────────────
+    def _fetch_declaratii(uat_key: str) -> list:
+        try:
+            from bs4 import BeautifulSoup as BS
+            import urllib.request, urllib.parse
+
+            url = f"https://www.integritate.eu/Search?cuvinte={urllib.parse.quote(uat_key)}"
+            req = urllib.request.Request(
+                url,
+                headers={"User-Agent": UA, "Accept": "text/html"}
+            )
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                html = resp.read().decode("utf-8", errors="replace")
+
+            soup = BS(html, "html.parser")
+            declaratii = []
+
+            # Structura tipică integritate.eu: tabele sau divuri cu
+            # coloana Nume, Funcție, Tip declarație, An, link PDF
+            for row in soup.find_all(["tr", "div"], class_=re.compile(r"result|row|item", re.I)):
+                cells = row.find_all(["td", "span", "div"])
+                if len(cells) < 2:
+                    continue
+                text_row = " | ".join(c.get_text(strip=True) for c in cells)
+                if not text_row.strip():
+                    continue
+
+                # Link PDF
+                link = row.find("a", href=re.compile(r"\.pdf", re.I))
+                pdf_url = ""
+                if link:
+                    href = link.get("href", "")
+                    pdf_url = href if href.startswith("http") else "https://www.integritate.eu" + href
+
+                # Extrage an
+                ani = re.findall(r'\b(20\d{2})\b', text_row)
+                an = max(ani) if ani else ""
+
+                # Tip declaratie
+                tip = "declaratie_avere"
+                if re.search(r"interese", text_row, re.I):
+                    tip = "declaratie_interese"
+
+                declaratii.append({
+                    "text_row":        text_row[:300],
+                    "url_declaratie":  pdf_url,
+                    "an":              an,
+                    "tip":             tip,
+                    "sursa":           "integritate.eu",
+                })
+
+            return declaratii
+
+        except ImportError:
+            print("  ⚠️  §3.2 ANI: BeautifulSoup lipsă (pip install beautifulsoup4)")
+            return []
+        except Exception as exc:
+            print(f"  ⚠️  §3.2 ANI: eroare fetch integritate.eu — {exc}")
+            return []
+
+    # ── Main logic ───────────────────────────────────────────────
+    conn = _init_ani_cache(cache_db)
+    declaratii = _cache_get(conn, uat)
+
+    if declaratii is None:
+        print(f"  [ANI] Fetch declarații avere pentru '{uat}'…")
+        declaratii = _fetch_declaratii(uat)
+        _cache_set(conn, uat, declaratii)
+        print(f"  ✓ ANI: {len(declaratii)} declarații găsite → cache actualizat")
+    else:
+        print(f"  ✓ ANI: {len(declaratii)} declarații (din cache) pentru '{uat}'")
+
+    conn.close()
+
+    # Scriere ani_declaratii.json
+    with open("ani_declaratii.json", "w", encoding="utf-8") as fout:
+        json_mod.dump(declaratii, fout, ensure_ascii=False, indent=2)
+
+    return declaratii
+
 
 def calculeaza_scor_transparenta(toate_flags: list, contracte: list, statistici_hcl: dict) -> dict:
     """Calculeaza scorul de transparenta al UAT (0-100, mai mare = mai transparent)."""
@@ -4407,6 +4741,18 @@ def main():
     rezultat_hcl = analizeaza_hcl(stare_ant)
     flags_hcl = rezultat_hcl["flags"]
     statistici_hcl = rezultat_hcl["statistici"]
+
+    # §3.1 Curtea de Conturi — rapoarte audit UAT (cache 30 zile)
+    rapoarte_cc = fetch_curtea_de_conturi(
+        uat_nume=CONFIG.get("uat_search", "Pantelimon"),
+    )
+    CONFIG["_rapoarte_cc"] = rapoarte_cc
+
+    # §3.2 ANI — declarații avere aleși locali (cache 30 zile)
+    declaratii_ani = fetch_declaratii_avere(
+        uat=CONFIG.get("uat_search", "Pantelimon"),
+    )
+    CONFIG["_declaratii_ani"] = declaratii_ani
 
     # Pasăm statisticile HCL în CONFIG pentru template
     CONFIG["_hcl_total"] = statistici_hcl.get("total_hcl", 0)
