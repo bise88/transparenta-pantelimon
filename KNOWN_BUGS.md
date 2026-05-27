@@ -99,6 +99,21 @@ Ramane o discrepanta (257M > 146M ANAF) probabila din cauza contractelor multi-a
 
 ---
 
+## ~~BUG-7: Harta furnizori complet nefuncțională — SRI hash greșit pentru leaflet.js~~ ✅ REZOLVAT direct în main
+
+**Rezolvat prin:** actualizat `integrity` hash în `harta.html`  
+**Commit:** `fix(harta): BUG-7 — SRI hash incorect pentru leaflet.js`
+
+### Descriere
+
+Hash-ul SRI al `leaflet@1.9.4/dist/leaflet.js` de pe `unpkg.com` nu mai corespundea cu fișierul actual (CDN actualizat upstream). Browserul refuza să execute scriptul → `window.L` undefined → `L.map()` aruncă `ReferenceError` → harta goală pentru toți utilizatorii.
+
+- Hash greșit: `sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/**XN/WLs**=`
+- Hash corect: `sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV**1lvTlZBo**=`
+- CSS integrity era corect (nemodificat)
+
+---
+
 ## ~~BUG-6: Shell filter chips (⚠️ Orice risc, 👥 0 angajați, 📉 CA=0) — rând ascuns, riskCount=0 pentru toți~~ ✅ REZOLVAT în PR #47
 
 **Rezolvat prin:** enhance.js citește acum `#risc-firma-data` JSON pentru `riskCount` (câmpul `scor`) în loc de `.supplier-risk-panel` care nu există în HTML-ul curent.  

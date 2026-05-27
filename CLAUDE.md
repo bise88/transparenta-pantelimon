@@ -279,6 +279,7 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 | CI coverage | `pytest-cov` în CI; branch triggers extinse (docs/**, chore/**, fix/**); coverage report ca artifact | PR #45 |
 | Fix JS toggleFlag | Șters `}` orfan din `<script>` inline → SyntaxError bloca `toggleFlag`, `openFirmaPanel`, `_getContracte` etc. Fix în template + fișier generat | PR #46 |
 | Fix shell filter chips | BUG-6: `enhance.js` citea `.supplier-risk-panel` (neexistent) → `#tp-shell-row` ascuns, `any-risk` returna 0/299. Fix: citește `scor` din `#risc-firma-data` JSON | PR #47 |
+| Fix harta Leaflet SRI | BUG-7: SRI hash greșit pentru `leaflet.js` → browserul refuza execuția → hartă goală pentru toți userii. Fix: hash actualizat | direct main |
 
 ### ❌ Nu e posibil / Nu ataca fără discuție
 
