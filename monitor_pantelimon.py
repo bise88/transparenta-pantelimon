@@ -4314,8 +4314,6 @@ function closeFirmaPanel() {{
 
 // Keyboard ESC closes panel
 document.addEventListener('keydown', function(e) {{ if (e.key==='Escape') closeFirmaPanel(); }});
-
-}}
 </script>
 <footer style="background:#00427A;color:rgba(255,255,255,.7);text-align:center;padding:16px;font-size:12px;margin-top:40px">
   <p>Surse date: <a href="https://transparenta.eu/entities/{config['cui']}#achizitii" target="_blank" style="color:#FF6B35">transparenta.eu</a> (ANAF/MF) &nbsp;·&nbsp;
