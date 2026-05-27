@@ -130,6 +130,193 @@ Feed Atom cu top 20 nereguli (compatibil RSS). Util pentru Feedly, Inoreader etc
 
 ---
 
+## Endpoint: `contracte.csv`
+
+**URL:** `https://aprindemlumina.eu/contracte.csv`
+
+Același dataset ca `contracte.json` în format CSV — compatibil Excel, Google Sheets, pandas.
+
+### Schema (coloane)
+
+| Coloană | Tip | Descriere |
+|---|---|---|
+| `id` | string | ID contract SEAP (ex: `achizitie-directa-2025-2637`) |
+| `titlu` | string | Obiectul contractului (max 80 caractere) |
+| `valoare` | number | Valoarea contractului în RON |
+| `data` | string | Data atribuirii (`YYYY-MM-DD`) |
+| `tip` | string | Tipul procedurii (ex: `Achizitie directa`) |
+| `firma` | string | Denumirea câștigătorului |
+| `cui` | string | CUI/CIF furnizor |
+| `ofertanti` | integer | Numărul de ofertanți (0 = necunoscut) |
+
+---
+
+## Endpoint: `press_kit.json`
+
+**URL:** `https://aprindemlumina.eu/press_kit.json`
+
+Press kit auto-generat cu statistici și top nereguli — destinat jurnaliștilor.
+
+### Schema
+
+```json
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-05-15T14:32:10",
+  "statistici": {
+    "total_flags": 299,
+    "critic": 107,
+    "major": 55,
+    "mediu": 137,
+    "total_contracte": 506,
+    "valoare_totala_ron": 313680510.12,
+    "scor_transparenta": 47
+  },
+  "top_nereguli": [
+    {
+      "titlu": "Achiziție directă peste pragul legal",
+      "severitate": "CRITIC",
+      "furnizor": "MIDAS ROAD S.R.L.",
+      "valoare": 880000.0
+    }
+  ],
+  "top_firme": [
+    {
+      "firma": "MIDAS ROAD S.R.L.",
+      "valoare_totala": 4320000.0,
+      "nr_contracte": 7,
+      "cui": "RO12345678"
+    }
+  ]
+}
+```
+
+---
+
+## Endpoint: `pnrr_projects.json`
+
+**URL:** `https://aprindemlumina.eu/pnrr_projects.json`
+
+Proiectele PNRR cu beneficiar Primăria Pantelimon (sursă: `proiecte.pnrr.gov.ro`).
+Cache TTL: 7 zile.
+
+### Schema (array de obiecte)
+
+| Câmp | Tip | Descriere |
+|---|---|---|
+| `titlu` | string | Denumirea proiectului |
+| `cod` | string | Codul proiectului PNRR |
+| `valoare_ron` | number | Valoarea totală în RON |
+| `status` | string | Stadiul proiectului |
+| `program` | string | Programul de finanțare (ex: PNRR, POR) |
+| `beneficiar` | string | Denumirea beneficiarului |
+| `link` | string | URL pagina proiectului |
+| `extras_la` | string | Data extragerii (`YYYY-MM-DD`) |
+
+---
+
+## Endpoint: `ani_declaratii.json`
+
+**URL:** `https://aprindemlumina.eu/ani_declaratii.json`
+
+Declarații de avere și interese ale aleșilor locali din Pantelimon (sursă: ANI / integritate.eu).
+Cache TTL: 30 zile.
+
+### Schema (array de obiecte)
+
+| Câmp | Tip | Descriere |
+|---|---|---|
+| `nume` | string | Numele persoanei publice |
+| `functie` | string | Funcția deținută |
+| `an` | string | Anul declarației |
+| `tip` | string | `avere` sau `interese` |
+| `url_pdf` | string | Link PDF declarație pe integritate.eu |
+| `extras_la` | string | Data extragerii |
+
+---
+
+## Endpoint: `curtea_de_conturi.json`
+
+**URL:** `https://aprindemlumina.eu/curtea_de_conturi.json`
+
+Rapoarte de audit ale Curții de Conturi pentru UAT Pantelimon (sursă: curteadeconturi.ro).
+Cache TTL: 30 zile.
+
+### Schema (array de obiecte)
+
+| Câmp | Tip | Descriere |
+|---|---|---|
+| `titlu` | string | Titlul raportului de audit |
+| `an` | string | Anul auditului |
+| `url` | string | Link PDF raport |
+| `tip` | string | Tipul controlului (ex: `audit financiar`) |
+| `extras_la` | string | Data extragerii |
+
+---
+
+## Endpoint: `ted_notices.json`
+
+**URL:** `https://aprindemlumina.eu/ted_notices.json`
+
+Anunțuri de achiziție publică din Jurnalul Oficial al UE (TED Europa) pentru cumpărătorul cu CIF 4420759.
+Contracte > 500.000 EUR trebuie publicate obligatoriu în TED (Directiva UE 2014/24).
+Cache TTL: 7 zile.
+
+### Schema (array de obiecte)
+
+| Câmp | Tip | Descriere |
+|---|---|---|
+| `notice_id` | string | ID anunț TED |
+| `title` | string | Titlul anunțului |
+| `publication_date` | string | Data publicării (`YYYY-MM-DD`) |
+| `value_eur` | number | Valoarea în EUR (dacă disponibil) |
+| `url` | string | Link anunț pe ted.europa.eu |
+| `extras_la` | string | Data extragerii |
+
+---
+
+## Endpoint: `mol_primarie.json`
+
+**URL:** `https://aprindemlumina.eu/mol_primarie.json`
+
+Hotărâri din Monitorul Oficial Local al Primăriei Pantelimon (sursă: primariapantelimon.ro).
+Cache TTL: 7 zile.
+
+### Schema (array de obiecte)
+
+| Câmp | Tip | Descriere |
+|---|---|---|
+| `titlu` | string | Titlul hotărârii (HCL) |
+| `numar` | string | Numărul hotărârii |
+| `data` | string | Data adoptării |
+| `url` | string | Link document |
+| `tip` | string | Tipul documentului |
+| `extras_la` | string | Data extragerii |
+
+---
+
+## Endpoint: `firme_geocoded.json`
+
+**URL:** `https://aprindemlumina.eu/firme_geocoded.json`
+
+Coordonatele geografice ale sediilor furnizorilor cu contracte la Primăria Pantelimon.
+Geocodare via Nominatim/OpenStreetMap. Cache TTL: 180 zile.
+Folosit de harta.html (Leaflet.js).
+
+### Schema (array de obiecte)
+
+| Câmp | Tip | Descriere |
+|---|---|---|
+| `cui` | string | CUI/CIF furnizor |
+| `name` | string | Denumirea firmei |
+| `address` | string | Adresa sediului social |
+| `lat` | number | Latitudine (null dacă geocodarea a eșuat) |
+| `lng` | number | Longitudine (null dacă geocodarea a eșuat) |
+| `valoare` | number | Valoarea totală contracte în RON |
+| `nr_contracte` | integer | Numărul de contracte cu primăria |
+
+---
+
 ## Utilizare responsabilă
 
 - Respectă limitele serverului (max 1 req/minut dacă faci poll automat)
