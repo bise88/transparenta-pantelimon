@@ -6,8 +6,8 @@
  * Permite consultare offline a raportului și paginii principale.
  */
 
-const CACHE_VERSION = 'tp-v1';
-const CACHE_STATIC = 'tp-static-v1';
+const CACHE_VERSION = 'tp-v2';
+const CACHE_STATIC = 'tp-static-v2';
 const CACHE_DATA   = 'tp-data-v1';
 
 // Resurse core — pre-cached la install
@@ -24,13 +24,14 @@ const CORE_URLS = [
   '/gdpr.html',
 ];
 
-// Date JSON — Network-First cu fallback cache
+// Date JSON/CSV — Network-First cu fallback cache
 const DATA_URLS = [
   '/raport.json',
   '/delta.json',
   '/contracte.json',
   '/press_kit.json',
   '/firme_geocoded.json',
+  '/contracte.csv',
 ];
 
 // ── Install: pre-cache resurse core ───────────────────────────────────────────
@@ -66,9 +67,11 @@ self.addEventListener('fetch', event => {
   if (request.method !== 'GET') return;
   if (url.origin !== self.location.origin) return;
 
-  // Date JSON — Network-First (vrem date proaspete)
-  if (DATA_URLS.some(u => url.pathname === u) || url.pathname.endsWith('.json')) {
-    event.respondWith(networkFirstJson(request));
+  // Date JSON/CSV — Network-First (vrem date proaspete)
+  if (DATA_URLS.some(u => url.pathname === u) || url.pathname.endsWith('.json') || url.pathname.endsWith('.csv')) {
+    event.respondWith(
+      url.pathname.endsWith('.csv') ? networkFirstCsv(request) : networkFirstJson(request)
+    );
     return;
   }
 
@@ -111,6 +114,23 @@ async function networkFirstJson(request) {
     const cached = await caches.match(request);
     return cached || new Response('{}', {
       headers: { 'Content-Type': 'application/json' }
+    });
+  }
+}
+
+// ── Network-First pentru date CSV ─────────────────────────────────────────────
+async function networkFirstCsv(request) {
+  try {
+    const response = await fetch(request);
+    if (response.ok) {
+      const cache = await caches.open(CACHE_DATA);
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch {
+    const cached = await caches.match(request);
+    return cached || new Response('id,titlu,valoare,data,tip,firma,cui,ofertanti\n', {
+      headers: { 'Content-Type': 'text/csv; charset=utf-8' }
     });
   }
 }
