@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hartă furnizori – Transparența Pantelimon</title>
+  <meta name="description" content="Harta geografică a furnizorilor contractați de Primăria Pantelimon – distribuție teritorială, valori contracte, nereguli identificate.">
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website">
+  <meta property="og:title"       content="Hartă furnizori – Transparența Pantelimon">
+  <meta property="og:description" content="Vizualizare geografică a firmelor care au primit contracte de la Primăria Pantelimon.">
+  <meta property="og:url"         content="https://aprindemlumina.eu/harta.html">
+  <meta property="og:image"       content="https://aprindemlumina.eu/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:image"      content="https://aprindemlumina.eu/og-image.png">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #f8fafc; color: #1e293b; }
+
+    /* Map container — full viewport below nav (~56px) */
+    #harta-wrap {
+      position: relative;
+      width: 100%;
+      height: calc(100vh - 56px);
+      min-height: 400px;
+    }
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Side panel */
+    #panel {
+      position: absolute;
+      top: 10px; right: 10px;
+      width: min(340px, calc(100vw - 20px));
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+      z-index: 1000;
+      overflow: hidden;
+    }
+    #panel-header {
+      background: #1e40af;
+      color: #fff;
+      padding: 12px 16px;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    #panel-header small {
+      display: block;
+      font-weight: 400;
+      font-size: .78rem;
+      opacity: .85;
+      margin-top: 2px;
+    }
+    #panel-body {
+      padding: 12px 16px;
+      font-size: .88rem;
+      max-height: 55vh;
+      overflow-y: auto;
+    }
+    #firma-detail { display: none; }
+    #firma-detail h3 { font-size: .95rem; color: #1e40af; margin-bottom: 6px; }
+    #firma-detail .detail-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #f1f5f9; }
+    #firma-detail .detail-row:last-child { border-bottom: none; }
+    #firma-detail .detail-label { color: #64748b; }
+    #firma-detail .detail-val { font-weight: 600; }
+    #btn-inapoi { background: none; border: none; color: #1e40af; cursor: pointer; font-size:.85rem; margin-bottom:8px; padding:0; }
+    #btn-inapoi:hover { text-decoration: underline; }
+
+    /* Legend */
+    #legenda {
+      font-size: .8rem;
+      padding: 8px 16px 12px;
+      border-top: 1px solid #f1f5f9;
+    }
+    #legenda .leg-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .leg-dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+
+    /* Stat cards in panel */
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+    .stat-card { background: #f8fafc; border-radius: 6px; padding: 8px 10px; }
+    .stat-card .sc-val { font-size: 1.15rem; font-weight: 700; color: #1e40af; }
+    .stat-card .sc-label { font-size: .75rem; color: #64748b; }
+
+    /* Loading overlay */
+    #loading {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(248,250,252,.9);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2000; font-size: 1rem; color: #475569;
+      flex-direction: column; gap: 12px;
+    }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 4px solid #e2e8f0; border-top-color: #1e40af;
+      border-radius: 50%; animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Empty state */
+    #empty-state {
+      display: none;
+      padding: 24px 16px;
+      text-align: center;
+      color: #64748b;
+    }
+    #empty-state .es-icon { font-size: 2rem; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+<div id="harta-wrap">
+  <div id="loading">
+    <div class="spinner" aria-hidden="true"></div>
+    <span>Se încarcă harta furnizorilor…</span>
+  </div>
+
+  <div id="map" role="application" aria-label="Hartă geografică furnizori Primăria Pantelimon"></div>
+
+  <div id="panel" role="complementary" aria-label="Panou informații furnizori">
+    <div id="panel-header">
+      <span aria-hidden="true">🗺️</span> Hartă furnizori
+      <small>Primăria Pantelimon · contracte SEAP</small>
+    </div>
+    <div id="panel-body">
+      <!-- Default: statistici globale -->
+      <div id="overview">
+        <div class="stat-grid" id="stat-grid">
+          <!-- populat din JS -->
+        </div>
+        <div id="empty-state">
+          <div class="es-icon" aria-hidden="true">📍</div>
+          <p>Nu există date de geocodare disponibile.<br>
+             Rulați <code>monitor_pantelimon.py</code> cu un API key openapi.ro pentru a genera <code>firme_geocoded.json</code>.</p>
+        </div>
+        <p style="font-size:.8rem;color:#94a3b8;margin-top:8px">Faceți click pe un marker pentru detalii.</p>
+      </div>
+
+      <!-- Detail view (ascuns implicit) -->
+      <div id="firma-detail">
+        <button id="btn-inapoi" aria-label="Înapoi la lista generală">← Înapoi</button>
+        <h3 id="det-name"></h3>
+        <div id="det-rows"></div>
+        <div id="det-link" style="margin-top:10px"></div>
+      </div>
+    </div>
+
+    <div id="legenda" aria-label="Legendă hartă">
+      <strong>Legendă</strong>
+      <div class="leg-row"><span class="leg-dot" style="background:#dc2626" aria-hidden="true"></span> Valoare &gt; 1 M RON</div>
+      <div class="leg-row"><span class="leg-dot" style="background:#ea580c" aria-hidden="true"></span> Valoare 500k – 1 M RON</div>
+      <div class="leg-row"><span class="leg-dot" style="background:#ca8a04" aria-hidden="true"></span> Valoare 100k – 500k RON</div>
+      <div class="leg-row"><span class="leg-dot" style="background:#16a34a" aria-hidden="true"></span> Valoare &lt; 100k RON</div>
+    </div>
+  </div>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/XN/WLs=" crossorigin=""></script>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── Culoare marker după valoare ── */
+  function culoareMarker(valoare) {
+    if (valoare >= 1_000_000) return '#dc2626';
+    if (valoare >= 500_000)   return '#ea580c';
+    if (valoare >= 100_000)   return '#ca8a04';
+    return '#16a34a';
+  }
+
+  /* ── Raza marker după valoare (px) ── */
+  function razaMarker(valoare) {
+    if (valoare >= 1_000_000) return 18;
+    if (valoare >= 500_000)   return 14;
+    if (valoare >= 100_000)   return 10;
+    return 7;
+  }
+
+  /* ── Formatare RON ── */
+  function fmtRON(val) {
+    if (!val) return '0 RON';
+    if (val >= 1_000_000) return (val / 1_000_000).toFixed(2).replace('.', ',') + ' M RON';
+    if (val >= 1_000)     return (val / 1_000).toFixed(1).replace('.', ',') + ' k RON';
+    return val.toFixed(0) + ' RON';
+  }
+
+  /* ── Init hartă Leaflet ── */
+  const map = L.map('map', {
+    center: [44.445, 26.175],   // Pantelimon, Ilfov
+    zoom: 10,
+    zoomControl: true,
+  });
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',
+    maxZoom: 19,
+  }).addTo(map);
+
+  /* ── Panel refs ── */
+  const overview    = document.getElementById('overview');
+  const firmaDetail = document.getElementById('firma-detail');
+  const btnInapoi   = document.getElementById('btn-inapoi');
+  const statGrid    = document.getElementById('stat-grid');
+  const emptyState  = document.getElementById('empty-state');
+  const loading     = document.getElementById('loading');
+
+  btnInapoi.addEventListener('click', function () {
+    firmaDetail.style.display = 'none';
+    overview.style.display    = 'block';
+  });
+
+  function showDetail(firma) {
+    overview.style.display    = 'none';
+    firmaDetail.style.display = 'block';
+
+    document.getElementById('det-name').textContent = firma.name || firma.cif;
+    const rows = [
+      ['CIF',          firma.cif || '–'],
+      ['Adresă',       firma.adresa || '–'],
+      ['Contracte',    firma.nr_contracte || 0],
+      ['Valoare totală', fmtRON(firma.valoare || 0)],
+      ['Latitudine',   firma.lat ? firma.lat.toFixed(5) : '–'],
+      ['Longitudine',  firma.lng ? firma.lng.toFixed(5) : '–'],
+    ];
+    document.getElementById('det-rows').innerHTML = rows.map(([label, val]) =>
+      `<div class="detail-row"><span class="detail-label">${label}</span><span class="detail-val">${val}</span></div>`
+    ).join('');
+
+    const linkWrap = document.getElementById('det-link');
+    if (firma.slug) {
+      linkWrap.innerHTML = `<a href="furnizori/${firma.slug}.html" style="color:#1e40af;font-size:.85rem">→ Vezi pagina furnizorului</a>`;
+    } else {
+      linkWrap.innerHTML = '';
+    }
+  }
+
+  /* ── Încărcare firme_geocoded.json ── */
+  fetch('firme_geocoded.json')
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    .then(function (firme) {
+      loading.style.display = 'none';
+
+      if (!firme || firme.length === 0) {
+        emptyState.style.display = 'block';
+        return;
+      }
+
+      /* Statistici globale */
+      const totalValoare   = firme.reduce((s, f) => s + (f.valoare || 0), 0);
+      const totalContracte = firme.reduce((s, f) => s + (f.nr_contracte || 0), 0);
+      statGrid.innerHTML = `
+        <div class="stat-card">
+          <div class="sc-val">${firme.length}</div>
+          <div class="sc-label">firme geocodate</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-val">${totalContracte}</div>
+          <div class="sc-label">contracte totale</div>
+        </div>
+        <div class="stat-card" style="grid-column:1/-1">
+          <div class="sc-val">${fmtRON(totalValoare)}</div>
+          <div class="sc-label">valoare totală contracte</div>
+        </div>
+      `;
+
+      /* Markere ── */
+      firme.forEach(function (firma) {
+        if (!firma.lat || !firma.lng) return;
+        const marker = L.circleMarker([firma.lat, firma.lng], {
+          radius:      razaMarker(firma.valoare || 0),
+          fillColor:   culoareMarker(firma.valoare || 0),
+          color:       '#fff',
+          weight:      2,
+          opacity:     1,
+          fillOpacity: 0.85,
+        }).addTo(map);
+
+        marker.bindTooltip(
+          `<strong>${firma.name || firma.cif}</strong><br>${fmtRON(firma.valoare || 0)}<br>${firma.nr_contracte || 0} contracte`,
+          { sticky: true, opacity: .95 }
+        );
+
+        marker.on('click', function () {
+          showDetail(firma);
+          map.setView([firma.lat, firma.lng], Math.max(map.getZoom(), 12), { animate: true });
+        });
+
+        marker.on('keypress', function (e) {
+          if (e.originalEvent && (e.originalEvent.key === 'Enter' || e.originalEvent.key === ' ')) {
+            showDetail(firma);
+          }
+        });
+      });
+
+      /* Auto-fit bounds */
+      const bounds = firme
+        .filter(f => f.lat && f.lng)
+        .map(f => [f.lat, f.lng]);
+      if (bounds.length > 1) {
+        map.fitBounds(bounds, { padding: [40, 40] });
+      } else if (bounds.length === 1) {
+        map.setView(bounds[0], 13);
+      }
+    })
+    .catch(function (err) {
+      loading.style.display = 'none';
+      console.warn('firme_geocoded.json indisponibil:', err);
+      emptyState.style.display = 'block';
+    });
+})();
+</script>
+
+<!-- Progressive enhancement nav/toolbar -->
+<script src="enhance.js" defer></script>
+</body>
+</html>
