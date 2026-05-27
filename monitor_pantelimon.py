@@ -4337,6 +4337,28 @@ document.addEventListener('keydown', function(e) {{ if (e.key==='Escape') closeF
 # 6. FEED ATOM
 # ==============================================================================
 
+def genereaza_contracte_csv(contracte_export: list) -> str:
+    """Genereaza continutul CSV pentru contractele exportate (aceleasi campuri ca contracte.json).
+
+    Args:
+        contracte_export: lista de dictionare cu chei id, titlu, valoare, data, tip, firma, cui, ofertanti
+
+    Returns:
+        String UTF-8 cu headerul si randurile CSV (separator virgula, quoting automat).
+    """
+    import csv
+    import io
+
+    FIELDNAMES = ["id", "titlu", "valoare", "data", "tip", "firma", "cui", "ofertanti"]
+    buf = io.StringIO()
+    writer = csv.DictWriter(buf, fieldnames=FIELDNAMES, extrasaction="ignore",
+                            lineterminator="\n")
+    writer.writeheader()
+    for row in contracte_export:
+        writer.writerow({k: (row.get(k, "") if row.get(k) is not None else "") for k in FIELDNAMES})
+    return buf.getvalue()
+
+
 def genereaza_feed_atom(nereguli: list, data_generare: datetime) -> str:
     """Generează feed Atom cu cele mai noi N=20 nereguli (CRITIC > MAJOR > MEDIU, apoi valoare descendentă)."""
     import html as html_mod
@@ -5622,6 +5644,12 @@ def main():
     with open("contracte.json", "w", encoding="utf-8") as f:
         json.dump(contracte_export, f, ensure_ascii=False, indent=2)
     print(f"  ✓ Contracte exportate: contracte.json ({len(contracte_export)} intrări)")
+
+    # Export contracte.csv pentru jurnalisti / prelucrare spreadsheet
+    csv_content = genereaza_contracte_csv(contracte_export)
+    with open("contracte.csv", "w", encoding="utf-8", newline="") as f:
+        f.write(csv_content)
+    print(f"  ✓ Contracte exportate: contracte.csv ({len(contracte_export)} randuri)")
 
     # §1.1: Actualizează tabelul static din transparenta_pantelimon.html
     actualizeaza_tabel_contracte(contracte_export)
