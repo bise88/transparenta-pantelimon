@@ -216,8 +216,8 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 
 ## Status git (la data generării acestui fișier)
 
-- **Ultimul push reușit:** PR #45 — "ci: pytest-cov + extinde branch triggers + coverage report"
-- **Branch main:** la zi după merge PR #20–45
+- **Ultimul push reușit:** PR #46 — "fix(js): inlatura } orfan care bloca toggleFlag si openFirmaPanel"
+- **Branch main:** la zi după merge PR #20–46
 - **Suite de teste:** 359 teste, 18 fișiere, 0 erori
 - **De făcut:** run `fix_si_push.bat` pentru a regenera `raport_transparenta.html` cu toți detectori activi
 
@@ -277,6 +277,7 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 | Teste scor transparență | 29 teste noi: `calculeaza_scor_transparenta` — structură, interval 0-100, toate subscorurile (achizitii, ofertant, sedinte, fragmentare), valori hardcodate, ponderi | PR #43 |
 | README la zi | 216→359 teste, 14→18 fișiere, 4 fisiere noi adaugate la lista | PR #44 |
 | CI coverage | `pytest-cov` în CI; branch triggers extinse (docs/**, chore/**, fix/**); coverage report ca artifact | PR #45 |
+| Fix JS toggleFlag | Șters `}` orfan din `<script>` inline → SyntaxError bloca `toggleFlag`, `openFirmaPanel`, `_getContracte` etc. Fix în template + fișier generat | PR #46 |
 
 ### ❌ Nu e posibil / Nu ataca fără discuție
 
