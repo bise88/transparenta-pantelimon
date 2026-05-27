@@ -216,9 +216,9 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 
 ## Status git (la data generării acestui fișier)
 
-- **Ultimul push reușit:** PR #38 — "README.md la zi — 216 teste, 14 fisiere, monitor_uat + PWA"
-- **Branch main:** la zi după merge PR #20–38
-- **Suite de teste:** 216 teste, 14 fișiere, 0 erori
+- **Ultimul push reușit:** PR #39 — "sw.js: /contracte.csv în DATA_URLS, cache v2, networkFirstCsv, 3 teste noi"
+- **Branch main:** la zi după merge PR #20–39
+- **Suite de teste:** 219 teste, 14 fișiere, 0 erori
 - **De făcut:** run `fix_si_push.bat` pentru a regenera `raport_transparenta.html` cu toți detectori activi
 
 ## Stare roadmap IMPROVEMENTS.md + AUDIT.md (la zi)
@@ -270,6 +270,7 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 | CSV export + teste feed | `genereaza_contracte_csv()` → `contracte.csv`; link CSV în presa.html; 13 teste CSV + 13 teste feed Atom | PR #36 |
 | API.md extins | Documentate 8 endpoint-uri noi: contracte.csv, press_kit.json, pnrr_projects.json, ani_declaratii.json, curtea_de_conturi.json, ted_notices.json, mol_primarie.json, firme_geocoded.json | PR #37 |
 | README.md la zi | 153→216 teste, 10→14 fisiere test, repo struct cu monitor_uat.py/sw.js/csv, PNRR in surse | PR #38 |
+| sw.js CSV cache | `/contracte.csv` în DATA_URLS; `networkFirstCsv()` cu fallback CSV; CACHE_STATIC bump v2; 3 teste noi | PR #39 |
 
 ### ❌ Nu e posibil / Nu ataca fără discuție
 
