@@ -918,6 +918,290 @@ def fetch_declaratii_avere(
     return declaratii
 
 
+# ==============================================================================
+# §3.4  TED EUROPA — cross-referențiere contracte mari (>500k EUR) cu SEAP
+# ==============================================================================
+
+def search_ted_for_buyer(
+    cif_buyer: str,
+    year: int = None,
+    cache_db: str = "ted_cache.db",
+    ttl_zile: int = 7,
+    timeout: int = 30,
+) -> list:
+    """§3.4 Caută anunțuri TED Europa pentru un cumpărător identificat prin CIF.
+
+    Contractele > 500.000 EUR trebuie publicate și în TED (Tenders Electronic Daily)
+    conform Directivei UE 2014/24. Dacă apar în SEAP dar NU în TED → flag potențial.
+
+    Args:
+        cif_buyer: CIF-ul cumpărătorului (ex: "4420759")
+        year:      An de filtrat (implicit: anul curent)
+        cache_db:  Cale fișier SQLite cache
+        ttl_zile:  TTL cache în zile (implicit 7 — anunțuri apar zilnic)
+        timeout:   Timeout HTTP în secunde
+
+    Returns:
+        list [{notice_id, title, publication_date, value_eur, procedure_type, url}]
+        Scrie ted_notices.json cu rezultatele.
+    """
+    import sqlite3
+    import json as json_mod
+    from datetime import datetime, timedelta
+    import urllib.request, urllib.parse
+
+    if year is None:
+        year = datetime.now().year
+
+    UA = "transparenta-pantelimon-bot (contact: contact@transparenta-pantelimon.eu)"
+    TED_API = "https://ted.europa.eu/api/v3.0/notices/search"
+
+    # ── Cache ────────────────────────────────────────────────────
+    def _init_cache(db_path):
+        conn = sqlite3.connect(db_path)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS ted_notices (
+                cache_key TEXT PRIMARY KEY,
+                extras_la TEXT,
+                date_json TEXT
+            )
+        """)
+        conn.commit()
+        return conn
+
+    def _cache_get(conn, key):
+        row = conn.execute(
+            "SELECT date_json, extras_la FROM ted_notices WHERE cache_key=?", (key,)
+        ).fetchone()
+        if not row:
+            return None
+        try:
+            if datetime.now() - datetime.fromisoformat(row[1]) < timedelta(days=ttl_zile):
+                return json_mod.loads(row[0])
+        except (ValueError, TypeError):
+            pass
+        return None
+
+    def _cache_set(conn, key, data):
+        conn.execute(
+            "INSERT OR REPLACE INTO ted_notices (cache_key, extras_la, date_json) VALUES (?,?,?)",
+            (key, datetime.now().isoformat(), json_mod.dumps(data, ensure_ascii=False))
+        )
+        conn.commit()
+
+    # ── Fetch TED API ─────────────────────────────────────────────
+    def _fetch_ted(cif: str, an: int) -> list:
+        params = urllib.parse.urlencode({
+            "q":      f'BUYER-NATIONALID="{cif}"',
+            "fields": "notice-id,short-description,publication-date,estimated-value-setting,procedure-type",
+            "scope":  3,
+            "limit":  100,
+        })
+        url = f"{TED_API}?{params}"
+        req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/json"})
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                data = json_mod.loads(resp.read().decode("utf-8"))
+            notices = data.get("notices", data.get("results", []))
+            rezultate = []
+            for n in notices:
+                pub_date = n.get("publication-date", n.get("publicationDate", ""))
+                # Filtrăm după an dacă e specificat
+                if pub_date and str(an) not in pub_date:
+                    continue
+                val = n.get("estimated-value-setting", {})
+                val_eur = val.get("amount", 0) if isinstance(val, dict) else 0
+                notice_id = n.get("notice-id", n.get("noticeId", ""))
+                rezultate.append({
+                    "notice_id":        notice_id,
+                    "title":            n.get("short-description", n.get("title", ""))[:200],
+                    "publication_date": pub_date,
+                    "value_eur":        val_eur,
+                    "procedure_type":   n.get("procedure-type", ""),
+                    "url":              f"https://ted.europa.eu/en/notice/{notice_id}" if notice_id else "",
+                    "sursa":            "ted.europa.eu",
+                })
+            return rezultate
+        except Exception as exc:
+            print(f"  ⚠️  §3.4 TED: eroare fetch — {exc}")
+            return []
+
+    # ── Main logic ───────────────────────────────────────────────
+    cache_key = f"{cif_buyer}_{year}"
+    conn = _init_cache(cache_db)
+    notices = _cache_get(conn, cache_key)
+
+    if notices is None:
+        print(f"  [TED] Fetch anunțuri pentru CIF {cif_buyer}, an {year}…")
+        notices = _fetch_ted(cif_buyer, year)
+        _cache_set(conn, cache_key, notices)
+        print(f"  ✓ TED: {len(notices)} anunțuri găsite → cache actualizat")
+    else:
+        print(f"  ✓ TED: {len(notices)} anunțuri (din cache) pentru CIF {cif_buyer}/{year}")
+
+    conn.close()
+
+    with open("ted_notices.json", "w", encoding="utf-8") as fout:
+        json_mod.dump(notices, fout, ensure_ascii=False, indent=2)
+
+    return notices
+
+
+# ==============================================================================
+# §3.5  MONITORUL OFICIAL LOCAL — rectificări bugetare și HCL
+# ==============================================================================
+
+def fetch_mol_primarie(
+    url: str = "https://www.primariapantelimon.ro/mol/",
+    cache_db: str = "mol_cache.db",
+    ttl_zile: int = 7,
+    timeout: int = 20,
+) -> list:
+    """§3.5 Scraping Monitorul Oficial Local al primăriei.
+
+    Caută rectificări bugetare și HCL-uri cu sume concrete. Foloseşte
+    BeautifulSoup pentru extragere linkuri + texte.
+
+    Args:
+        url:       URL pagina MOL primărie
+        cache_db:  Cale fișier SQLite cache
+        ttl_zile:  TTL cache în zile (implicit 7)
+        timeout:   Timeout HTTP în secunde
+
+    Returns:
+        list [{titlu, url, data, tip, suma_ron}]
+        Scrie mol_primarie.json cu rezultatele.
+    """
+    import sqlite3
+    import json as json_mod
+    import re
+    from datetime import datetime, timedelta
+    import urllib.request
+
+    UA = "transparenta-pantelimon-bot (contact: contact@transparenta-pantelimon.eu)"
+
+    # ── Cache ─────────────────────────────────────────────────────
+    def _init_cache(db_path):
+        conn = sqlite3.connect(db_path)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS mol_entries (
+                url_cheie TEXT PRIMARY KEY,
+                extras_la TEXT,
+                date_json TEXT
+            )
+        """)
+        conn.commit()
+        return conn
+
+    def _cache_get(conn, url_cheie):
+        row = conn.execute(
+            "SELECT date_json, extras_la FROM mol_entries WHERE url_cheie=?", (url_cheie,)
+        ).fetchone()
+        if not row:
+            return None
+        try:
+            if datetime.now() - datetime.fromisoformat(row[1]) < timedelta(days=ttl_zile):
+                return json_mod.loads(row[0])
+        except (ValueError, TypeError):
+            pass
+        return None
+
+    def _cache_set(conn, url_cheie, data):
+        conn.execute(
+            "INSERT OR REPLACE INTO mol_entries (url_cheie, extras_la, date_json) VALUES (?,?,?)",
+            (url_cheie, datetime.now().isoformat(), json_mod.dumps(data, ensure_ascii=False))
+        )
+        conn.commit()
+
+    # ── Fetch și parse ────────────────────────────────────────────
+    def _fetch_mol(mol_url: str) -> list:
+        try:
+            from bs4 import BeautifulSoup as BS
+            req = urllib.request.Request(
+                mol_url,
+                headers={"User-Agent": UA, "Accept": "text/html"}
+            )
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                html = resp.read().decode("utf-8", errors="replace")
+
+            soup = BS(html, "html.parser")
+            intrari = []
+
+            # Pattern: linkuri cu cuvinte-cheie bugetar
+            kw_bugetar = re.compile(
+                r"rectific|HCL|hotarare|hotărâre|buget|anexa|aprobare", re.I
+            )
+            for a in soup.find_all("a", href=True):
+                text = a.get_text(strip=True)
+                href = a["href"]
+                if not kw_bugetar.search(text) and not kw_bugetar.search(href):
+                    continue
+                if not href.startswith("http"):
+                    from urllib.parse import urljoin
+                    href = urljoin(mol_url, href)
+
+                # Extrage sumă RON din text (ex: "2.300.000 RON" sau "2,3M RON")
+                suma_ron = 0.0
+                match_ron = re.search(
+                    r'([\d\.,]+)\s*(?:milioane?|M)?\s*RON',
+                    text, re.I
+                )
+                if match_ron:
+                    try:
+                        nr_str = match_ron.group(1).replace(".", "").replace(",", ".")
+                        suma_ron = float(nr_str)
+                        if re.search(r"milio|M\s*RON", match_ron.group(0), re.I):
+                            suma_ron *= 1_000_000
+                    except ValueError:
+                        pass
+
+                # Tip
+                tip = "rectificare_buget" if re.search(r"rectific", text, re.I) else "hcl"
+
+                # Data din text sau href (dd.mm.yyyy sau yyyy-mm-dd)
+                data_str = ""
+                dm = re.search(r'\b(\d{1,2})[./](\d{1,2})[./](\d{4})\b', text)
+                if dm:
+                    data_str = f"{dm.group(3)}-{dm.group(2):>02}-{dm.group(1):>02}"
+
+                intrari.append({
+                    "titlu":    text[:200],
+                    "url":      href,
+                    "data":     data_str,
+                    "tip":      tip,
+                    "suma_ron": suma_ron,
+                    "sursa":    "mol.primariapantelimon.ro",
+                })
+
+            return intrari
+
+        except ImportError:
+            print("  ⚠️  §3.5 MOL: BeautifulSoup lipsă (pip install beautifulsoup4)")
+            return []
+        except Exception as exc:
+            print(f"  ⚠️  §3.5 MOL: eroare fetch {url} — {exc}")
+            return []
+
+    # ── Main logic ────────────────────────────────────────────────
+    conn = _init_cache(cache_db)
+    intrari = _cache_get(conn, url)
+
+    if intrari is None:
+        print(f"  [MOL] Fetch Monitorul Oficial Local…")
+        intrari = _fetch_mol(url)
+        _cache_set(conn, url, intrari)
+        print(f"  ✓ MOL: {len(intrari)} intrări găsite → cache actualizat")
+    else:
+        print(f"  ✓ MOL: {len(intrari)} intrări (din cache)")
+
+    conn.close()
+
+    with open("mol_primarie.json", "w", encoding="utf-8") as fout:
+        json_mod.dump(intrari, fout, ensure_ascii=False, indent=2)
+
+    return intrari
+
+
 def calculeaza_scor_transparenta(toate_flags: list, contracte: list, statistici_hcl: dict) -> dict:
     """Calculeaza scorul de transparenta al UAT (0-100, mai mare = mai transparent)."""
     ponderi = {
@@ -4753,6 +5037,16 @@ def main():
         uat=CONFIG.get("uat_search", "Pantelimon"),
     )
     CONFIG["_declaratii_ani"] = declaratii_ani
+
+    # §3.4 TED Europa — cross-referențiere contracte mari (cache 7 zile)
+    ted_notices = search_ted_for_buyer(
+        cif_buyer=CONFIG["cui"],
+    )
+    CONFIG["_ted_notices"] = ted_notices
+
+    # §3.5 MOL primărie — rectificări bugetare și HCL (cache 7 zile)
+    mol_intrari = fetch_mol_primarie()
+    CONFIG["_mol_intrari"] = mol_intrari
 
     # Pasăm statisticile HCL în CONFIG pentru template
     CONFIG["_hcl_total"] = statistici_hcl.get("total_hcl", 0)
