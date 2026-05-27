@@ -124,6 +124,10 @@ html[data-tp-theme="dark"] {
 .tp-chip[data-sev="MEDIU"].active  { background: #eab308; border-color: #eab308; color: #1a1a1a; }
 .tp-chip[data-shell].active        { background: #7c3aed; border-color: #7c3aed; color: #fff; }
 #tp-shell-row { display: none; }  /* ascuns până confirmăm că există panele */
+/* Chips severitate — grupate, nu se separă pe linii diferite */
+.tp-chips-sev {
+  display: flex; gap: .3rem; flex-shrink: 0; flex-wrap: nowrap;
+}
 
 .tp-btn {
   padding: .45rem .85rem;
@@ -219,7 +223,7 @@ html[data-tp-theme="dark"] {
   .tp-nav-brand { font-size: .82rem; }
   .tp-nav-links a { padding: .35rem .55rem; font-size: .8rem; }
   .tp-toolbar { top: 52px; padding: .55rem .6rem; }
-  .tp-search { font-size: 16px; } /* fără zoom iOS */
+  .tp-search { font-size: 16px; flex-basis: 100%; } /* fără zoom iOS; full linie → chips pe rândul următor */
   .tp-select { max-width: 100%; flex: 1; }
 }
 
@@ -664,9 +668,11 @@ html[data-tp-theme="dark"] .tp-anap-btn {
           <input type="search" class="tp-search" id="tp-q"
                  placeholder="🔍 Caută în nereguli (furnizor, sumă, cod contract, lege)…"
                  aria-label="Caută în nereguli">
-          <button class="tp-chip active" data-sev="CRITIC" aria-pressed="true">🔴 CRITIC</button>
-          <button class="tp-chip active" data-sev="MAJOR"  aria-pressed="true">🟠 MAJOR</button>
-          <button class="tp-chip active" data-sev="MEDIU"  aria-pressed="true">🟡 MEDIU</button>
+          <div class="tp-chips-sev">
+            <button class="tp-chip active" data-sev="CRITIC" aria-pressed="true">🔴 CRITIC</button>
+            <button class="tp-chip active" data-sev="MAJOR"  aria-pressed="true">🟠 MAJOR</button>
+            <button class="tp-chip active" data-sev="MEDIU"  aria-pressed="true">🟡 MEDIU</button>
+          </div>
         </div>
         <div class="tp-toolbar-row">
           <select class="tp-select" id="tp-supplier" aria-label="Filtrează după furnizor">
