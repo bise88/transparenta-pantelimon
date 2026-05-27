@@ -374,6 +374,7 @@ html[data-tp-theme="dark"] .tp-anap-btn {
       { href: 'despre.html',                   emoji: 'ℹ️', text: 'Despre' },
       { href: 'presa.html',                    emoji: '🗞️', text: 'Presă' },
       { href: 'petitie.html',                  emoji: '✍️', text: 'Petiție' },
+      { href: 'harta.html',                    emoji: '🗺️', text: 'Hartă' },
     ];
 
     const linksHTML = links.map(l => {
