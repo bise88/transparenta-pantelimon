@@ -216,9 +216,9 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 
 ## Status git (la data generării acestui fișier)
 
-- **Ultimul push reușit:** PR #28 — "§4.6 harta.html Leaflet + §3.6 geocodare Nominatim"
-- **Branch main:** la zi după merge PR #20–28
-- **Suite de teste:** 119 teste, 7 fișiere, 0 erori
+- **Ultimul push reușit:** PR #29 — "§3.1 Curtea de Conturi + §3.2 ANI declarații avere"
+- **Branch main:** la zi după merge PR #20–29
+- **Suite de teste:** 130 teste, 8 fișiere, 0 erori
 - **De făcut:** run `fix_si_push.bat` pentru a regenera `raport_transparenta.html` cu toți detectori activi
 
 ## Stare roadmap IMPROVEMENTS.md + AUDIT.md (la zi)
@@ -256,6 +256,8 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 | §6.5 Audit secrete | git log grep — 0 secrete hardcodate găsite în istoricul repo | PR #27 |
 | §4.6 Hartă Leaflet | `harta.html` — hartă interactivă furnizori cu circle markers Leaflet.js | PR #28 |
 | §3.6 Geocodare | `geocodeaza_firme()` + SQLite cache 180z + Nominatim → `firme_geocoded.json` | PR #28 |
+| §3.1 Curtea de Conturi | `fetch_curtea_de_conturi()` + SQLite cache + `curtea_de_conturi.json` | PR #29 |
+| §3.2 ANI declarații avere | `fetch_declaratii_avere()` + SQLite cache + `ani_declaratii.json` | PR #29 |
 
 ### ❌ Nu e posibil / Nu ataca fără discuție
 
