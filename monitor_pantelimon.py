@@ -4535,6 +4535,191 @@ def genereaza_og_image(n_flags: int, n_critic: int, valoare_mil: float,
         return False
 
 
+# ==============================================================================
+# §5.1  PRESS KIT AUTO-GENERAT — pentru jurnaliști și ONG-uri
+# ==============================================================================
+
+def genereaza_press_kit(
+    nereguli: list,
+    contracte: list,
+    scor: dict,
+    config: dict,
+) -> dict:
+    """§5.1 Generează press kit JSON + Markdown pentru jurnaliști.
+
+    Conține: top 10 nereguli, top 10 firme, statistici, linkuri utile.
+    Scrie:
+      - press_kit.json   (citit de presa.html pentru date dinamice)
+      - press_kit.md     (Markdown descărcabil)
+
+    Args:
+        nereguli:  toate_flags (lista neregulilor detectate)
+        contracte: lista contracte SEAP
+        scor:      dict scor transparență {scor, detalii, ...}
+        config:    CONFIG dict cu metadate UAT
+
+    Returns:
+        dict cu datele press kit-ului
+    """
+    import json as json_mod
+    from datetime import datetime
+
+    BASE_URL = "https://aprindemlumina.eu"
+    azi = datetime.now().strftime("%d.%m.%Y")
+    azi_iso = datetime.now().strftime("%Y-%m-%d")
+
+    # ── Statistici generale ───────────────────────────────────────
+    n_total = len(nereguli)
+    n_critic = sum(1 for f in nereguli if f.get("severitate") == "CRITIC")
+    n_major  = sum(1 for f in nereguli if f.get("severitate") == "MAJOR")
+    n_mediu  = sum(1 for f in nereguli if f.get("severitate") == "MEDIU")
+    val_total = sum(c.get("valoare_ron", 0) for c in contracte)
+    val_mil = round(val_total / 1_000_000, 2)
+    n_contracte = len(contracte)
+    scor_val = scor.get("scor") if scor else None
+
+    # ── Top 10 nereguli (sortate: CRITIC > MAJOR > MEDIU, apoi valoare) ──
+    sev_ord = {"CRITIC": 0, "MAJOR": 1, "MEDIU": 2}
+    top_nereguli = sorted(
+        nereguli,
+        key=lambda f: (sev_ord.get(f.get("severitate", ""), 3), -(f.get("valoare") or 0))
+    )[:10]
+
+    top_nereguli_export = [{
+        "titlu":        f.get("titlu", "")[:120],
+        "severitate":   f.get("severitate", ""),
+        "descriere":    f.get("descriere", "")[:300],
+        "furnizor":     f.get("furnizor", ""),
+        "valoare_ron":  f.get("valoare", 0) or 0,
+        "data":         f.get("data", ""),
+        "contract_id":  f.get("contract_id") or f.get("contract_numar") or "",
+        "tip":          f.get("tip", ""),
+        "anchor":       f"#nereguli-{nereguli.index(f) + 1}" if f in nereguli else "",
+    } for f in top_nereguli]
+
+    # ── Top 10 firme după valoare contracte ──────────────────────
+    firme_val: dict = {}
+    firme_nr: dict = {}
+    for c in contracte:
+        firma = c.get("castigator", "")
+        if not firma:
+            continue
+        firme_val[firma] = firme_val.get(firma, 0) + c.get("valoare_ron", 0)
+        firme_nr[firma]  = firme_nr.get(firma, 0) + 1
+
+    top_firme = sorted(firme_val.items(), key=lambda x: -x[1])[:10]
+    top_firme_export = [{
+        "nume":         f,
+        "valoare_ron":  v,
+        "nr_contracte": firme_nr.get(f, 0),
+    } for f, v in top_firme]
+
+    # ── Structura JSON ────────────────────────────────────────────
+    press_kit = {
+        "schema_version":  "1.0",
+        "generated_at":    azi_iso,
+        "uat": {
+            "name":   config.get("nume_entitate", ""),
+            "cif":    config.get("cui", ""),
+            "judet":  config.get("judet", ""),
+        },
+        "statistici": {
+            "total_nereguli":  n_total,
+            "critice":         n_critic,
+            "majore":          n_major,
+            "medii":           n_mediu,
+            "total_contracte": n_contracte,
+            "valoare_totala_ron": val_total,
+            "valoare_totala_mil": val_mil,
+            "scor_transparenta": scor_val,
+        },
+        "top_nereguli":  top_nereguli_export,
+        "top_firme":     top_firme_export,
+        "date_deschise": {
+            "api_json":    f"{BASE_URL}/raport.json",
+            "contracte_json": f"{BASE_URL}/contracte.json",
+            "rss_feed":    f"{BASE_URL}/feed.xml",
+            "harta":       f"{BASE_URL}/harta.html",
+        },
+        "contact":       config.get("email_to", ""),
+        "site":          BASE_URL,
+        "disclaimer":    (
+            "Toate datele sunt fapte publice (SEAP, ANAF, ONRC). "
+            "Site-ul nu face afirmații despre intenții sau vinovăție — "
+            "doar afișează statistici și legi posibil încălcate. "
+            "Concluziile sunt la latitudinea cititorului."
+        ),
+    }
+
+    # ── Scriere press_kit.json ────────────────────────────────────
+    with open("press_kit.json", "w", encoding="utf-8") as fout:
+        json_mod.dump(press_kit, fout, ensure_ascii=False, indent=2)
+
+    # ── Generare press_kit.md ─────────────────────────────────────
+    top5_md = "\n".join(
+        f"{i+1}. [{f['severitate']}] **{f['titlu']}** — {f['furnizor']} — "
+        f"{f['valoare_ron']:,.0f} RON"
+        for i, f in enumerate(top_nereguli_export[:5])
+    )
+    top5_firme_md = "\n".join(
+        f"{i+1}. **{f['nume']}** — {f['valoare_ron']/1_000_000:.2f} M RON "
+        f"({f['nr_contracte']} contracte)"
+        for i, f in enumerate(top_firme_export[:5])
+    )
+
+    md = f"""# Press kit — Transparența Pantelimon ({azi})
+
+Monitorizare cetățenească automată a achizițiilor publice — {config.get('nume_entitate', 'Primăria Pantelimon')}.
+
+## Statistici la zi
+
+| Indicator | Valoare |
+|---|---|
+| Nereguli detectate total | {n_total} |
+| Critice / Majore / Medii | {n_critic} / {n_major} / {n_mediu} |
+| Contracte analizate | {n_contracte} |
+| Valoare totală contracte | {val_mil} M RON |
+| Scor transparență | {scor_val if scor_val is not None else 'N/A'}/100 |
+
+## Top 5 nereguli (severitate + valoare)
+
+{top5_md}
+
+## Top 5 firme după valoare contracte
+
+{top5_firme_md}
+
+## Date deschise
+
+- API JSON: {BASE_URL}/raport.json
+- Contracte JSON: {BASE_URL}/contracte.json
+- RSS: {BASE_URL}/feed.xml
+- Hartă furnizori: {BASE_URL}/harta.html
+
+## Contact
+
+{config.get('email_to', '[contact]')}
+
+## Metodologie completă
+
+{BASE_URL}/despre.html
+
+## Disclaimer
+
+Toate datele sunt fapte publice. Concluziile sunt la latitudinea cititorului.
+
+---
+*Generat automat de monitor_pantelimon.py la {azi_iso}*
+"""
+
+    with open("press_kit.md", "w", encoding="utf-8") as fout:
+        fout.write(md)
+
+    print(f"  ✓ Press kit generat: press_kit.json + press_kit.md "
+          f"(top {len(top_nereguli_export)} nereguli, top {len(top_firme_export)} firme)")
+    return press_kit
+
+
 def genereaza_sitemap(index_furnizori: list) -> str:
     """Regenerează sitemap.xml cu paginile statice + toate paginile furnizori."""
     BASE = "https://aprindemlumina.eu"
@@ -5204,6 +5389,14 @@ def main():
     with open("feed.xml", "w", encoding="utf-8") as f:
         f.write(feed_xml)
     print(f"  ✓ Feed Atom salvat: feed.xml (top {min(20, len(toate_flags))} nereguli)")
+
+    # §5.1 Press kit auto-generat pentru jurnaliști / ONG-uri
+    genereaza_press_kit(
+        nereguli=toate_flags,
+        contracte=contracte,
+        scor=CONFIG.get("_scor", {}),
+        config=CONFIG,
+    )
 
     # Export raport.json (endpoint public pentru jurnalisti / integari externe)
     _n_main = len(contracte)
