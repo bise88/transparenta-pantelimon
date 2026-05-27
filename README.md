@@ -18,7 +18,8 @@ Monitorizare cetateasca automata a achizitiilor publice ale Primariei Pantelimon
 ## Structura repo
 
 ```
-monitor_pantelimon.py        # Scriptul principal (~5600 linii)
+monitor_pantelimon.py        # Scriptul principal (~5800 linii)
+monitor_uat.py               # CLI wrapper multi-UAT (orice CIF de primarie)
 transparenta_pantelimon.html # Pagina principala (site static)
 raport_transparenta.html     # Raport generat (output monitor)
 harta.html                   # Harta interactiva furnizori (Leaflet.js)
@@ -26,11 +27,16 @@ presa.html                   # Pagina jurnalisti + press kit
 petitie.html                 # Petitie cetateneasca (Formspree)
 despre.html                  # Metodologie + institutii sesizare
 gdpr.html                    # Politica de confidentialitate
-contracte.json               # Export contracte SEAP
+sw.js                        # Service Worker PWA (Cache-First/Network-First)
+manifest.webmanifest         # PWA manifest (instalabil pe telefon)
+icon-192.png / icon-512.png  # Icoane PWA
+contracte.json               # Export contracte SEAP (JSON)
+contracte.csv                # Export contracte SEAP (CSV — Excel/Sheets)
 raport.json                  # Export flags/nereguli (format JSON public)
 feed.xml                     # RSS/Atom feed nereguli noi
 press_kit.json               # Press kit date structurate (generat automat)
 press_kit.md                 # Press kit Markdown (descarcabil de jurnalisti)
+pnrr_projects.json           # Proiecte PNRR (generat automat)
 firme_geocoded.json          # Sedii firme geocodate cu Nominatim OSM
 curtea_de_conturi.json       # Rapoarte audit CC (generat automat)
 ani_declaratii.json          # Declaratii avere ANI (generat automat)
@@ -39,6 +45,7 @@ mol_primarie.json            # Documente MOL primarie (generat automat)
 furnizori/                   # Pagini per furnizor (generate automat)
 risc_firma.py                # Modul detector shell companies
 .github/workflows/           # GitHub Actions (rulare automata lunara)
+API.md                       # Documentatie API JSON/CSV public
 IMPROVEMENTS.md              # Roadmap si idei de imbunatatire
 AUDIT.md                     # Audit tehnic cu propuneri cod
 ```
@@ -48,9 +55,13 @@ AUDIT.md                     # Audit tehnic cu propuneri cod
 ```bash
 git clone https://github.com/transparenta-locala/transparenta-pantelimon
 cd transparenta-pantelimon
-# editeaza CONFIG in monitor_pantelimon.py cu CUI + nume UAT
 pip install -r requirements.txt
-python monitor_pantelimon.py
+
+# Foloseste CLI-ul multi-UAT:
+py monitor_uat.py 4420759                                            # Pantelimon (default)
+py monitor_uat.py 4364643 --judet Ilfov --uat-search Voluntari      # Voluntari
+py monitor_uat.py 4364660 --judet Ilfov --uat-search Popesti-Leordeni
+py monitor_uat.py 4420759 --dry-run                                  # Preview CONFIG fara scraping
 ```
 
 ## Algoritmi de detectie (red flags)
@@ -93,6 +104,7 @@ Praguri: Legea 98/2016 — 130.000 RON (servicii/furnizare), 500.000 RON (lucrar
 | TED Europa | Anunturi contracte >500k EUR | 7 zile |
 | MOL primarie | HCL-uri / rectificari buget | 7 zile |
 | Nominatim OSM | Geocodare sedii firme | 180 zile |
+| proiecte.pnrr.gov.ro | Proiecte PNRR beneficiar CIF | 7 zile |
 
 ## Teste automate
 
@@ -100,7 +112,7 @@ Praguri: Legea 98/2016 — 130.000 RON (servicii/furnizare), 500.000 RON (lucrar
 py -m pytest tests/ -v
 ```
 
-**153 teste unitare in 10 fisiere** — toate ruleaza fara conexiune la retea (mock urllib/requests).
+**216 teste unitare in 14 fisiere** — toate ruleaza fara conexiune la retea (mock urllib/requests).
 
 ```
 tests/test_detectors.py          # detectori batch 1 (fragmentare, concentrare, sedinte, publicare)
@@ -113,6 +125,10 @@ tests/test_geocoding.py          # geocodare Nominatim + cache SQLite
 tests/test_cc_ani.py             # Curtea de Conturi + ANI declaratii avere
 tests/test_ted_mol.py            # TED Europa + MOL primarie
 tests/test_press_kit.py          # press kit JSON + Markdown
+tests/test_pwa.py                # Service Worker + manifest PWA + icoane
+tests/test_pnrr.py               # PNRR tracker (cache SQLite + JSON/HTML fallback)
+tests/test_monitor_uat.py        # CLI multi-UAT (argparse + build_config_overrides)
+tests/test_csv_feed.py           # CSV export + feed Atom (XSS, sortare, max 20)
 ```
 
 ## Contribuie
