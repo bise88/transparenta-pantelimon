@@ -216,9 +216,9 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 
 ## Status git (la data generării acestui fișier)
 
-- **Ultimul push reușit:** PR #35 — "Faza 4-F CLI multi-UAT — monitor_uat.py"
-- **Branch main:** la zi după merge PR #20–35
-- **Suite de teste:** 193 teste, 13 fișiere, 0 erori
+- **Ultimul push reușit:** PR #36 — "CSV export + teste genereaza_feed_atom"
+- **Branch main:** la zi după merge PR #20–36
+- **Suite de teste:** 216 teste, 14 fișiere, 0 erori
 - **De făcut:** run `fix_si_push.bat` pentru a regenera `raport_transparenta.html` cu toți detectori activi
 
 ## Stare roadmap IMPROVEMENTS.md + AUDIT.md (la zi)
@@ -267,6 +267,7 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 | §4.3 Service Worker PWA | `sw.js` Cache-First/Network-First + `manifest.webmanifest` + icons 192/512 + `initPWA()` în enhance.js | PR #34 |
 | §3.3 PNRR tracking | `fetch_pnrr_projects()` + SQLite cache + `pnrr_projects.json`; JSON API + HTML fallback | PR #34 |
 | Faza 4-F CLI multi-UAT | `monitor_uat.py` wrapper CLI — orice UAT românesc cu `--judet`, `--uat-search`, `--dry-run` | PR #35 |
+| CSV export + teste feed | `genereaza_contracte_csv()` → `contracte.csv`; link CSV în presa.html; 13 teste CSV + 13 teste feed Atom | PR #36 |
 
 ### ❌ Nu e posibil / Nu ataca fără discuție
 
