@@ -368,20 +368,57 @@ Licență date: Creative Commons CC-BY 4.0 — atribuire: "Transparența Panteli
   }
 
   function downloadPressKit() {
-    const text = window._pkText || document.getElementById('pk-text').value;
-    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'press-kit-transparenta-pantelimon.txt';
-    a.click();
-    URL.revokeObjectURL(url);
+    // Încearcă mai întâi să descarce press_kit.md generat de monitor
+    fetch('press_kit.md')
+      .then(r => r.ok ? r.text() : Promise.reject(r.status))
+      .then(mdText => {
+        const blob = new Blob([mdText], { type: 'text/markdown;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'press-kit-transparenta-pantelimon.md';
+        a.click();
+        URL.revokeObjectURL(url);
+      })
+      .catch(() => {
+        // Fallback: descarcă press kit text generat din raport.json
+        const text = window._pkText || document.getElementById('pk-text').value;
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'press-kit-transparenta-pantelimon.txt';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+  }
+
+  // §5.1 Îmbogățire date din press_kit.json (dacă disponibil)
+  async function loadPressKitJson() {
+    try {
+      const r = await fetch('press_kit.json', { cache: 'no-store' });
+      if (!r.ok) return;
+      const pk = await r.json();
+      // Actualizează KPI din press_kit.json dacă sunt mai recente
+      const st = pk.statistici || {};
+      if (st.total_nereguli != null && document.getElementById('pk-critic').textContent === '–') {
+        document.getElementById('pk-critic').textContent    = st.critice ?? '–';
+        document.getElementById('pk-major').textContent     = st.majore  ?? '–';
+        document.getElementById('pk-mediu').textContent     = st.medii   ?? '–';
+        document.getElementById('pk-contracts').textContent = st.total_contracte ?? '–';
+        document.getElementById('pk-value').textContent     = st.valoare_totala_mil != null ? st.valoare_totala_mil : '–';
+        document.getElementById('pk-scor').textContent      = st.scor_transparenta != null ? st.scor_transparenta : '–';
+      }
+    } catch (e) {
+      // press_kit.json indisponibil — se folosesc datele din raport.json
+    }
   }
 
   window.copyPressKit = copyPressKit;
   window.downloadPressKit = downloadPressKit;
 
   loadData();
+  loadPressKitJson();
 })();
 </script>
 </body>
