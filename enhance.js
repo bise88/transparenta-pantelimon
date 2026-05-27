@@ -703,22 +703,39 @@ html[data-tp-theme="dark"] .tp-anap-btn {
     `;
 
     // ─── ÎMBOGĂȚIRE ITEMS CU DATE RISC FIRMĂ ─────────────────
-    // Citim panelul .supplier-risk-panel injectat de risc_firma.py (opțional)
-    let shellPanelsFound = 0;
+    // Citim scorul de risc din #risc-firma-data (generat de monitor_pantelimon.py)
+    // Fallback: .supplier-risk-panel (mecanism vechi, nefolosit în generatorul curent)
+    let riscFirmaLookup = {};
+    try {
+      const riscTag = document.getElementById('risc-firma-data');
+      if (riscTag) riscFirmaLookup = JSON.parse(riscTag.textContent) || {};
+    } catch(e) { /* risc-firma-data absent sau JSON invalid */ }
+
     items.forEach(it => {
       if (!it.el) { it.riskCount = 0; it.riskText = ''; return; }
+      // Cale 1: #risc-firma-data JSON (sursă preferată)
+      const rd = riscFirmaLookup[it.supplier];
+      if (rd) {
+        it.riskCount = rd.scor || 0;
+        it.riskText  = (rd.flags || [])
+          .map(f => (f.tip + ' ' + (f.titlu || '')).toUpperCase()).join(' ');
+        return;
+      }
+      // Cale 2: .supplier-risk-panel inline (fallback legacy)
       const panel = it.el.querySelector('.supplier-risk-panel');
       if (panel) {
         it.riskCount = parseInt(panel.dataset.riskCount || '0', 10) || 0;
         it.riskText  = panel.textContent.toUpperCase();
-        shellPanelsFound++;
-      } else {
-        it.riskCount = 0;
-        it.riskText  = '';
+        return;
       }
+      it.riskCount = 0;
+      it.riskText  = '';
     });
-    // Afișăm rândul de filtre shell doar dacă există cel puțin un panel
-    if (shellPanelsFound > 0) {
+
+    // Afișăm rândul de filtre shell dacă există date de risc (any-risk funcționează)
+    const hasRiscData = Object.keys(riscFirmaLookup).length > 0 ||
+                        !!document.querySelector('.supplier-risk-panel');
+    if (hasRiscData) {
       const shellRow = toolbar.querySelector('#tp-shell-row');
       if (shellRow) shellRow.style.display = '';
     }
