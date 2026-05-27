@@ -112,7 +112,7 @@ Praguri: Legea 98/2016 — 130.000 RON (servicii/furnizare), 500.000 RON (lucrar
 py -m pytest tests/ -v
 ```
 
-**216 teste unitare in 14 fisiere** — toate ruleaza fara conexiune la retea (mock urllib/requests).
+**359 teste unitare in 18 fisiere** — toate ruleaza fara conexiune la retea (mock urllib/requests).
 
 ```
 tests/test_detectors.py          # detectori batch 1 (fragmentare, concentrare, sedinte, publicare)
@@ -129,6 +129,10 @@ tests/test_pwa.py                # Service Worker + manifest PWA + icoane
 tests/test_pnrr.py               # PNRR tracker (cache SQLite + JSON/HTML fallback)
 tests/test_monitor_uat.py        # CLI multi-UAT (argparse + build_config_overrides)
 tests/test_csv_feed.py           # CSV export + feed Atom (XSS, sortare, max 20)
+tests/test_state_analytics.py    # state persistence + analytics (incarca/salveaza/detecteaza)
+tests/test_og_furnizori.py       # og-image 1200x630 (Pillow) + index furnizori A-Z
+tests/test_utils.py              # functii utilitare (_seap_url, _fmt_ron, _termene_url, etc.)
+tests/test_scor_transparenta.py  # calculeaza_scor_transparenta (subscoruri, ponderi, interval)
 ```
 
 ## Contribuie
