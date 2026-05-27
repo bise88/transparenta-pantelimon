@@ -216,9 +216,9 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 
 ## Status git (la data generării acestui fișier)
 
-- **Ultimul push reușit:** PR #34 — "§4.3 Service Worker PWA + §3.3 PNRR + §5.6-CLI"
-- **Branch main:** la zi după merge PR #20–34
-- **Suite de teste:** 180 teste, 12 fișiere, 0 erori
+- **Ultimul push reușit:** PR #35 — "Faza 4-F CLI multi-UAT — monitor_uat.py"
+- **Branch main:** la zi după merge PR #20–35
+- **Suite de teste:** 193 teste, 13 fișiere, 0 erori
 - **De făcut:** run `fix_si_push.bat` pentru a regenera `raport_transparenta.html` cu toți detectori activi
 
 ## Stare roadmap IMPROVEMENTS.md + AUDIT.md (la zi)
@@ -264,8 +264,9 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 | §5.1 Press kit auto-generat | `genereaza_press_kit()` → `press_kit.json` + `press_kit.md`; `presa.html` descărcare `.md` + `loadPressKitJson()` | PR #31 |
 | Docs README | Test count 37→153, tabel 19 algoritmi, tabel surse externe, structura repo completă | PR #32 |
 | Repo hygiene | `.gitignore` extins (*.bat, scripturi locale, 201.html); `AUDIT.md` + `config.json.template` adăugate | PR #33 |
-| §4.3 Service Worker | `sw.js` (Cache-First static + Network-First JSON) + `manifest.webmanifest` + iconuri PWA + SW registration în `enhance.js` | PR #34 |
-| §3.3 PNRR | `fetch_pnrr_projects()` + SQLite cache 7z + `pnrr_projects.json` — proiecte.pnrr.gov.ro | PR #34 |
+| §4.3 Service Worker PWA | `sw.js` Cache-First/Network-First + `manifest.webmanifest` + icons 192/512 + `initPWA()` în enhance.js | PR #34 |
+| §3.3 PNRR tracking | `fetch_pnrr_projects()` + SQLite cache + `pnrr_projects.json`; JSON API + HTML fallback | PR #34 |
+| Faza 4-F CLI multi-UAT | `monitor_uat.py` wrapper CLI — orice UAT românesc cu `--judet`, `--uat-search`, `--dry-run` | PR #35 |
 
 ### ❌ Nu e posibil / Nu ataca fără discuție
 
@@ -273,9 +274,9 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 |---|---|
 | §2.4 Repeat-loser pattern | Necesită date toți ofertanți — SEAP exportă doar câștigător |
 | §2.9 / Faza 5-K Network analysis | ~2-4 săptămâni, scraping termene.ro + NetworkX + Cytoscape |
-| Faza 5-L PNRR tracking | Sursă de date nouă complexă |
-| Faza 4-F Comparator multi-UAT | "Nu ataca fără discuție cu userul" explicit în IMPROVEMENTS.md |
-| §4.3 Service Worker | Prematur până testăm nevoile offline ale userilor |
+| §6.1 Refactor modular | ~2-4 zile, major undertaking |
+| §5.6 Newsletter | Necesită cont extern (Substack/Mailchimp) — nu automatizabil |
+| §6.4 Branch protection | Necesită 2FA activat — nu se poate face programatic |
 
 ---
 
