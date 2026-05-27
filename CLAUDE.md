@@ -216,8 +216,8 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 
 ## Status git (la data generării acestui fișier)
 
-- **Ultimul push reușit:** PR #26 — "nav petitie + cross-linking gdpr/petitie"
-- **Branch main:** la zi după merge PR #20–26
+- **Ultimul push reușit:** PR #27 — "og:image index.html + lazy images + §6.5 audit secrete"
+- **Branch main:** la zi după merge PR #20–27
 - **Suite de teste:** 111 teste, 6 fișiere, 0 erori
 - **De făcut:** run `fix_si_push.bat` pentru a regenera `raport_transparenta.html` cu toți detectori activi
 
@@ -252,6 +252,8 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 | §5.5 Petiție | `petitie.html` — formular cetățenesc cu Formspree | PR #25 |
 | §4.4 Accesibilitate | skip-link, aria-hidden emojis, contrast fix, main landmark | PR #25 |
 | Nav + cross-linking | petitie.html în nav; CTA petiție în index/transparenta; gdpr în footere | PR #26 |
+| §4.5 Core Web Vitals | `loading="lazy"` automat pe imagini (enhance.js); og:image pe index.html | PR #27 |
+| §6.5 Audit secrete | git log grep — 0 secrete hardcodate găsite în istoricul repo | PR #27 |
 
 ### ❌ Nu e posibil / Nu ataca fără discuție
 
