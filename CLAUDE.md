@@ -216,8 +216,8 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 
 ## Status git (la data generării acestui fișier)
 
-- **Ultimul push reușit:** PR #31 — "§5.1 Press kit auto-generat"
-- **Branch main:** la zi după merge PR #20–31
+- **Ultimul push reușit:** PR #33 — ".gitignore extins + AUDIT.md + config.json.template"
+- **Branch main:** la zi după merge PR #20–33
 - **Suite de teste:** 153 teste, 10 fișiere, 0 erori
 - **De făcut:** run `fix_si_push.bat` pentru a regenera `raport_transparenta.html` cu toți detectori activi
 
@@ -262,6 +262,8 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 | §3.5 MOL primărie | `fetch_mol_primarie()` + SQLite cache 7z + `mol_primarie.json` | PR #30 |
 | §4.2 Dark mode toggle | Buton + localStorage + prefers-color-scheme (deja în enhance.js) | PR #30 |
 | §5.1 Press kit auto-generat | `genereaza_press_kit()` → `press_kit.json` + `press_kit.md`; `presa.html` descărcare `.md` + `loadPressKitJson()` | PR #31 |
+| Docs README | Test count 37→153, tabel 19 algoritmi, tabel surse externe, structura repo completă | PR #32 |
+| Repo hygiene | `.gitignore` extins (*.bat, scripturi locale, 201.html); `AUDIT.md` + `config.json.template` adăugate | PR #33 |
 
 ### ❌ Nu e posibil / Nu ataca fără discuție
 
