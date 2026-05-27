@@ -60,6 +60,25 @@ Trei cifre diferite pe doua pagini pentru acelasi concept.
 
 ---
 
+## ~~BUG-5: `toggleFlag` / `openFirmaPanel` nedefinite — SyntaxError JS~~ ✅ REZOLVAT în PR #46
+
+**Rezolvat prin:** șters `}}` orfan din template-ul Python (`monitor_pantelimon.py` linia ~4318) și `}` din `raport_transparenta.html`  
+**Commit:** `fix(js): inlatura } orfan care bloca toggleFlag si openFirmaPanel`
+
+### Descriere originală
+
+Un `}` extra la finalul blocului `<script>` inline în `raport_transparenta.html` cauza un **SyntaxError JavaScript** la parsare. Întreg scriptul (13 688 chars) nu executa deloc — funcțiile nu erau definite în global scope:
+
+- `toggleFlag()` — clic pe „▼ detalii" nu producea niciun efect vizibil
+- `openFirmaPanel()` — badge RISC (ex: „⚠️ RISC 46") nu deschidea panoul firmei
+- `_getContracte()`, `_getRisc()`, `closeFirmaPanel()`, `showFirmaContracts()` — toate nedefinite
+
+`printRaport` funcționa *aparent* corect deoarece `enhance.js` îl exporta explicit via `window.printRaport = printRaport` — mascând simptomele.
+
+**Cauza:** `}}` orfan în template Python, reziduu dintr-un refactoring care a eliminat un IIFE wrapper (`(function() { ... })()`) dar a lăsat `}}` de închidere în urmă.
+
+---
+
 ## BUG-4: Rev.2 dubleaza valoarea contractelor in SEAP (problema upstream)
 
 **Severitate:** INFO — sursa: SEAP, nu codul nostru  
