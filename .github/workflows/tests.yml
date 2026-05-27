@@ -2,7 +2,7 @@ name: 🧪 Teste unitare
 
 on:
   push:
-    branches: [main, 'feat/**']
+    branches: [main, 'feat/**', 'fix/**', 'docs/**', 'chore/**', 'ci/**']
   pull_request:
     branches: [main]
 
@@ -20,7 +20,15 @@ jobs:
           python-version: '3.11'
 
       - name: 📦 Instalare dependente
-        run: pip install -r requirements.txt pytest
+        run: pip install -r requirements.txt pytest pytest-cov pytest-mock requests-mock
 
-      - name: 🧪 Rulare teste
-        run: pytest tests/ -v --tb=short
+      - name: 🧪 Rulare teste cu coverage
+        run: pytest tests/ -v --tb=short --cov=monitor_pantelimon --cov=monitor_uat --cov=risc_firma --cov-report=term-missing --cov-report=xml:coverage.xml
+
+      - name: 📊 Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage.xml
+          retention-days: 30
