@@ -1212,11 +1212,25 @@ html[data-tp-theme="dark"] .tp-anap-btn {
     } catch (e) {}
   }
 
+  // ──────────────────────────────────────────────────────────────
+  // §4.5 CORE WEB VITALS — lazy loading imagini sub fold
+  // ──────────────────────────────────────────────────────────────
+  function injectLazyImages() {
+    // Adăugăm loading="lazy" pe orice <img> care nu are deja atributul
+    // și nu se află în <nav> (adică nu e above-the-fold).
+    $$('img:not([loading])').forEach(img => {
+      if (!img.closest('.tp-nav')) {
+        img.setAttribute('loading', 'lazy');
+      }
+    });
+  }
+
   function boot() {
     applyTheme();
     injectStyle();
     injectNav();
     injectMainId();
+    injectLazyImages();
     injectBackToTop();
     showWhatsNewBanner();
 
