@@ -1278,4 +1278,42 @@ html[data-tp-theme="dark"] .tp-anap-btn {
   // Expunem global — butonul din raport_transparenta.html apelează printRaport()
   window.printRaport = printRaport;
 
+  // ── §4.3 Service Worker + PWA manifest ──────────────────────────────────────
+  (function initPWA() {
+    // Înregistrare Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js', { scope: '/' })
+        .then(reg => {
+          // Verifică update-uri la navigare
+          reg.addEventListener('updatefound', () => {
+            const newSW = reg.installing;
+            if (!newSW) return;
+            newSW.addEventListener('statechange', () => {
+              if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+                // Există versiune nouă — notificăm discret
+                console.info('[SW] Versiune nouă disponibilă — reîncarcă pagina pentru update.');
+              }
+            });
+          });
+        })
+        .catch(() => {}); // Eșec silențios (ex: file://, localhost fără HTTPS)
+    }
+
+    // Injectează <link rel="manifest"> dacă lipsește
+    if (!document.querySelector('link[rel="manifest"]')) {
+      const link = document.createElement('link');
+      link.rel = 'manifest';
+      link.href = '/manifest.webmanifest';
+      document.head.appendChild(link);
+    }
+
+    // Injectează <meta name="theme-color"> dacă lipsește
+    if (!document.querySelector('meta[name="theme-color"]')) {
+      const meta = document.createElement('meta');
+      meta.name = 'theme-color';
+      meta.content = '#dc2626';
+      document.head.appendChild(meta);
+    }
+  })();
+
 })();

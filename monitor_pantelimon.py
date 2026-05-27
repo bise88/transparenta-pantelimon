@@ -1202,6 +1202,186 @@ def fetch_mol_primarie(
     return intrari
 
 
+def fetch_pnrr_projects(
+    cif_beneficiar: str = "4420759",
+    cache_db: str = "pnrr_cache.db",
+    ttl_zile: int = 7,
+    timeout: int = 30,
+) -> list:
+    """§3.3 Caută proiectele PNRR ale unui UAT pe proiecte.pnrr.gov.ro.
+
+    Endpoint public oficial. Returnează lista proiectelor cu titlu, valoare,
+    status, program. Cache SQLite TTL 7 zile.
+
+    Args:
+        cif_beneficiar: CUI-ul primăriei (fără prefix RO).
+        cache_db:       Calea la fișierul SQLite cache.
+        ttl_zile:       Durata validității cache în zile.
+        timeout:        Timeout HTTP în secunde.
+
+    Returns:
+        list[dict] cu proiectele găsite, sau [] la eroare.
+    """
+    import json as json_mod
+    import sqlite3
+    import urllib.request
+    import urllib.parse
+    from datetime import datetime, timedelta
+
+    BASE_URL = "https://proiecte.pnrr.gov.ro"
+    USER_AGENT = "transparenta-pantelimon-bot (contact: office@valisblue.com)"
+    OUTPUT_FILE = "pnrr_projects.json"
+
+    # ── Cache SQLite ──────────────────────────────────────────────────────────
+    def _init_cache(db):
+        conn = sqlite3.connect(db)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS pnrr_projects (
+                cache_key   TEXT PRIMARY KEY,
+                extras_la   TEXT,
+                date_json   TEXT
+            )
+        """)
+        conn.commit()
+        return conn
+
+    def _cache_get(conn, key):
+        row = conn.execute(
+            "SELECT extras_la, date_json FROM pnrr_projects WHERE cache_key=?", (key,)
+        ).fetchone()
+        if not row:
+            return None
+        try:
+            extras = datetime.fromisoformat(row[0])
+            if datetime.now() - extras > timedelta(days=ttl_zile):
+                return None
+            return json_mod.loads(row[1])
+        except (ValueError, TypeError):
+            return None
+
+    def _cache_set(conn, key, data):
+        conn.execute(
+            "INSERT OR REPLACE INTO pnrr_projects VALUES (?,?,?)",
+            (key, datetime.now().isoformat(), json_mod.dumps(data, ensure_ascii=False))
+        )
+        conn.commit()
+
+    # ── Fetch API PNRR ────────────────────────────────────────────────────────
+    def _fetch_pnrr(cif):
+        """Încearcă API JSON, fallback la scraping HTML."""
+        proiecte = []
+
+        # Endpoint 1: API JSON oficial (dacă există)
+        api_url = f"{BASE_URL}/api/projects?beneficiary={urllib.parse.quote(cif)}"
+        try:
+            req = urllib.request.Request(
+                api_url,
+                headers={"User-Agent": USER_AGENT, "Accept": "application/json"}
+            )
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                data = json_mod.loads(resp.read().decode("utf-8", errors="replace"))
+                if isinstance(data, list):
+                    proiecte = data
+                elif isinstance(data, dict):
+                    proiecte = data.get("projects", data.get("results", data.get("data", [])))
+            if proiecte:
+                return _normalizeaza(proiecte)
+        except Exception:
+            pass
+
+        # Endpoint 2: pagina de căutare HTML
+        search_url = f"{BASE_URL}/proiecte?beneficiar={urllib.parse.quote(cif)}"
+        try:
+            from html.parser import HTMLParser
+
+            class _PNRRParser(HTMLParser):
+                def __init__(self):
+                    super().__init__()
+                    self.proiecte = []
+                    self._in_project = False
+                    self._crt = {}
+                    self._tag_stack = []
+
+                def handle_starttag(self, tag, attrs):
+                    attrs_d = dict(attrs)
+                    cls = attrs_d.get("class", "")
+                    if "project" in cls.lower() or "card" in cls.lower():
+                        self._in_project = True
+                        self._crt = {}
+                    self._tag_stack.append(tag)
+
+                def handle_endtag(self, tag):
+                    if self._tag_stack:
+                        self._tag_stack.pop()
+                    if self._in_project and self._crt.get("titlu"):
+                        self.proiecte.append(dict(self._crt))
+                        self._in_project = False
+                        self._crt = {}
+
+                def handle_data(self, data):
+                    if not self._in_project:
+                        return
+                    txt = data.strip()
+                    if not txt:
+                        return
+                    if not self._crt.get("titlu"):
+                        self._crt["titlu"] = txt[:200]
+                    elif "RON" in txt or "EUR" in txt:
+                        self._crt["valoare_text"] = txt
+
+            req2 = urllib.request.Request(
+                search_url,
+                headers={"User-Agent": USER_AGENT}
+            )
+            with urllib.request.urlopen(req2, timeout=timeout) as resp:
+                html = resp.read().decode("utf-8", errors="replace")
+            parser = _PNRRParser()
+            parser.feed(html)
+            proiecte = parser.proiecte
+        except Exception:
+            pass
+
+        return _normalizeaza(proiecte)
+
+    def _normalizeaza(raw):
+        """Normalizează structura proiectelor la un format consistent."""
+        rezultat = []
+        for p in raw:
+            if not isinstance(p, dict):
+                continue
+            rezultat.append({
+                "titlu":        p.get("titlu") or p.get("title") or p.get("name") or "",
+                "cod":          p.get("cod") or p.get("code") or p.get("project_code") or "",
+                "valoare_ron":  p.get("valoare_ron") or p.get("value") or p.get("budget") or 0,
+                "status":       p.get("status") or p.get("state") or "",
+                "program":      p.get("program") or p.get("programme") or "",
+                "beneficiar":   p.get("beneficiar") or p.get("beneficiary") or "",
+                "link":         p.get("link") or p.get("url") or "",
+                "extras_la":    datetime.now().strftime("%Y-%m-%d"),
+            })
+        return rezultat
+
+    # ── Main logic ────────────────────────────────────────────────────────────
+    cache_key = f"pnrr_{cif_beneficiar}"
+    conn = _init_cache(cache_db)
+    proiecte = _cache_get(conn, cache_key)
+
+    if proiecte is None:
+        print(f"  [PNRR] Fetch proiecte.pnrr.gov.ro pentru CIF {cif_beneficiar}…")
+        proiecte = _fetch_pnrr(cif_beneficiar)
+        _cache_set(conn, cache_key, proiecte)
+        print(f"  ✓ PNRR: {len(proiecte)} proiecte → cache actualizat")
+    else:
+        print(f"  ✓ PNRR: {len(proiecte)} proiecte (din cache)")
+
+    conn.close()
+
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as fout:
+        json_mod.dump(proiecte, fout, ensure_ascii=False, indent=2)
+
+    return proiecte
+
+
 def calculeaza_scor_transparenta(toate_flags: list, contracte: list, statistici_hcl: dict) -> dict:
     """Calculeaza scorul de transparenta al UAT (0-100, mai mare = mai transparent)."""
     ponderi = {
@@ -5232,6 +5412,12 @@ def main():
     # §3.5 MOL primărie — rectificări bugetare și HCL (cache 7 zile)
     mol_intrari = fetch_mol_primarie()
     CONFIG["_mol_intrari"] = mol_intrari
+
+    # §3.3 Proiecte PNRR
+    pnrr_projects = fetch_pnrr_projects(
+        cif_beneficiar=CONFIG.get("cui", "4420759"),
+    )
+    CONFIG["_pnrr_projects"] = pnrr_projects
 
     # Pasăm statisticile HCL în CONFIG pentru template
     CONFIG["_hcl_total"] = statistici_hcl.get("total_hcl", 0)
