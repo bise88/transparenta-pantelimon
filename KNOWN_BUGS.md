@@ -96,3 +96,22 @@ Din 417 contracte 2025 in `contracte.json`:
 Dupa deduplicare canonica (`_suma_seap_dedupata`): 242 contracte unice, 257M RON.
 
 Ramane o discrepanta (257M > 146M ANAF) probabila din cauza contractelor multi-anuale.
+
+---
+
+## ~~BUG-6: Shell filter chips (⚠️ Orice risc, 👥 0 angajați, 📉 CA=0) — rând ascuns, riskCount=0 pentru toți~~ ✅ REZOLVAT în PR #47
+
+**Rezolvat prin:** enhance.js citește acum `#risc-firma-data` JSON pentru `riskCount` (câmpul `scor`) în loc de `.supplier-risk-panel` care nu există în HTML-ul curent.  
+**Commit:** `fix(filter): BUG-6 — shell chips citesc risc din #risc-firma-data`
+
+### Descriere originală
+
+`enhance.js` linia ~707 căuta `.supplier-risk-panel[data-risk-count]` în fiecare card. Aceste elemente **nu sunt generate** de `monitor_pantelimon.py` în versiunea curentă. Rezultat:
+- `shellPanelsFound = 0` → `#tp-shell-row { display: none }` (rândul de chip-uri shell era **complet ascuns**)
+- `riskCount = 0` pentru toți cei 299 itemi → filtrul `any-risk` returna 0/299
+
+### Starea după fix
+
+- Sursă: `#risc-firma-data` JSON (93 firme, toate cu `scor > 0`)  
+- `any-risk` chip: afișează 299/299 (toți furnizorii flagați au scor risc > 0 — corect)
+- `zero-sal` / `zero-ca`: afișează 0/299 — date ANAF/ONRC (angajați, cifra afaceri) **nu sunt încă populate** în `risc-firma-data.onrc`/`.openapi`; chips sunt vizibile dar fără date relevante deocamdată
