@@ -282,6 +282,22 @@
     margin-bottom: 18px;
   }
 
+  /* Fallback grafice — apare dacă Chart.js nu se încarcă sau date lipsă */
+  .tp-chart-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    color: #aaa;
+    font-size: 14px;
+    font-style: italic;
+    border: 2px dashed #e5e7eb;
+    border-radius: 8px;
+    background: #f9fafb;
+    user-select: none;
+  }
+  .tp-chart-fallback svg { margin-right: 8px; opacity: .45; }
+
   .two-col {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -2795,10 +2811,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   } catch(e) {}
 
+  // Helper: afișează mesaj „Date indisponibile" dacă Chart.js lipsește sau aruncă eroare
+  function _chartFallback(canvas) {
+    try {
+      const fb = document.createElement('div');
+      fb.className = 'tp-chart-fallback';
+      fb.setAttribute('role', 'img');
+      fb.setAttribute('aria-label', 'Grafic indisponibil');
+      fb.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Date indisponibile';
+      canvas.parentNode.insertBefore(fb, canvas);
+      canvas.style.display = 'none';
+    } catch(ex) {}
+  }
+
+  // Dacă Chart.js nu a fost încărcat (CDN down etc.), afișăm fallback pentru toate canvas-urile
+  if (typeof Chart === 'undefined') {
+    document.querySelectorAll('.chart-box canvas').forEach(_chartFallback);
+  } else {
+
   // Chart 1: Buget vs Cheltuieli pe categorii
   const ctxCateg = document.getElementById('chartBugetCateg');
   if (ctxCateg) {
-    new Chart(ctxCateg, {
+    try { new Chart(ctxCateg, {
       type: 'bar',
       data: {
         labels: ['Autorități publice', 'Ordine publică', 'Învățământ', 'Sănătate', 'Cultură & Sport', 'Asistență socială', 'Servicii publice', 'Mediu', 'Transport', 'Acțiuni economice'],
@@ -2825,13 +2859,13 @@ document.addEventListener('DOMContentLoaded', function() {
         plugins: { legend: { position: 'top' } },
         scales: { y: { beginAtZero: true, title: { display: true, text: 'mil. RON' } } }
       }
-    });
+    }); } catch(e) { _chartFallback(ctxCateg); }
   }
 
   // Chart 2: Evoluție buget 2020-2025
   const ctxEvol = document.getElementById('chartEvolutie');
   if (ctxEvol) {
-    new Chart(ctxEvol, {
+    try { new Chart(ctxEvol, {
       type: 'line',
       data: {
         labels: ['2020', '2021', '2022', '2023', '2024', '2025'],
@@ -2858,13 +2892,13 @@ document.addEventListener('DOMContentLoaded', function() {
         plugins: { legend: { position: 'top' } },
         scales: { y: { beginAtZero: false, title: { display: true, text: 'mil. RON' } } }
       }
-    });
+    }); } catch(e) { _chartFallback(ctxEvol); }
   }
 
   // Chart 3: Structura cheltuieli (pie)
   const ctxPie = document.getElementById('chartPie');
   if (ctxPie) {
-    new Chart(ctxPie, {
+    try { new Chart(ctxPie, {
       type: 'doughnut',
       data: {
         labels: ['Autorități publice', 'Ordine publică', 'Învățământ', 'Sănătate', 'Cultură & Sport', 'Asistență socială', 'Servicii & Transport', 'Altele'],
@@ -2884,13 +2918,13 @@ document.addEventListener('DOMContentLoaded', function() {
           tooltip: { callbacks: { label: ctx => ctx.label + ': ' + ctx.parsed + ' mil. RON' } }
         }
       }
-    });
+    }); } catch(e) { _chartFallback(ctxPie); }
   }
 
   // Chart 4: Distribuție proceduri achiziții
   const ctxProc = document.getElementById('chartProceduri');
   if (ctxProc) {
-    new Chart(ctxProc, {
+    try { new Chart(ctxProc, {
       type: 'bar',
       data: {
         labels: ['Cumpărare directă', 'Licitație deschisă', 'Procedură simplificată', 'Negociere fără publicare', 'Altele'],
@@ -2910,7 +2944,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         scales: { y: { beginAtZero: true, title: { display: true, text: 'Nr. contracte' } } }
       }
-    });
+    }); } catch(e) { _chartFallback(ctxProc); }
   }
 
   _loadContracte();
@@ -2918,7 +2952,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Chart Lunar distribution
   const ctxLunar = document.getElementById('chartLunar');
   if (ctxLunar) {
-    new Chart(ctxLunar, {
+    try { new Chart(ctxLunar, {
       type: 'bar',
       data: {
         labels: ['Sep 23','Dec 24','Ian 25','Feb 25','Mar 25','Apr 25','Mai 25','Iun 25','Iul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Ian 26','Feb 26','Mar 26'],
@@ -2944,8 +2978,10 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         scales: { y: { beginAtZero: true, title: { display: true, text: 'Nr. contracte' } } }
       }
-    });
+    }); } catch(e) { _chartFallback(ctxLunar); }
   }
+
+  } // end if (typeof Chart !== 'undefined')
 
 });
 </script>
