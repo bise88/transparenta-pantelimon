@@ -38,19 +38,32 @@ import json
 import re
 import argparse
 import io
+import zipfile
 
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
-# ── URL-uri per an ────────────────────────────────────────────────────────────
+# ── URL-uri per an ─────────────────────────────────────────────────────────────
+# NOTĂ: fișierele .csv = specificații coloane (mici, câțiva KB)
+#        fișierele .txt = date efective bilanțuri (~200MB, comma-delimited, UTF-8)
+# Schema TXT confirmată (2024): CUI,CAEN,I1,I2,...,I20
+#   I13 = Cifra de afaceri netă
+#   I20 = Număr mediu de salariați
 URLS = {
-    '2024': 'https://data.gov.ro/dataset/d3caacb6-2c08-445e-94e6-8d36d00ab250/resource/b9f399d8-b641-4a23-9de7-a1dd4427b4b0/download/web_bl_bs_sl_an2024.csv',
-    '2023': 'https://data.gov.ro/dataset/7861a98f-4d5c-4faa-90d4-8e934ebd1782/resource/2de79441-0db1-468d-9e7e-ebc9b0f3ff17/download/web_bl_bs_sl_an2023.csv',
+    '2024': 'https://data.gov.ro/dataset/d3caacb6-2c08-445e-94e6-8d36d00ab250/resource/f89140dc-20dd-494f-912a-d1a482188885/download/web_bl_bs_sl_an2024.txt',
+    '2024-uu': 'https://data.gov.ro/dataset/d3caacb6-2c08-445e-94e6-8d36d00ab250/resource/25098618-f6a5-4610-8c7f-c0bdb801635f/download/web_uu_an2024.txt',
+    '2023': 'https://data.gov.ro/dataset/7861a98f-4d5c-4faa-90d4-8e934ebd1782/resource/5ed47b6f-f8a2-4ca8-a272-692aff4fe9e4/download/web_bl_bs_sl_an2023.txt',
+    '2023-uu': 'https://data.gov.ro/dataset/7861a98f-4d5c-4faa-90d4-8e934ebd1782/resource/a1c85e04-4a2d-4e0c-bcac-73c5c85d0e30/download/web_uu_an2023.txt',
 }
 
-# ── Variante de nume coloană (se schimbă ușor între ediții) ──────────────────
+# Delimiter real în fișierele .txt
+CSV_DELIMITER = ','
+
+# ── Variante de nume coloană ───────────────────────────────────────────────────
+# TXT-ul folosește I1..I20 (coduri indicatori); descrierile sunt în .csv spec.
+# I13 = Cifra de afaceri netă  |  I20 = Număr mediu de salariați
 COL_CUI_VARIANTS   = {'cui', 'cod fiscal', 'cod_fiscal', 'cod unic'}
-COL_CA_VARIANTS    = {'cifra de afaceri neta', 'cifra_de_afaceri_neta', 'cifra afaceri', 'ca neta'}
-COL_SAL_VARIANTS   = {'numar mediu de salariati', 'numar_mediu_de_salariati', 'salariati', 'nr salariati'}
+COL_CA_VARIANTS    = {'i13', 'cifra de afaceri neta', 'cifra_de_afaceri_neta', 'ca neta', 'ca_neta'}
+COL_SAL_VARIANTS   = {'i20', 'numar mediu de salariati', 'numar_mediu_de_salariati', 'salariati', 'nr salariati'}
 
 HTML_FILE        = 'raport_transparenta.html'
 OUTPUT_JSON      = 'firme_financiar.json'
@@ -105,7 +118,7 @@ def stream_parse_csv(source, cui_tinta, an, encoding='cp1250'):
     rezultate = {}
 
     def _rows(f):
-        reader = csv.reader(f, delimiter=';')
+        reader = csv.reader(f, delimiter=CSV_DELIMITER)
         headers_raw = next(reader, [])
         headers_norm = [_norm(h) for h in headers_raw]
 
@@ -114,11 +127,23 @@ def stream_parse_csv(source, cui_tinta, an, encoding='cp1250'):
         idx_sal = _find_col(headers_norm, COL_SAL_VARIANTS)
 
         if idx_cui is None:
-            print(f'[EROARE] Coloana CUI nu a fost găsită. Coloane disponibile: {headers_raw[:10]}')
+            print(f'[EROARE] Coloana CUI nu a fost găsită.')
+            print(f'         Coloane raw (primele 15): {headers_raw[:15]}')
+            print(f'         Coloane normalize (primele 15): {headers_norm[:15]}')
             return
         print(f'[INFO] Coloane detectate: CUI@{idx_cui}, CA@{idx_ca}, Sal@{idx_sal}')
+        # Dict mutable folosit ca flag în closure (evită nonlocal)
+        _state = {'debug_shown': False}
 
         for row in reader:
+            # Debug: primul rând de date (indiferent de CUI)
+            if not _state['debug_shown']:
+                _state['debug_shown'] = True
+                sample = {headers_raw[i]: row[i] for i in range(min(len(headers_raw), len(row)))}
+                cui_sample = sample.get(headers_raw[idx_cui] if idx_cui is not None else '', 'N/A')
+                ca_sample  = sample.get(headers_raw[idx_ca]  if idx_ca  is not None else '', 'N/A')
+                sal_sample = sample.get(headers_raw[idx_sal] if idx_sal is not None else '', 'N/A')
+                print(f'[DEBUG] Primul rând: CUI={cui_sample!r}, CA={ca_sample!r}, Sal={sal_sample!r}')
             try:
                 cui_raw = row[idx_cui].strip().lstrip('RO').strip()
                 if not cui_raw.isdigit():
@@ -173,13 +198,41 @@ def stream_parse_csv(source, cui_tinta, an, encoding='cp1250'):
             raw_bytes = b''.join(chunks)
         print(f'[OK] Descărcat {len(raw_bytes) // (1024*1024)} MB')
 
-        # Detectăm encoding: BOM UTF-8 sau fallback cp1250
+        # ── ZIP? data.gov.ro pune uneori fișierele mari în ZIP ───────────────
+        if raw_bytes[:2] == b'PK':
+            print('[INFO] Fișier ZIP detectat — extrag primul CSV din arhivă...')
+            with zipfile.ZipFile(io.BytesIO(raw_bytes)) as zf:
+                csv_names = [n for n in zf.namelist()
+                             if n.lower().endswith('.csv') or n.lower().endswith('.txt')]
+                if not csv_names:
+                    print(f'[EROARE] Niciun CSV/TXT în ZIP. Conținut: {zf.namelist()}')
+                    return rezultate
+                csv_name = csv_names[0]
+                print(f'         Extrag: {csv_name}')
+                raw_bytes = zf.read(csv_name)
+
+        # ── Detectare encoding ────────────────────────────────────────────────
+        # .txt ANAF 2024 este UTF-8 fara BOM. .csv spec poate fi cp1250.
         if raw_bytes.startswith(b'\xef\xbb\xbf'):
             enc = 'utf-8-sig'
+        elif raw_bytes.startswith(b'\xff\xfe') or raw_bytes.startswith(b'\xfe\xff'):
+            enc = 'utf-16'
+        elif raw_bytes[:20].isascii():
+            enc = 'utf-8'  # header ASCII → UTF-8 (standard pentru .txt ANAF 2024)
         else:
-            enc = encoding
+            enc = encoding  # cp1250 sau override explicit
 
+        # Decodăm cu fallback cascadat
         text = raw_bytes.decode(enc, errors='replace')
+        n_bad = text.count('�')
+        if n_bad > 50:
+            if enc == 'cp1250':
+                print(f'[INFO] {n_bad} caractere stricate — reîncerc cu windows-1250...')
+                text = raw_bytes.decode('windows-1250', errors='replace')
+            elif enc not in ('utf-8', 'utf-8-sig'):
+                print(f'[INFO] {n_bad} caractere stricate cu {enc} — reîncerc utf-8...')
+                text = raw_bytes.decode('utf-8', errors='replace')
+
         _rows(io.StringIO(text))
     else:
         # Fișier local — streaming cu open()
@@ -192,12 +245,14 @@ def stream_parse_csv(source, cui_tinta, an, encoding='cp1250'):
 
 def main():
     parser = argparse.ArgumentParser(description='Import situații financiare ANAF data.gov.ro')
-    parser.add_argument('--an', default='2024', choices=URLS.keys(),
+    parser.add_argument('--an', default='2024', choices=list(URLS.keys()),
                         help='Anul situațiilor financiare (implicit: 2024)')
     parser.add_argument('--fisier', default=None,
                         help='Cale fișier local CSV (sare descărcarea)')
     parser.add_argument('--encoding', default='cp1250',
                         help='Encoding fișier CSV (implicit: cp1250)')
+    parser.add_argument('--merge', action='store_true',
+                        help=f'Merge în {OUTPUT_JSON} existent (nu suprascrie)')
     args = parser.parse_args()
 
     # 1. Extragem CUI-urile țintă
@@ -232,10 +287,22 @@ def main():
 
     # Convertim cheile în string pentru JSON (JSON nu permite int keys)
     output = {str(k): v for k, v in rezultate.items()}
+
+    # ── Merge cu fișier existent (--merge) ───────────────────────────────────
+    if args.merge and os.path.exists(OUTPUT_JSON):
+        try:
+            existing = json.load(open(OUTPUT_JSON, encoding='utf-8'))
+            n_before = len(existing)
+            existing.update(output)   # new entries win (mai recente)
+            output = existing
+            print(f'[OK] Merge: {n_before} existente + {len(rezultate)} noi → {len(output)} total')
+        except Exception as e:
+            print(f'[WARN] Merge eșuat ({e}) — suprascriere.')
+
     json.dump(output, open(OUTPUT_JSON, 'w', encoding='utf-8'),
               ensure_ascii=False, indent=2)
     print(f'\n[OK] Scris {OUTPUT_JSON} ({len(output)} firme).')
-    print(f'     Pas următor: python enricheaza_firme.py --sursa-financiara {OUTPUT_JSON}')
+    print(f'     Pas următor: python enricheaza_firme.py')
 
 
 if __name__ == '__main__':

@@ -56,6 +56,7 @@ jobs:
           git add istoric_scor.json 2>/dev/null || true
           git add press_kit.json 2>/dev/null || true
           git add firme_geocoded.json 2>/dev/null || true
+          git add firme_financiar.json 2>/dev/null || true
           git add og-image.png 2>/dev/null || true
           # Commit doar dacă există modificări
           git diff --staged --quiet || git commit -m "🚩 Raport actualizat $(date +'%d.%m.%Y')"
