@@ -236,8 +236,9 @@ class TestGeocodeazaFirme:
         # Pre-populăm cache-ul manual
         conn = sqlite3.connect(cache_db)
         conn.execute("CREATE TABLE geocoding (adresa TEXT PRIMARY KEY, lat REAL, lng REAL, geocodat_la TEXT)")
+        # Noua cheie de cache = adresa bruta (fara judet adaugat separat)
         conn.execute("INSERT INTO geocoding VALUES (?,?,?,?)",
-                     ("Str. Victoriei 1, Ilfov", 44.4268, 26.1025, datetime.now().isoformat()))
+                     ("Str. Victoriei 1", 44.4268, 26.1025, datetime.now().isoformat()))
         conn.commit()
         conn.close()
 

@@ -1,1 +1,1812 @@
-[]
+[
+  {
+    "name": "ASOCIATIA CENTRUL ROMAN PENTRU INITIATIVA SOCIALA",
+    "cif": "26181156",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, BLD. CORNELIU COPOSU, NR.2-4, BL.CORP B, ET.1, AP.BIROU NR.3",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 138000.0,
+    "nr_contracte": 2,
+    "slug": "asociatia-centrul-roman-pentru-initiativa-sociala"
+  },
+  {
+    "name": "COMPANY DATA S.R.L.",
+    "cif": "24782214",
+    "adresa": "JUD. ILFOV, ORŞ. VOLUNTARI, ŞOS. BUCUREŞTI NORD, NR.10, CLĂDIREA O21",
+    "lat": 44.358957,
+    "lng": 25.992722,
+    "valoare": 10790.0,
+    "nr_contracte": 2,
+    "slug": "company-data-srl"
+  },
+  {
+    "name": "INDOOR MEDIA GROUP SRL",
+    "cif": "18436062",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, ŞOS. PIPERA, NR.61, PARTER+MEZANIN, BL.4, SC.2, AP.80",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 461950.0,
+    "nr_contracte": 10,
+    "slug": "indoor-media-group-srl"
+  },
+  {
+    "name": "ADLO PROCARS SRL",
+    "cif": "29496361",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, STR. RÎMNICU VÎLCEA, NR.31, BL.17A, SC.1, ET.2, AP.11",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 246990.0,
+    "nr_contracte": 4,
+    "slug": "adlo-procars-srl"
+  },
+  {
+    "name": "OTIS LIFT SRL",
+    "cif": "7782044",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, BLD DIMITRIE POMPEI, NR.9-9A, \"IRIDE BUSINESS PARK\". CLADIREA 19, ET.2",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 75100.0,
+    "nr_contracte": 2,
+    "slug": "otis-lift-srl"
+  },
+  {
+    "name": "INTEGRISOFT SOLUTIONS SRL",
+    "cif": "12448483",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, ŞOS PANTELIMON, NR.6-8,  CU INTRARE PRIN STRADA ION HELIADE RADULESCU. NR. 26. CAMERA 1. ETAJ 1",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 152102.1,
+    "nr_contracte": 4,
+    "slug": "integrisoft-solutions-srl"
+  },
+  {
+    "name": "VICE COM 95 SRL",
+    "cif": "7637486",
+    "adresa": "JUD. ILFOV, COM. BRĂNEŞTI, STR. NEGRU VODA, NR.59 A",
+    "lat": 44.501707,
+    "lng": 26.244908,
+    "valoare": 270600.0,
+    "nr_contracte": 2,
+    "slug": "vice-com-95-srl"
+  },
+  {
+    "name": "ROTAREXIM SA",
+    "cif": "1465985",
+    "adresa": "JUD. VÂLCEA, MUN. RÂMNICU VÂLCEA, STR. ALEXANDRU IOAN CUZA, NR.5",
+    "lat": 45.103173,
+    "lng": 24.364721,
+    "valoare": 34792.0,
+    "nr_contracte": 1,
+    "slug": "rotarexim-sa"
+  },
+  {
+    "name": "SOCIETATEA NATIONALA DE INFORMATICA SA",
+    "cif": "1556587",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 1, CALEA GRIVITEI, NR.150, SC.1, ET.1, AP.2",
+    "lat": 44.487945,
+    "lng": 26.050155,
+    "valoare": 474720.0,
+    "nr_contracte": 3,
+    "slug": "societatea-nationala-de-informatica-sa"
+  },
+  {
+    "name": "TURBOTOP SRL",
+    "cif": "22627540",
+    "adresa": "JUD. ILFOV, ORŞ. PANTELIMON, STR. GRĂDINARILOR, NR.11",
+    "lat": 44.451879,
+    "lng": 26.203556,
+    "valoare": 40373.41,
+    "nr_contracte": 29,
+    "slug": "turbotop-srl"
+  },
+  {
+    "name": "CONSTOPOGRAF EXPERT SRL",
+    "cif": "25145252",
+    "adresa": "JUD. ILFOV, SAT PANTELIMON ORŞ. PANTELIMON, STR. MIORITEI, NR.20, AP.CAMERA 6",
+    "lat": 44.451879,
+    "lng": 26.203556,
+    "valoare": 1890000.0,
+    "nr_contracte": 7,
+    "slug": "constopograf-expert-srl"
+  },
+  {
+    "name": "ILIE GEORGIAN PERSOANĂ FIZICĂ AUTORIZATĂ",
+    "cif": "30277713",
+    "adresa": "JUD. ILFOV, ORŞ. PANTELIMON, STR. VLĂSIEI, NR.35",
+    "lat": 44.451879,
+    "lng": 26.203556,
+    "valoare": 114000.0,
+    "nr_contracte": 2,
+    "slug": "ilie-georgian-persoana-fizica-autorizata"
+  },
+  {
+    "name": "PAN - NET SRL",
+    "cif": "18675647",
+    "adresa": "JUD. ILFOV, SAT PANTELIMON ORŞ. PANTELIMON, STR. SF. GHEORGHE, NR.38, BL.N, SC.A, ET.1, AP.15",
+    "lat": 44.451879,
+    "lng": 26.203556,
+    "valoare": 300539.0,
+    "nr_contracte": 7,
+    "slug": "pan-net-srl"
+  },
+  {
+    "name": "OPAX PROTECTION SYSTEMS S.R.L.",
+    "cif": "29587346",
+    "adresa": "JUD. ILFOV, SAT VOLUNTARI ORŞ. VOLUNTARI, STR. DRUMUL POTCOAVEI, NR.63A, ET.P",
+    "lat": 44.490278,
+    "lng": 26.177279,
+    "valoare": 48000.0,
+    "nr_contracte": 1,
+    "slug": "opax-protection-systems-srl"
+  },
+  {
+    "name": "AUTO MARCUS GRUP SA",
+    "cif": "86",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, SOS. PANTELIMON, NR.450",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 41854.69,
+    "nr_contracte": 26,
+    "slug": "auto-marcus-grup-sa"
+  },
+  {
+    "name": "KSA ROAD SERVICES SRL",
+    "cif": "35253022",
+    "adresa": "JUD. ILFOV, ORŞ. PANTELIMON, STR. APUSULUI, NR.1, CAMERA 2",
+    "lat": 44.451879,
+    "lng": 26.203556,
+    "valoare": 162381.08,
+    "nr_contracte": 51,
+    "slug": "ksa-road-services-srl"
+  },
+  {
+    "name": "ADMIRAL MEDIA SRL",
+    "cif": "32146145",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 6, BLD REGIEI, NR.6D, BIROUL NR. 5. SPAŢIUL DE 50 M.P., BL.4, ET.1",
+    "lat": 44.447875,
+    "lng": 26.032448,
+    "valoare": 208.25,
+    "nr_contracte": 1,
+    "slug": "admiral-media-srl"
+  },
+  {
+    "name": "GEMCO TRADE SRL",
+    "cif": "31335227",
+    "adresa": "JUD. CĂLĂRAŞI, ORŞ. LEHLIU-GARĂ, STR. NICOLAE TITULESCU, NR.2",
+    "lat": 44.439839,
+    "lng": 26.851534,
+    "valoare": 946470.0,
+    "nr_contracte": 4,
+    "slug": "gemco-trade-srl"
+  },
+  {
+    "name": "GENERAL UTIL CONS S.R.L.",
+    "cif": "34772064",
+    "adresa": "JUD. ILFOV, SAT MOARA DOMNEASCĂ COM. GĂNEASA, STR P. KONTSZBUIE, NR.10, BIROUL NR. 6",
+    "lat": 44.703255,
+    "lng": 26.326122,
+    "valoare": 321000.0,
+    "nr_contracte": 4,
+    "slug": "general-util-cons-srl"
+  },
+  {
+    "name": "CENTRUL DE CALCUL SA",
+    "cif": "2163993",
+    "adresa": "JUD. GORJ, MUN. TÂRGU JIU, STR. TUDOR VLADIMIRESCU, NR.17",
+    "lat": 45.042295,
+    "lng": 23.272812,
+    "valoare": 26095.0,
+    "nr_contracte": 13,
+    "slug": "centrul-de-calcul-sa"
+  },
+  {
+    "name": "ALPHA CONSULT GENERAL SRL",
+    "cif": "25188733",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, B-DUL RÂMNICU SĂRAT, NR.24, BL.7B, SC.B, ET.10, AP.86",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 74000.0,
+    "nr_contracte": 3,
+    "slug": "alpha-consult-general-srl"
+  },
+  {
+    "name": "WORLD GLOBAL MEDIA S.R.L.",
+    "cif": "44412011",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 6, ŞOS VIRTUŢII, NR.19D, BIROU B, ET.4",
+    "lat": 44.447875,
+    "lng": 26.032448,
+    "valoare": 48000.0,
+    "nr_contracte": 2,
+    "slug": "world-global-media-srl"
+  },
+  {
+    "name": "DANTE INTERNATIONAL SA",
+    "cif": "14399840",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 6, ŞOS. VIRTUŢII, NR.148, SPATIUL E47",
+    "lat": 44.447875,
+    "lng": 26.032448,
+    "valoare": 488.99,
+    "nr_contracte": 2,
+    "slug": "dante-international-sa"
+  },
+  {
+    "name": "PERCONS EU S.R.L.",
+    "cif": "25535239",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 1, STR NĂVODARI, NR.32A, PARTER",
+    "lat": 44.487945,
+    "lng": 26.050155,
+    "valoare": 721000.0,
+    "nr_contracte": 6,
+    "slug": "percons-eu-srl"
+  },
+  {
+    "name": "CRISBO COMPANY SRL",
+    "cif": "7954166",
+    "adresa": "JUD. IAŞI, MUN. IAŞI, ŞOS. NAŢIONALĂ, NR.178-180, PARTER",
+    "lat": 47.16156,
+    "lng": 27.583781,
+    "valoare": 135000.0,
+    "nr_contracte": 1,
+    "slug": "crisbo-company-srl"
+  },
+  {
+    "name": "GI EUROSERVICE SRL",
+    "cif": "19166285",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, STR. NEGOSTINA, NR.111A",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 29429.59,
+    "nr_contracte": 22,
+    "slug": "gi-euroservice-srl"
+  },
+  {
+    "name": "DARK SOLUTIONS S.R.L.",
+    "cif": "23255720",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 4, STR. SECUILOR, NR.6, BL.23, SC.1, ET.3, AP.15",
+    "lat": 44.381903,
+    "lng": 26.119018,
+    "valoare": 12575.0,
+    "nr_contracte": 3,
+    "slug": "dark-solutions-srl"
+  },
+  {
+    "name": "SSM FIRE CONSULTING SRL",
+    "cif": "25336694",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 4, STR SOLD. IOAN CIOCODEICA, NR.1",
+    "lat": 44.381903,
+    "lng": 26.119018,
+    "valoare": 181440.0,
+    "nr_contracte": 2,
+    "slug": "ssm-fire-consulting-srl"
+  },
+  {
+    "name": "ANASTASIA G.B. PRODCOM SRL",
+    "cif": "4911926",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, STR. IANCU CAVALER DE FLONDOR, NR.7, AP.1",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 873.1,
+    "nr_contracte": 1,
+    "slug": "anastasia-gb-prodcom-srl"
+  },
+  {
+    "name": "NICOLAS CONSTRUCT SRL",
+    "cif": "24651529",
+    "adresa": "JUD. ILFOV, ORŞ. PANTELIMON, STR. LIVEZILOR II, NR.15",
+    "lat": 44.451879,
+    "lng": 26.203556,
+    "valoare": 389276.66,
+    "nr_contracte": 5,
+    "slug": "nicolas-construct-srl"
+  },
+  {
+    "name": "MASTER SOLUTIONS TEAM SRL",
+    "cif": "32099000",
+    "adresa": "JUD. ILFOV, ORŞ. PANTELIMON, STR. RĂSCOALEI, NR.37 H",
+    "lat": 44.451879,
+    "lng": 26.203556,
+    "valoare": 535000.0,
+    "nr_contracte": 3,
+    "slug": "master-solutions-team-srl"
+  },
+  {
+    "name": "VITERI CONCEPT SOLUTIONS S.R.L.",
+    "cif": "50324046",
+    "adresa": "JUD. ILFOV, ORŞ. PANTELIMON, STR. SFINŢII CONSTANTIN ŞI ELENA, NR.14",
+    "lat": 44.451879,
+    "lng": 26.203556,
+    "valoare": 166000.0,
+    "nr_contracte": 2,
+    "slug": "viteri-concept-solutions-srl"
+  },
+  {
+    "name": "DEDEMAN SRL",
+    "cif": "2816464",
+    "adresa": "JUD. BACĂU, MUN. BACĂU, STR. ALEXEI TOLSTOI, NR.8",
+    "lat": 46.556049,
+    "lng": 26.915356,
+    "valoare": 35753.34,
+    "nr_contracte": 18,
+    "slug": "dedeman-srl"
+  },
+  {
+    "name": "HEAT INSTAL SRL",
+    "cif": "23862510",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, STR ARISTIDE PASCAL, NR.29-31, CAMERA 1, BL.R3, ET.5, AP.2",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 127743.0,
+    "nr_contracte": 6,
+    "slug": "heat-instal-srl"
+  },
+  {
+    "name": "CENTRUL TERITORIAL DE CALCUL ELECTRONIC SA",
+    "cif": "2040729",
+    "adresa": "JUD. NEAMŢ, MUN. PIATRA NEAMŢ, BLD. DECEBAL, NR.32",
+    "lat": 46.830872,
+    "lng": 26.131542,
+    "valoare": 4800.0,
+    "nr_contracte": 1,
+    "slug": "centrul-teritorial-de-calcul-electronic-sa"
+  },
+  {
+    "name": "PROTECT FIRE CONSULTING SRL",
+    "cif": "31145826",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 4, STR SOLD. IOAN CIOCODEICA, NR.1, DEMISOL SI ETAJ 1",
+    "lat": 44.381903,
+    "lng": 26.119018,
+    "valoare": 106847.0,
+    "nr_contracte": 4,
+    "slug": "protect-fire-consulting-srl"
+  },
+  {
+    "name": "ELLIS STORE CONCEPT S.R.L.",
+    "cif": "50893467",
+    "adresa": "JUD. VÂLCEA, MUN. RÂMNICU VÂLCEA, STR. CĂMINULUI, NR.5B, CAMERA 1",
+    "lat": 45.103173,
+    "lng": 24.364721,
+    "valoare": 12475.0,
+    "nr_contracte": 1,
+    "slug": "ellis-store-concept-srl"
+  },
+  {
+    "name": "CARDEEMS SRL",
+    "cif": "31074679",
+    "adresa": "JUD. GIURGIU, SAT MIHAI VODĂ COM. BOLINTIN-DEAL,  , NR.CADASTRAL 4093",
+    "lat": 44.139987,
+    "lng": 26.05847,
+    "valoare": 1807.98,
+    "nr_contracte": 6,
+    "slug": "cardeems-srl"
+  },
+  {
+    "name": "FLASHALARM ELECTRIC SRL",
+    "cif": "18837943",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, ALEEA ARHITECT PETRE ANTONESCU, NR.6, BL.23, SC.1, ET.6, AP.39",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 16200.0,
+    "nr_contracte": 1,
+    "slug": "flashalarm-electric-srl"
+  },
+  {
+    "name": "GEROM INTERNATIONAL PRODIMEX SRL",
+    "cif": "4695288",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, ŞOS. MIHAI BRAVU, NR.531-533",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 89565.0,
+    "nr_contracte": 2,
+    "slug": "gerom-international-prodimex-srl"
+  },
+  {
+    "name": "FEROSTIL ART S.R.L.",
+    "cif": "18760319",
+    "adresa": "JUD. ILFOV, ORŞ. PANTELIMON, STR. AGRICULTORI, NR.8",
+    "lat": 44.451879,
+    "lng": 26.203556,
+    "valoare": 7300.0,
+    "nr_contracte": 1,
+    "slug": "ferostil-art-srl"
+  },
+  {
+    "name": "AROX EQUIPMENT SRL",
+    "cif": "23646540",
+    "adresa": "JUD. MARAMUREŞ, ORŞ. TĂUŢII-MĂGHERĂUŞ, STR. 66, NR.16",
+    "lat": 47.665965,
+    "lng": 23.467985,
+    "valoare": 4221.05,
+    "nr_contracte": 2,
+    "slug": "arox-equipment-srl"
+  },
+  {
+    "name": "HIDROCONSTRUCT SUD S.R.L.",
+    "cif": "37154246",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, STR CHIRISTIGIILOR, NR.8, CAMERA 1, BL.P36A, SC.1, ET.7, AP.27",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 3702.0,
+    "nr_contracte": 2,
+    "slug": "hidroconstruct-sud-srl"
+  },
+  {
+    "name": "TEHNICAT SERVICE S.R.L.",
+    "cif": "48766364",
+    "adresa": "JUD. ILFOV, SAT ROŞU COM. CHIAJNA, STR DRM. BACRIULUI, NR.31D, ET.1, AP.3",
+    "lat": 44.450942,
+    "lng": 26.008216,
+    "valoare": 31443.54,
+    "nr_contracte": 5,
+    "slug": "tehnicat-service-srl"
+  },
+  {
+    "name": "COMPANIA STINGERI SI INTERVENTII SA",
+    "cif": "22072113",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, STR. RONDĂ, NR.18",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 800.0,
+    "nr_contracte": 1,
+    "slug": "compania-stingeri-si-interventii-sa"
+  },
+  {
+    "name": "IVECO TRUCK SERVICES SRL",
+    "cif": "31625301",
+    "adresa": "JUD. ILFOV, SAT MANOLACHE COM. GLINA, STR. CĂMINULUI, NR.54",
+    "lat": 44.404605,
+    "lng": 26.24685,
+    "valoare": 20666.51,
+    "nr_contracte": 4,
+    "slug": "iveco-truck-services-srl"
+  },
+  {
+    "name": "ZBK BALKAN S.A. BULGARIA-SUCURSALA  ROMÂNIA",
+    "cif": "35779982",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, BLD DECEBAL, NR.1, BL.H2, SC.A, ET.6, AP.24",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 68239.44,
+    "nr_contracte": 13,
+    "slug": "zbk-balkan-sa-bulgaria-sucursala-romania"
+  },
+  {
+    "name": "ZIARUL SEMNAL ENTERPRISES SRL",
+    "cif": "36352016",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 1, STR AVIONULUI, NR.26, BIROUL B, ET.1",
+    "lat": 44.487945,
+    "lng": 26.050155,
+    "valoare": 96000.0,
+    "nr_contracte": 1,
+    "slug": "ziarul-semnal-enterprises-srl"
+  },
+  {
+    "name": "EUROPROIECT ESTATE S.R.L.",
+    "cif": "24149442",
+    "adresa": "JUD. BRĂILA, MUN. BRĂILA, BLD. INDEPENDENŢEI, NR.18, BL.B6",
+    "lat": 45.271609,
+    "lng": 27.974293,
+    "valoare": 3480.0,
+    "nr_contracte": 1,
+    "slug": "europroiect-estate-srl"
+  },
+  {
+    "name": "AUTOSIM ELECTRONIC S.R.L.",
+    "cif": "45536921",
+    "adresa": "JUD. ILFOV, ORŞ. PANTELIMON, STR CAMPULUI, NR.10, PARTER. CAMERA 1",
+    "lat": 44.451879,
+    "lng": 26.203556,
+    "valoare": 14000.0,
+    "nr_contracte": 1,
+    "slug": "autosim-electronic-srl"
+  },
+  {
+    "name": "ALEX COM - STING S.R.L.",
+    "cif": "16474353",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 6, INTRAREA COLABORARII, NR.1",
+    "lat": 44.447875,
+    "lng": 26.032448,
+    "valoare": 834.0,
+    "nr_contracte": 1,
+    "slug": "alex-com-sting-srl"
+  },
+  {
+    "name": "EUROHOSTING SRL",
+    "cif": "18545256",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, DRM GURA PUTNEI, NR.45C, ET.3, AP.33",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 142800.0,
+    "nr_contracte": 2,
+    "slug": "eurohosting-srl"
+  },
+  {
+    "name": "BETIRA CONSTRUCT SRL",
+    "cif": "30520358",
+    "adresa": "JUD. ILFOV, SAT BRĂNEŞTI COM. BRĂNEŞTI, STR. INDUSTRIILOR, NR.26, CAMERA 3, ET.1",
+    "lat": 44.457562,
+    "lng": 26.33501,
+    "valoare": 802776.0,
+    "nr_contracte": 3,
+    "slug": "betira-construct-srl"
+  },
+  {
+    "name": "BELLE VIE MEDICAL SRL",
+    "cif": "30722900",
+    "adresa": "JUD. ILFOV, SAT PANTELIMON ORŞ. PANTELIMON, STR. TUDOR VLADIMIRESCU, NR.20, MANSARDA. IN INCINTA POLICLINICII PANTELIMON",
+    "lat": 44.451879,
+    "lng": 26.203556,
+    "valoare": 39670.0,
+    "nr_contracte": 3,
+    "slug": "belle-vie-medical-srl"
+  },
+  {
+    "name": "TACTICA OUTDOOR SRL",
+    "cif": "34994508",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, STR FOIŞORULUI, NR.126, AP. 35-LOT 1. CAMERA 1, SC.B, ET.5",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 993.53,
+    "nr_contracte": 3,
+    "slug": "tactica-outdoor-srl"
+  },
+  {
+    "name": "ANDUNA SERVIMOB SRL",
+    "cif": "9666682",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 1, STR VIRGILIU, NR.55-57, PARTER. CAMERA 1, BL.1, AP.1",
+    "lat": 44.487945,
+    "lng": 26.050155,
+    "valoare": 180441.6,
+    "nr_contracte": 1,
+    "slug": "anduna-servimob-srl"
+  },
+  {
+    "name": "GIORGIO 67 SERVICE SRL",
+    "cif": "5539104",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, SOS. PANTELIMON, NR.354, BL.2, SC.1, ET.5, AP.18",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 32903.12,
+    "nr_contracte": 2,
+    "slug": "giorgio-67-service-srl"
+  },
+  {
+    "name": "SPORT & LIGHT CONSULTING S.R.L.",
+    "cif": "41128644",
+    "adresa": "JUD. ARGEŞ, MUN. PITEŞTI, CAL. CRAIOVEI, NR.119, BL.19, SC.B, ET.PARTER, AP.4",
+    "lat": 44.857288,
+    "lng": 24.872116,
+    "valoare": 30000.0,
+    "nr_contracte": 1,
+    "slug": "sport-light-consulting-srl"
+  },
+  {
+    "name": "STRABO CONSTRUCTION & MENTENANCE S.R.L.",
+    "cif": "50464376",
+    "adresa": "JUD. ILFOV, SAT PANTELIMON ORŞ. PANTELIMON, STR DUNARII, CAMERA 1. PARTER",
+    "lat": 44.451879,
+    "lng": 26.203556,
+    "valoare": 202058.05,
+    "nr_contracte": 3,
+    "slug": "strabo-construction-mentenance-srl"
+  },
+  {
+    "name": "EUROPROIECT UNIVERS SRL",
+    "cif": "19172660",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, ŞOS PANTELIMON, NR.266, PARTER. CAMERA 1, BL.D, AP.5",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 104500.0,
+    "nr_contracte": 2,
+    "slug": "europroiect-univers-srl"
+  },
+  {
+    "name": "EURIAL INVEST SRL",
+    "cif": "5919480",
+    "adresa": "JUD. ARGEŞ, SAT GEAMĂNA COM. BRADU, STR. ZONA COMERCIALĂ, NR.5, BL.-, SC.-, ET.-, AP.-",
+    "lat": 44.818852,
+    "lng": 24.889812,
+    "valoare": 9614.83,
+    "nr_contracte": 2,
+    "slug": "eurial-invest-srl"
+  },
+  {
+    "name": "ONEDIA CAR SERVICE S.R.L.",
+    "cif": "28521297",
+    "adresa": "JUD. ILFOV, SAT PANTELIMON ORŞ. PANTELIMON, BLD. BIRUINŢEI, NR.227, ET.P",
+    "lat": 44.451879,
+    "lng": 26.203556,
+    "valoare": 9934.58,
+    "nr_contracte": 4,
+    "slug": "onedia-car-service-srl"
+  },
+  {
+    "name": "ROSERVOTECH SRL",
+    "cif": "15857245",
+    "adresa": "JUD. PRAHOVA, SAT ROMÂNEŞTI COM. BĂRCĂNEŞTI, STR. IRISULUI, NR.227",
+    "lat": 44.85902,
+    "lng": 26.070991,
+    "valoare": 4428.21,
+    "nr_contracte": 3,
+    "slug": "roservotech-srl"
+  },
+  {
+    "name": "CITY PARK SRL",
+    "cif": "33945345",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, STR BUCOVINA, NR.1BIS, BL.L10A, ET.2, AP.28",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 312248.6,
+    "nr_contracte": 2,
+    "slug": "city-park-srl"
+  },
+  {
+    "name": "AUTOVEST SRL",
+    "cif": "RO 6836324",
+    "adresa": "JUD. BIHOR, MUN. ORADEA, STR. FRUNZEI, NR.10",
+    "lat": 47.054916,
+    "lng": 21.928523,
+    "valoare": 4369065.0,
+    "nr_contracte": 2,
+    "slug": "autovest-srl"
+  },
+  {
+    "name": "TOP A-Z CONCEPT S.R.L.",
+    "cif": "45058860",
+    "adresa": "JUD. ILFOV, SAT FUNDENI COM. DOBROEŞTI, STR. MĂRULUI, NR.19, CAMERA 2, SC.A, ET.2, AP.16",
+    "lat": 44.470278,
+    "lng": 26.176246,
+    "valoare": 16728051.0,
+    "nr_contracte": 3,
+    "slug": "top-a-z-concept-srl"
+  },
+  {
+    "name": "ARON MEDICAL S.R.L.",
+    "cif": "36507889",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 1, STR SFÂNTUL CONSTANTIN, NR.31, CAMERA NR. 1, ET.1, AP.4",
+    "lat": 44.487945,
+    "lng": 26.050155,
+    "valoare": 11600.0,
+    "nr_contracte": 3,
+    "slug": "aron-medical-srl"
+  },
+  {
+    "name": "IDEAL - STAR ELECTRIC  SRL",
+    "cif": "31717448",
+    "adresa": "JUD. ILFOV, SAT DOBROEŞTI COM. DOBROEŞTI, STR. ORIZONTULUI, NR.13",
+    "lat": 44.450786,
+    "lng": 26.182527,
+    "valoare": 9000.0,
+    "nr_contracte": 3,
+    "slug": "ideal-star-electric-srl"
+  },
+  {
+    "name": "FOCUS RISK S.R.L.",
+    "cif": "42708003",
+    "adresa": "JUD. CONSTANŢA, MUN. CONSTANŢA, STR. ŞTEFAN MIHĂILEANU, NR.50",
+    "lat": 44.176716,
+    "lng": 28.65076,
+    "valoare": 17000.0,
+    "nr_contracte": 2,
+    "slug": "focus-risk-srl"
+  },
+  {
+    "name": "INTERSOFT START SOLUTIONS SRL",
+    "cif": "33322231",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 1, STR MR. GHEORGHE ŞONŢU, NR.6, PARTER",
+    "lat": 44.487945,
+    "lng": 26.050155,
+    "valoare": 2300.0,
+    "nr_contracte": 1,
+    "slug": "intersoft-start-solutions-srl"
+  },
+  {
+    "name": "DAF INTERNATIONAL PROFESSIONAL S.R.L.",
+    "cif": "45501605",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 6, STR. PRECIZIEI, NR.17, CORP C16",
+    "lat": 44.447875,
+    "lng": 26.032448,
+    "valoare": 15270.0,
+    "nr_contracte": 1,
+    "slug": "daf-international-professional-srl"
+  },
+  {
+    "name": "RICON CONSULTING SRL",
+    "cif": "23246919",
+    "adresa": "JUD. IAŞI, MUN. IAŞI, STR. ION CREANGĂ, NR.23, BL.H3, SC.B, ET.2, AP.3",
+    "lat": 47.16156,
+    "lng": 27.583781,
+    "valoare": 30000.0,
+    "nr_contracte": 1,
+    "slug": "ricon-consulting-srl"
+  },
+  {
+    "name": "LUCA F BOGDAN PERSOANĂ FIZICĂ AUTORIZATĂ",
+    "cif": "39256277",
+    "adresa": "JUD. ILFOV, ORŞ. PANTELIMON, STR. INDEPENDENŢEI, NR.6, AP.43",
+    "lat": 44.451879,
+    "lng": 26.203556,
+    "valoare": 96000.0,
+    "nr_contracte": 1,
+    "slug": "luca-f-bogdan-persoana-fizica-autorizata"
+  },
+  {
+    "name": "PRO ARHIVE MANAGEMENT S.R.L.",
+    "cif": "35666380",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 1, STR AMINTIRII, NR.28, CAMERA 1",
+    "lat": 44.487945,
+    "lng": 26.050155,
+    "valoare": 135000.0,
+    "nr_contracte": 1,
+    "slug": "pro-arhive-management-srl"
+  },
+  {
+    "name": "ECO PUBLIC SRL",
+    "cif": "19123039",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 6, SPL INDEPENDENŢEI, NR.319, OBIECTIV 19B. IN SUPRAFATA DE 297 MP, ET.2",
+    "lat": 44.447875,
+    "lng": 26.032448,
+    "valoare": 17900.0,
+    "nr_contracte": 5,
+    "slug": "eco-public-srl"
+  },
+  {
+    "name": "OPIUM OFFICE CONSULTING S.R.L.",
+    "cif": "32265200",
+    "adresa": "JUD. ILFOV, SAT 1 DECEMBRIE COM. 1 DECEMBRIE, STR. 13, NR.18",
+    "lat": 44.495934,
+    "lng": 26.174623,
+    "valoare": 4500.0,
+    "nr_contracte": 1,
+    "slug": "opium-office-consulting-srl"
+  },
+  {
+    "name": "IFNCONS MEDIA SRL",
+    "cif": "16016984",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 1, STR IULIA HAŞDEU, NR.13, PARTER",
+    "lat": 44.487945,
+    "lng": 26.050155,
+    "valoare": 240000.0,
+    "nr_contracte": 1,
+    "slug": "ifncons-media-srl"
+  },
+  {
+    "name": "COMINDFLEX S.R.L.",
+    "cif": "1393676",
+    "adresa": "JUD. TELEORMAN, MUN. ROŞIORI DE VEDE, STR. CRISAN, NR.10",
+    "lat": 44.108349,
+    "lng": 24.995209,
+    "valoare": 29000.0,
+    "nr_contracte": 1,
+    "slug": "comindflex-srl"
+  },
+  {
+    "name": "PROBITZ SRL",
+    "cif": "13434567",
+    "adresa": "JUD. PRAHOVA, MUN. PLOIEŞTI, STR. TORCĂTORI, NR.37",
+    "lat": 44.941747,
+    "lng": 26.02365,
+    "valoare": 4047.4,
+    "nr_contracte": 2,
+    "slug": "probitz-srl"
+  },
+  {
+    "name": "FANPLACE IT S.R.L.",
+    "cif": "31962960",
+    "adresa": "JUD. ILFOV, SAT CĂLDĂRARU COM. CERNICA, STR. OXIGENULUI, NR.1H",
+    "lat": 44.413187,
+    "lng": 26.26116,
+    "valoare": 29291.89,
+    "nr_contracte": 15,
+    "slug": "fanplace-it-srl"
+  },
+  {
+    "name": "STANGER DESIGN S.R.L.",
+    "cif": "40412167",
+    "adresa": "JUD. CĂLĂRAŞI, MUN. CĂLĂRAŞI, PRL. BUCUREŞTI, NR.24, BL.M19, SC.2, ET.3, AP.6",
+    "lat": 44.210116,
+    "lng": 27.30713,
+    "valoare": 115500.0,
+    "nr_contracte": 1,
+    "slug": "stanger-design-srl"
+  },
+  {
+    "name": "SAGA INFRASTRUCTURĂ S.R.L.",
+    "cif": "32184793",
+    "adresa": "JUD. CĂLĂRAŞI, MUN. CĂLĂRAŞI, STR. VARIANTA NORD, NR.1, BIROUL NR. 1",
+    "lat": 44.196165,
+    "lng": 27.331323,
+    "valoare": 28119.22,
+    "nr_contracte": 1,
+    "slug": "saga-infrastructura-srl"
+  },
+  {
+    "name": "CXB CONSULTING & TECHNICAL SUPPORT SRL",
+    "cif": "25837539",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, STR ROMULUS RUSAN, NR.27, ET.3, AP.4, CAMERA 2",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 180000.0,
+    "nr_contracte": 1,
+    "slug": "cxb-consulting-technical-support-srl"
+  },
+  {
+    "name": "PMC GROUP DISTRIBUTIE SRL",
+    "cif": "17116469",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, STR. CAMPIA LIBERTATII, NR.27, BL.42, SC.1, ET.1, AP.7",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 2714.26,
+    "nr_contracte": 1,
+    "slug": "pmc-group-distributie-srl"
+  },
+  {
+    "name": "DNS BIROTICA SRL",
+    "cif": "16310679",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 4, STR. POGOANELOR, NR.147",
+    "lat": 44.381903,
+    "lng": 26.119018,
+    "valoare": 3676.3,
+    "nr_contracte": 2,
+    "slug": "dns-birotica-srl"
+  },
+  {
+    "name": "RHEEA CONSTRUCTION S.R.L.",
+    "cif": "47379122",
+    "adresa": "JUD. ILFOV, SAT TUNARI COM. TUNARI, STR. FAGULUI, NR.8A",
+    "lat": 44.545928,
+    "lng": 26.137698,
+    "valoare": 150600.0,
+    "nr_contracte": 4,
+    "slug": "rheea-construction-srl"
+  },
+  {
+    "name": "PLUXEE ROMANIA S.R.L.",
+    "cif": "11071295",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, BLD DIMITRIE POMPEI, NR.9-9A, CLADIREA 19, ET.3",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 0.01,
+    "nr_contracte": 1,
+    "slug": "pluxee-romania-srl"
+  },
+  {
+    "name": "PRESTIGE EVENTS SRL",
+    "cif": "26120590",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 6, CAL. CRÂNGAŞI, NR.16, BL.41, SC.B, ET.1, AP.41",
+    "lat": 44.447875,
+    "lng": 26.032448,
+    "valoare": 108000.0,
+    "nr_contracte": 1,
+    "slug": "prestige-events-srl"
+  },
+  {
+    "name": "GEO AUTO AGRO S.R.L.",
+    "cif": "26697077",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, ŞOS. COLENTINA, NR.64, BL.105, SC.A, ET.9, AP.59",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 285.71,
+    "nr_contracte": 1,
+    "slug": "geo-auto-agro-srl"
+  },
+  {
+    "name": "CREATIVE PEOPLE S.R.L.",
+    "cif": "39329387",
+    "adresa": "JUD. PRAHOVA, SAT CERAŞU COM. CERAŞU, G CERAŞU, NR.132",
+    "lat": 45.325221,
+    "lng": 26.0413,
+    "valoare": 350000.0,
+    "nr_contracte": 2,
+    "slug": "creative-people-srl"
+  },
+  {
+    "name": "SEMNAL.EU S.R.L.",
+    "cif": "51649500",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 1, STR HRISOVULUI, NR.2-4, BL.2, SC.1, ET.PARTER, AP.88",
+    "lat": 44.487945,
+    "lng": 26.050155,
+    "valoare": 118000.0,
+    "nr_contracte": 2,
+    "slug": "semnaleu-srl"
+  },
+  {
+    "name": "OMNI CONSTRUCT LOGISTIC SRL",
+    "cif": "32194177",
+    "adresa": "JUD. CONSTANŢA, MUN. CONSTANŢA, STR. SIRETULUI, NR.1",
+    "lat": 44.176716,
+    "lng": 28.65076,
+    "valoare": 7920929.0,
+    "nr_contracte": 1,
+    "slug": "omni-construct-logistic-srl"
+  },
+  {
+    "name": "SICURO INVEST SRL",
+    "cif": "RO6879473",
+    "adresa": "JUD. ILFOV, SAT DOBROEŞTI COM. DOBROEŞTI, BLD. NICOLAE BĂLCESCU, NR.107, PARTER. CAMERA NR. 2",
+    "lat": 44.450786,
+    "lng": 26.182527,
+    "valoare": 15070720.0,
+    "nr_contracte": 2,
+    "slug": "sicuro-invest-srl"
+  },
+  {
+    "name": "FAST NEW PRINT SERVICES S.R.L.",
+    "cif": "43154577",
+    "adresa": "JUD. ILFOV, ORŞ. PANTELIMON, STR. GRĂDINARILOR, NR.30, CAMERA 1, BL.7, ET.1, AP.05",
+    "lat": 44.451879,
+    "lng": 26.203556,
+    "valoare": 225408.0,
+    "nr_contracte": 1,
+    "slug": "fast-new-print-services-srl"
+  },
+  {
+    "name": "MODSERV IMPEX SRL",
+    "cif": "17258404",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, STR. MAŞINA DE PÂINE, NR.22A, BL.9IRTA, SC.1, ET.3, AP.13",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 1716.0,
+    "nr_contracte": 2,
+    "slug": "modserv-impex-srl"
+  },
+  {
+    "name": "ROMNETS CORPORATION SRL",
+    "cif": "33529670",
+    "adresa": "JUD. TELEORMAN, SAT SUHAIA COM. SUHAIA, STR. ŞOSEAUA DUNĂRII, NR.87",
+    "lat": 43.757281,
+    "lng": 25.273296,
+    "valoare": 10027.0,
+    "nr_contracte": 1,
+    "slug": "romnets-corporation-srl"
+  },
+  {
+    "name": "FOCUS COMPANY CONSULTING CCN SRL",
+    "cif": "26057280",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 1, CAL GRIVIŢEI, NR.399, CAMERA 6, BL.O, SC.1, ET.6, AP.24",
+    "lat": 44.487945,
+    "lng": 26.050155,
+    "valoare": 384990.0,
+    "nr_contracte": 2,
+    "slug": "focus-company-consulting-ccn-srl"
+  },
+  {
+    "name": "AXICO GRUP SRL",
+    "cif": "24385699",
+    "adresa": "JUD. TULCEA, SAT MINERI COM. SOMOVA, STR. VULTURULUI, NR.5, MANSARDA. CAMERA NR.1",
+    "lat": 45.163965,
+    "lng": 28.714638,
+    "valoare": 22305.36,
+    "nr_contracte": 1,
+    "slug": "axico-grup-srl"
+  },
+  {
+    "name": "EPSILON S.R.L.",
+    "cif": "8077425",
+    "adresa": "JUD. CĂLĂRAŞI, MUN. CĂLĂRAŞI, STR. CIREŞILOR, NR.13",
+    "lat": 44.196165,
+    "lng": 27.331323,
+    "valoare": 63.03,
+    "nr_contracte": 1,
+    "slug": "epsilon-srl"
+  },
+  {
+    "name": "DATABASE PRO SRL",
+    "cif": "23744204",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 6, STR. CEAHLAUL, NR.24, BL.106, SC.2, ET.7, AP.97",
+    "lat": 44.447875,
+    "lng": 26.032448,
+    "valoare": 126.0,
+    "nr_contracte": 1,
+    "slug": "database-pro-srl"
+  },
+  {
+    "name": "ROMSYSTEMS SRL",
+    "cif": "15437993",
+    "adresa": "JUD. BACĂU, MUN. BACĂU, STR. ABATORULUI, NR.4",
+    "lat": 46.556049,
+    "lng": 26.915356,
+    "valoare": 4568.54,
+    "nr_contracte": 2,
+    "slug": "romsystems-srl"
+  },
+  {
+    "name": "VIR COM EM SRL",
+    "cif": "7010885",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, BLD BASARABIA, NR.250, IMOBIL TRUP D8",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 1236.0,
+    "nr_contracte": 1,
+    "slug": "vir-com-em-srl"
+  },
+  {
+    "name": "ROFUSION ADVERTISING S.R.L.",
+    "cif": "38547529",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 1, BLD ION MIHALACHE, NR.140, PARTER, SC.A, AP.2",
+    "lat": 44.487945,
+    "lng": 26.050155,
+    "valoare": 239.67,
+    "nr_contracte": 1,
+    "slug": "rofusion-advertising-srl"
+  },
+  {
+    "name": "A.F. CONSULTING SRL",
+    "cif": "12972517",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 4, STR ODEI, NR.89",
+    "lat": 44.381903,
+    "lng": 26.119018,
+    "valoare": 239900.0,
+    "nr_contracte": 1,
+    "slug": "af-consulting-srl"
+  },
+  {
+    "name": "DV PROD MEDIA SRL",
+    "cif": "15143068",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, STR. POPA NAN, NR.14, ET.1, AP.3",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 4038.0,
+    "nr_contracte": 1,
+    "slug": "dv-prod-media-srl"
+  },
+  {
+    "name": "FLAX COMPUTERS SRL",
+    "cif": "14639030",
+    "adresa": "JUD. DÂMBOVIŢA, MUN. TÂRGOVIŞTE, CAL. DOMNEASCA, NR.345",
+    "lat": 44.926771,
+    "lng": 25.462816,
+    "valoare": 209.7,
+    "nr_contracte": 1,
+    "slug": "flax-computers-srl"
+  },
+  {
+    "name": "LUKA NIKAT UTILAJE SRL",
+    "cif": "36689322",
+    "adresa": "JUD. ILFOV, ORŞ. PANTELIMON, STR. RĂSCOALEI, NR.14, CORP C1",
+    "lat": 44.451879,
+    "lng": 26.203556,
+    "valoare": 2850.0,
+    "nr_contracte": 2,
+    "slug": "luka-nikat-utilaje-srl"
+  },
+  {
+    "name": "RALEX PROIECT CONSTRUCT SRL",
+    "cif": "29101593",
+    "adresa": "JUD. CĂLĂRAŞI, MUN. CĂLĂRAŞI, STR. NUFĂRULUI, NR.4, BL.E 7, SC.B, ET.2, AP.6",
+    "lat": 44.196165,
+    "lng": 27.331323,
+    "valoare": 1017350.0,
+    "nr_contracte": 5,
+    "slug": "ralex-proiect-construct-srl"
+  },
+  {
+    "name": "CAPITAL GRUP INSTAL SRL",
+    "cif": "20434446",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, DRM GURA PUTNEI, NR.26, DEMISOL. CAMERA 1",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 75000.0,
+    "nr_contracte": 1,
+    "slug": "capital-grup-instal-srl"
+  },
+  {
+    "name": "FINANCE PUBLIC CONSULTING S.R.L.",
+    "cif": "47236831",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 1, STR IULIA HAŞDEU, NR.13",
+    "lat": 44.487945,
+    "lng": 26.050155,
+    "valoare": 275000.0,
+    "nr_contracte": 3,
+    "slug": "finance-public-consulting-srl"
+  },
+  {
+    "name": "SOFA SOFT SRL",
+    "cif": "9601390",
+    "adresa": "JUD. TIMIŞ, SAT MOŞNIŢA NOUĂ COM. MOŞNIŢA NOUĂ, STR. FLORENTINA, NR.16",
+    "lat": 45.734462,
+    "lng": 21.330255,
+    "valoare": 1098.0,
+    "nr_contracte": 1,
+    "slug": "sofa-soft-srl"
+  },
+  {
+    "name": "DO&DO SILVER SPRINT SRL",
+    "cif": "26167585",
+    "adresa": "JUD. ILFOV, SAT GLINA COM. GLINA, STR. LIBERTĂŢII, NR.143, AP.CAMERA 1",
+    "lat": 44.386201,
+    "lng": 26.245235,
+    "valoare": 162495.0,
+    "nr_contracte": 3,
+    "slug": "dodo-silver-sprint-srl"
+  },
+  {
+    "name": "CARTOGATE GROUP SRL",
+    "cif": "14950892",
+    "adresa": "JUD. ILFOV, SAT CĂŢELU COM. GLINA, STR. APUSULUI, NR.1",
+    "lat": 44.402944,
+    "lng": 26.218155,
+    "valoare": 4095.0,
+    "nr_contracte": 1,
+    "slug": "cartogate-group-srl"
+  },
+  {
+    "name": "POLITES ONLINE SRL",
+    "cif": "34846331",
+    "adresa": "JUD. DOLJ, MUN. CRAIOVA, STR. PETRACHE POENARU, NR.1",
+    "lat": 44.319016,
+    "lng": 23.796561,
+    "valoare": 11223.0,
+    "nr_contracte": 1,
+    "slug": "polites-online-srl"
+  },
+  {
+    "name": "NOICONSTRUIM.RO SRL",
+    "cif": "16230359",
+    "adresa": "JUD. ILFOV, SAT GLINA COM. GLINA, STR. LIBERTATII, CAMERA NR. 1, NR.347",
+    "lat": 44.386201,
+    "lng": 26.245235,
+    "valoare": 10982.0,
+    "nr_contracte": 2,
+    "slug": "noiconstruimro-srl"
+  },
+  {
+    "name": "TACHONAN SERVICE SRL",
+    "cif": "8893970",
+    "adresa": "JUD. BIHOR, MUN. ORADEA, STR. OGORULUI, NR.62",
+    "lat": 47.054916,
+    "lng": 21.928523,
+    "valoare": 909.09,
+    "nr_contracte": 1,
+    "slug": "tachonan-service-srl"
+  },
+  {
+    "name": "VEST INSTAL S.R.L.",
+    "cif": "18991887",
+    "adresa": "JUD. CĂLĂRAŞI, MUN. CĂLĂRAŞI, STR. DROPIA, NR.104",
+    "lat": 44.196165,
+    "lng": 27.331323,
+    "valoare": 211200.0,
+    "nr_contracte": 1,
+    "slug": "vest-instal-srl"
+  },
+  {
+    "name": "TITAN MACHINERY ROMANIA SRL",
+    "cif": "29352595",
+    "adresa": "JUD. ILFOV, SAT DRAGOMIREŞTI-DEAL COM. DRAGOMIREŞTI-VALE, ALEEA ŞTEFANIA, NR.2, (CLĂDIREA E - HALA E)",
+    "lat": 44.458692,
+    "lng": 25.945338,
+    "valoare": 5135.13,
+    "nr_contracte": 3,
+    "slug": "titan-machinery-romania-srl"
+  },
+  {
+    "name": "CORVIN DESIGN SRL",
+    "cif": "RO 24299482",
+    "adresa": "JUD. HUNEDOARA, MUN. HUNEDOARA, STR. SEREI, NR.31",
+    "lat": 45.795407,
+    "lng": 22.945243,
+    "valoare": 7149763.0,
+    "nr_contracte": 1,
+    "slug": "corvin-design-srl"
+  },
+  {
+    "name": "ELECTROCONS GROUP PROIECT INTL SRL",
+    "cif": "RO 15475580",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, CALEA VITAN, NR.213, BL.20, SC.1, ET.1, AP.2",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 7149763.0,
+    "nr_contracte": 1,
+    "slug": "electrocons-group-proiect-intl-srl"
+  },
+  {
+    "name": "ACG CONSTRUCTION & PROJECTS S.R.L.",
+    "cif": "RO17351537",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 4, STR CĂRĂRUIA, NR.33-35, DEMISOL 1. BIROURILE NR. 1 SI 2, SC.A, AP.4",
+    "lat": 44.381903,
+    "lng": 26.119018,
+    "valoare": 13570756.0,
+    "nr_contracte": 1,
+    "slug": "acg-construction-projects-srl"
+  },
+  {
+    "name": "OLTENIA GARDEN SRL",
+    "cif": "RO 11289053",
+    "adresa": "JUD. DOLJ, SAT PIELEŞTI COM. PIELEŞTI,  , TARLAUA 83. PARCELA 675",
+    "lat": 44.34104,
+    "lng": 23.963011,
+    "valoare": 13570756.0,
+    "nr_contracte": 1,
+    "slug": "oltenia-garden-srl"
+  },
+  {
+    "name": "ALA EXPERT CONSTRUCT SRL",
+    "cif": "RO30056330",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 5, STR CPT. ILIE NEDELCU, NR.45A",
+    "lat": 44.405054,
+    "lng": 26.071651,
+    "valoare": 29508940.0,
+    "nr_contracte": 1,
+    "slug": "ala-expert-construct-srl"
+  },
+  {
+    "name": "SANTIA PARTNER CONSTRUCT SRL",
+    "cif": "RO27702350",
+    "adresa": "JUD. PRAHOVA, MUN. PLOIEŞTI, ALEEA TÂRGŞOR, NR.2, CAMERA NR.1, BL.80, SC.A, ET.P, AP.2",
+    "lat": 44.941747,
+    "lng": 26.02365,
+    "valoare": 29508940.0,
+    "nr_contracte": 1,
+    "slug": "santia-partner-construct-srl"
+  },
+  {
+    "name": "YARDMAN SRL",
+    "cif": "RO28250562",
+    "adresa": "JUD. ILFOV, ORŞ. VOLUNTARI, STR. GAROAFELOR, NR.13A, PARTER",
+    "lat": 44.490278,
+    "lng": 26.177279,
+    "valoare": 29508940.0,
+    "nr_contracte": 1,
+    "slug": "yardman-srl"
+  },
+  {
+    "name": "GLOBEXTERRA S.R.L.",
+    "cif": "RO28610220",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 1, STR MUZEUL ZAMBACCIAN, NR.1, ET.1 ŞI 2",
+    "lat": 44.487945,
+    "lng": 26.050155,
+    "valoare": 24184504.0,
+    "nr_contracte": 1,
+    "slug": "globexterra-srl"
+  },
+  {
+    "name": "ROMCO SYSTEM SRL",
+    "cif": "RO 15315902",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, B-DUL THEODOR PALLADY, NR.50, LOTUL II. C21",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 24184504.0,
+    "nr_contracte": 1,
+    "slug": "romco-system-srl"
+  },
+  {
+    "name": "FRAMEWORKS SRL",
+    "cif": "17523870",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, STR. NERVA TRAIAN, NR.27-33, SC.B, ET.1, AP.BIROU 6",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 3437.06,
+    "nr_contracte": 1,
+    "slug": "frameworks-srl"
+  },
+  {
+    "name": "FLEXABILITY MANAGEMENT SRL",
+    "cif": "19179498",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 1, STR. BARBU DELAVRANCEA, NR.59, ET.1, AP.3",
+    "lat": 44.487945,
+    "lng": 26.050155,
+    "valoare": 230000.0,
+    "nr_contracte": 1,
+    "slug": "flexability-management-srl"
+  },
+  {
+    "name": "GHE STUBEANU 2000 SRL",
+    "cif": "12780287",
+    "adresa": "JUD. GIURGIU, MUN. GIURGIU, BLD. MIHAI VITEAZU, BL.208/3S1, SC.D, ET.P",
+    "lat": 43.896127,
+    "lng": 25.965645,
+    "valoare": 60000.0,
+    "nr_contracte": 2,
+    "slug": "ghe-stubeanu-2000-srl"
+  },
+  {
+    "name": "LEGAL ASSISTANCE SRL",
+    "cif": "21293787",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, STR. DRISTORULUI, NR.91-95, BL.B, ET.5, AP.509, CAM.1",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 10000.0,
+    "nr_contracte": 1,
+    "slug": "legal-assistance-srl"
+  },
+  {
+    "name": "BIROTICIENII S.R.L.",
+    "cif": "33911008",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, STR LUNCA BRADULUI, NR.8, BL.M31K, SC.B, ET.2, AP.54",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 747.0,
+    "nr_contracte": 1,
+    "slug": "biroticienii-srl"
+  },
+  {
+    "name": "WURTH ROMANIA SRL",
+    "cif": "5175127",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 1, ȘOS BUCUREŞTI-PLOIEŞTI, NR.73-81, CLĂDIREA VICTORIA BUSINESS PARK. CORP 3, ET.2",
+    "lat": 44.487945,
+    "lng": 26.050155,
+    "valoare": 3123.5,
+    "nr_contracte": 1,
+    "slug": "wurth-romania-srl"
+  },
+  {
+    "name": "TEHNOSERVICE ACTIV INSTAL SRL",
+    "cif": "37006983",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 5, STR IOVIŢA, NR.23-27, CAMERA  1, ET.4, AP.17",
+    "lat": 44.405054,
+    "lng": 26.071651,
+    "valoare": 35472.0,
+    "nr_contracte": 2,
+    "slug": "tehnoservice-activ-instal-srl"
+  },
+  {
+    "name": "GPK INFRASTRUCTURE DESIGN S.R.L.",
+    "cif": "40092259",
+    "adresa": "JUD. ILFOV, ORŞ. PANTELIMON, STR. RĂSCOALEI, NR. PROVENIT 41 A",
+    "lat": 44.451879,
+    "lng": 26.203556,
+    "valoare": 252500.0,
+    "nr_contracte": 1,
+    "slug": "gpk-infrastructure-design-srl"
+  },
+  {
+    "name": "KOMORA ENGINEERING SRL",
+    "cif": "32815436",
+    "adresa": "JUD. CĂLĂRAŞI, MUN. CĂLĂRAŞI, STR. RAHOVA, NR.169",
+    "lat": 44.196165,
+    "lng": 27.331323,
+    "valoare": 125000.0,
+    "nr_contracte": 1,
+    "slug": "komora-engineering-srl"
+  },
+  {
+    "name": "SAMTEC MONDO TECHNOLOGY INDUSTRY S.R.L.",
+    "cif": "49195789",
+    "adresa": "JUD. CARAŞ-SEVERIN, ORŞ. OŢELU ROŞU, STR. 22 DECEMBRIE 1989, NR.10H",
+    "lat": 45.519829,
+    "lng": 22.357742,
+    "valoare": 164700.0,
+    "nr_contracte": 1,
+    "slug": "samtec-mondo-technology-industry-srl"
+  },
+  {
+    "name": "SCHWARZ GRUPPE INT SRL",
+    "cif": "31055634",
+    "adresa": "JUD. SIBIU, ORŞ. CISNĂDIE, STR. TRANSILVANIEI, NR.6",
+    "lat": 45.716842,
+    "lng": 24.154624,
+    "valoare": 1568.83,
+    "nr_contracte": 1,
+    "slug": "schwarz-gruppe-int-srl"
+  },
+  {
+    "name": "MIRON COM SRL",
+    "cif": "5537626",
+    "adresa": "JUD. BRĂILA, MUN. BRĂILA, STR. ŞTEFAN CEL MARE, NR.110, CONSTRUCTIA C3. CAM.1",
+    "lat": 45.271609,
+    "lng": 27.974293,
+    "valoare": 246000.0,
+    "nr_contracte": 1,
+    "slug": "miron-com-srl"
+  },
+  {
+    "name": "HENTZA CONSULTING S.R.L.",
+    "cif": "49783681",
+    "adresa": "JUD. ILFOV, SAT ŞTEFĂNEŞTII DE JOS COM. ŞTEFĂNEŞTII DE JOS, STR. LINIA DE CENTURĂ, NR.50, BL.H8, AP.003",
+    "lat": 44.533142,
+    "lng": 26.202984,
+    "valoare": 198000.0,
+    "nr_contracte": 1,
+    "slug": "hentza-consulting-srl"
+  },
+  {
+    "name": "HENTZA PROPERTIES S.R.L.",
+    "cif": "49514381",
+    "adresa": "JUD. ILFOV, SAT ŞTEFĂNEŞTII DE JOS COM. ŞTEFĂNEŞTII DE JOS, STR. EUROPA, NR.4 BIS , (TARLA 44. PARCELA 337), BL.L2, ET.5, AP.502",
+    "lat": 44.533142,
+    "lng": 26.202984,
+    "valoare": 49000.0,
+    "nr_contracte": 1,
+    "slug": "hentza-properties-srl"
+  },
+  {
+    "name": "GREEN DEVELOPMENT SOLUTIONS AND MANAGEMENT S.R.L.",
+    "cif": "28072147",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, STR. PETRE ANTONESCU, NR.11, BL.11, SC.A, ET.2, AP.16",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 270000.0,
+    "nr_contracte": 1,
+    "slug": "green-development-solutions-and-management-srl"
+  },
+  {
+    "name": "PANORAMIC CONCEPT CONS S.R.L.",
+    "cif": "37655409",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 1, INT EPOCII, NR.8-12, CAMERA 3, ET.3, AP.15",
+    "lat": 44.487945,
+    "lng": 26.050155,
+    "valoare": 470000.0,
+    "nr_contracte": 2,
+    "slug": "panoramic-concept-cons-srl"
+  },
+  {
+    "name": "OPTIC HOUSE TRANSILVANIA S.R.L.",
+    "cif": "37951668",
+    "adresa": "JUD. BISTRIŢA-NĂSĂUD, MUN. BISTRIŢA, STR. LACULUI, NR.8G",
+    "lat": 47.132701,
+    "lng": 24.496395,
+    "valoare": 34355.37,
+    "nr_contracte": 1,
+    "slug": "optic-house-transilvania-srl"
+  },
+  {
+    "name": "TIRIAC AUTO SRL",
+    "cif": "11331727",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 1, BLD. EXPOZIŢIEI, NR.2, BL.CLADIREA C9",
+    "lat": 44.487945,
+    "lng": 26.050155,
+    "valoare": 6060.77,
+    "nr_contracte": 1,
+    "slug": "tiriac-auto-srl"
+  },
+  {
+    "name": "CLIMTEH SRL",
+    "cif": "7742",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, ŞOS. VERGULUI, NR.14 A",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 1225.0,
+    "nr_contracte": 1,
+    "slug": "climteh-srl"
+  },
+  {
+    "name": "GDM REPAIR S.R.L.",
+    "cif": "47094311",
+    "adresa": "JUD. CĂLĂRAŞI, ORŞ. FUNDULEA, STR. ROZELOR, NR.15, CAMERA 1, ET.PARTER",
+    "lat": 44.468369,
+    "lng": 26.50968,
+    "valoare": 3770.0,
+    "nr_contracte": 2,
+    "slug": "gdm-repair-srl"
+  },
+  {
+    "name": "TIRES AND PARTS SRL",
+    "cif": "35056829",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, STR DOAMNA GHICA, NR.30, BL.11SUD, SC.1, ET.6, AP.20",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 1103.29,
+    "nr_contracte": 1,
+    "slug": "tires-and-parts-srl"
+  },
+  {
+    "name": "GIMAR STINGSERV SRL",
+    "cif": "15175418",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 1, STR. HORIA MĂCELARIU, NR.7, BL.13/5, SC.A, ET.2, AP.5",
+    "lat": 44.487945,
+    "lng": 26.050155,
+    "valoare": 1043.0,
+    "nr_contracte": 1,
+    "slug": "gimar-stingserv-srl"
+  },
+  {
+    "name": "NIPLICAD SRL",
+    "cif": "26281970",
+    "adresa": "JUD. ILFOV, ORŞ. PANTELIMON, STR INTRAREA CIUCAŞ, NR.2 A",
+    "lat": 44.451879,
+    "lng": 26.203556,
+    "valoare": 63008.0,
+    "nr_contracte": 1,
+    "slug": "niplicad-srl"
+  },
+  {
+    "name": "GREEN SPACE ART SRL",
+    "cif": "34596758",
+    "adresa": "JUD. ILFOV, SAT BRĂNEŞTI COM. BRĂNEŞTI, STR I.C. BRĂTIANU, NR.19, CAMERA NR. 1",
+    "lat": 44.457562,
+    "lng": 26.33501,
+    "valoare": 63520.0,
+    "nr_contracte": 1,
+    "slug": "green-space-art-srl"
+  },
+  {
+    "name": "ETA AUTOMATIZARI INDUSTRIALE SRL",
+    "cif": "6825562",
+    "adresa": "JUD. TIMIŞ, MUN. TIMIŞOARA, STR. GHEORGHE DOJA, NR.11, CASA DOJA BUSINESS CENTER. BIROURILE OG-13 (59). OG-12 (60). SP. FLEXIBIL (61). CORIDOR. OG-08 (72). OG-07 (73). OG-06 (74). OG-04 (76). SP. FLEX",
+    "lat": 45.753836,
+    "lng": 21.225747,
+    "valoare": 3188.16,
+    "nr_contracte": 1,
+    "slug": "eta-automatizari-industriale-srl"
+  },
+  {
+    "name": "TOTAL WATER DESIGN SRL",
+    "cif": "36751076",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, STR VALEA BUZĂULUI, NR.14, BL.G26BIS, SC.1, ET.1, AP.4",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 75000.0,
+    "nr_contracte": 1,
+    "slug": "total-water-design-srl"
+  },
+  {
+    "name": "WINTER COM SRL",
+    "cif": "7702347",
+    "adresa": "JUD. BISTRIŢA-NĂSĂUD, MUN. BISTRIŢA, CAR. SĂRATA, NR.131 F",
+    "lat": 47.132701,
+    "lng": 24.496395,
+    "valoare": 1773.5,
+    "nr_contracte": 1,
+    "slug": "winter-com-srl"
+  },
+  {
+    "name": "OCONO ROMANIA S.R.L.",
+    "cif": "37215327",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 6, STR PRECIZIEI, NR.11, CAMERA 1B",
+    "lat": 44.447875,
+    "lng": 26.032448,
+    "valoare": 5416.34,
+    "nr_contracte": 1,
+    "slug": "ocono-romania-srl"
+  },
+  {
+    "name": "SELGROS CASH & CARRY SRL",
+    "cif": "11805367",
+    "adresa": "JUD. BRAŞOV, MUN. BRAŞOV, CAL. BUCUREŞTI, NR.231",
+    "lat": 45.64404,
+    "lng": 25.62385,
+    "valoare": 9031.31,
+    "nr_contracte": 2,
+    "slug": "selgros-cash-carry-srl"
+  },
+  {
+    "name": "NEWLINE MUSIC S.R.L.",
+    "cif": "18470480",
+    "adresa": "JUD. ILFOV, ORŞ. PANTELIMON, STR. COCORULUI, NR.19",
+    "lat": 44.451879,
+    "lng": 26.203556,
+    "valoare": 6000.0,
+    "nr_contracte": 1,
+    "slug": "newline-music-srl"
+  },
+  {
+    "name": "HAHAHA S.R.L.",
+    "cif": "38846954",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, ALEEA DOBRINA, NR.3, BL.49D, SC.A, ET.3, AP.17",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 600.0,
+    "nr_contracte": 1,
+    "slug": "hahaha-srl"
+  },
+  {
+    "name": "DAV GARDEN & SERVICE SRL",
+    "cif": "RO 28167751",
+    "adresa": "JUD. CĂLĂRAŞI, SAT NANA COM. NANA,",
+    "lat": 44.30078,
+    "lng": 26.629686,
+    "valoare": 10385059.0,
+    "nr_contracte": 3,
+    "slug": "dav-garden-service-srl"
+  },
+  {
+    "name": "SSG SELECT SOLUTIONS SRL",
+    "cif": "36563420",
+    "adresa": "JUD. ILFOV, SAT AFUMAŢI COM. AFUMAŢI, STR ŞOSEAUA DE CENTURĂ STÂNGA, NR.3",
+    "lat": 44.524683,
+    "lng": 26.24943,
+    "valoare": 2880.0,
+    "nr_contracte": 1,
+    "slug": "ssg-select-solutions-srl"
+  },
+  {
+    "name": "ITG ONLINE SRL",
+    "cif": "34198965",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, STR TURTURELELOR, NR.52, PARTER. CAMERA P1",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 13909.0,
+    "nr_contracte": 1,
+    "slug": "itg-online-srl"
+  },
+  {
+    "name": "CENTRAL SERVICE INSTAL SRL",
+    "cif": "19222172",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 4, SOS. VITAN-BARZESTI, NR.11A, BL.CORP C8",
+    "lat": 44.381903,
+    "lng": 26.119018,
+    "valoare": 6456.21,
+    "nr_contracte": 1,
+    "slug": "central-service-instal-srl"
+  },
+  {
+    "name": "WOLTERS KLUWER ROMÂNIA SRL",
+    "cif": "8451308",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 5, BLD TUDOR VLADIMIRESCU, NR.22, CLADIREA GREEN GATE, ET.6",
+    "lat": 44.405054,
+    "lng": 26.071651,
+    "valoare": 8988.0,
+    "nr_contracte": 1,
+    "slug": "wolters-kluwer-romania-srl"
+  },
+  {
+    "name": "COMPANIA NATIONALA POSTA ROMANA S.A.",
+    "cif": "427410",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, B-DUL DACIA, NR.140, ET.P",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 150000.0,
+    "nr_contracte": 1,
+    "slug": "compania-nationala-posta-romana-sa"
+  },
+  {
+    "name": "MEDA CONSULT SRL",
+    "cif": "15730038",
+    "adresa": "JUD. DÂMBOVIŢA, MUN. TÂRGOVIŞTE, STR. ION GHICA, BL.13, SC.A, AP.6",
+    "lat": 44.926771,
+    "lng": 25.462816,
+    "valoare": 1238.84,
+    "nr_contracte": 1,
+    "slug": "meda-consult-srl"
+  },
+  {
+    "name": "BLITZ PRINT SRL",
+    "cif": "15757246",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, STR SFÂNTA TREIME, NR.47, PARTER",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 25400.0,
+    "nr_contracte": 1,
+    "slug": "blitz-print-srl"
+  },
+  {
+    "name": "GPT PIPE PLAN S.R.L.",
+    "cif": "40012187",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, BLD 1 DECEMBRIE 1918, NR.27A, BL.PM73, SC.A, ET.6, AP.42",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 43000.0,
+    "nr_contracte": 3,
+    "slug": "gpt-pipe-plan-srl"
+  },
+  {
+    "name": "ALPHA SHOT SRL",
+    "cif": "33933162",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, BLD THEODOR PALLADY, NR.46A, CORP C1, ET.PARTER",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 4130.0,
+    "nr_contracte": 1,
+    "slug": "alpha-shot-srl"
+  },
+  {
+    "name": "PROF PRINT S.R.L.",
+    "cif": "30153510",
+    "adresa": "JUD. IALOMIŢA, MUN. SLOBOZIA, STR. VASILE ALECSANDRI, NR.20",
+    "lat": 44.5636,
+    "lng": 27.361848,
+    "valoare": 4380.0,
+    "nr_contracte": 1,
+    "slug": "prof-print-srl"
+  },
+  {
+    "name": "QUICK SERVICE SRL",
+    "cif": "4998931",
+    "adresa": "JUD. CONSTANŢA, MUN. CONSTANŢA, STR. MERIŞOR, NR.102",
+    "lat": 44.176716,
+    "lng": 28.65076,
+    "valoare": 70200.0,
+    "nr_contracte": 1,
+    "slug": "quick-service-srl"
+  },
+  {
+    "name": "SARMIS COLUMNA FIRE SRL",
+    "cif": "34748449",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 5, STR CORBIŢA, NR.32, C1. U 04",
+    "lat": 44.405054,
+    "lng": 26.071651,
+    "valoare": 15172.0,
+    "nr_contracte": 1,
+    "slug": "sarmis-columna-fire-srl"
+  },
+  {
+    "name": "EXPERT DESIGN CONSULTING S.R.L.",
+    "cif": "28034690",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, STR. LANULUI, NR.53, UNA CAMERĂ",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 15000.0,
+    "nr_contracte": 1,
+    "slug": "expert-design-consulting-srl"
+  },
+  {
+    "name": "A-Z INSTAL GAZ S.R.L.",
+    "cif": "33311747",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 4, BLD DIMITRIE CANTEMIR, NR.17, CAMERA NR.1, BL.10, SC.2, ET.5, AP.58",
+    "lat": 44.381903,
+    "lng": 26.119018,
+    "valoare": 53600.0,
+    "nr_contracte": 1,
+    "slug": "a-z-instal-gaz-srl"
+  },
+  {
+    "name": "SUBANSAMBLE AUTO SA",
+    "cif": "9938485",
+    "adresa": "JUD. COVASNA, MUN. SFÂNTU GHEORGHE, STR. LT. DAVID PAIUS, NR.9",
+    "lat": 45.865994,
+    "lng": 25.786537,
+    "valoare": 9694.5,
+    "nr_contracte": 1,
+    "slug": "subansamble-auto-sa"
+  },
+  {
+    "name": "MIDAS ROAD S.R.L.",
+    "cif": "47338351",
+    "adresa": "JUD. ILFOV, SAT BERCENI COM. BERCENI, STR. POIANA VERDE, NR.12",
+    "lat": 44.317123,
+    "lng": 26.184697,
+    "valoare": 880411.88,
+    "nr_contracte": 1,
+    "slug": "midas-road-srl"
+  },
+  {
+    "name": "SMART CHOICE SRL",
+    "cif": "17491492",
+    "adresa": "JUD. IAŞI, MUN. IAŞI, STR. STEJAR, NR.60, BL.L5, SC.A, ET.1, AP.5",
+    "lat": 47.16156,
+    "lng": 27.583781,
+    "valoare": 633.0,
+    "nr_contracte": 1,
+    "slug": "smart-choice-srl"
+  },
+  {
+    "name": "CRIA GENERAL CONSTRUCT S.R.L.",
+    "cif": "41011023",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 4, STR DUNĂRII, NR.19, ET.1",
+    "lat": 44.381903,
+    "lng": 26.119018,
+    "valoare": 12671650.0,
+    "nr_contracte": 1,
+    "slug": "cria-general-construct-srl"
+  },
+  {
+    "name": "DORBASTI CONSTRUCT S.R.L.",
+    "cif": "37920815",
+    "adresa": "JUD. ILFOV, SAT VIDRA COM. VIDRA, STR. PRELUNGIREA GĂRII, NR.242A, CAM. 1, ET.PARTER",
+    "lat": 44.262661,
+    "lng": 26.164075,
+    "valoare": 12671650.0,
+    "nr_contracte": 1,
+    "slug": "dorbasti-construct-srl"
+  },
+  {
+    "name": "GRI CONSTRUCT ACM S.R.L.",
+    "cif": "41497242",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, STR. SOLD. PETRE M. TINĂ, NR.2, BL.L9B, SC.1, AP.2",
+    "lat": 44.418284,
+    "lng": 26.165099,
+    "valoare": 12671650.0,
+    "nr_contracte": 1,
+    "slug": "gri-construct-acm-srl"
+  },
+  {
+    "name": "QUANTUM AUTO MAX S.R.L.",
+    "cif": "RO48590798",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 1, ŞOS BUCUREŞTI-PLOIEŞTI, NR.73-81, CLADIREA C2. VICTORIA PARK, ET.3",
+    "lat": 44.487945,
+    "lng": 26.050155,
+    "valoare": 2656673.0,
+    "nr_contracte": 1,
+    "slug": "quantum-auto-max-srl"
+  },
+  {
+    "name": "BEPA CONSTRUCTII CIVILE SRL",
+    "cif": "ro 27019056",
+    "adresa": "JUD. ILFOV, ORŞ. PANTELIMON, STR. CORBULUI, NR.5, ET.1",
+    "lat": 44.451879,
+    "lng": 26.203556,
+    "valoare": 21561196.0,
+    "nr_contracte": 3,
+    "slug": "bepa-constructii-civile-srl"
+  }
+]

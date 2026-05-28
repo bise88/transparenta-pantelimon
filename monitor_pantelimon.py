@@ -2651,7 +2651,7 @@ def _get_firme_anaf_batch(cui_list: list) -> dict:
         return result
 
     today  = datetime.now().strftime("%Y-%m-%d")
-    url    = "https://webservicesp.anaf.ro/PlatitorTvaRest/api/v8/ws/tva"
+    url    = "https://webservicesp.anaf.ro/api/PlatitorTvaRest/v9/tva"
     BATCH  = 499
     total_found = 0
 
@@ -2671,11 +2671,11 @@ def _get_firme_anaf_batch(cui_list: list) -> dict:
             continue
 
         for item in data.get("found", []):
-            ci = item.get("cui")
+            dg   = item.get("date_generale", {})
+            ci   = dg.get("cui") or item.get("cui")  # v9: CUI in date_generale; v8: la top
             if not ci:
                 continue
             orig = cui_map.get(ci, str(ci))
-            dg   = item.get("date_generale", {})
             si   = item.get("stare_inactiv", {})
             stare_raw = (dg.get("stare_inregistrare") or "").upper()
             if si.get("statusInactivi"):
@@ -5036,9 +5036,44 @@ def geocodeaza_firme(
         )
         conn.commit()
 
+    def _simplify_adresa(adresa: str) -> str:
+        """Extrage localitate + judet din adresa ANAF verbosa pentru Nominatim."""
+        import re as _re
+        parts = [p.strip() for p in adresa.split(",")]
+        judet, localitate, sector = "", "", ""
+        for p in parts:
+            pu = p.upper()
+            if pu.startswith("JUD."):
+                judet = _re.sub(r"^JUD\.\s*", "", p, flags=_re.IGNORECASE).strip()
+            elif "BUCURE" in pu:
+                localitate = "Bucuresti"
+            elif _re.match(r"^SECTOR\s+\d+", pu, _re.IGNORECASE):
+                sector = _re.sub(r"^SECTOR\s*", "Sector ", p, flags=_re.IGNORECASE).strip()
+            elif _re.match(r"^(MUN\.|MUNICIPIUL|ORAS|SAT|ORŞ\.|ORS\.)\s*", pu):
+                loc = _re.sub(r"^(MUN\.|MUNICIPIUL|ORAS|SAT|ORŞ\.\s*|ORS\.)\s*", "", p, flags=_re.IGNORECASE).strip()
+                loc = loc.split()[0] if loc else loc
+                if loc:
+                    localitate = loc
+            elif _re.match(r"^(STR|SOS|BD|BDUL|CAL\.|CALEA|NR|BL|SC|AP|ET|ALEEA|INTRAREA)", pu):
+                break
+        parts_q = []
+        if localitate == "Bucuresti" and sector:
+            parts_q.append(sector)
+        if localitate:
+            parts_q.append(localitate)
+        if judet and judet.upper() not in (localitate.upper() if localitate else ""):
+            parts_q.append(judet)
+        if not parts_q:
+            for p in adresa.split(",")[:2]:
+                p2 = _re.sub(r"^(JUD\.|MUNICIPIUL|ORAS|MUN\.|SAT|ORŞ\.|ORS\.)\s*", "", p, flags=_re.IGNORECASE).strip()
+                if p2:
+                    parts_q.append(p2)
+        return ", ".join(parts_q) if parts_q else adresa[:50]
+
     def _nominatim_query(adresa: str) -> tuple:
         """Returnează (lat, lng) sau (None, None) dacă nu găsit."""
-        query = urllib.parse.urlencode({"q": adresa + ", Romania", "format": "json", "limit": "1"})
+        adresa_query = _simplify_adresa(adresa)
+        query = urllib.parse.urlencode({"q": adresa_query + ", Romania", "format": "json", "limit": "1"})
         url = f"{NOMINATIM_URL}?{query}"
         req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
         try:
@@ -5061,9 +5096,8 @@ def geocodeaza_firme(
         adresa = (info.get("adresa") or "").strip()
         if not adresa:
             continue
-        # Adaugă județ la adresă pentru precizie mai bună
-        judet = (info.get("judet") or "").strip()
-        adresa_query = f"{adresa}, {judet}" if judet and judet.lower() not in adresa.lower() else adresa
+        # Simplificăm adresa ANAF verbosă pentru query Nominatim precis
+        adresa_query = adresa  # cheia de cache rămâne adresa completă
 
         cached = _cache_get_geo(conn, adresa_query, ttl_zile)
         if cached:
@@ -5075,7 +5109,8 @@ def geocodeaza_firme(
                 time.sleep(RATE_LIMIT - elapsed)
             lat, lng = _nominatim_query(adresa_query)
             ultima_req = time.time()
-            _cache_set_geo(conn, adresa_query, lat, lng)
+            if lat is not None:  # Nu salvam in cache geocodare esuate
+                _cache_set_geo(conn, adresa_query, lat, lng)
 
         if lat is None or lng is None:
             continue
