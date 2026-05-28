@@ -280,6 +280,8 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 | Fix JS toggleFlag | Șters `}` orfan din `<script>` inline → SyntaxError bloca `toggleFlag`, `openFirmaPanel`, `_getContracte` etc. Fix în template + fișier generat | PR #46 |
 | Fix shell filter chips | BUG-6: `enhance.js` citea `.supplier-risk-panel` (neexistent) → `#tp-shell-row` ascuns, `any-risk` returna 0/299. Fix: citește `scor` din `#risc-firma-data` JSON | PR #47 |
 | Fix harta Leaflet SRI | BUG-7: SRI hash greșit pentru `leaflet.js` → browserul refuza execuția → hartă goală pentru toți userii. Fix: hash actualizat | direct main |
+| Geocodare 181 firme | firme_geocoded.json era `[]` — geocodat via ANAF v9 (gratuit) + Nominatim. Harta arată acum 181 markere, 506 contracte, 313.68M RON | commit c3d83bf |
+| Fix ANAF URL v8→v9 | `webservicesp.anaf.ro/PlatitorTvaRest/api/v8/ws/tva` returnează 404. URL nou: `/api/PlatitorTvaRest/v9/tva`. CUI e în `date_generale.cui` (nu top-level) | commit c3d83bf |
 
 ### ❌ Nu e posibil / Nu ataca fără discuție
 
