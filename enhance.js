@@ -72,7 +72,12 @@ html[data-tp-theme="dark"] {
 }
 .tp-nav-brand {
   font-weight: 700; text-decoration: none; color: var(--tp-fg);
-  white-space: nowrap; font-size: .95rem;
+  white-space: nowrap; font-size: .95rem; display: flex; align-items: center; gap: .4rem;
+}
+.tp-nav-date {
+  font-size: .68rem; font-weight: 400; opacity: .65;
+  background: rgba(0,0,0,.06); border-radius: 3px; padding: 1px 5px;
+  white-space: nowrap;
 }
 .tp-nav-links {
   display: flex; gap: .15rem; flex: 1; flex-wrap: wrap;
@@ -1191,6 +1196,29 @@ html[data-tp-theme="dark"] .tp-anap-btn {
   // ──────────────────────────────────────────────────────────────
   // BOOT
   // ──────────────────────────────────────────────────────────────
+  async function injectLastUpdated() {
+    // Injectează "Date actualizate: [lună] [an]" în nav brand (credibilitate)
+    try {
+      const r = await fetch('delta.json', { cache: 'no-store' });
+      if (!r.ok) return;
+      const d = await r.json();
+      const dateStr = d.data_curenta || d.data_anterioara || '';
+      if (!dateStr) return;
+      const dt = new Date(dateStr);
+      if (isNaN(dt)) return;
+      const luni = ['ian','feb','mar','apr','mai','iun','iul','aug','sep','oct','nov','dec'];
+      const label = `${luni[dt.getMonth()]} ${dt.getFullYear()}`;
+      const brand = document.querySelector('.tp-nav-brand');
+      if (brand && !brand.querySelector('.tp-nav-date')) {
+        const span = document.createElement('span');
+        span.className = 'tp-nav-date';
+        span.setAttribute('aria-label', `Date actualizate ${label}`);
+        span.textContent = label;
+        brand.appendChild(span);
+      }
+    } catch (e) {}
+  }
+
   async function showWhatsNewBanner() {
     try {
       // Calea relativă funcționează atât pe GitHub Pages cât și local
@@ -1256,6 +1284,7 @@ html[data-tp-theme="dark"] .tp-anap-btn {
     injectMainId();
     injectLazyImages();
     injectBackToTop();
+    injectLastUpdated();
     showWhatsNewBanner();
 
     const path = location.pathname.toLowerCase();
