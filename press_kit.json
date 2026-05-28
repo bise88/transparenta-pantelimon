@@ -1,1 +1,14 @@
-{}
+{
+  "generated_at": "2026-05-26T12:59:48.757413",
+  "statistici": {
+    "total_nereguli": 299,
+    "critice": 107,
+    "majore": 55,
+    "medii": 137,
+    "total_contracte": 506,
+    "valoare_totala_mil": 313.68,
+    "scor_transparenta": 17
+  },
+  "entitate": "Orașul Pantelimon",
+  "sursa_date": "SEAP / data.gov.ro"
+}
