@@ -769,8 +769,8 @@ html[data-tp-theme="dark"] .tp-anap-btn {
           btnZeroSal.disabled = true;
           btnZeroSal.style.opacity = '.4';
           btnZeroSal.style.cursor = 'not-allowed';
-          btnZeroSal.title = 'Date ANAF indisponibile — mfinante.gov.ro nu poate fi accesat automat';
-          btnZeroSal.innerHTML = '👥 0 angajați <span style="font-size:.72em;opacity:.7">(date lipsă)</span>';
+          btnZeroSal.title = 'Datele privind salariații nu sunt încă integrate (situații financiare ANAF).\nConform Legii 544/2001, primăria are obligația să publice date despre contractele atribuite.';
+          btnZeroSal.innerHTML = '👥 0 angajați <span style="font-size:.72em;opacity:.7">(date în pregătire)</span>';
         } else {
           btnZeroSal.title += ` — ${cntZeroSal} nereguli`;
         }
@@ -780,8 +780,8 @@ html[data-tp-theme="dark"] .tp-anap-btn {
           btnZeroCa.disabled = true;
           btnZeroCa.style.opacity = '.4';
           btnZeroCa.style.cursor = 'not-allowed';
-          btnZeroCa.title = 'Date ANAF indisponibile — mfinante.gov.ro nu poate fi accesat automat';
-          btnZeroCa.innerHTML = '📉 CA = 0 RON <span style="font-size:.72em;opacity:.7">(date lipsă)</span>';
+          btnZeroCa.title = 'Datele privind cifra de afaceri nu sunt încă integrate (situații financiare ANAF).\nConform Legii 544/2001, primăria are obligația să publice date despre contractele atribuite.';
+          btnZeroCa.innerHTML = '📉 CA = 0 RON <span style="font-size:.72em;opacity:.7">(date în pregătire)</span>';
         } else {
           btnZeroCa.title += ` — ${cntZeroCa} nereguli`;
         }

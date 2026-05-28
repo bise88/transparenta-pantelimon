@@ -106,6 +106,76 @@ if os.path.exists(GEOCODED_FILE):
     except Exception as e:
         print(f'[WARN] Eroare la citire firme_geocoded.json: {e}')
 
+# ── 2c. Merge date financiare din firme_financiar.json ───────────────────
+# Generat de: python import_financiar_datagov.py
+# Conține: { "CUI": { an, cifra_afaceri, nr_salariati } }
+FINANCIAR_FILE = 'firme_financiar.json'
+fin_flagged = 0
+if os.path.exists(FINANCIAR_FILE):
+    try:
+        financiar = json.load(open(FINANCIAR_FILE, encoding='utf-8'))
+        print(f'[OK] firme_financiar.json: {len(financiar)} CUI-uri cu date financiare.')
+
+        # Construim index CUI_str → risc_data entry
+        cui_to_furn = {}
+        for furn, rd in risc_data.items():
+            cui = str(rd.get('cui', '')).lstrip('RO').strip()
+            if cui:
+                cui_to_furn[cui] = furn
+
+        for cui_str, fin in financiar.items():
+            furn = cui_to_furn.get(cui_str)
+            if not furn:
+                continue
+            rd = risc_data[furn]
+
+            # Nu duplicăm dacă flagurile financiare există deja
+            existing_tips = {f.get('tip', '') for f in rd.get('flags', [])}
+            fin_tips = {'ZERO ANGAJATI','CIFRA AFACERI ZERO','CIFRA AFACERI MULT SUB CONTRACT',
+                        'CIFRA AFACERI SUB CONTRACT','FOARTE PUTINI ANGAJATI'}
+            if existing_tips & fin_tips:
+                continue
+
+            ca  = fin.get('cifra_afaceri')
+            sal = fin.get('nr_salariati')
+            an  = fin.get('an', '?')
+
+            # Cea mai recentă dată de contract și valoarea maximă (pentru evaluate_shell_risk)
+            dates   = [f.get('data', '') for f in rd.get('flags', []) if f.get('data')]
+            max_val = max((f.get('valoare', 0) or 0 for f in rd.get('flags', [])), default=0)
+            latest_date = max(dates) if dates else f'{an}-12-31'
+
+            # Construim profil_data fals dar compatibil cu evaluate_shell_risk()
+            profil_data = {'ani': {str(an): {'cifra_afaceri': ca, 'salariati': sal}}}
+            try:
+                shell_flags = evaluate_shell_risk(profil_data, latest_date, max_val)
+            except Exception:
+                shell_flags = []
+
+            if shell_flags:
+                fin_flagged += 1
+                for sf in shell_flags:
+                    tip_display = sf['cod'].replace('_', ' ')
+                    rd['flags'].append({
+                        'tip':        tip_display,
+                        'titlu':      sf.get('descriere', ''),
+                        'severitate': sf['severitate'],
+                        'valoare':    0,
+                        'data':       '',
+                    })
+                    sev = sf['severitate']
+                    if sev == 'CRITIC':   rd['n_critic'] = rd.get('n_critic', 0) + 1
+                    elif sev == 'MAJOR':  rd['n_major']  = rd.get('n_major', 0) + 1
+                    else:                 rd['n_mediu']  = rd.get('n_mediu', 0) + 1
+                rd['scor'] = min(100, rd.get('n_critic',0)*10 + rd.get('n_major',0)*5 + rd.get('n_mediu',0)*2)
+
+        print(f'[OK] Firme cu flaguri noi din firme_financiar.json: {fin_flagged}')
+
+    except Exception as e:
+        print(f'[WARN] Eroare la citire firme_financiar.json: {e}')
+else:
+    print(f'[INFO] {FINANCIAR_FILE} lipsă — rulează import_financiar_datagov.py pentru date ANAF.')
+
 # ── 3. Fetch mfinante + merge flags ───────────────────────────────────────
 total_fetched   = 0
 total_flagged   = 0

@@ -3435,6 +3435,50 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
             # Recalculăm scorul inclusiv cu noii indicatori
             _rd["scor"] = min(100, _rd["n_critic"]*10 + _rd["n_major"]*5 + _rd["n_mediu"]*2)
 
+    # ── Merge date financiare din firme_financiar.json (generat de import_financiar_datagov.py) ──
+    # Alternativă la mfinante.gov.ro (care e 404 din mai 2026).
+    # Workflow: rulezi manual import_financiar_datagov.py o dată/an, comiți firme_financiar.json.
+    try:
+        import json as _json_mod2
+        if os.path.exists("firme_financiar.json"):
+            _fin = _json_mod2.load(open("firme_financiar.json", encoding="utf-8"))
+            _cui_to_furn2 = {str(_rd.get("cui","")).lstrip("RO").strip(): _fk
+                             for _fk, _rd in risc_firma.items() if _rd.get("cui")}
+            for _cui_str, _fin_data in _fin.items():
+                _furn2 = _cui_to_furn2.get(_cui_str)
+                if not _furn2:
+                    continue
+                _rd2 = risc_firma[_furn2]
+                # Skip dacă deja au flaguri financiare
+                _ex_tips = {_fg.get("tip","") for _fg in _rd2["flags"]}
+                _fin_tips = {"ZERO ANGAJATI","CIFRA AFACERI ZERO","CIFRA AFACERI MULT SUB CONTRACT",
+                             "CIFRA AFACERI SUB CONTRACT","FOARTE PUTINI ANGAJATI"}
+                if _ex_tips & _fin_tips:
+                    continue
+                _an  = _fin_data.get("an", "2024")
+                _ca  = _fin_data.get("cifra_afaceri")
+                _sal = _fin_data.get("nr_salariati")
+                _dates2  = [_fg.get("data","") for _fg in _rd2["flags"] if _fg.get("data")]
+                _maxv2   = max((_fg.get("valoare",0) or 0 for _fg in _rd2["flags"]), default=0)
+                _ldate2  = max(_dates2) if _dates2 else f"{_an}-12-31"
+                _profil2 = {"ani": {str(_an): {"cifra_afaceri": _ca, "salariati": _sal}}}
+                if _RISC_FIRMA_OK:
+                    try:
+                        _sflags2 = _evaluate_shell_risk(_profil2, _ldate2, _maxv2)
+                    except Exception:
+                        _sflags2 = []
+                    for _sf2 in _sflags2:
+                        _td2 = _sf2["cod"].replace("_", " ")
+                        _rd2["flags"].append({"tip": _td2, "titlu": _sf2.get("descriere",""),
+                                              "severitate": _sf2["severitate"], "valoare": 0, "data": ""})
+                        _s3 = _sf2["severitate"]
+                        if _s3 == "CRITIC":   _rd2["n_critic"] += 1
+                        elif _s3 == "MAJOR":  _rd2["n_major"]  += 1
+                        else:                 _rd2["n_mediu"]   += 1
+                    _rd2["scor"] = min(100, _rd2["n_critic"]*10 + _rd2["n_major"]*5 + _rd2["n_mediu"]*2)
+    except Exception:
+        pass
+
     flags_html = ""
     for idx, f in enumerate(flags_sortate, 1):
         culoare = culori.get(f["severitate"], "#999")
