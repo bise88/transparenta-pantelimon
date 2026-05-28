@@ -29,6 +29,7 @@ from bs4 import BeautifulSoup
 try:
     from risc_firma import fetch_firma_anaf as _fetch_firma_anaf
     from risc_firma import get_risk_panel_html as _get_risk_panel_html
+    from risc_firma import evaluate_shell_risk as _evaluate_shell_risk
     _RISC_FIRMA_OK = True
 except ImportError:
     _RISC_FIRMA_OK = False
@@ -3358,6 +3359,29 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
     for _fk, _rd in risc_firma.items():
         _rd["scor"] = min(100, _rd["n_critic"]*10 + _rd["n_major"]*5 + _rd["n_mediu"]*2)
 
+    # ── Cross-reference CUI lipsă din firme_geocoded.json ──────────────────
+    # Majoritate flag-urilor SEAP nu au cif_furnizor. Îl recuperăm din geocodare.
+    try:
+        import json as _json_mod
+        if os.path.exists("firme_geocoded.json"):
+            _geo = _json_mod.load(open("firme_geocoded.json", encoding="utf-8"))
+            _geo_by_name = {g["name"].upper().strip(): g["cif"] for g in _geo if g.get("cif")}
+            _geo_prefix  = {}
+            for _gn, _gc in _geo_by_name.items():
+                _geo_prefix.setdefault(_gn[:15], []).append((_gn, _gc))
+            for _furn, _rd in risc_firma.items():
+                if _rd.get("cui"):
+                    continue
+                _nu = _furn.upper().strip()
+                if _nu in _geo_by_name:
+                    _rd["cui"] = _geo_by_name[_nu]
+                    continue
+                _cands = _geo_prefix.get(_nu[:15], [])
+                if len(_cands) == 1:
+                    _rd["cui"] = _cands[0][1]
+    except Exception:
+        pass
+
     # ── Pre-fetch date financiare firme furnizoare (opțional, cu cache SQLite) ──
     _firma_profile: dict[str, dict] = {}
     if _RISC_FIRMA_OK:
@@ -3368,6 +3392,48 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
             except Exception as _e:
                 print(f"  [risc_firma] Eroare la fetch CUI {_cui}: {_e}")
                 _firma_profile[_cui] = {}
+
+        # ── Merge indicatori financiari (zero-sal, zero-ca) în risc_firma ──
+        # Acești indicatori vin din mfinante.gov.ro și alimentează chip-urile
+        # «0 angajați» / «CA = 0 RON» din filtrele enhance.js.
+        _cui_to_furn = {}
+        for _furn, _rd in risc_firma.items():
+            _c = _rd.get("cui", "")
+            if _c:
+                _cui_to_furn[_c] = _furn
+
+        for _cui, _profil in _firma_profile.items():
+            _furn = _cui_to_furn.get(_cui)
+            if not _furn or not _profil or 'error' in _profil:
+                continue
+            _rd = risc_firma[_furn]
+            # Folosim cea mai recentă dată de contract și valoarea maximă a firmei
+            _dates = [_fg.get("data", "") for _fg in _rd["flags"] if _fg.get("data")]
+            _latest_date = max(_dates) if _dates else ""
+            _max_val = max((_fg.get("valoare", 0) or 0 for _fg in _rd["flags"]), default=0)
+            if not _latest_date:
+                continue
+            try:
+                _shell_flags = _evaluate_shell_risk(_profil, _latest_date, _max_val)
+            except Exception:
+                _shell_flags = []
+            for _sf in _shell_flags:
+                # tip cu spațiu pentru a fi detectat de enhance.js
+                # (ZERO_ANGAJATI → "ZERO ANGAJATI"; CIFRA_AFACERI_ZERO → "CIFRA AFACERI ZERO")
+                _tip_display = _sf["cod"].replace("_", " ")
+                _rd["flags"].append({
+                    "tip":       _tip_display,
+                    "titlu":     _sf.get("descriere", ""),
+                    "severitate": _sf["severitate"],
+                    "valoare":   0,
+                    "data":      "",
+                })
+                _sev2 = _sf["severitate"]
+                if _sev2 == "CRITIC":   _rd["n_critic"] += 1
+                elif _sev2 == "MAJOR":  _rd["n_major"]  += 1
+                else:                   _rd["n_mediu"]   += 1
+            # Recalculăm scorul inclusiv cu noii indicatori
+            _rd["scor"] = min(100, _rd["n_critic"]*10 + _rd["n_major"]*5 + _rd["n_mediu"]*2)
 
     flags_html = ""
     for idx, f in enumerate(flags_sortate, 1):

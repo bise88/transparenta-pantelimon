@@ -107,6 +107,12 @@ def fetch_firma_anaf(cif: str, contact_email: str = CONTACT_EMAIL_DEFAULT,
     except ImportError as e:
         return {'cif': cif_clean, 'error': f'Dependință lipsă: {e}', 'ani': {}}
 
+    # NOTĂ: URL-ul mfinante.gov.ro a returnat 404 în mai 2026.
+    # Site-ul a migrat la o arhitectură SPA și blochează bot-urile.
+    # Când va deveni disponibil un endpoint alternativ (ex. ANAF open data, data.gov.ro),
+    # actualizați URL-ul de mai jos.
+    # Alternativ: descărcați manual export CSV de la:
+    #   https://data.gov.ro/dataset/angajati-si-indicatori-financiari-persoane-juridice
     url = (
         'https://mfinante.gov.ro/static/10/Anaf/'
         f'Informatii_R/situatii_financiare.html?cui={cif_clean}'
@@ -114,6 +120,8 @@ def fetch_firma_anaf(cif: str, contact_email: str = CONTACT_EMAIL_DEFAULT,
     headers = {
         'User-Agent': f'transparenta-pantelimon-bot (contact: {contact_email})',
         'Accept-Language': 'ro,en-US;q=0.9',
+        'Accept': 'text/html,application/xhtml+xml',
+        'Referer': 'https://mfinante.gov.ro/',
     }
 
     time.sleep(REQUEST_DELAY)
@@ -124,7 +132,10 @@ def fetch_firma_anaf(cif: str, contact_email: str = CONTACT_EMAIL_DEFAULT,
     except Exception as e:
         result = {'cif': cif_clean, 'error': str(e), 'ani': {},
                   'extras_la': datetime.now().isoformat()}
-        _cache_set(cif_clean, result, db_path)
+        # NU salvăm în cache erorile 404/connection reset pentru a permite retry-ul
+        # când URL-ul va fi reparat (nu blocăm cu TTL de 30 zile o eroare temporară)
+        if '404' not in str(e) and 'ConnectionResetError' not in str(e):
+            _cache_set(cif_clean, result, db_path)
         return result
 
     soup = BeautifulSoup(r.text, 'html.parser')

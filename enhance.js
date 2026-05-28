@@ -749,6 +749,46 @@ html[data-tp-theme="dark"] .tp-anap-btn {
     if (hasRiscData) {
       const shellRow = toolbar.querySelector('#tp-shell-row');
       if (shellRow) shellRow.style.display = '';
+
+      // Calculăm câte nereguli ar match fiecare chip financiar
+      // Dacă 0 → dezactivăm chip-ul și afișăm tooltip clar
+      const cntZeroSal = items.filter(it =>
+        it.riskText.includes('ZERO ANGAJATI') || it.riskText.includes('PUTINI ANGAJATI')
+      ).length;
+      const cntZeroCa = items.filter(it =>
+        it.riskText.includes('CIFRA AFACERI ZERO') || it.riskText.includes('CIFRA AFACERI MULT SUB')
+      ).length;
+      const cntAnyRisk = items.filter(it => it.riskCount > 0).length;
+
+      const btnZeroSal = toolbar.querySelector('[data-shell="zero-sal"]');
+      const btnZeroCa  = toolbar.querySelector('[data-shell="zero-ca"]');
+      const btnAnyRisk = toolbar.querySelector('[data-shell="any-risk"]');
+
+      if (btnZeroSal) {
+        if (cntZeroSal === 0) {
+          btnZeroSal.disabled = true;
+          btnZeroSal.style.opacity = '.4';
+          btnZeroSal.style.cursor = 'not-allowed';
+          btnZeroSal.title = 'Date ANAF indisponibile — mfinante.gov.ro nu poate fi accesat automat';
+          btnZeroSal.innerHTML = '👥 0 angajați <span style="font-size:.72em;opacity:.7">(date lipsă)</span>';
+        } else {
+          btnZeroSal.title += ` — ${cntZeroSal} nereguli`;
+        }
+      }
+      if (btnZeroCa) {
+        if (cntZeroCa === 0) {
+          btnZeroCa.disabled = true;
+          btnZeroCa.style.opacity = '.4';
+          btnZeroCa.style.cursor = 'not-allowed';
+          btnZeroCa.title = 'Date ANAF indisponibile — mfinante.gov.ro nu poate fi accesat automat';
+          btnZeroCa.innerHTML = '📉 CA = 0 RON <span style="font-size:.72em;opacity:.7">(date lipsă)</span>';
+        } else {
+          btnZeroCa.title += ` — ${cntZeroCa} nereguli`;
+        }
+      }
+      if (btnAnyRisk && cntAnyRisk > 0) {
+        btnAnyRisk.title += ` — ${cntAnyRisk} nereguli`;
+      }
     }
 
     // ─── SUMMARY WIDGET ───────────────────────────────────────

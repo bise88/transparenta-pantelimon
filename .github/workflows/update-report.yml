@@ -35,6 +35,11 @@ jobs:
       - name: 🗺️ Geocodare firme furnizoare (ANAF v9 + Nominatim)
         run: python geocodeaza_acum.py 2>/dev/null || echo "geocodare skipped"
 
+      - name: 🏢 Enrichment CUI firme (cross-reference, fără mfinante)
+        # mfinante.gov.ro URL-ul static a căzut în mai 2026 — skip fetch financiar
+        # Rulăm cu --no-mfinante pentru cross-referencing CUI din firme_geocoded.json
+        run: NO_MFINANTE=1 python enricheaza_firme.py 2>/dev/null || echo "enrichment skipped"
+
       - name: 💾 Commit raport actualizat
         run: |
           git config --local user.email "transparenta-bot@cetatenipantelimon.ro"
