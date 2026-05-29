@@ -28,6 +28,11 @@ from datetime import datetime
 
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
+def _norm_cui(raw):
+    """Normalizează CUI: strip prefix RO (case-insensitive), spații, cifre pure."""
+    s = re.sub(r'^[Rr][Oo]\s*', '', str(raw).strip()).replace(' ', '')
+    return s if s.isdigit() else ''
+
 HTML_FILE    = 'raport_transparenta.html'
 CACHE_FILE   = 'firme_cache.db'
 # Setați NO_MFINANTE=1 sau --no-mfinante pentru a sări fetch-ul mfinante
@@ -118,12 +123,8 @@ if os.path.exists(CONTRACTE_FILE):
         for c in contracte:
             firma = c.get('firma', '').strip()
             cui_raw = str(c.get('cui', '')).strip()
-            cui_clean = cui_raw.lstrip('RO').strip()
-            # Normalizăm: eliminăm spații interioare și leading zeros
-            cui_clean = cui_clean.replace(' ', '')
-            while cui_clean.startswith('0') and len(cui_clean) > 1:
-                cui_clean = cui_clean[1:]
-            if firma and cui_clean and len(cui_clean) >= 4 and cui_clean.isdigit():
+            cui_clean = _norm_cui(cui_raw)
+            if firma and cui_clean and len(cui_clean) >= 4:
                 cont_by_name[firma.upper()] = cui_clean
 
         cui_from_cont = 0
@@ -155,7 +156,7 @@ if os.path.exists(FINANCIAR_FILE):
         # Construim index CUI_str → risc_data entry
         cui_to_furn = {}
         for furn, rd in risc_data.items():
-            cui = str(rd.get('cui', '')).lstrip('RO').strip()
+            cui = _norm_cui(rd.get('cui', ''))
             if cui:
                 cui_to_furn[cui] = furn
 
@@ -165,48 +166,50 @@ if os.path.exists(FINANCIAR_FILE):
                 continue
             rd = risc_data[furn]
 
-            # Nu duplicăm dacă flagurile financiare există deja
-            existing_tips = {f.get('tip', '') for f in rd.get('flags', [])}
-            fin_tips = {'ZERO ANGAJATI','CIFRA AFACERI ZERO','CIFRA AFACERI MULT SUB CONTRACT',
-                        'CIFRA AFACERI SUB CONTRACT','FOARTE PUTINI ANGAJATI'}
-            if existing_tips & fin_tips:
-                continue
-
             ca  = fin.get('cifra_afaceri')
             sal = fin.get('nr_salariati')
             an  = fin.get('an', '?')
-            # Normalizăm an: '2024-uu', '2024-bl' → '2024' (evaluate_shell_risk face int(yr))
-            import re as _re
-            an_num = (_re.sub(r'[^0-9]', '', str(an)) or str(an))[:4]
+            # Normalizăm an: '2024-uu', '2024-ip' → '2024' (evaluate_shell_risk face int(yr))
+            an_num = (re.sub(r'[^0-9]', '', str(an)) or str(an))[:4]
 
             # Cea mai recentă dată de contract și valoarea maximă (pentru evaluate_shell_risk)
             dates   = [f.get('data', '') for f in rd.get('flags', []) if f.get('data')]
             max_val = max((f.get('valoare', 0) or 0 for f in rd.get('flags', [])), default=0)
             latest_date = max(dates) if dates else f'{an_num}-12-31'
 
-            # Construim profil_data fals dar compatibil cu evaluate_shell_risk()
+            # Construim profil_data compatibil cu evaluate_shell_risk()
             profil_data = {'ani': {an_num: {'cifra_afaceri': ca, 'salariati': sal}}}
             try:
                 shell_flags = evaluate_shell_risk(profil_data, latest_date, max_val)
             except Exception:
                 shell_flags = []
 
-            if shell_flags:
-                fin_flagged += 1
-                for sf in shell_flags:
-                    tip_display = sf['cod'].replace('_', ' ')
-                    rd['flags'].append({
-                        'tip':        tip_display,
-                        'titlu':      sf.get('descriere', ''),
-                        'severitate': sf['severitate'],
-                        'valoare':    0,
-                        'data':       '',
-                    })
-                    sev = sf['severitate']
-                    if sev == 'CRITIC':   rd['n_critic'] = rd.get('n_critic', 0) + 1
-                    elif sev == 'MAJOR':  rd['n_major']  = rd.get('n_major', 0) + 1
-                    else:                 rd['n_mediu']  = rd.get('n_mediu', 0) + 1
-                rd['scor'] = min(100, rd.get('n_critic',0)*10 + rd.get('n_major',0)*5 + rd.get('n_mediu',0)*2)
+            if not shell_flags:
+                continue
+
+            # Filtrăm individual flagurile deja existente (granular, nu skip tot firma)
+            # Astfel o firmă cu PUTINI_ANGAJATI poate primi ulterior și un flag CA
+            existing_tips = {f.get('tip', '') for f in rd.get('flags', [])}
+            new_flags = [sf for sf in shell_flags
+                         if sf['cod'].replace('_', ' ') not in existing_tips]
+            if not new_flags:
+                continue
+
+            fin_flagged += 1
+            for sf in new_flags:
+                tip_display = sf['cod'].replace('_', ' ')
+                rd['flags'].append({
+                    'tip':        tip_display,
+                    'titlu':      sf.get('descriere', ''),
+                    'severitate': sf['severitate'],
+                    'valoare':    0,
+                    'data':       '',
+                })
+                sev = sf['severitate']
+                if sev == 'CRITIC':   rd['n_critic'] = rd.get('n_critic', 0) + 1
+                elif sev == 'MAJOR':  rd['n_major']  = rd.get('n_major', 0) + 1
+                else:                 rd['n_mediu']  = rd.get('n_mediu', 0) + 1
+            rd['scor'] = min(100, rd.get('n_critic',0)*10 + rd.get('n_major',0)*5 + rd.get('n_mediu',0)*2)
 
         print(f'[OK] Firme cu flaguri noi din firme_financiar.json: {fin_flagged}')
 
@@ -226,7 +229,7 @@ if NO_MFINANTE:
 for furn_name, rd in risc_data.items():
     if NO_MFINANTE:
         break  # skip all mfinante calls
-    cui = rd.get('cui', '').lstrip('RO').strip()
+    cui = _norm_cui(rd.get('cui', ''))
     if not cui:
         continue
 
@@ -307,18 +310,29 @@ else:
           f', total: {total_all} firme cu flaguri financiare noi).')
 
 # ── 5. Statistici rezumat ─────────────────────────────────────────────────
-zero_sal = zero_ca = any_risk = 0
+zero_sal = zero_ca = ca_sub = any_risk = 0
 for rd in risc_data.values():
     tips = ' '.join(f.get('tip', '').upper() for f in rd.get('flags', []))
     if 'ZERO ANGAJATI' in tips or 'PUTINI ANGAJATI' in tips:
         zero_sal += 1
-    if 'CIFRA AFACERI ZERO' in tips or 'CIFRA AFACERI MULT SUB' in tips:
+    if 'CIFRA AFACERI ZERO' in tips or 'AFACERI MULT SUB' in tips:
         zero_ca += 1
+    if 'CIFRA AFACERI SUB CONTRACT' in tips and 'MULT SUB' not in tips:
+        ca_sub += 1   # exact CIFRA AFACERI SUB CONTRACT (fără MULT SUB)
     if rd.get('scor', 0) > 0:
         any_risk += 1
 
+# Firme cu CUI dar fără date financiare
+fin_keys = set(financiar.keys()) if 'financiar' in dir() else set()
+no_fin_data = sum(1 for rd in risc_data.values()
+                  if _norm_cui(rd.get('cui','')) and
+                     _norm_cui(rd.get('cui','')) not in fin_keys)
+
 print()
 print(f'Chip-uri estimate după enrichment:')
-print(f'  👥 0 angajați  (zero-sal):  {zero_sal} firme')
-print(f'  📉 CA = 0 RON  (zero-ca):   {zero_ca} firme')
-print(f'  ⚠️  Orice risc (any-risk):  {any_risk} firme')
+print(f'  👥 ≤2 angajați  (zero-sal):  {zero_sal} firme')
+print(f'  📉 CA << contract (zero-ca):  {zero_ca} firme')
+print(f'  📊 CA sub contract (ca-sub):  {ca_sub} firme')
+print(f'  ⚠️  Orice risc (any-risk):    {any_risk} firme')
+if no_fin_data:
+    print(f'  ℹ️  Cu CUI dar fără date fin.: {no_fin_data} firme')

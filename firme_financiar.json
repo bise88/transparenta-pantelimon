@@ -403,5 +403,15 @@
     "an": "2024-uu",
     "cifra_afaceri": 2420703.0,
     "nr_salariati": 15
+  },
+  "27019056": {
+    "an": "2024-uu",
+    "cifra_afaceri": 3090241.0,
+    "nr_salariati": 29
+  },
+  "26181156": {
+    "an": "2024-ong",
+    "cifra_afaceri": null,
+    "nr_salariati": 0
   }
 }
