@@ -35,6 +35,22 @@ jobs:
       - name: 🗺️ Geocodare firme furnizoare (ANAF v9 + Nominatim)
         run: python geocodeaza_acum.py 2>/dev/null || echo "geocodare skipped"
 
+      - name: 🏦 Refresh date financiare ANAF (o dată la 180 zile)
+        # firme_financiar.json e comis în repo; re-descărcăm din data.gov.ro dacă e mai vechi de 6 luni
+        # Fișierele: WEB_BL (~8MB, entități mari) + WEB_UU (~73MB, entități mici/micro)
+        run: |
+          LAST_COMMIT=$(git log -1 --format="%at" -- firme_financiar.json 2>/dev/null || echo "0")
+          NOW=$(date +%s)
+          DAYS=$(( (NOW - LAST_COMMIT) / 86400 ))
+          echo "firme_financiar.json: $DAYS zile de la ultimul commit"
+          if [ "$DAYS" -gt "180" ] || [ ! -f firme_financiar.json ]; then
+            echo "Re-descărcare ANAF data.gov.ro..."
+            python import_financiar_datagov.py --an 2024 2>/dev/null || echo "BL import skipped"
+            python import_financiar_datagov.py --an 2024-uu --merge 2>/dev/null || echo "UU import skipped"
+          else
+            echo "firme_financiar.json e recent, skip import ANAF"
+          fi
+
       - name: 🏢 Enrichment CUI firme (cross-reference, fără mfinante)
         # mfinante.gov.ro URL-ul static a căzut în mai 2026 — skip fetch financiar
         # Rulăm cu --no-mfinante pentru cross-referencing CUI din firme_geocoded.json

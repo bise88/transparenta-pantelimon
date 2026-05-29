@@ -51,6 +51,8 @@ sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 URLS = {
     '2024': 'https://data.gov.ro/dataset/d3caacb6-2c08-445e-94e6-8d36d00ab250/resource/f89140dc-20dd-494f-912a-d1a482188885/download/web_bl_bs_sl_an2024.txt',
     '2024-uu': 'https://data.gov.ro/dataset/d3caacb6-2c08-445e-94e6-8d36d00ab250/resource/25098618-f6a5-4610-8c7f-c0bdb801635f/download/web_uu_an2024.txt',
+    '2024-ong': 'https://data.gov.ro/dataset/d3caacb6-2c08-445e-94e6-8d36d00ab250/resource/d6eb54bb-9d94-4b64-814b-26a6b4a9064a/download/web_ong_an2024.txt',
+    '2024-ip': 'https://data.gov.ro/dataset/d3caacb6-2c08-445e-94e6-8d36d00ab250/resource/7217e197-f1d6-4cc9-969e-1982519b7ea7/download/web_ip_ieme2024.txt',
     '2023': 'https://data.gov.ro/dataset/7861a98f-4d5c-4faa-90d4-8e934ebd1782/resource/5ed47b6f-f8a2-4ca8-a272-692aff4fe9e4/download/web_bl_bs_sl_an2023.txt',
     '2023-uu': 'https://data.gov.ro/dataset/7861a98f-4d5c-4faa-90d4-8e934ebd1782/resource/a1c85e04-4a2d-4e0c-bcac-73c5c85d0e30/download/web_uu_an2023.txt',
 }
@@ -100,7 +102,7 @@ def get_cui_set_from_html(html_file=HTML_FILE):
         data = json.loads(m.group(1).strip())
         cuis = set()
         for rd in data.values():
-            cui = str(rd.get('cui', '')).lstrip('RO').strip()
+            cui = re.sub(r'^[Rr][Oo]\s*', '', str(rd.get('cui', '')).strip()).replace(' ', '')
             if cui and cui.isdigit():
                 cuis.add(int(cui))
         return cuis
