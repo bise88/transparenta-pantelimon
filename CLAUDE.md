@@ -23,8 +23,9 @@ github-repo/
 └── .github/workflows/          # GitHub Actions pentru rulare automată
 ```
 
-**GitHub Pages URL:** `https://bise88.github.io/transparenta-pantelimon/`
-**Raport live:** `https://bise88.github.io/transparenta-pantelimon/raport_transparenta.html`
+**URL live (custom domain):** `https://aprindemlumina.eu/`
+**Raport live:** `https://aprindemlumina.eu/raport_transparenta.html`
+**GitHub Pages (redirect):** `https://transparenta-locala.github.io/transparenta-pantelimon/`
 
 ---
 
