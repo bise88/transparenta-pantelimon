@@ -3442,32 +3442,35 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
         import json as _json_mod2
         if os.path.exists("firme_financiar.json"):
             _fin = _json_mod2.load(open("firme_financiar.json", encoding="utf-8"))
-            _cui_to_furn2 = {str(_rd.get("cui","")).lstrip("RO").strip(): _fk
-                             for _fk, _rd in risc_firma.items() if _rd.get("cui")}
+            import re as _re2
+            _cui_to_furn2 = {}
+            for _fk, _rd in risc_firma.items():
+                _c = _re2.sub(r'^[Rr][Oo]\s*', '', str(_rd.get("cui","")).strip()).replace(' ', '')
+                if _c and _c.isdigit():
+                    _cui_to_furn2[_c] = _fk
             for _cui_str, _fin_data in _fin.items():
                 _furn2 = _cui_to_furn2.get(_cui_str)
                 if not _furn2:
                     continue
                 _rd2 = risc_firma[_furn2]
-                # Skip dacă deja au flaguri financiare
                 _ex_tips = {_fg.get("tip","") for _fg in _rd2["flags"]}
-                _fin_tips = {"ZERO ANGAJATI","CIFRA AFACERI ZERO","CIFRA AFACERI MULT SUB CONTRACT",
-                             "CIFRA AFACERI SUB CONTRACT","FOARTE PUTINI ANGAJATI"}
-                if _ex_tips & _fin_tips:
-                    continue
                 _an  = _fin_data.get("an", "2024")
+                _an_num = (_re2.sub(r'[^0-9]', '', str(_an)) or str(_an))[:4]
                 _ca  = _fin_data.get("cifra_afaceri")
                 _sal = _fin_data.get("nr_salariati")
                 _dates2  = [_fg.get("data","") for _fg in _rd2["flags"] if _fg.get("data")]
                 _maxv2   = max((_fg.get("valoare",0) or 0 for _fg in _rd2["flags"]), default=0)
-                _ldate2  = max(_dates2) if _dates2 else f"{_an}-12-31"
-                _profil2 = {"ani": {str(_an): {"cifra_afaceri": _ca, "salariati": _sal}}}
+                _ldate2  = max(_dates2) if _dates2 else f"{_an_num}-12-31"
+                _profil2 = {"ani": {_an_num: {"cifra_afaceri": _ca, "salariati": _sal}}}
                 if _RISC_FIRMA_OK:
                     try:
                         _sflags2 = _evaluate_shell_risk(_profil2, _ldate2, _maxv2)
                     except Exception:
                         _sflags2 = []
-                    for _sf2 in _sflags2:
+                    # Filtrăm granular flagurile deja existente
+                    _new_sflags2 = [_sf2 for _sf2 in _sflags2
+                                    if _sf2["cod"].replace("_", " ") not in _ex_tips]
+                    for _sf2 in _new_sflags2:
                         _td2 = _sf2["cod"].replace("_", " ")
                         _rd2["flags"].append({"tip": _td2, "titlu": _sf2.get("descriere",""),
                                               "severitate": _sf2["severitate"], "valoare": 0, "data": ""})
@@ -3475,7 +3478,8 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
                         if _s3 == "CRITIC":   _rd2["n_critic"] += 1
                         elif _s3 == "MAJOR":  _rd2["n_major"]  += 1
                         else:                 _rd2["n_mediu"]   += 1
-                    _rd2["scor"] = min(100, _rd2["n_critic"]*10 + _rd2["n_major"]*5 + _rd2["n_mediu"]*2)
+                    if _new_sflags2:
+                        _rd2["scor"] = min(100, _rd2["n_critic"]*10 + _rd2["n_major"]*5 + _rd2["n_mediu"]*2)
     except Exception:
         pass
 
@@ -5662,6 +5666,27 @@ def main():
     for f in toate_flags:
         if f.get("furnizor") and f["furnizor"] != "Multiple":
             flags_per_firma[f["furnizor"]].append(f)
+
+    # Adăugăm flaguri financiare din risc_firma (PUTINI_ANGAJATI, CIFRA_AFACERI etc.)
+    # Acestea nu sunt în toate_flags (vin din firme_financiar.json, nu din SEAP).
+    # Prin includerea lor în flags_per_firma, apar în paginile furnizori și
+    # sunt trackuite de stare_anterioara.json → badge-ul NOU va funcționa automat.
+    _FIN_TIPS_SET = {"ZERO ANGAJATI", "CIFRA AFACERI ZERO", "CIFRA AFACERI MULT SUB CONTRACT",
+                     "CIFRA AFACERI SUB CONTRACT", "FOARTE PUTINI ANGAJATI"}
+    for _furn_fin, _rd_fin in risc_firma.items():
+        _existing_keys = {(f.get("tip",""), f.get("data",""))
+                          for f in flags_per_firma.get(_furn_fin, [])}
+        for _ff in _rd_fin.get("flags", []):
+            if _ff.get("tip","") in _FIN_TIPS_SET:
+                _k = (_ff.get("tip",""), _ff.get("data",""))
+                if _k not in _existing_keys:
+                    flags_per_firma[_furn_fin].append({
+                        **_ff,
+                        "furnizor": _furn_fin,
+                        "titlu": _ff.get("titlu") or _ff.get("tip",""),
+                        "descriere": _ff.get("titlu",""),
+                    })
+                    _existing_keys.add(_k)
 
     _os.makedirs("furnizori", exist_ok=True)
     index_furnizori = []

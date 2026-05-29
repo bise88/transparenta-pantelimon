@@ -73,6 +73,20 @@ except json.JSONDecodeError as e:
 
 print(f'[OK] Încărcat {len(risc_data)} firme din risc-firma-data.')
 
+# ── 2a. Normalizăm CUI-urile malformate deja stocate ─────────────────────
+# Ex: 'ro 27019056' → '27019056' (prefix lowercase + spații din surse externe)
+_cui_fixed = 0
+for _rd_fix in risc_data.values():
+    _raw = _rd_fix.get('cui', '')
+    if _raw:
+        _clean = _norm_cui(_raw)
+        # Normalizăm dacă forma stocată diferă de forma curată (ex. 'ro 27019056' → '27019056')
+        if _clean and str(_raw).strip() != _clean:
+            _rd_fix['cui'] = _clean
+            _cui_fixed += 1
+if _cui_fixed:
+    print(f'[OK] CUI-uri malformate normalizate: {_cui_fixed}')
+
 # ── 2b. Populăm CUI-urile lipsă din firme_geocoded.json ──────────────────
 # Cele 92/93 firme fără CUI în risc-firma-data pot fi cross-referenced
 # cu firme_geocoded.json care are CIF-ul din ANAF v9.
