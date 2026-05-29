@@ -73,6 +73,50 @@ git push origin main
 
 ## Modificări recente importante (sesiunile anterioare)
 
+### Pipeline date financiare ANAF (sesiunile recente 2026-05)
+
+**Fișiere noi adăugate:**
+- `import_financiar_datagov.py` — descarcă streaming din data.gov.ro fișierele ANAF situații financiare:
+  - WEB_BL_BS_SL_AN2024.txt (~8MB, entități mari/medii/mici)
+  - WEB_UU_AN2024.txt (~73MB, entități mici/micro)
+  - WEB_ONG_AN2024.txt (~7MB, NGO-uri) — pentru ASOCIATII
+  - WEB_IP_IEME2024.txt (instituții publice)
+  - Opțiuni CLI: `--an 2024`, `--an 2024-uu`, `--an 2024-ong`, `--merge`
+- `enricheaza_firme.py` — enrichment HTML raport cu date financiare:
+  - Pas 2a: Normalizează CUI-uri malformate ('ro 27019056' → '27019056')
+  - Pas 2b: Cross-reference CUI din `firme_geocoded.json`
+  - Pas 2b.5: Cross-reference CUI din `contracte.json` (+31 CUI-uri)
+  - Pas 2c: Merge `firme_financiar.json` → flaguri financiare în HTML
+  - Funcție helper `_norm_cui()`: strip prefix RO case-insensitive
+- `firme_financiar.json` — output import, comis în repo:
+  - 83 firme cu date ANAF 2024 (CA netă, nr. mediu salariați)
+  - Cheile = CUI string, valorile = {an, cifra_afaceri, nr_salariati}
+- `AUDIT_PRIVAT.md` — analiză privată top-risk (gitignored via AUDIT_PRIVAT*.md)
+
+**Stare curentă date financiare (2026-05-29):**
+- CUI populate: 90/93 firme (3 lipsă: Consiliul Local, Multiple, AUTO MARCU'S)
+- Date financiare ANAF: 83/90 firme
+- Chip zero-sal (≤2 angajați): 24 firme
+- Chip zero-ca (CA << contract): 2 firme  
+- Chip ca-sub (CA sub 50%): 4 firme
+- Chip any-risk: 93 firme
+
+**Workflow actualizare anuală (după publicare ANAF ~mai/iulie):**
+```bash
+python import_financiar_datagov.py --an 2025
+python import_financiar_datagov.py --an 2025-uu --merge
+python import_financiar_datagov.py --an 2025-ong --merge
+python enricheaza_firme.py --no-mfinante
+git add firme_financiar.json raport_transparenta.html enricheaza_firme.py
+git commit -m "Date financiare ANAF 2025 integrate"
+```
+
+**mfinante.gov.ro**: URL-ul static căzut în mai 2026 (SPA, blochează bots). 
+Înlocuit cu pipeline data.gov.ro. `--no-mfinante` este standard acum.
+
+**CI auto-refresh** (`update-report.yml`): dacă `firme_financiar.json` e mai vechi de 180 zile
+(verificat via `git log`), CI re-descarcă WEB_BL + WEB_UU automat.
+
 ### Flag nou: ACHIZITIE_DIRECTA_PESTE_PRAG
 - Adăugat **Algoritm 1b** care detectează când un singur contract depășește individual pragul de 130.000 RON
 - Anterior existau doar flags pentru valoare combinată (fragmentare) — acum și pentru contract individual
@@ -220,6 +264,8 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 - **Branch main:** la zi după merge PR #20–46 + hotfix SW v3
 - **Suite de teste:** 359 teste, 18 fișiere, 0 erori
 - **De făcut:** run `fix_si_push.bat` pentru a regenera `raport_transparenta.html` cu toți detectori activi
+- **Date financiare ANAF**: integrate (83/90 firme, `firme_financiar.json` comis în repo)
+- **mfinante.gov.ro**: căzut din mai 2026 — înlocuit cu pipeline data.gov.ro
 
 ## Stare roadmap IMPROVEMENTS.md + AUDIT.md (la zi)
 
