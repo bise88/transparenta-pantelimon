@@ -106,6 +106,42 @@ if os.path.exists(GEOCODED_FILE):
     except Exception as e:
         print(f'[WARN] Eroare la citire firme_geocoded.json: {e}')
 
+# ── 2b.5. Populăm CUI-urile lipsă din contracte.json ─────────────────────
+# contracte.json are câmpul `cui` per contract — fallback rapid pentru firmele
+# care nu apar în firme_geocoded.json (noi, sau cu CUI diferit de ONRC).
+CONTRACTE_FILE = 'contracte.json'
+if os.path.exists(CONTRACTE_FILE):
+    try:
+        contracte = json.load(open(CONTRACTE_FILE, encoding='utf-8'))
+        # Index firmă → CUI (uppercase, RO prefix stripuit, minim 4 cifre)
+        cont_by_name = {}
+        for c in contracte:
+            firma = c.get('firma', '').strip()
+            cui_raw = str(c.get('cui', '')).strip()
+            cui_clean = cui_raw.lstrip('RO').strip()
+            # Normalizăm: eliminăm spații interioare și leading zeros
+            cui_clean = cui_clean.replace(' ', '')
+            while cui_clean.startswith('0') and len(cui_clean) > 1:
+                cui_clean = cui_clean[1:]
+            if firma and cui_clean and len(cui_clean) >= 4 and cui_clean.isdigit():
+                cont_by_name[firma.upper()] = cui_clean
+
+        cui_from_cont = 0
+        for furn_name, rd in risc_data.items():
+            if rd.get('cui'):
+                continue
+            cui = cont_by_name.get(furn_name.upper().strip())
+            if cui:
+                rd['cui'] = cui
+                cui_from_cont += 1
+
+        if cui_from_cont:
+            total_with_cui = sum(1 for rd in risc_data.values() if rd.get('cui'))
+            print(f'[OK] CUI-uri completate din contracte.json: {cui_from_cont}')
+            print(f'     Firme cu CUI acum: {total_with_cui}/{len(risc_data)}')
+    except Exception as e:
+        print(f'[WARN] Eroare la citire contracte.json: {e}')
+
 # ── 2c. Merge date financiare din firme_financiar.json ───────────────────
 # Generat de: python import_financiar_datagov.py
 # Conține: { "CUI": { an, cifra_afaceri, nr_salariati } }
@@ -139,14 +175,17 @@ if os.path.exists(FINANCIAR_FILE):
             ca  = fin.get('cifra_afaceri')
             sal = fin.get('nr_salariati')
             an  = fin.get('an', '?')
+            # Normalizăm an: '2024-uu', '2024-bl' → '2024' (evaluate_shell_risk face int(yr))
+            import re as _re
+            an_num = (_re.sub(r'[^0-9]', '', str(an)) or str(an))[:4]
 
             # Cea mai recentă dată de contract și valoarea maximă (pentru evaluate_shell_risk)
             dates   = [f.get('data', '') for f in rd.get('flags', []) if f.get('data')]
             max_val = max((f.get('valoare', 0) or 0 for f in rd.get('flags', [])), default=0)
-            latest_date = max(dates) if dates else f'{an}-12-31'
+            latest_date = max(dates) if dates else f'{an_num}-12-31'
 
             # Construim profil_data fals dar compatibil cu evaluate_shell_risk()
-            profil_data = {'ani': {str(an): {'cifra_afaceri': ca, 'salariati': sal}}}
+            profil_data = {'ani': {an_num: {'cifra_afaceri': ca, 'salariati': sal}}}
             try:
                 shell_flags = evaluate_shell_risk(profil_data, latest_date, max_val)
             except Exception:
@@ -262,7 +301,10 @@ if content_new == content:
     print('[WARN] Nicio modificare în HTML. Poate tot e ok sau blocul nu a fost găsit.')
 else:
     open(HTML_FILE, 'w', encoding='utf-8').write(content_new)
-    print(f'[OK] {HTML_FILE} actualizat cu {total_flagged} firme cu indicatori financiari noi.')
+    total_all = fin_flagged + total_flagged
+    print(f'[OK] {HTML_FILE} actualizat'
+          f' (firme_financiar.json: {fin_flagged}, mfinante.gov.ro: {total_flagged}'
+          f', total: {total_all} firme cu flaguri financiare noi).')
 
 # ── 5. Statistici rezumat ─────────────────────────────────────────────────
 zero_sal = zero_ca = any_risk = 0

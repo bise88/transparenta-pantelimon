@@ -128,6 +128,7 @@ html[data-tp-theme="dark"] {
 .tp-chip[data-sev="MAJOR"].active  { background: #f59e0b; border-color: #f59e0b; color: #1a1a1a; }
 .tp-chip[data-sev="MEDIU"].active  { background: #eab308; border-color: #eab308; color: #1a1a1a; }
 .tp-chip[data-shell].active        { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+.tp-chip-cnt { font-size:.75em; font-weight:700; opacity:.85; margin-left:.18em; }
 #tp-shell-row { display: none; }  /* ascuns până confirmăm că există panele */
 /* Chips severitate — grupate, nu se separă pe linii diferite */
 .tp-chips-sev {
@@ -660,7 +661,7 @@ html[data-tp-theme="dark"] .tp-anap-btn {
       sort: prefs.sort || 'idx-asc',
       shown: CFG.pageSize,
       _domReordered: false,  // true când DOM-ul a fost sortat (nu idx-asc)
-      shellFilter: '',       // '' | 'zero-sal' | 'zero-ca' | 'any-risk'
+      shellFilter: '',       // '' | 'zero-sal' | 'zero-ca' | 'ca-sub' | 'any-risk'
     };
 
     // ─── TOOLBAR ──────────────────────────────────────────────
@@ -704,6 +705,8 @@ html[data-tp-theme="dark"] .tp-anap-btn {
                   title="Arată doar nereguli unde furnizorul are 0 angajați declarați la ANAF">👥 0 angajați</button>
           <button class="tp-chip" data-shell="zero-ca" aria-pressed="false"
                   title="Arată doar nereguli unde furnizorul are cifra de afaceri 0 RON">📉 CA = 0 RON</button>
+          <button class="tp-chip" data-shell="ca-sub" aria-pressed="false"
+                  title="Arată nereguli unde cifra de afaceri a furnizorului e sub 50% din valoarea contractului">📊 CA sub contract</button>
           <button class="tp-chip" data-shell="any-risk" aria-pressed="false"
                   title="Arată doar nereguli unde furnizorul are cel puțin un indicator de risc financiar">⚠️ Orice risc</button>
         </div>
@@ -758,10 +761,14 @@ html[data-tp-theme="dark"] .tp-anap-btn {
       const cntZeroCa = items.filter(it =>
         it.riskText.includes('CIFRA AFACERI ZERO') || it.riskText.includes('CIFRA AFACERI MULT SUB')
       ).length;
+      const cntCaSub = items.filter(it =>
+        it.riskText.includes('CIFRA AFACERI SUB CONTRACT') && !it.riskText.includes('MULT SUB')
+      ).length;
       const cntAnyRisk = items.filter(it => it.riskCount > 0).length;
 
       const btnZeroSal = toolbar.querySelector('[data-shell="zero-sal"]');
       const btnZeroCa  = toolbar.querySelector('[data-shell="zero-ca"]');
+      const btnCaSub   = toolbar.querySelector('[data-shell="ca-sub"]');
       const btnAnyRisk = toolbar.querySelector('[data-shell="any-risk"]');
 
       if (btnZeroSal) {
@@ -772,7 +779,11 @@ html[data-tp-theme="dark"] .tp-anap-btn {
           btnZeroSal.title = 'Datele privind salariații nu sunt încă integrate (situații financiare ANAF).\nConform Legii 544/2001, primăria are obligația să publice date despre contractele atribuite.';
           btnZeroSal.innerHTML = '👥 0 angajați <span style="font-size:.72em;opacity:.7">(date în pregătire)</span>';
         } else {
-          btnZeroSal.title += ` — ${cntZeroSal} nereguli`;
+          const hasZeroExact = items.some(it =>
+            it.riskText.includes('ZERO ANGAJATI') && !it.riskText.includes('PUTINI ANGAJATI'));
+          btnZeroSal.innerHTML = (hasZeroExact ? '👥 0 angajați' : '👥 ≤2 angajați')
+            + ` <span class="tp-chip-cnt">(${cntZeroSal})</span>`;
+          btnZeroSal.title = `Furnizori cu personal redus sau zero angajați la ANAF — ${cntZeroSal} nereguli`;
         }
       }
       if (btnZeroCa) {
@@ -783,11 +794,29 @@ html[data-tp-theme="dark"] .tp-anap-btn {
           btnZeroCa.title = 'Datele privind cifra de afaceri nu sunt încă integrate (situații financiare ANAF).\nConform Legii 544/2001, primăria are obligația să publice date despre contractele atribuite.';
           btnZeroCa.innerHTML = '📉 CA = 0 RON <span style="font-size:.72em;opacity:.7">(date în pregătire)</span>';
         } else {
-          btnZeroCa.title += ` — ${cntZeroCa} nereguli`;
+          const hasZeroExact = items.some(it => it.riskText.includes('CIFRA AFACERI ZERO'));
+          btnZeroCa.innerHTML = (hasZeroExact ? '📉 CA = 0 RON' : '📉 CA << contract')
+            + ` <span class="tp-chip-cnt">(${cntZeroCa})</span>`;
+          btnZeroCa.title = `Cifra de afaceri zero sau mult sub valoarea contractului (< 10%) — ${cntZeroCa} nereguli`;
         }
       }
-      if (btnAnyRisk && cntAnyRisk > 0) {
-        btnAnyRisk.title += ` — ${cntAnyRisk} nereguli`;
+      if (btnCaSub) {
+        if (cntCaSub === 0) {
+          btnCaSub.style.display = 'none';
+        } else {
+          btnCaSub.innerHTML = `📊 CA sub contract <span class="tp-chip-cnt">(${cntCaSub})</span>`;
+          btnCaSub.title = `Cifra de afaceri sub 50% din valoarea contractului — ${cntCaSub} nereguli`;
+        }
+      }
+      if (btnAnyRisk) {
+        if (cntAnyRisk === 0) {
+          btnAnyRisk.disabled = true;
+          btnAnyRisk.style.opacity = '.4';
+          btnAnyRisk.style.cursor = 'not-allowed';
+        } else {
+          btnAnyRisk.innerHTML = `⚠️ Orice risc <span class="tp-chip-cnt">(${cntAnyRisk})</span>`;
+          btnAnyRisk.title = `Orice indicator de risc financiar — ${cntAnyRisk} nereguli`;
+        }
       }
     }
 
@@ -970,6 +999,8 @@ html[data-tp-theme="dark"] .tp-anap-btn {
                                     it.riskText.includes('PUTINI ANGAJATI'))) return false;
         if (f === 'zero-ca'   && !(it.riskText.includes('CIFRA AFACERI ZERO') ||
                                     it.riskText.includes('AFACERI MULT SUB'))) return false;
+        if (f === 'ca-sub'    && !(it.riskText.includes('CIFRA AFACERI SUB CONTRACT') &&
+                                    !it.riskText.includes('MULT SUB'))) return false;
       }
       return true;
     });
