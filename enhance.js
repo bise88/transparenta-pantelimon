@@ -129,6 +129,14 @@ html[data-tp-theme="dark"] {
 .tp-chip[data-sev="MEDIU"].active  { background: #eab308; border-color: #eab308; color: #1a1a1a; }
 .tp-chip[data-shell].active        { background: #7c3aed; border-color: #7c3aed; color: #fff; }
 .tp-chip-cnt { font-size:.75em; font-weight:700; opacity:.85; margin-left:.18em; }
+/* Mini-badge financiar pe card (angajați + CA) ─ injectat de enhance.js */
+.tp-fin-badge { display:flex; flex-wrap:wrap; gap:.3em; margin:.35em 0 .2em .5em; }
+.tp-fin-badge .tp-fb-item {
+  font-size:.72rem; color:var(--tp-muted);
+  background:rgba(107,114,128,.07); border:1px solid rgba(107,114,128,.16);
+  border-radius:4px; padding:.1em .45em; white-space:nowrap;
+}
+.tp-dark .tp-fin-badge .tp-fb-item { background:rgba(156,163,175,.1); border-color:rgba(156,163,175,.2); }
 #tp-shell-row { display: none; }  /* ascuns până confirmăm că există panele */
 /* Chips severitate — grupate, nu se separă pe linii diferite */
 .tp-chips-sev {
@@ -614,6 +622,55 @@ html[data-tp-theme="dark"] .tp-anap-btn {
 
     // Butoane sesizare ANAP pe fiecare card
     injectAnapButtons(items);
+
+    // ─── MINI-BADGES FINANCIARE ──────────────────────────────────────────────
+    // Injectăm un rând discret cu date angajați/CA sub header-ul fiecărui card
+    // care are flaguri financiare în #risc-firma-data.
+    const FIN_BADGE_TIPS = ['ZERO ANGAJATI','FOARTE PUTINI ANGAJATI',
+                            'CIFRA AFACERI ZERO','CIFRA AFACERI MULT SUB CONTRACT',
+                            'CIFRA AFACERI SUB CONTRACT'];
+    items.forEach(it => {
+      if (!it.el || !it.supplier) return;
+      const rd = riscFirmaLookup[it.supplier];
+      if (!rd || !(rd.flags || []).length) return;
+      if (it.el.querySelector('.tp-fin-badge')) return; // nu duplicăm la re-render
+
+      const finFlags = rd.flags.filter(f => FIN_BADGE_TIPS.includes(f.tip));
+      if (!finFlags.length) return;
+
+      const parts = [];
+      const salFlag = finFlags.find(f => f.tip.includes('ANGAJATI'));
+      const caFlag  = finFlags.find(f => f.tip.includes('AFACERI'));
+
+      if (salFlag) {
+        if (salFlag.tip === 'ZERO ANGAJATI') {
+          parts.push('👥 0 angajați ANAF');
+        } else {
+          const m = (salFlag.titlu || '').match(/^(\d+)/);
+          const n = m ? m[1] : '≤2';
+          parts.push(`👥 ${n} angajat${n === '1' ? '' : 'i'} ANAF`);
+        }
+      }
+      if (caFlag) {
+        // Extragem CA din titlu: "Cifra de afaceri în 2024: 403,035 RON ..."
+        const mCA = (caFlag.titlu || '').match(/([\d\s,.]+)\s*RON/i);
+        const caStr = mCA ? mCA[1].trim() : '?';
+        if (caFlag.tip === 'CIFRA AFACERI ZERO')      parts.push('📉 CA = 0 RON');
+        else if (caFlag.tip.includes('MULT'))          parts.push(`📉 CA ${caStr} RON (sub 10% contract)`);
+        else                                           parts.push(`📉 CA ${caStr} RON (sub 50% contract)`);
+      }
+      if (!parts.length) return;
+
+      const badge = document.createElement('div');
+      badge.className = 'tp-fin-badge';
+      badge.setAttribute('aria-label', 'Date financiare ANAF 2024');
+      badge.innerHTML = parts.map(p =>
+        `<span class="tp-fb-item">${p}</span>`).join('');
+
+      // Injectăm după primul div (header-ul flex cu titlul flagului)
+      const headerDiv = it.el.querySelector('div');
+      if (headerDiv) headerDiv.insertAdjacentElement('afterend', badge);
+    });
 
     // Ancore + permalink
     items.forEach(item => {
