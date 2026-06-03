@@ -226,7 +226,7 @@
 
 <!-- ALERT BANNER -->
 <div class="alert-banner">
-  🔴 <strong>216 nereguli detectate</strong> în ultima analiză automată, din care <strong>2 CRITICE</strong> —
+  🔴 <strong><span id="idx-banner-nereguli">299</span> nereguli detectate</strong> în ultima analiză automată, din care <strong><span id="idx-banner-critic">107</span> CRITICE</strong> —
   <a href="raport_transparenta.html">Vezi raportul complet →</a>
 </div>
 
@@ -238,11 +238,11 @@
 
   <div class="hero-stats">
     <div class="hero-stat">
-      <span class="v">216</span>
+      <span class="v" id="idx-nereguli">299</span>
       <span class="l">Nereguli detectate</span>
     </div>
     <div class="hero-stat">
-      <span class="v">506</span>
+      <span class="v" id="idx-contracte">506</span>
       <span class="l">Contracte analizate</span>
     </div>
     <div class="hero-stat">
@@ -308,6 +308,21 @@
         var compEl = document.getElementById('scor-componente');
         if (compEl) compEl.innerHTML = html;
       }
+      // BUG-11 fix: actualizare dinamică statistici din raport.json
+      var totals = raport && raport.totals;
+      if (totals) {
+        var nf   = totals.flags || 0;
+        var nc   = (totals.by_severity && totals.by_severity.CRITIC) || 0;
+        var ncon = totals.contracts_analyzed || 0;
+        var _upd = function(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; };
+        _upd('idx-nereguli', nf);
+        _upd('idx-contracte', ncon);
+        _upd('idx-banner-nereguli', nf);
+        _upd('idx-banner-critic', nc);
+        var elSeeAll = document.getElementById('idx-see-all');
+        if (elSeeAll) elSeeAll.textContent = 'Vezi toate ' + nf + ' →';
+      }
+
       if (Array.isArray(istoric) && istoric.length > 1) {
         var ctx = document.getElementById('scor-chart');
         if (ctx) {
@@ -346,7 +361,7 @@
   <div class="flags-preview">
     <div class="flags-header">
       <h3>🚩 Cele mai recente nereguli detectate</h3>
-      <a href="raport_transparenta.html">Vezi toate 216 →</a>
+      <a href="raport_transparenta.html" id="idx-see-all">Vezi toate 299 →</a>
     </div>
     <div class="flag-item">
       <span class="flag-sev sev-critic">CRITIC</span>
