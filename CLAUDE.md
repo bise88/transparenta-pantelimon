@@ -342,6 +342,26 @@ Detector nou `detect_geographic_anomaly(contracte, firme_openapi)`:
 
 ---
 
+## Monitoring uptime
+
+Verificare că site-ul funcționează non-stop. Setup manual cu UptimeRobot (gratuit, fără cod):
+
+**Pași:**
+1. Creează cont la [uptimerobot.com](https://uptimerobot.com) (plan Free — 50 monitoare, interval 5 min)
+2. Add Monitor → **HTTPS Keyword** pe `https://aprindemlumina.eu` — keyword: `Raport Transparență`
+   - Detectează și că pagina conține datele reale (nu doar că serverul răspunde)
+3. Add Monitor → **HTTPS** pe `https://aprindemlumina.eu/raport_transparenta.html` — check HTTP status 200
+4. Configurează alertă email la adresa ta privată (nu cea publică)
+5. Opțional: Add Monitor → **HTTPS** pe `https://aprindemlumina.eu/feed.xml` (RSS functional)
+
+**Badge status** (adaugă în README.md după ce ai URL-ul public al monitorului):
+```markdown
+[![Uptime](https://img.shields.io/uptimerobot/ratio/mXXXXXXXXX)](https://stats.uptimerobot.com/XXXXX)
+```
+Înlocuiește `mXXXXXXXXX` cu monitor ID-ul din dashboard UptimeRobot.
+
+---
+
 ## Instituții la care pot fi depuse sesizări (context civic)
 
 Neregulile detectate de monitor pot fi sesizate la:
