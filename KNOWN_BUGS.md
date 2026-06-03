@@ -1,6 +1,8 @@
 # Bug-uri cunoscute (descoperite in Faza 2)
 
-Documentate pe 25 mai 2026. BUG-1, BUG-2, BUG-3 rezolvate in Faza 2.5 (branch `feat/fix-kpi-consistency`).
+Documentate pe 25 mai 2026. BUG-1, BUG-2, BUG-3 rezolvate in Faza 2.5.  
+BUG-5, BUG-6, BUG-7 rezolvate în PR-urile #46/#47.  
+BUG-8..BUG-13 descoperite pe 03 iun 2026 (audit `AUDIT_BUGS_03iun.md`), rezolvate în PR `fix/bug-major-kpi-dynamic` (BUG-8/9/11) și PR `fix/bug-minor-polish` (BUG-10/12/13).
 
 ---
 
@@ -130,3 +132,48 @@ Hash-ul SRI al `leaflet@1.9.4/dist/leaflet.js` de pe `unpkg.com` nu mai corespun
 - Sursă: `#risc-firma-data` JSON (93 firme, toate cu `scor > 0`)  
 - `any-risk` chip: afișează 299/299 (toți furnizorii flagați au scor risc > 0 — corect)
 - `zero-sal` / `zero-ca`: afișează 0/299 — date ANAF/ONRC (angajați, cifra afaceri) **nu sunt încă populate** în `risc-firma-data.onrc`/`.openapi`; chips sunt vizibile dar fără date relevante deocamdată
+
+---
+
+## ~~BUG-8: Label KPI an hardcodat ("2025" deși data-an="2026")~~ ✅ REZOLVAT în `fix/bug-major-kpi-dynamic`
+
+**Fișier:** `transparenta_pantelimon.html` linia ~1159  
+**Rezolvat prin:** regex nou în `actualizeaza_kpi_seap()` pentru `Valoare contracte atribuite \d{4}`
+
+---
+
+## ~~BUG-9: Detail-grid KPI stale (4.2M RON 2025 ≠ 12.3M RON 2026)~~ ✅ REZOLVAT în `fix/bug-major-kpi-dynamic`
+
+**Fișier:** `transparenta_pantelimon.html` liniile ~1191-1194  
+**Rezolvat prin:** nouă funcție `_categorizeaza_contracte_breakdown()` + 4 regex în `actualizeaza_kpi_seap()`.  
+**Teste:** 18 teste noi în `tests/test_kpi_breakdown.py`
+
+---
+
+## ~~BUG-10: "506 contracte · 2025" hardcodat în 5 locații~~ ✅ REZOLVAT în `fix/bug-minor-polish`
+
+**Fișier:** `transparenta_pantelimon.html` (5 locații)  
+**Rezolvat prin:** elemente înlocuite cu `<span id="tp-nr-*">` și `<span id="tp-an-*">`;  
+funcție nouă `actualizeaza_contoare_analiza()` apelată din `main()`.
+
+---
+
+## ~~BUG-11: index.html "216 nereguli / 2 CRITICE" hardcodat~~ ✅ REZOLVAT în `fix/bug-major-kpi-dynamic`
+
+**Fișier:** `index.html` liniile ~229, 241, 349  
+**Rezolvat prin:** blocul JS existent extins cu `_upd()` pentru 5 elemente din `raport.json`.  
+**Fallback NoJS:** actualizat la valorile curente (299 / 107 CRITIC).
+
+---
+
+## ~~BUG-12: despre.html "17 algoritmi" în loc de 19~~ ✅ REZOLVAT în `fix/bug-minor-polish`
+
+**Fișier:** `despre.html` linia ~160  
+**Rezolvat prin:** înlocuire manuală 17→19.
+
+---
+
+## ~~BUG-13: 201.html — dead code cu URL-uri bise88 stale~~ ✅ REZOLVAT în `fix/bug-minor-polish`
+
+**Fișier:** `201.html`  
+**Rezolvat prin:** fișier șters (nu era tracked de git, zero referințe în proiect).

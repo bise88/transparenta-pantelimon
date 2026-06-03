@@ -4775,6 +4775,54 @@ def actualizeaza_kpi_seap(contracte_export: list) -> None:
           f'{kpi_text} ({nr_unice} contracte unice {an_curent})')
 
 
+def actualizeaza_contoare_analiza(contracte_export: list) -> None:
+    """
+    BUG-10: Actualizează contoarele „N contracte · YYYY" din secțiunile de analiză
+    ale transparenta_pantelimon.html. Aceste referințe devin stale la fiecare an nou
+    sau după import de contracte noi.
+
+    Actualizează elementele cu ID: tp-nr-contracte, tp-nr-analiza, tp-an-analiza,
+    tp-nr-top10, tp-an-top10, tp-nr-directe, tp-nr-stat-card, tp-an-stat-card.
+    """
+    import re as _re_ca
+    an_curent = datetime.now().year
+    n_total = len(contracte_export)
+
+    tp_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                           'transparenta_pantelimon.html')
+    if not os.path.exists(tp_path):
+        return
+
+    with open(tp_path, encoding='utf-8') as _f:
+        content = _f.read()
+    original = content
+
+    # Contoare contracte (tp-nr-*)
+    for elem_id in ('tp-nr-contracte', 'tp-nr-analiza', 'tp-nr-top10',
+                    'tp-nr-directe', 'tp-nr-stat-card'):
+        content = _re_ca.sub(
+            rf'(<span[^>]*id="{elem_id}"[^>]*>)\d+(</span>)',
+            rf'\g<1>{n_total}\2',
+            content,
+        )
+
+    # An curent (tp-an-*)
+    for elem_id in ('tp-an-analiza', 'tp-an-top10', 'tp-an-stat-card'):
+        content = _re_ca.sub(
+            rf'(<span[^>]*id="{elem_id}"[^>]*>)\d{{4}}(</span>)',
+            rf'\g<1>{an_curent}\2',
+            content,
+        )
+
+    if content == original:
+        print('  [INFO] contoare analiza: deja actualizate')
+        return
+
+    with open(tp_path, 'w', encoding='utf-8') as _f:
+        _f.write(content)
+    print(f'  [OK] transparenta_pantelimon.html: contoare analiza → {n_total} contracte, {an_curent}')
+
+
 def genereaza_og_image(n_flags: int, n_critic: int, valoare_mil: float,
                        scor: int = None, output: str = "og-image.png") -> bool:
     """
@@ -5821,8 +5869,10 @@ def main():
 
     # §1.1: Actualizează tabelul static din transparenta_pantelimon.html
     actualizeaza_tabel_contracte(contracte_export)
-    # §2.5: Actualizează KPI valoare contracte (fix BUG-1/2/3)
+    # §2.5: Actualizează KPI valoare contracte (fix BUG-1/2/3/8/9)
     actualizeaza_kpi_seap(contracte_export)
+    # BUG-10: Actualizează contoare „N contracte · YYYY" din secțiunile de analiză
+    actualizeaza_contoare_analiza(contracte_export)
 
     # 6. Salvare stare
     print("\n[6/6] Salvez starea...")
