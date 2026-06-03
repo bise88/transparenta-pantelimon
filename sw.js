@@ -6,31 +6,35 @@
  * Permite consultare offline a raportului și paginii principale.
  */
 
-const CACHE_VERSION = 'tp-v4';
-const CACHE_STATIC = 'tp-static-v4';
-const CACHE_DATA   = 'tp-data-v1';
+const CACHE_VERSION = 'tp-v5';
+const CACHE_STATIC = 'tp-static-v5';
+const CACHE_DATA   = 'tp-data-v2';
 
-// Resurse core — pre-cached la install
+// Resurse core — pre-cached la install (offline-first pentru navigare)
 const CORE_URLS = [
   '/',
   '/index.html',
-  '/raport_transparenta.html',
   '/transparenta_pantelimon.html',
   '/enhance.js',
   '/harta.html',
+  '/retele.html',
   '/presa.html',
   '/despre.html',
   '/petitie.html',
   '/gdpr.html',
 ];
 
-// Date JSON/CSV — Network-First cu fallback cache
+// Date care se schimbă frecvent — Network-First cu fallback cache
+// IMPORTANT: raport_transparenta.html e generat săptămânal → network-first
 const DATA_URLS = [
+  '/raport_transparenta.html',
   '/raport.json',
   '/delta.json',
   '/contracte.json',
   '/press_kit.json',
   '/firme_geocoded.json',
+  '/retele_firme.json',
+  '/mentiuni_presa_auto.json',
   '/contracte.csv',
 ];
 
@@ -67,10 +71,13 @@ self.addEventListener('fetch', event => {
   if (request.method !== 'GET') return;
   if (url.origin !== self.location.origin) return;
 
-  // Date JSON/CSV — Network-First (vrem date proaspete)
-  if (DATA_URLS.some(u => url.pathname === u) || url.pathname.endsWith('.json') || url.pathname.endsWith('.csv')) {
+  // Date/pagini care se schimbă frecvent — Network-First (vrem date proaspete)
+  const isDataUrl = DATA_URLS.some(u => url.pathname === u)
+                 || url.pathname.endsWith('.json')
+                 || url.pathname.endsWith('.csv');
+  if (isDataUrl) {
     event.respondWith(
-      url.pathname.endsWith('.csv') ? networkFirstCsv(request) : networkFirstJson(request)
+      url.pathname.endsWith('.csv') ? networkFirstCsv(request) : networkFirstHtmlOrJson(request)
     );
     return;
   }
@@ -101,8 +108,9 @@ async function cacheFirstStatic(request) {
   }
 }
 
-// ── Network-First pentru date JSON ────────────────────────────────────────────
-async function networkFirstJson(request) {
+// ── Network-First pentru HTML dinamic + JSON ──────────────────────────────────
+// Folosit și pentru raport_transparenta.html (generat săptămânal — nu cacheable!)
+async function networkFirstHtmlOrJson(request) {
   try {
     const response = await fetch(request);
     if (response.ok) {
@@ -112,8 +120,9 @@ async function networkFirstJson(request) {
     return response;
   } catch {
     const cached = await caches.match(request);
-    return cached || new Response('{}', {
-      headers: { 'Content-Type': 'application/json' }
+    const ct = request.url.endsWith('.html') ? 'text/html; charset=utf-8' : 'application/json';
+    return cached || new Response(request.url.endsWith('.html') ? '' : '{}', {
+      headers: { 'Content-Type': ct }
     });
   }
 }
