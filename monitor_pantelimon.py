@@ -5267,7 +5267,8 @@ def geocodeaza_firme(
 def genereaza_pagina_furnizor(
         nume: str, slug: str,
         flags_firma: list, contracte_firma: list,
-        config: dict, mentiuni: list = None) -> str:
+        config: dict, mentiuni: list = None,
+        firme_legate: list = None) -> str:
     """Generează pagina HTML dedicată unui furnizor."""
     import html as html_mod
 
@@ -5339,6 +5340,32 @@ def genereaza_pagina_furnizor(
         mentiuni_html = f"""
   <h2>📰 Mențiuni în presă ({len(mentiuni)})</h2>
   {rands_m}"""
+
+    # Secțiune firme legate (din retele_firme.json)
+    firme_legate_html = ""
+    if firme_legate:
+        tip_friendly = {
+            'ADRESA_COMUNA': 'aceeași adresă fiscală',
+            'ACTIONAR_COMUN': 'acționar comun',
+        }
+        rows_legate = ""
+        for leg in firme_legate:
+            tip_f = tip_friendly.get(leg.get('tip', ''), leg.get('tip', ''))
+            slug_l = re.sub(r'[^\w-]', '-', leg.get('nume_legat', '').lower()).strip('-')
+            slug_l = re.sub(r'-+', '-', slug_l)
+            link_l = f'<a href="{slug_l}.html" style="color:#5b21b6">{html_mod.escape(leg.get("nume_legat",""))}</a>'
+            rows_legate += f"""
+      <li style="margin:.3rem 0">{link_l} — <em style="color:#6b7280">{html_mod.escape(tip_f)}</em></li>"""
+        firme_legate_html = f"""
+  <h2 style="margin-top:2rem">🔗 Firme legate (detectare automată)</h2>
+  <div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:8px;
+              padding:.6rem 1rem;font-size:.82rem;color:#6b21a8;margin:.5rem 0 .75rem">
+    Relații detectate pe baza adresei fiscale ANAF. Pot fi coincidențe geografice
+    (sedii de comoditate, clădiri de birouri). Verificare manuală recomandată.
+    <a href="../retele.html" style="color:#5b21b6;font-weight:600">→ Grafic rețele</a>
+  </div>
+  <ul style="margin:.2rem 0 .5rem 1.3rem;color:#374151;font-size:.9rem">{rows_legate}
+  </ul>"""
 
     return f"""<!DOCTYPE html>
 <html lang="ro">
@@ -5412,6 +5439,7 @@ def genereaza_pagina_furnizor(
   </table>
 
   {mentiuni_html}
+  {firme_legate_html}
   <footer>
     Date extrase din surse publice oficiale (SEAP / data.gov.ro) · Inițiativă cetățenească independentă
   </footer>
@@ -5505,6 +5533,16 @@ def main():
         pass
     except Exception as _e_mm:
         print(f"  [WARN] mentiuni_media.json: {_e_mm}")
+
+    # Încarcă rețelele de firme (opțional — retele_firme.json)
+    _retea_firme: dict = {}
+    try:
+        from analizeaza_retele import incarca_retea as _incarca_retea
+        _retea_firme = _incarca_retea()
+        if _retea_firme.get('edges'):
+            print(f"  ✓ retele_firme.json: {len(_retea_firme['edges'])} relații")
+    except (ImportError, Exception):
+        pass  # opțional
 
     trimite_email = "--email" in sys.argv
     print("\n" + "="*60)
@@ -5697,9 +5735,19 @@ def main():
         if not slug:
             continue
         flags_firma = flags_per_firma.get(firma, [])
+        # Firme legate (rețele) — lookup prin CUI
+        _cui_firma_r = (contracte_firma[0].get("castigator_cui", "") or "") if contracte_firma else ""
+        _firme_legate_r = []
+        if _retea_firme and _cui_firma_r:
+            try:
+                from analizeaza_retele import gaseste_firme_legate as _gfl
+                _firme_legate_r = _gfl(_cui_firma_r, _retea_firme)
+            except ImportError:
+                pass
         pagina_html = genereaza_pagina_furnizor(
             firma, slug, flags_firma, contracte_firma, CONFIG,
             mentiuni=_mentiuni_media.get(firma, []),
+            firme_legate=_firme_legate_r if _firme_legate_r else None,
         )
         with open(f"furnizori/{slug}.html", "w", encoding="utf-8") as fh:
             fh.write(pagina_html)
