@@ -56,6 +56,12 @@ jobs:
         # Rulăm cu --no-mfinante pentru cross-referencing CUI din firme_geocoded.json
         run: NO_MFINANTE=1 python enricheaza_firme.py 2>/dev/null || echo "enrichment skipped"
 
+      - name: 📰 Monitorizare presă automată (Google News + Context.ro)
+        # Cache SQLite TTL 7 zile → re-fetch la fiecare rulare săptămânală
+        # Rate limit 1.2s/request; max 20 articole per firmă per sursă
+        # Output: mentiuni_presa_auto.json — citit de monitor_pantelimon.py pentru flaguri
+        run: python monitorizare_presa.py 2>/dev/null || echo "monitorizare presa skipped"
+
       - name: 💾 Commit raport actualizat
         run: |
           git config --local user.email "transparenta-bot@cetatenipantelimon.ro"
@@ -73,6 +79,7 @@ jobs:
           git add press_kit.json 2>/dev/null || true
           git add firme_geocoded.json 2>/dev/null || true
           git add firme_financiar.json 2>/dev/null || true
+          git add mentiuni_presa_auto.json 2>/dev/null || true
           git add og-image.png 2>/dev/null || true
           # Commit doar dacă există modificări
           git diff --staged --quiet || git commit -m "🚩 Raport actualizat $(date +'%d.%m.%Y')"

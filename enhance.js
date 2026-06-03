@@ -718,7 +718,7 @@ html[data-tp-theme="dark"] .tp-anap-btn {
       sort: prefs.sort || 'idx-asc',
       shown: CFG.pageSize,
       _domReordered: false,  // true când DOM-ul a fost sortat (nu idx-asc)
-      shellFilter: '',       // '' | 'zero-sal' | 'zero-ca' | 'ca-sub' | 'any-risk'
+      shellFilter: '',       // '' | 'zero-sal' | 'zero-ca' | 'ca-sub' | 'any-risk' | 'presa-risc'
     };
 
     // ─── TOOLBAR ──────────────────────────────────────────────
@@ -766,6 +766,8 @@ html[data-tp-theme="dark"] .tp-anap-btn {
                   title="Arată nereguli unde cifra de afaceri a furnizorului e sub 50% din valoarea contractului">📊 CA sub contract</button>
           <button class="tp-chip" data-shell="any-risk" aria-pressed="false"
                   title="Arată doar nereguli unde furnizorul are cel puțin un indicator de risc financiar">⚠️ Orice risc</button>
+          <button class="tp-chip" data-shell="presa-risc" aria-pressed="false"
+                  title="Arată doar nereguli unde furnizorul are mențiuni de risc detectate automat în presă" style="display:none">📰 În presă</button>
         </div>
         <div class="tp-toolbar-row">
           <div class="tp-stats" id="tp-stats" aria-live="polite"></div>
@@ -823,10 +825,25 @@ html[data-tp-theme="dark"] .tp-anap-btn {
       ).length;
       const cntAnyRisk = items.filter(it => it.riskCount > 0).length;
 
-      const btnZeroSal = toolbar.querySelector('[data-shell="zero-sal"]');
-      const btnZeroCa  = toolbar.querySelector('[data-shell="zero-ca"]');
-      const btnCaSub   = toolbar.querySelector('[data-shell="ca-sub"]');
-      const btnAnyRisk = toolbar.querySelector('[data-shell="any-risk"]');
+      const btnZeroSal  = toolbar.querySelector('[data-shell="zero-sal"]');
+      const btnZeroCa   = toolbar.querySelector('[data-shell="zero-ca"]');
+      const btnCaSub    = toolbar.querySelector('[data-shell="ca-sub"]');
+      const btnAnyRisk  = toolbar.querySelector('[data-shell="any-risk"]');
+      const btnPresaRisc = toolbar.querySelector('[data-shell="presa-risc"]');
+
+      // Chip "📰 În presă"
+      const cntPresaRisc = items.filter(it =>
+        it.riskText.includes('MENTIUNI PRESA')
+      ).length;
+      if (btnPresaRisc) {
+        if (cntPresaRisc === 0) {
+          btnPresaRisc.style.display = 'none';
+        } else {
+          btnPresaRisc.style.display = '';
+          btnPresaRisc.innerHTML = `📰 În presă <span class="tp-chip-cnt">(${cntPresaRisc})</span>`;
+          btnPresaRisc.title = `Furnizori cu mențiuni de risc detectate automat în presă — ${cntPresaRisc} nereguli`;
+        }
+      }
 
       if (btnZeroSal) {
         if (cntZeroSal === 0) {
@@ -1058,6 +1075,7 @@ html[data-tp-theme="dark"] .tp-anap-btn {
                                     it.riskText.includes('AFACERI MULT SUB'))) return false;
         if (f === 'ca-sub'    && !(it.riskText.includes('CIFRA AFACERI SUB CONTRACT') &&
                                     !it.riskText.includes('MULT SUB'))) return false;
+        if (f === 'presa-risc' && !it.riskText.includes('MENTIUNI PRESA')) return false;
       }
       return true;
     });
