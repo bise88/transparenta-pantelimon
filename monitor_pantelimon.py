@@ -4714,10 +4714,63 @@ def actualizeaza_tabel_contracte(contracte_export: list) -> None:
           f'(top {min(20, len(contracte_export))} dupa valoare)')
 
 
+_LUCR_KEYWORDS = [
+    'lucrari', 'reparatii', 'reabilitare', 'modernizare',
+    'constructi', 'construire', 'executie', 'reamenajare', 'amenajare', 'deviere',
+]
+
+
+def _categorizeaza_contracte_breakdown(contracte: list, an: int) -> dict:
+    """Calculează breakdownul deduplicat al contractelor pentru un an.
+
+    Categorii:
+      - 'lucr': contracte cu titluri ce conțin cuvinte-cheie de lucrări (construcții, reparații etc.)
+      - 'srv':  toate celelalte (servicii + furnizări)
+
+    Deduplicare identică cu _suma_seap_dedupata: păstrează valoarea MAX per (titlu_canonic, firma).
+
+    Returns: dict cu chei 'lucr_total', 'lucr_n', 'srv_total', 'srv_n', 'total', 'n', 'medie'
+    """
+    import re as _bre
+    rev_re = _bre.compile(r'\s*\(Rev\.\d+\)\s*$', _bre.IGNORECASE)
+    lucr: dict = {}
+    srv: dict = {}
+    for c in contracte:
+        data = c.get('data_publicare') or c.get('data') or ''
+        if str(an) not in data:
+            continue
+        titlu_raw = c.get('titlu') or ''
+        titlu_can = rev_re.sub('', titlu_raw).strip().lower()
+        firma = (c.get('castigator_cui') or c.get('cui') or
+                 c.get('castigator') or c.get('firma') or '').strip()
+        if not titlu_can or not firma:
+            continue
+        key = (titlu_can, firma)
+        val = float(c.get('valoare_ron') or c.get('valoare') or 0)
+        if any(kw in titlu_can for kw in _LUCR_KEYWORDS):
+            if key not in lucr or val > lucr[key]:
+                lucr[key] = val
+        else:
+            if key not in srv or val > srv[key]:
+                srv[key] = val
+    lucr_total = sum(lucr.values())
+    lucr_n = len(lucr)
+    srv_total = sum(srv.values())
+    srv_n = len(srv)
+    total = lucr_total + srv_total
+    n = lucr_n + srv_n
+    return {
+        'lucr_total': lucr_total, 'lucr_n': lucr_n,
+        'srv_total': srv_total, 'srv_n': srv_n,
+        'total': total, 'n': n,
+        'medie': total / n if n else 0,
+    }
+
+
 def actualizeaza_kpi_seap(contracte_export: list) -> None:
     """
     Actualizeaza KPI-ul 'Valoare contracte' din transparenta_pantelimon.html
-    cu suma deduplicata canonic pentru anul curent (fix BUG-1 + BUG-2 + BUG-3).
+    cu suma deduplicata canonic pentru anul curent (fix BUG-1 + BUG-2 + BUG-3 + BUG-8 + BUG-9).
     Injecteaza atributul data-total-ron folosit de JS ca sursa unica de adevar.
     """
     import re as _re3
@@ -4725,6 +4778,7 @@ def actualizeaza_kpi_seap(contracte_export: list) -> None:
     total_dedupat, nr_unice = _suma_seap_dedupata(contracte_export, an_curent)
     kpi_text = _format_kpi(total_dedupat)
     total_ron_int = int(round(total_dedupat))
+    bkd = _categorizeaza_contracte_breakdown(contracte_export, an_curent)
 
     def _ro_int(n: float) -> str:
         return f'{int(round(n)):,}'.replace(',', '.')
@@ -4765,6 +4819,43 @@ def actualizeaza_kpi_seap(contracte_export: list) -> None:
         count=1,
     )
 
+    # BUG-8: label "Valoare contracte atribuite YYYY" — an hardcodat
+    content = _re3.sub(
+        r'Valoare contracte atribuite \d{4}',
+        f'Valoare contracte atribuite {an_curent}',
+        content,
+    )
+
+    # BUG-9: detail-grid breakdown — celule stale din 2025
+    content = _re3.sub(
+        r'<div class="d-lbl">Contracte lucrări</div><div class="d-val">[^<]*</div>',
+        f'<div class="d-lbl">Contracte lucrări</div>'
+        f'<div class="d-val">{_ro_int(bkd["lucr_total"])} RON</div>',
+        content,
+        count=1,
+    )
+    content = _re3.sub(
+        r'<div class="d-lbl">Servicii & furniz[^<]+</div><div class="d-val">[^<]*</div>',
+        f'<div class="d-lbl">Servicii & furnizări</div>'
+        f'<div class="d-val">{_ro_int(bkd["srv_total"])} RON</div>',
+        content,
+        count=1,
+    )
+    content = _re3.sub(
+        r'<div class="d-lbl">Nr\. contracte publicate</div><div class="d-val">[^<]*</div>',
+        f'<div class="d-lbl">Nr. contracte publicate</div>'
+        f'<div class="d-val">{bkd["n"]} contracte</div>',
+        content,
+        count=1,
+    )
+    content = _re3.sub(
+        r'<div class="d-lbl">Valoare medie/contract</div><div class="d-val">[^<]*</div>',
+        f'<div class="d-lbl">Valoare medie/contract</div>'
+        f'<div class="d-val">{_ro_int(bkd["medie"])} RON</div>',
+        content,
+        count=1,
+    )
+
     if content == original:
         print('  [INFO] KPI seap: deja actualizat, nicio modificare')
         return
@@ -4772,7 +4863,9 @@ def actualizeaza_kpi_seap(contracte_export: list) -> None:
     with open(tp_path, 'w', encoding='utf-8') as _f:
         _f.write(content)
     print(f'  [OK] transparenta_pantelimon.html: KPI actualizat -- '
-          f'{kpi_text} ({nr_unice} contracte unice {an_curent})')
+          f'{kpi_text} ({nr_unice} contracte unice {an_curent})'
+          f' | Lucr: {_ro_int(bkd["lucr_total"])} RON,'
+          f' Srv: {_ro_int(bkd["srv_total"])} RON)')
 
 
 def genereaza_og_image(n_flags: int, n_critic: int, valoare_mil: float,
