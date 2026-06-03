@@ -51,6 +51,11 @@ jobs:
             echo "firme_financiar.json e recent, skip import ANAF"
           fi
 
+      - name: 🔗 Analiză rețele firme (adrese comune)
+        # Detectează firme cu adresă fiscală comună din firme_geocoded.json
+        # Output: retele_firme.json — citit de monitor_pantelimon.py pentru paginile furnizori
+        run: python analizeaza_retele.py 2>/dev/null || echo "analiza retele skipped"
+
       - name: 🏢 Enrichment CUI firme (cross-reference, fără mfinante)
         # mfinante.gov.ro URL-ul static a căzut în mai 2026 — skip fetch financiar
         # Rulăm cu --no-mfinante pentru cross-referencing CUI din firme_geocoded.json
@@ -80,6 +85,8 @@ jobs:
           git add firme_geocoded.json 2>/dev/null || true
           git add firme_financiar.json 2>/dev/null || true
           git add mentiuni_presa_auto.json 2>/dev/null || true
+          git add retele_firme.json 2>/dev/null || true
+          git add retele.html 2>/dev/null || true
           git add og-image.png 2>/dev/null || true
           # Commit doar dacă există modificări
           git diff --staged --quiet || git commit -m "🚩 Raport actualizat $(date +'%d.%m.%Y')"

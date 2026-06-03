@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔗 Încrengătură firme — Transparența Pantelimon</title>
+<meta name="description" content="Rețea de relații între firmele monitorizate: adrese comune detectate automat. Transparența Pantelimon.">
+<link rel="canonical" href="https://aprindemlumina.eu/retele.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aprindemlumina.eu/retele.html">
+<meta property="og:title" content="Încrengătură firme — Transparența Pantelimon">
+<meta property="og:image" content="https://aprindemlumina.eu/og-image.png">
+<meta property="og:locale" content="ro_RO">
+<meta property="og:site_name" content="Transparența Pantelimon">
+<link rel="alternate" type="application/atom+xml" href="https://aprindemlumina.eu/feed.xml">
+<script src="enhance.js" defer></script>
+
+<!-- Cytoscape.js — graf interactiv -->
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.30.2/dist/cytoscape.min.js"></script>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #f5f7fa; color: #1a1a1a; line-height: 1.6;
+}
+.page-wrap { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+
+h1 { font-size: 1.7rem; font-weight: 800; margin-bottom: .3rem; }
+.subtitle { color: #6b7280; font-size: .95rem; margin-bottom: 1.5rem; }
+
+/* Stats row */
+.stats-row {
+  display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.2rem;
+}
+.stat-chip {
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 8px;
+  padding: .4rem .9rem; font-size: .85rem; color: #374151;
+}
+.stat-chip strong { color: #111; }
+
+/* Disclaimer */
+.disclaimer {
+  background: #fffbeb; border: 1px solid #fcd34d; border-radius: 8px;
+  padding: .75rem 1rem; font-size: .85rem; color: #92400e; margin-bottom: 1.2rem;
+}
+
+/* Graf */
+#cy-container {
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+#cy {
+  width: 100%; height: 560px;
+}
+.cy-controls {
+  padding: .5rem .75rem; background: #f9fafb; border-top: 1px solid #e5e7eb;
+  display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; font-size: .8rem;
+  color: #6b7280;
+}
+.cy-btn {
+  padding: .3rem .7rem; border: 1px solid #d1d5db; border-radius: 6px;
+  background: #fff; color: #374151; cursor: pointer; font-size: .8rem;
+}
+.cy-btn:hover { background: #f3f4f6; }
+.cy-legend { display: flex; gap: 1rem; flex-wrap: wrap; margin-left: auto; }
+.cy-legend-item { display: flex; align-items: center; gap: .35rem; }
+.cy-legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+
+/* Panou detalii */
+#retea-info {
+  margin-top: 1rem; background: #fff; border: 1px solid #e5e7eb; border-radius: 10px;
+  padding: 1rem 1.2rem; min-height: 56px;
+  font-size: .9rem; color: #374151;
+}
+#retea-info h4 { margin-bottom: .4rem; color: #111; }
+#retea-info .info-placeholder { color: #9ca3af; }
+
+/* Tabel relații */
+.retea-table-wrap { margin-top: 1.5rem; }
+.retea-table-wrap h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: .75rem; }
+table { width: 100%; border-collapse: collapse; background: #fff;
+        border-radius: 8px; overflow: hidden;
+        box-shadow: 0 1px 4px rgba(0,0,0,.06); font-size: .88rem; }
+th { padding: .6rem .85rem; text-align: left; background: #1e3a5f; color: #fff;
+     font-size: .78rem; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+td { padding: .55rem .85rem; border-bottom: 1px solid #f3f4f6; color: #374151; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #f9fafb; }
+.tag-rel {
+  display: inline-block; padding: .1rem .55rem; border-radius: 20px;
+  font-size: .75rem; font-weight: 600;
+  background: #ede9fe; color: #5b21b6;
+}
+.tag-adresa { background: #fef3c7; color: #92400e; }
+
+@media (max-width: 640px) {
+  #cy { height: 380px; }
+  h1 { font-size: 1.3rem; }
+}
+</style>
+</head>
+<body>
+
+<main class="page-wrap" id="main-content">
+  <h1>🔗 Încrengătură firme</h1>
+  <p class="subtitle">
+    Relații detectate automat între firmele cu contracte la Primăria Pantelimon
+    (adresă fiscală comună). Date din ANAF v9 via <code>firme_geocoded.json</code>.
+  </p>
+
+  <div class="disclaimer">
+    ⚠️ <strong>Detectare automată.</strong> Relațiile de mai jos sunt bazate pe adrese
+    fiscale ANAF și pot include coincidențe geografice (clădiri de birouri cu multe firme,
+    sedii de comoditate). <strong>Verificare manuală recomandată</strong> înainte de orice
+    utilizare publică sau juridică.
+  </div>
+
+  <div class="stats-row" id="retea-stats">
+    <div class="stat-chip">⏳ Se încarcă…</div>
+  </div>
+
+  <div id="cy-container">
+    <div id="cy"></div>
+    <div class="cy-controls">
+      <button class="cy-btn" id="cy-fit" title="Ajustează zoom la toți nodurile">🔍 Fit all</button>
+      <button class="cy-btn" id="cy-reset" title="Resetează selecția">✖ Resetează</button>
+      <div class="cy-legend">
+        <div class="cy-legend-item">
+          <div class="cy-legend-dot" style="background:#0070C0"></div> Firmă cu contracte
+        </div>
+        <div class="cy-legend-item">
+          <div class="cy-legend-dot" style="background:#dc2626; width:24px; height:4px; border-radius:2px"></div>
+          Adresă comună
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="retea-info">
+    <span class="info-placeholder">Click pe un nod sau o relație pentru detalii. Zoom cu scroll, drag pentru pan.</span>
+  </div>
+
+  <div class="retea-table-wrap" id="retea-table-wrap" style="display:none">
+    <h2>📋 Toate relațiile detectate</h2>
+    <table id="retea-table">
+      <thead>
+        <tr>
+          <th>Firmă 1</th>
+          <th>Firmă 2</th>
+          <th>Tip relație</th>
+          <th>Adresă</th>
+        </tr>
+      </thead>
+      <tbody id="retea-tbody"></tbody>
+    </table>
+  </div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  fetch('retele_firme.json?' + Date.now())
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      var nodes  = data.nodes  || [];
+      var edges  = data.edges  || [];
+      var stats  = data.stats  || {};
+
+      // ── Stats chips ──────────────────────────────────────────
+      var statsEl = document.getElementById('retea-stats');
+      if (statsEl) {
+        statsEl.innerHTML = [
+          '<div class="stat-chip">🏢 <strong>' + (stats.total_noduri || nodes.length) + '</strong> firme</div>',
+          '<div class="stat-chip">🔗 <strong>' + (stats.edges_adresa_comuna || edges.length) + '</strong> adrese comune</div>',
+          '<div class="stat-chip">🌐 <strong>' + (stats.noduri_in_retea || 0) + '</strong> firme implicate</div>',
+        ].join('');
+      }
+
+      if (edges.length === 0) {
+        document.getElementById('retea-info').innerHTML =
+          '<p style="color:#6b7280">Nu s-au detectat relații între firmele monitorizate.</p>';
+        return;
+      }
+
+      // ── CUI → slug lookup ─────────────────────────────────────
+      var slugByCui = {};
+      nodes.forEach(function (n) {
+        if (n.cui && n.label) {
+          var slug = n.label.toLowerCase()
+            .replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+          slugByCui[n.cui] = slug;
+        }
+      });
+
+      // ── Cytoscape elements ────────────────────────────────────
+      // Includ doar nodurile care apar în cel puțin un edge
+      var cuiInEdge = new Set();
+      edges.forEach(function (e) { (e.firme || []).forEach(function (c) { cuiInEdge.add(c); }); });
+
+      var cyNodes = nodes
+        .filter(function (n) { return cuiInEdge.has(n.cui); })
+        .map(function (n) {
+          return { data: { id: n.cui, label: n.label, cui: n.cui, adresa: n.adresa || '' } };
+        });
+
+      var cyEdges = edges.map(function (e, i) {
+        return {
+          data: {
+            id:     'e' + i,
+            source: e.firme[0],
+            target: e.firme[1],
+            tip:    e.tip || 'ADRESA_COMUNA',
+            adresa: e.adresa || '',
+            descriere: e.descriere || '',
+          }
+        };
+      });
+
+      // ── Init Cytoscape ────────────────────────────────────────
+      var cy = window.cytoscape({
+        container: document.getElementById('cy'),
+        elements: cyNodes.concat(cyEdges),
+        style: [
+          {
+            selector: 'node',
+            style: {
+              'label':            'data(label)',
+              'background-color': '#0070C0',
+              'color':            '#fff',
+              'text-valign':      'center',
+              'text-halign':      'center',
+              'font-size':        '10px',
+              'font-weight':      '600',
+              'text-wrap':        'wrap',
+              'text-max-width':   '90px',
+              'width':            40,
+              'height':           40,
+              'border-width':     2,
+              'border-color':     '#fff',
+              'text-background-color': 'rgba(0,112,192,0.85)',
+              'text-background-opacity': 0,
+            }
+          },
+          {
+            selector: 'node:selected',
+            style: {
+              'background-color': '#dc2626',
+              'border-color':     '#fff',
+              'border-width':     3,
+            }
+          },
+          {
+            selector: 'edge',
+            style: {
+              'line-color':    '#dc2626',
+              'width':         3,
+              'curve-style':   'bezier',
+              'opacity':       0.75,
+            }
+          },
+          {
+            selector: 'edge[tip="ADRESA_COMUNA"]',
+            style: {
+              'line-color':     '#f59e0b',
+              'line-style':     'dashed',
+              'width':          2.5,
+            }
+          },
+          {
+            selector: 'edge:selected',
+            style: {
+              'line-color': '#7c3aed',
+              'width':      4,
+              'opacity':    1,
+            }
+          },
+        ],
+        layout: {
+          name:         'cose',
+          animate:      false,
+          padding:      40,
+          nodeRepulsion: 8000,
+          idealEdgeLength: 120,
+          edgeElasticity: 200,
+        },
+        minZoom: 0.3,
+        maxZoom: 3,
+      });
+
+      // ── Detalii la click nod ──────────────────────────────────
+      var infoEl = document.getElementById('retea-info');
+      cy.on('tap', 'node', function (e) {
+        var n    = e.target.data();
+        var slug = slugByCui[n.cui] || '';
+        var link = slug
+          ? '<a href="furnizori/' + slug + '.html" style="color:#0070C0">Vezi pagina furnizorului →</a>'
+          : '';
+        // Găsim firme legate
+        var legate = cy.edges().filter(function (edge) {
+          return edge.source().id() === n.id || edge.target().id() === n.id;
+        });
+        var legendaLegate = legate.map(function (ed) {
+          var alt = ed.source().id() === n.id ? ed.target() : ed.source();
+          var tipFriendly = 'Adresă fiscală comună';
+          return '<li>' + alt.data('label') + ' — <em>' + tipFriendly + '</em></li>';
+        }).join('');
+
+        infoEl.innerHTML = '<h4>🏢 ' + n.label + '</h4>'
+          + '<p style="color:#6b7280;font-size:.83rem">CUI: ' + n.cui + '</p>'
+          + (n.adresa ? '<p style="font-size:.83rem;margin-top:.3rem">📍 ' + n.adresa.substring(0, 80) + '…</p>' : '')
+          + (legendaLegate ? '<p style="margin-top:.5rem;font-weight:600;font-size:.85rem">Relații detectate:</p><ul style="margin:.2rem 0 .4rem 1.2rem;font-size:.85rem">' + legendaLegate + '</ul>' : '')
+          + (link ? '<p style="margin-top:.5rem">' + link + '</p>' : '');
+      });
+
+      cy.on('tap', 'edge', function (e) {
+        var ed = e.target.data();
+        var n1 = cy.$('#' + ed.source).data('label') || ed.source;
+        var n2 = cy.$('#' + ed.target).data('label') || ed.target;
+        infoEl.innerHTML = '<h4>🔗 Relație detectată</h4>'
+          + '<p style="margin:.3rem 0;font-size:.88rem"><strong>' + n1 + '</strong> ↔ <strong>' + n2 + '</strong></p>'
+          + '<p style="font-size:.83rem;color:#6b7280">' + (ed.adresa || '') + '</p>'
+          + '<p style="font-size:.83rem;margin-top:.4rem;color:#92400e">' + (ed.descriere || 'Adresă fiscală ANAF comună.') + '</p>';
+      });
+
+      cy.on('tap', function (e) {
+        if (e.target === cy) {
+          infoEl.innerHTML = '<span class="info-placeholder">Click pe un nod sau relație pentru detalii.</span>';
+        }
+      });
+
+      // ── Butoane control ───────────────────────────────────────
+      document.getElementById('cy-fit').addEventListener('click', function () { cy.fit(); });
+      document.getElementById('cy-reset').addEventListener('click', function () {
+        cy.elements().unselect();
+        cy.fit();
+        infoEl.innerHTML = '<span class="info-placeholder">Click pe un nod sau relație pentru detalii.</span>';
+      });
+
+      // ── Tabel relații ─────────────────────────────────────────
+      var tbody = document.getElementById('retea-tbody');
+      if (tbody && edges.length) {
+        document.getElementById('retea-table-wrap').style.display = '';
+        tbody.innerHTML = edges.map(function (e) {
+          var n1 = e.nume && e.nume[0] ? e.nume[0] : e.firme[0];
+          var n2 = e.nume && e.nume[1] ? e.nume[1] : e.firme[1];
+          var tip = (e.tip || '').replace('_', ' ');
+          var adr = (e.adresa || '').substring(0, 80) + (e.adresa && e.adresa.length > 80 ? '…' : '');
+          return '<tr>'
+            + '<td><strong>' + n1 + '</strong></td>'
+            + '<td><strong>' + n2 + '</strong></td>'
+            + '<td><span class="tag-rel tag-adresa">' + tip + '</span></td>'
+            + '<td style="font-size:.82rem;color:#6b7280">' + adr + '</td>'
+            + '</tr>';
+        }).join('');
+      }
+    })
+    .catch(function (err) {
+      document.getElementById('retea-stats').innerHTML =
+        '<div class="stat-chip" style="color:#dc2626">⚠️ ' + err.message + '</div>';
+    });
+})();
+</script>
+</body>
+</html>
