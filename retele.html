@@ -96,8 +96,11 @@ tr:hover td { background: #f9fafb; }
 .tag-adresa { background: #fef3c7; color: #92400e; }
 
 @media (max-width: 640px) {
-  #cy { height: 380px; }
+  #cy { height: min(380px, calc(100svh - 260px)); }
   h1 { font-size: 1.3rem; }
+}
+@media (max-width: 640px) and (orientation: landscape) {
+  #cy { height: min(280px, calc(100svh - 160px)); }
 }
 </style>
 </head>

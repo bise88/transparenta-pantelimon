@@ -3773,7 +3773,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
         yoy_v_color = "#C0392B" if "-" in str(yoy_v) else "#27AE60"
         yoy_c_color = "#C0392B" if "+" in str(yoy_c) else "#27AE60"
         budget_html = f"""
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin-bottom:24px">
           <div style="background:#fff;border-radius:10px;padding:20px;border-top:4px solid #0070C0;box-shadow:0 1px 4px rgba(0,0,0,0.08)">
             <span style="font-size:24px;font-weight:800;color:#0070C0">{budget['venituri_mil_ron']} mil. RON</span><br>
             <span style="font-size:11px;color:#777;text-transform:uppercase">Venituri {budget['an']}</span><br>
