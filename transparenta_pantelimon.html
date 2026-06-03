@@ -974,7 +974,7 @@ document.addEventListener('scroll', function() {
     </div>
 
     <div style="background:#EBF5FB;border-left:3px solid #0070C0;padding:10px 14px;border-radius:0 6px 6px 0;font-size:13px;margin-bottom:16px">
-      📋 Vezi toate cele <strong>506 contracte</strong> în tab-ul <a href="#" onclick="showTab('achizitii',document.querySelector('a[onclick*=achizitii]'));return false" style="color:#0070C0;font-weight:700">Achiziții Publice →</a> &nbsp;|&nbsp;
+      📋 Vezi toate cele <strong id="tp-nr-contracte">506</strong> contracte în tab-ul <a href="#" onclick="showTab('achizitii',document.querySelector('a[onclick*=achizitii]'));return false" style="color:#0070C0;font-weight:700">Achiziții Publice →</a> &nbsp;|&nbsp;
       📈 Tipare recurente în <a href="#" onclick="showTab('tendinte',document.querySelector('a[onclick*=tendinte]'));return false" style="color:#0070C0;font-weight:700">Tendințe →</a>
     </div>
 
@@ -1325,7 +1325,7 @@ document.addEventListener('scroll', function() {
     </div>
 
     <div class="disclaimer">
-      Analiză automată a tiparelor din 506 contracte publice 2025. Tiparele identificate sunt indicatori de risc — nu constituie dovezi juridice, dar justifică sesizări la ANAP sau Curtea de Conturi.
+      Analiză automată a tiparelor din <span id="tp-nr-analiza">506</span> contracte publice <span id="tp-an-analiza">2026</span>. Tiparele identificate sunt indicatori de risc — nu constituie dovezi juridice, dar justifică sesizări la ANAP sau Curtea de Conturi.
     </div>
 
     <!-- PATTERN CRITIC: contracte identice aceeași zi -->
@@ -1342,7 +1342,7 @@ document.addEventListener('scroll', function() {
     <!-- TOP FIRME -->
     <div class="chart-box">
       <h3>Top 10 firme după valoarea totală a contractelor</h3>
-      <p class="subtitle">Date din SEAP · 506 contracte · 2025 · Click pe firmă pentru detalii în registrul comerțului · <a href="#tab-achizitii" onclick="return showTab('achizitii', document.querySelector('[href=\'#tab-achizitii\']'))" style="color:var(--albastru);font-weight:600">📋 Caută în Achiziții →</a></p>
+      <p class="subtitle">Date din SEAP · <span id="tp-nr-top10">506</span> contracte · <span id="tp-an-top10">2026</span> · Click pe firmă pentru detalii în registrul comerțului · <a href="#tab-achizitii" onclick="return showTab('achizitii', document.querySelector('[href=\'#tab-achizitii\']'))" style="color:var(--albastru);font-weight:600">📋 Caută în Achiziții →</a></p>
       <div style="overflow-x:auto;margin-top:16px">
         <table class="data-table">
           <thead>
@@ -1516,7 +1516,7 @@ document.addEventListener('scroll', function() {
 
         <div style="background:#FEF3E2;border-radius:10px;padding:16px;border-left:4px solid #E67E22">
           <div style="font-weight:700;color:#935116;margin-bottom:8px">3. 100% achiziții directe</div>
-          <p style="font-size:13px;color:#444;line-height:1.6">Din 506 contracte, practic toate sunt achiziții directe. Nicio procedură competitivă vizibilă în datele SEAP analizate. Media națională este 45-50% proceduri competitive.</p>
+          <p style="font-size:13px;color:#444;line-height:1.6">Din <span id="tp-nr-directe">506</span> contracte, practic toate sunt achiziții directe. Nicio procedură competitivă vizibilă în datele SEAP analizate. Media națională este 45-50% proceduri competitive.</p>
           <div class="action-chips" style="margin-top:8px">
             <a class="chip chip-anap" href="https://www.anap.gov.ro/web/contact/" target="_blank" rel="noopener noreferrer">📧 ANAP</a>
             <a class="chip chip-cdc" href="https://www.curteadeconturi.ro/Sesizari" target="_blank" rel="noopener noreferrer">📋 Curtea de Conturi</a>
@@ -1568,8 +1568,8 @@ document.addEventListener('scroll', function() {
         <div class="sub">5 contracte atribuite pe 2 date (29.07 + 05.09.2025)</div>
       </div>
       <div class="card orange">
-        <span class="val">506</span>
-        <span class="lbl">Achiziții directe SEAP 2025</span>
+        <span class="val" id="tp-nr-stat-card">506</span>
+        <span class="lbl">Achiziții directe SEAP <span id="tp-an-stat-card">2026</span></span>
         <div class="sub">0 proceduri competitive vizibile</div>
       </div>
       <div class="card">
