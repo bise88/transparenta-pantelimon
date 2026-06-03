@@ -5408,7 +5408,8 @@ def geocodeaza_firme(
 def genereaza_pagina_furnizor(
         nume: str, slug: str,
         flags_firma: list, contracte_firma: list,
-        config: dict, mentiuni: list = None) -> str:
+        config: dict, mentiuni: list = None,
+        mentiuni_auto: list = None) -> str:
     """Generează pagina HTML dedicată unui furnizor."""
     import html as html_mod
 
@@ -5480,6 +5481,37 @@ def genereaza_pagina_furnizor(
         mentiuni_html = f"""
   <h2>📰 Mențiuni în presă ({len(mentiuni)})</h2>
   {rands_m}"""
+
+    # Secțiune mențiuni automate de presă (din mentiuni_presa_auto.json)
+    mentiuni_auto_html = ""
+    if mentiuni_auto:
+        rands_auto = ""
+        for m in mentiuni_auto[:10]:
+            kw = m.get('matched_keyword', '')
+            rands_auto += f"""
+      <div style="border-left:3px solid #7C3AED;padding:8px 14px;margin-bottom:8px;
+                  background:#fff;border-radius:0 6px 6px 0;
+                  box-shadow:0 1px 3px rgba(0,0,0,.06)">
+        <div style="font-weight:600;font-size:14px">
+          <a href="{html_mod.escape(str(m.get('link','#')))}" target="_blank" rel="noopener noreferrer"
+             style="color:#7C3AED;text-decoration:none">
+            {html_mod.escape(str(m.get('title',''))[:120])}
+          </a>
+        </div>
+        <div style="font-size:12px;color:#888;margin-top:3px">
+          🗞️ {html_mod.escape(str(m.get('source','')))} &nbsp;·&nbsp;
+          📅 {html_mod.escape(str(m.get('pub_date',''))[:16])}
+          {(' &nbsp;·&nbsp; 🔑 <strong>' + html_mod.escape(kw) + '</strong>') if kw else ''}
+        </div>
+      </div>"""
+        mentiuni_auto_html = f"""
+  <h2>🔍 Mențiuni de risc detectate automat în presă ({len(mentiuni_auto)})</h2>
+  <div style="background:#FDF4FF;border:1px solid #E9D5FF;border-radius:8px;
+              padding:10px 14px;font-size:12px;color:#6B21A8;margin-bottom:12px">
+    ⚠️ <strong>Detecție automată</strong> — articolele de mai jos conțin cuvinte-cheie de risc
+    asociate cu numele firmei. Pot exista fals-pozitive. Verificare manuală recomandată.
+  </div>
+  {rands_auto}"""
 
     return f"""<!DOCTYPE html>
 <html lang="ro">
@@ -5553,6 +5585,7 @@ def genereaza_pagina_furnizor(
   </table>
 
   {mentiuni_html}
+  {mentiuni_auto_html}
   <footer>
     Date extrase din surse publice oficiale (SEAP / data.gov.ro) · Inițiativă cetățenească independentă
   </footer>
@@ -5631,6 +5664,19 @@ def main():
         os.makedirs(_args.output_dir, exist_ok=True)
         os.chdir(_args.output_dir)
     # --- end CLI ---
+
+    # Încarcă mențiuni automate de presă (opțional — fișier mentiuni_presa_auto.json)
+    _mentiuni_presa_auto_by_cui: dict = {}
+    try:
+        from monitorizare_presa import incarca_mentiuni_presa_auto as _imp_auto
+        _mentiuni_presa_auto_raw = _imp_auto()
+        # Indexăm după CUI pentru lookup rapid în bucla furnizori
+        _mentiuni_presa_auto_by_cui = _mentiuni_presa_auto_raw
+        if _mentiuni_presa_auto_by_cui:
+            n_cu_hits = sum(1 for v in _mentiuni_presa_auto_by_cui.values() if v.get('total', 0) > 0)
+            print(f"  ✓ mentiuni_presa_auto.json: {n_cu_hits} firme cu mențiuni de presă")
+    except (ImportError, Exception) as _e_auto:
+        pass  # opțional, nu blocăm dacă lipsește
 
     # Încarcă mențiuni media curatoriale (opțional — fișier mentiuni_media.json)
     _mentiuni_media: dict = {}
@@ -5829,6 +5875,42 @@ def main():
                     })
                     _existing_keys.add(_k)
 
+    # B — Adăugăm flaguri MENTIUNI_PRESA_RISCANTE din mentiuni_presa_auto.json
+    try:
+        from monitorizare_presa import incarca_mentiuni_presa_auto, evalueaza_flag_presa
+        import re as _re_presa
+        _mentiuni_auto = incarca_mentiuni_presa_auto()
+        if _mentiuni_auto:
+            # Construim lookup CUI → furnizor (același mecanism ca pentru date financiare)
+            _cui_to_furn_p = {}
+            for _fp, _rdp in risc_firma.items():
+                _cp = _re_presa.sub(r'^[Rr][Oo]\s*', '', str(_rdp.get("cui","")).strip()).replace(' ', '')
+                if _cp and _cp.isdigit():
+                    _cui_to_furn_p[_cp] = _fp
+            _presa_added = 0
+            for _cui_p, _mp in _mentiuni_auto.items():
+                if not _mp.get('total'):
+                    continue
+                _furn_p = _cui_to_furn_p.get(str(_cui_p))
+                if not _furn_p:
+                    continue
+                _flag_p = evalueaza_flag_presa(_mp)
+                if not _flag_p:
+                    continue
+                _ex_tips_p = {f.get("tip","") for f in flags_per_firma.get(_furn_p, [])}
+                if 'MENTIUNI PRESA RISCANTE' not in _ex_tips_p:
+                    flags_per_firma[_furn_p].append({**_flag_p, "furnizor": _furn_p})
+                    # Adăugăm și în risc_firma pentru a apărea în raport + chip filter
+                    if _furn_p in risc_firma:
+                        _ex_rf_tips = {f.get("tip","") for f in risc_firma[_furn_p].get("flags",[])}
+                        if 'MENTIUNI PRESA RISCANTE' not in _ex_rf_tips:
+                            risc_firma[_furn_p].setdefault("flags", []).append(_flag_p)
+                    _presa_added += 1
+            if _presa_added:
+                print(f'  [OK] Presă: {_presa_added} firme cu flaguri MENTIUNI_PRESA_RISCANTE')
+    except ImportError:
+        pass  # monitorizare_presa.py opțional
+
     _os.makedirs("furnizori", exist_ok=True)
     index_furnizori = []
     for firma, contracte_firma in contracte_per_firma.items():
@@ -5838,9 +5920,17 @@ def main():
         if not slug:
             continue
         flags_firma = flags_per_firma.get(firma, [])
+        # Lookup mențiuni automate de presă pentru această firmă (prin CUI)
+        _cui_firma = (contracte_firma[0].get("castigator_cui", "") or "") if contracte_firma else ""
+        _mentiuni_auto_firma = []
+        if _cui_firma and _mentiuni_presa_auto_by_cui:
+            _mp_entry = _mentiuni_presa_auto_by_cui.get(str(_cui_firma), {})
+            _mentiuni_auto_firma = _mp_entry.get('mentiuni', [])
+
         pagina_html = genereaza_pagina_furnizor(
             firma, slug, flags_firma, contracte_firma, CONFIG,
             mentiuni=_mentiuni_media.get(firma, []),
+            mentiuni_auto=_mentiuni_auto_firma if _mentiuni_auto_firma else None,
         )
         with open(f"furnizori/{slug}.html", "w", encoding="utf-8") as fh:
             fh.write(pagina_html)
