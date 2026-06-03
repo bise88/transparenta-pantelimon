@@ -2588,17 +2588,54 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
     return flags_unice
 
 
-def _seap_url(contract_id: str) -> str:
-    """Construiește URL-ul direct SEAP dintr-un contract_id de forma 'achizitie-directa-2025-489392'.
-    Returnează URL-ul la anunțul specific, sau lista generică dacă ID-ul nu e parsabil."""
-    # Luăm primul ID dacă sunt mai multe (separate prin virgulă)
+def _seap_url(contract_id: str, tip_procedura: str = '') -> str:
+    """Construiește URL-ul direct SEAP dintr-un contract_id.
+
+    Formate acceptate:
+      achizitie-directa-2025-489392  → da-direct-acquisition
+      contract-2025-79964            → contract-notice (licitatie deschisa)
+      contract-2026-3957             → simplified-tender (procedura simplificata)
+
+    Returnează URL-ul la anunțul specific, sau lista generică dacă ID-ul nu e parsabil.
+    """
     primul_id = contract_id.split(",")[0].strip()
-    # Extragem partea numerică: achizitie-directa-2025-489392 → 489392
     parts = primul_id.split("-")
     numeric_id = parts[-1] if parts and parts[-1].isdigit() else ""
-    if numeric_id:
-        return f"https://e-licitatie.ro/pub/notices/da-direct-acquisition/view/{numeric_id}"
-    return "https://e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0"
+    if not numeric_id:
+        return "https://e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0"
+
+    # Detectăm tipul din prefix sau din tip_procedura
+    tip_lower = (tip_procedura or '').lower()
+    if primul_id.startswith('achizitie-directa'):
+        path = 'da-direct-acquisition'
+    elif 'simplif' in tip_lower or 'simplificate' in tip_lower:
+        path = 'simplified-tender'
+    elif 'deschisa' in tip_lower or 'deschis' in tip_lower:
+        path = 'contract-notice'
+    elif primul_id.startswith('contract-'):
+        # fallback: licitatie/contract notice
+        path = 'contract-notice'
+    else:
+        path = 'da-direct-acquisition'
+
+    return f"https://e-licitatie.ro/pub/notices/{path}/view/{numeric_id}"
+
+
+def _seap_nr(contract_id: str) -> str:
+    """Extrage numărul/numerele SEAP din contract_id pentru afișare ca text copiabil.
+
+    Ex: 'achizitie-directa-2025-489392,achizitie-directa-2025-489393'
+        → 'Nr. SEAP: 489392, 489393'
+    """
+    ids = [cid.strip() for cid in contract_id.split(",") if cid.strip()]
+    nums = []
+    for cid in ids:
+        parts = cid.split("-")
+        if parts and parts[-1].isdigit():
+            nums.append(parts[-1])
+    if nums:
+        return "Nr. SEAP: " + ", ".join(nums)
+    return ""
 
 
 def _fmt_ron(valoare: float) -> str:
@@ -3571,11 +3608,11 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
           </div>
           <p style="font-size:13px;color:#444;margin:0 0 8px">{f['descriere']}</p>
           <div style="font-size:12px;color:#777;display:flex;gap:16px;flex-wrap:wrap">
-            <span>📋 {contract_id or '–'}</span>
             <span>💰 {_fmt_ron(f['valoare'])}</span>
             <span>🏢 {furnizor or '–'}</span>
             <span>📅 {f['data']}</span>
             <span>⚙️ {f['tip_procedura']}</span>
+            {(f'<span style="background:#EBF5FB;border:1px solid #AED6F1;border-radius:4px;padding:1px 7px;color:#1A5276;font-weight:700;letter-spacing:.3px" title="Număr SEAP — copiază-l pentru căutare manuală">🔍 {_seap_nr(contract_id)}</span>') if _seap_nr(contract_id) else f'<span>📋 {contract_id or "–"}</span>'}
           </div>
           <div class="flag-detail" style="display:none;margin-top:14px;padding-top:12px;border-top:1px solid #eee">
             <div style="font-size:12px;color:#555;margin-bottom:10px">
@@ -3585,7 +3622,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
               <strong>Procedură:</strong> {f['tip_procedura'] or '–'}
             </div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-              <a href="{_seap_url(contract_id)}"
+              <a href="{_seap_url(contract_id, f.get('tip_procedura',''))}"
                  target="_blank" onclick="event.stopPropagation()"
                  style="background:#0070C0;color:#fff;padding:6px 14px;border-radius:6px;
                         text-decoration:none;font-size:12px;font-weight:600">
@@ -3603,13 +3640,11 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
             <div style="margin-top:10px;padding:8px 12px;background:#F4F6F8;border-radius:6px;
                         font-size:11px;color:#666;line-height:1.6">
               ℹ️ <strong>Cum verifici în SEAP:</strong> apasă „Deschide în SEAP" de mai sus.
-              Dacă pagina apare goală, intră manual pe
-              <a href="https://e-licitatie.ro/pub/notices/da-direct-acquisition/list/0/0"
-                 target="_blank" onclick="event.stopPropagation()"
-                 style="color:#0070C0">lista achizițiilor directe</a>,
-              caută <strong>„Pantelimon"</strong> la câmpul Autoritate și filtrează după
-              numărul <strong>{contract_numar_display or contract_id}</strong>
-              și data <strong>{f['data']}</strong>.
+              Dacă pagina apare goală, caută manual pe
+              <a href="https://e-licitatie.ro/pub/" target="_blank" onclick="event.stopPropagation()"
+                 style="color:#0070C0">e-licitatie.ro</a>
+              după <strong>{_seap_nr(contract_id) or contract_id}</strong>
+              (data: <strong>{f['data']}</strong>, autoritate: <strong>Pantelimon</strong>).
             </div>
           </div>
         </div>"""
