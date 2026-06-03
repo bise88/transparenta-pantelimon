@@ -2,52 +2,59 @@
 
 Monitorizare cetateasca automata a achizitiilor publice ale Primariei Pantelimon.
 
-**Site live:** [aprindemlumina.eu](https://aprindemlumina.eu)
-**Raport nereguli:** [aprindemlumina.eu/raport_transparenta.html](https://aprindemlumina.eu/raport_transparenta.html)
+**Site live:** [aprindemlumina.eu](https://aprindemlumina.eu)  
+**Raport nereguli:** [aprindemlumina.eu/raport_transparenta.html](https://aprindemlumina.eu/raport_transparenta.html)  
+**Retele firme:** [aprindemlumina.eu/retele.html](https://aprindemlumina.eu/retele.html)
+
+> **Stare curentă (automatizat):** 299 nereguli · 506 contracte analizate · 313M RON total · 90/93 firme cu CUI · 83 cu date ANAF
 
 ---
 
 ## Ce face
 
-- Trage lunar contractele din SEAP (e-licitatie.ro) si bugetul de la ANAF
-- Aplica algoritmi de detectie pentru pattern-uri de risc (fragmentare artificiala, monopol furnizor, achizitii directe peste prag, shell companies, geocodare furnizori)
-- Genereaza raport HTML + JSON + RSS + press-kit + harta interactiva furnizori
-- Publica automat pe GitHub Pages prin GitHub Actions
-- Surse externe: Curtea de Conturi, ANI declaratii avere, TED Europa, MOL primarie
+- Trage saptamanal contractele din SEAP (e-licitatie.ro) si bugetul de la ANAF
+- Aplica **19 algoritmi** de detectie pentru pattern-uri de risc (fragmentare artificiala, monopol furnizor, achizitii directe peste prag, shell companies, geocodare furnizori, date financiare ANAF)
+- Detecteaza **mentiuni de risc in presa** automat (Google News + Context.ro RSS)
+- Analizeaza **retele de firme** cu adresa fiscala comuna (Cytoscape.js)
+- Genereaza raport HTML + JSON + RSS + press-kit + harta + retele interactiva furnizori
+- Publica automat pe GitHub Pages prin GitHub Actions (cron saptamanal, luni 06:00 UTC)
+- Surse externe: Curtea de Conturi, ANI declaratii avere, TED Europa, MOL primarie, data.gov.ro ANAF
 
 ## Structura repo
 
 ```
-monitor_pantelimon.py        # Scriptul principal (~5800 linii)
-monitor_uat.py               # CLI wrapper multi-UAT (orice CIF de primarie)
-transparenta_pantelimon.html # Pagina principala (site static)
-raport_transparenta.html     # Raport generat (output monitor)
-harta.html                   # Harta interactiva furnizori (Leaflet.js)
-presa.html                   # Pagina jurnalisti + press kit
-petitie.html                 # Petitie cetateneasca (Formspree)
-despre.html                  # Metodologie + institutii sesizare
-gdpr.html                    # Politica de confidentialitate
-sw.js                        # Service Worker PWA (Cache-First/Network-First)
-manifest.webmanifest         # PWA manifest (instalabil pe telefon)
-icon-192.png / icon-512.png  # Icoane PWA
-contracte.json               # Export contracte SEAP (JSON)
-contracte.csv                # Export contracte SEAP (CSV — Excel/Sheets)
-raport.json                  # Export flags/nereguli (format JSON public)
-feed.xml                     # RSS/Atom feed nereguli noi
-press_kit.json               # Press kit date structurate (generat automat)
-press_kit.md                 # Press kit Markdown (descarcabil de jurnalisti)
-pnrr_projects.json           # Proiecte PNRR (generat automat)
-firme_geocoded.json          # Sedii firme geocodate cu Nominatim OSM
-curtea_de_conturi.json       # Rapoarte audit CC (generat automat)
-ani_declaratii.json          # Declaratii avere ANI (generat automat)
-ted_notices.json             # Anunturi TED Europa (generat automat)
-mol_primarie.json            # Documente MOL primarie (generat automat)
-furnizori/                   # Pagini per furnizor (generate automat)
-risc_firma.py                # Modul detector shell companies
-.github/workflows/           # GitHub Actions (rulare automata lunara)
-API.md                       # Documentatie API JSON/CSV public
-IMPROVEMENTS.md              # Roadmap si idei de imbunatatire
-AUDIT.md                     # Audit tehnic cu propuneri cod
+monitor_pantelimon.py          # Scriptul principal (~6000 linii)
+monitor_uat.py                 # CLI wrapper multi-UAT (orice CIF de primarie)
+monitorizare_presa.py          # Monitorizare presă automată (Google News + Context.ro)
+analizeaza_retele.py           # Detectare retele firme cu adresa comuna
+import_financiar_datagov.py    # Import situatii financiare ANAF din data.gov.ro
+enricheaza_firme.py            # Enrichment CUI + flaguri financiare
+transparenta_pantelimon.html   # Pagina principala (site static)
+raport_transparenta.html       # Raport generat (output monitor, network-first SW)
+harta.html                     # Harta interactiva furnizori (Leaflet.js)
+retele.html                    # Graf retele firme (Cytoscape.js)
+presa.html                     # Pagina jurnalisti + press kit
+petitie.html                   # Petitie cetateneasca (Formspree)
+despre.html                    # Metodologie + institutii sesizare
+gdpr.html                      # Politica de confidentialitate
+sw.js                          # Service Worker PWA v5 (Cache-First/Network-First)
+manifest.webmanifest           # PWA manifest (instalabil pe telefon)
+icon-192.png / icon-512.png    # Icoane PWA
+contracte.json                 # Export contracte SEAP (JSON)
+contracte.csv                  # Export contracte SEAP (CSV — Excel/Sheets)
+raport.json                    # Export flags/nereguli (format JSON public)
+feed.xml                       # RSS/Atom feed nereguli noi
+press_kit.json                 # Press kit date structurate (generat automat)
+firme_geocoded.json            # Sedii firme geocodate cu Nominatim OSM
+firme_financiar.json           # Situatii financiare ANAF 2024 (83 firme)
+retele_firme.json              # Graf retele firme (noduri + edges)
+mentiuni_presa_auto.json       # Mentiuni presa detectate automat (generat automat)
+furnizori/                     # Pagini per furnizor (generate automat)
+risc_firma.py                  # Modul detector shell companies + date financiare
+.github/workflows/             # GitHub Actions (rulare automata saptamanala, luni)
+tests/                         # 380+ teste unitare (toate offline, mock urllib)
+API.md                         # Documentatie API JSON/CSV public
+AUDIT.md                       # Audit tehnic public
 ```
 
 ## Replicare pentru alta localitate
@@ -99,6 +106,9 @@ Praguri: Legea 98/2016 — 130.000 RON (servicii/furnizare), 500.000 RON (lucrar
 | ANAF / transparenta.eu | Buget executie | 30 zile |
 | openapi.ro (ONRC) | Date firme (CUI, adresa, actionariat) | 30 zile |
 | mfinante.gov.ro | Cifra afaceri, nr. angajati (shell detector) | 30 zile |
+| data.gov.ro ANAF | Situatii financiare anuale (WEB_BL + WEB_UU + WEB_ONG) | 180 zile |
+| Google News RSS | Mentiuni presa cu cuvinte-cheie de risc | 7 zile |
+| Context.ro RSS | Mentiuni investigatii locale | 7 zile |
 | Curtea de Conturi | Rapoarte audit UAT | 30 zile |
 | ANI integritate.eu | Declaratii avere alesi locali | 30 zile |
 | TED Europa | Anunturi contracte >500k EUR | 7 zile |
@@ -112,7 +122,7 @@ Praguri: Legea 98/2016 — 130.000 RON (servicii/furnizare), 500.000 RON (lucrar
 py -m pytest tests/ -v
 ```
 
-**359 teste unitare in 18 fisiere** — toate ruleaza fara conexiune la retea (mock urllib/requests).
+**380+ teste unitare in 21+ fisiere** — toate ruleaza fara conexiune la retea (mock urllib/requests).
 
 ```
 tests/test_detectors.py          # detectori batch 1 (fragmentare, concentrare, sedinte, publicare)
@@ -133,6 +143,9 @@ tests/test_state_analytics.py    # state persistence + analytics (incarca/salvea
 tests/test_og_furnizori.py       # og-image 1200x630 (Pillow) + index furnizori A-Z
 tests/test_utils.py              # functii utilitare (_seap_url, _fmt_ron, _termene_url, etc.)
 tests/test_scor_transparenta.py  # calculeaza_scor_transparenta (subscoruri, ponderi, interval)
+tests/test_kpi_breakdown.py      # _categorizeaza_contracte_breakdown (lucrari/servicii, dedup Rev.X)
+tests/test_monitorizare_presa.py # monitorizare_presa.py (keyword match, false-positive, cache)
+tests/test_retele_firme.py       # analizeaza_retele.py (norm adresa, clustering, gaseste_legate)
 ```
 
 ## Contribuie
