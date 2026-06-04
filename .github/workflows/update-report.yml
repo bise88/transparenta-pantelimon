@@ -1,4 +1,4 @@
-name: 🚩 Monitor Transparență Pantelimon
+﻿name: 🚩 Monitor Transparență Pantelimon
 
 "on":
   schedule:
@@ -87,6 +87,8 @@ jobs:
           git add mentiuni_presa_auto.json 2>/dev/null || true
           git add retele_firme.json 2>/dev/null || true
           git add retele.html 2>/dev/null || true
+          git add analiza_ai.json 2>/dev/null || true
+          git add genereaza_analiza_ai.py 2>/dev/null || true
           git add og-image.png 2>/dev/null || true
           # Commit doar dacă există modificări
           git diff --staged --quiet || git commit -m "🚩 Raport actualizat $(date +'%d.%m.%Y')"
@@ -95,3 +97,5 @@ jobs:
           git clean -fd 2>/dev/null || true
           git pull --rebase origin main
           git push
+
+
