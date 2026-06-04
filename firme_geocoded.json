@@ -7,7 +7,7 @@
     "lng": 26.165099,
     "valoare": 138000.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "asociatia-centrul-roman-pentru-initiativa-sociala"
   },
   {
     "name": "COMPANY DATA S.R.L.",
@@ -17,7 +17,7 @@
     "lng": 25.992722,
     "valoare": 10790.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "company-data-srl"
   },
   {
     "name": "INDOOR MEDIA GROUP SRL",
@@ -27,7 +27,7 @@
     "lng": 26.130345,
     "valoare": 461950.0,
     "nr_contracte": 10,
-    "slug": ""
+    "slug": "indoor-media-group-srl"
   },
   {
     "name": "ADLO PROCARS SRL",
@@ -47,7 +47,7 @@
     "lng": 26.130345,
     "valoare": 75100.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "otis-lift-srl"
   },
   {
     "name": "INTEGRISOFT SOLUTIONS SRL",
@@ -57,7 +57,7 @@
     "lng": 26.130345,
     "valoare": 152102.1,
     "nr_contracte": 4,
-    "slug": ""
+    "slug": "integrisoft-solutions-srl"
   },
   {
     "name": "VICE COM 95 SRL",
@@ -67,7 +67,7 @@
     "lng": 26.244908,
     "valoare": 270600.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "vice-com-95-srl"
   },
   {
     "name": "ROTAREXIM SA",
@@ -77,7 +77,7 @@
     "lng": 24.364721,
     "valoare": 34792.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "rotarexim-sa"
   },
   {
     "name": "SOCIETATEA NATIONALA DE INFORMATICA SA",
@@ -87,7 +87,7 @@
     "lng": 26.050155,
     "valoare": 474720.0,
     "nr_contracte": 3,
-    "slug": ""
+    "slug": "societatea-nationala-de-informatica-sa"
   },
   {
     "name": "TURBOTOP SRL",
@@ -97,7 +97,7 @@
     "lng": 26.203556,
     "valoare": 40373.41,
     "nr_contracte": 29,
-    "slug": ""
+    "slug": "turbotop-srl"
   },
   {
     "name": "CONSTOPOGRAF EXPERT SRL",
@@ -107,7 +107,7 @@
     "lng": 26.203556,
     "valoare": 1890000.0,
     "nr_contracte": 7,
-    "slug": ""
+    "slug": "constopograf-expert-srl"
   },
   {
     "name": "ILIE GEORGIAN PERSOANĂ FIZICĂ AUTORIZATĂ",
@@ -117,7 +117,7 @@
     "lng": 26.203556,
     "valoare": 114000.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "ilie-georgian-persoana-fizica-autorizata"
   },
   {
     "name": "PAN - NET SRL",
@@ -127,7 +127,7 @@
     "lng": 26.203556,
     "valoare": 300539.0,
     "nr_contracte": 7,
-    "slug": ""
+    "slug": "pan-net-srl"
   },
   {
     "name": "OPAX PROTECTION SYSTEMS S.R.L.",
@@ -137,7 +137,7 @@
     "lng": 26.177279,
     "valoare": 48000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "opax-protection-systems-srl"
   },
   {
     "name": "AUTO MARCUS GRUP SA",
@@ -157,7 +157,7 @@
     "lng": 26.203556,
     "valoare": 162381.08,
     "nr_contracte": 51,
-    "slug": ""
+    "slug": "ksa-road-services-srl"
   },
   {
     "name": "ADMIRAL MEDIA SRL",
@@ -167,7 +167,7 @@
     "lng": 26.032448,
     "valoare": 208.25,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "admiral-media-srl"
   },
   {
     "name": "GEMCO TRADE SRL",
@@ -177,7 +177,7 @@
     "lng": 26.851534,
     "valoare": 946470.0,
     "nr_contracte": 4,
-    "slug": ""
+    "slug": "gemco-trade-srl"
   },
   {
     "name": "GENERAL UTIL CONS S.R.L.",
@@ -187,7 +187,7 @@
     "lng": 26.326122,
     "valoare": 321000.0,
     "nr_contracte": 4,
-    "slug": ""
+    "slug": "general-util-cons-srl"
   },
   {
     "name": "CENTRUL DE CALCUL SA",
@@ -197,7 +197,7 @@
     "lng": 23.272812,
     "valoare": 26095.0,
     "nr_contracte": 13,
-    "slug": ""
+    "slug": "centrul-de-calcul-sa"
   },
   {
     "name": "ALPHA CONSULT GENERAL SRL",
@@ -207,7 +207,7 @@
     "lng": 26.165099,
     "valoare": 74000.0,
     "nr_contracte": 3,
-    "slug": ""
+    "slug": "alpha-consult-general-srl"
   },
   {
     "name": "WORLD GLOBAL MEDIA S.R.L.",
@@ -217,17 +217,17 @@
     "lng": 26.032448,
     "valoare": 48000.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "world-global-media-srl"
   },
   {
     "name": "DANTE INTERNATIONAL SA",
     "cif": "14399840",
-    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 6, ŞOS. VIRTUŢII, NR.148, SPATIUL E47",
-    "lat": 44.447875,
-    "lng": 26.032448,
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, STR. GARA HERĂSTRĂU, NR.6, CLADIREA GLOBALWORTH SQUARE, ET.1,2,3,5,8",
+    "lat": 44.459585,
+    "lng": 26.130345,
     "valoare": 488.99,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "dante-international-sa"
   },
   {
     "name": "PERCONS EU S.R.L.",
@@ -237,7 +237,7 @@
     "lng": 26.050155,
     "valoare": 721000.0,
     "nr_contracte": 6,
-    "slug": ""
+    "slug": "percons-eu-srl"
   },
   {
     "name": "CRISBO COMPANY SRL",
@@ -247,7 +247,7 @@
     "lng": 27.583781,
     "valoare": 135000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "crisbo-company-srl"
   },
   {
     "name": "GI EUROSERVICE SRL",
@@ -257,7 +257,7 @@
     "lng": 26.165099,
     "valoare": 29429.59,
     "nr_contracte": 22,
-    "slug": ""
+    "slug": "gi-euroservice-srl"
   },
   {
     "name": "DARK SOLUTIONS S.R.L.",
@@ -267,7 +267,7 @@
     "lng": 26.119018,
     "valoare": 12575.0,
     "nr_contracte": 3,
-    "slug": ""
+    "slug": "dark-solutions-srl"
   },
   {
     "name": "SSM FIRE CONSULTING SRL",
@@ -277,7 +277,7 @@
     "lng": 26.119018,
     "valoare": 181440.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "ssm-fire-consulting-srl"
   },
   {
     "name": "ANASTASIA G.B. PRODCOM SRL",
@@ -287,7 +287,7 @@
     "lng": 26.130345,
     "valoare": 873.1,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "anastasia-gb-prodcom-srl"
   },
   {
     "name": "NICOLAS CONSTRUCT SRL",
@@ -297,7 +297,7 @@
     "lng": 26.203556,
     "valoare": 389276.66,
     "nr_contracte": 5,
-    "slug": ""
+    "slug": "nicolas-construct-srl"
   },
   {
     "name": "MASTER SOLUTIONS TEAM SRL",
@@ -307,7 +307,7 @@
     "lng": 26.203556,
     "valoare": 535000.0,
     "nr_contracte": 3,
-    "slug": ""
+    "slug": "master-solutions-team-srl"
   },
   {
     "name": "VITERI CONCEPT SOLUTIONS S.R.L.",
@@ -317,7 +317,7 @@
     "lng": 26.203556,
     "valoare": 166000.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "viteri-concept-solutions-srl"
   },
   {
     "name": "DEDEMAN SRL",
@@ -337,7 +337,7 @@
     "lng": 26.165099,
     "valoare": 127743.0,
     "nr_contracte": 6,
-    "slug": ""
+    "slug": "heat-instal-srl"
   },
   {
     "name": "CENTRUL TERITORIAL DE CALCUL ELECTRONIC SA",
@@ -347,7 +347,7 @@
     "lng": 26.131542,
     "valoare": 4800.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "centrul-teritorial-de-calcul-electronic-sa"
   },
   {
     "name": "PROTECT FIRE CONSULTING SRL",
@@ -357,7 +357,7 @@
     "lng": 26.119018,
     "valoare": 106847.0,
     "nr_contracte": 4,
-    "slug": ""
+    "slug": "protect-fire-consulting-srl"
   },
   {
     "name": "ELLIS STORE CONCEPT S.R.L.",
@@ -367,7 +367,7 @@
     "lng": 24.364721,
     "valoare": 12475.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "ellis-store-concept-srl"
   },
   {
     "name": "CARDEEMS SRL",
@@ -377,7 +377,7 @@
     "lng": 26.05847,
     "valoare": 1807.98,
     "nr_contracte": 6,
-    "slug": ""
+    "slug": "cardeems-srl"
   },
   {
     "name": "FLASHALARM ELECTRIC SRL",
@@ -387,7 +387,7 @@
     "lng": 26.130345,
     "valoare": 16200.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "flashalarm-electric-srl"
   },
   {
     "name": "GEROM INTERNATIONAL PRODIMEX SRL",
@@ -397,7 +397,7 @@
     "lng": 26.165099,
     "valoare": 89565.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "gerom-international-prodimex-srl"
   },
   {
     "name": "FEROSTIL ART S.R.L.",
@@ -407,7 +407,7 @@
     "lng": 26.203556,
     "valoare": 7300.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "ferostil-art-srl"
   },
   {
     "name": "AROX EQUIPMENT SRL",
@@ -417,7 +417,7 @@
     "lng": 23.467985,
     "valoare": 4221.05,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "arox-equipment-srl"
   },
   {
     "name": "HIDROCONSTRUCT SUD S.R.L.",
@@ -427,7 +427,7 @@
     "lng": 26.130345,
     "valoare": 3702.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "hidroconstruct-sud-srl"
   },
   {
     "name": "TEHNICAT SERVICE S.R.L.",
@@ -437,7 +437,7 @@
     "lng": 26.008216,
     "valoare": 31443.54,
     "nr_contracte": 5,
-    "slug": ""
+    "slug": "tehnicat-service-srl"
   },
   {
     "name": "COMPANIA STINGERI SI INTERVENTII SA",
@@ -447,7 +447,7 @@
     "lng": 26.130345,
     "valoare": 800.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "compania-stingeri-si-interventii-sa"
   },
   {
     "name": "IVECO TRUCK SERVICES SRL",
@@ -457,7 +457,7 @@
     "lng": 26.24685,
     "valoare": 20666.51,
     "nr_contracte": 4,
-    "slug": ""
+    "slug": "iveco-truck-services-srl"
   },
   {
     "name": "ZBK BALKAN S.A. BULGARIA-SUCURSALA  ROMÂNIA",
@@ -477,7 +477,7 @@
     "lng": 26.050155,
     "valoare": 96000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "ziarul-semnal-enterprises-srl"
   },
   {
     "name": "EUROPROIECT ESTATE S.R.L.",
@@ -487,7 +487,7 @@
     "lng": 27.974293,
     "valoare": 3480.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "europroiect-estate-srl"
   },
   {
     "name": "AUTOSIM ELECTRONIC S.R.L.",
@@ -497,7 +497,7 @@
     "lng": 26.203556,
     "valoare": 14000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "autosim-electronic-srl"
   },
   {
     "name": "ALEX COM - STING S.R.L.",
@@ -507,7 +507,7 @@
     "lng": 26.032448,
     "valoare": 834.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "alex-com-sting-srl"
   },
   {
     "name": "EUROHOSTING SRL",
@@ -517,7 +517,7 @@
     "lng": 26.165099,
     "valoare": 142800.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "eurohosting-srl"
   },
   {
     "name": "BETIRA CONSTRUCT SRL",
@@ -527,7 +527,7 @@
     "lng": 26.33501,
     "valoare": 802776.0,
     "nr_contracte": 3,
-    "slug": ""
+    "slug": "betira-construct-srl"
   },
   {
     "name": "BELLE VIE MEDICAL SRL",
@@ -547,7 +547,7 @@
     "lng": 26.165099,
     "valoare": 993.53,
     "nr_contracte": 3,
-    "slug": ""
+    "slug": "tactica-outdoor-srl"
   },
   {
     "name": "ANDUNA SERVIMOB SRL",
@@ -557,7 +557,7 @@
     "lng": 26.050155,
     "valoare": 180441.6,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "anduna-servimob-srl"
   },
   {
     "name": "GIORGIO 67 SERVICE SRL",
@@ -567,7 +567,7 @@
     "lng": 26.130345,
     "valoare": 32903.12,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "giorgio-67-service-srl"
   },
   {
     "name": "SPORT & LIGHT CONSULTING S.R.L.",
@@ -577,7 +577,7 @@
     "lng": 24.872116,
     "valoare": 30000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "sport-light-consulting-srl"
   },
   {
     "name": "STRABO CONSTRUCTION & MENTENANCE S.R.L.",
@@ -587,7 +587,7 @@
     "lng": 26.203556,
     "valoare": 202058.05,
     "nr_contracte": 3,
-    "slug": ""
+    "slug": "strabo-construction-mentenance-srl"
   },
   {
     "name": "EUROPROIECT UNIVERS SRL",
@@ -597,7 +597,7 @@
     "lng": 26.130345,
     "valoare": 104500.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "europroiect-univers-srl"
   },
   {
     "name": "EURIAL INVEST SRL",
@@ -607,7 +607,7 @@
     "lng": 24.889812,
     "valoare": 9614.83,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "eurial-invest-srl"
   },
   {
     "name": "ONEDIA CAR SERVICE S.R.L.",
@@ -617,7 +617,7 @@
     "lng": 26.203556,
     "valoare": 9934.58,
     "nr_contracte": 4,
-    "slug": ""
+    "slug": "onedia-car-service-srl"
   },
   {
     "name": "ROSERVOTECH SRL",
@@ -627,7 +627,7 @@
     "lng": 26.070991,
     "valoare": 4428.21,
     "nr_contracte": 3,
-    "slug": ""
+    "slug": "roservotech-srl"
   },
   {
     "name": "CITY PARK SRL",
@@ -637,7 +637,7 @@
     "lng": 26.165099,
     "valoare": 312248.6,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "city-park-srl"
   },
   {
     "name": "AUTOVEST SRL",
@@ -647,7 +647,7 @@
     "lng": 21.928523,
     "valoare": 4369065.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "autovest-srl"
   },
   {
     "name": "TOP A-Z CONCEPT S.R.L.",
@@ -667,7 +667,7 @@
     "lng": 26.050155,
     "valoare": 11600.0,
     "nr_contracte": 3,
-    "slug": ""
+    "slug": "aron-medical-srl"
   },
   {
     "name": "IDEAL - STAR ELECTRIC  SRL",
@@ -677,7 +677,7 @@
     "lng": 26.182527,
     "valoare": 9000.0,
     "nr_contracte": 3,
-    "slug": ""
+    "slug": "ideal-star-electric-srl"
   },
   {
     "name": "FOCUS RISK S.R.L.",
@@ -687,7 +687,7 @@
     "lng": 28.65076,
     "valoare": 17000.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "focus-risk-srl"
   },
   {
     "name": "INTERSOFT START SOLUTIONS SRL",
@@ -697,7 +697,7 @@
     "lng": 26.050155,
     "valoare": 2300.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "intersoft-start-solutions-srl"
   },
   {
     "name": "DAF INTERNATIONAL PROFESSIONAL S.R.L.",
@@ -707,7 +707,7 @@
     "lng": 26.032448,
     "valoare": 15270.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "daf-international-professional-srl"
   },
   {
     "name": "RICON CONSULTING SRL",
@@ -717,7 +717,7 @@
     "lng": 27.583781,
     "valoare": 30000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "ricon-consulting-srl"
   },
   {
     "name": "LUCA F BOGDAN PERSOANĂ FIZICĂ AUTORIZATĂ",
@@ -727,7 +727,7 @@
     "lng": 26.203556,
     "valoare": 96000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "luca-f-bogdan-persoana-fizica-autorizata"
   },
   {
     "name": "PRO ARHIVE MANAGEMENT S.R.L.",
@@ -737,7 +737,7 @@
     "lng": 26.050155,
     "valoare": 135000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "pro-arhive-management-srl"
   },
   {
     "name": "ECO PUBLIC SRL",
@@ -747,7 +747,7 @@
     "lng": 26.032448,
     "valoare": 17900.0,
     "nr_contracte": 5,
-    "slug": ""
+    "slug": "eco-public-srl"
   },
   {
     "name": "OPIUM OFFICE CONSULTING S.R.L.",
@@ -757,7 +757,7 @@
     "lng": 26.174623,
     "valoare": 4500.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "opium-office-consulting-srl"
   },
   {
     "name": "IFNCONS MEDIA SRL",
@@ -767,7 +767,7 @@
     "lng": 26.050155,
     "valoare": 240000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "ifncons-media-srl"
   },
   {
     "name": "COMINDFLEX S.R.L.",
@@ -777,7 +777,7 @@
     "lng": 24.995209,
     "valoare": 29000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "comindflex-srl"
   },
   {
     "name": "PROBITZ SRL",
@@ -787,7 +787,7 @@
     "lng": 26.02365,
     "valoare": 4047.4,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "probitz-srl"
   },
   {
     "name": "FANPLACE IT S.R.L.",
@@ -803,11 +803,11 @@
     "name": "STANGER DESIGN S.R.L.",
     "cif": "40412167",
     "adresa": "JUD. CĂLĂRAŞI, MUN. CĂLĂRAŞI, PRL. BUCUREŞTI, NR.24, BL.M19, SC.2, ET.3, AP.6",
-    "lat": 44.210116,
-    "lng": 27.30713,
+    "lat": 44.190311,
+    "lng": 27.338525,
     "valoare": 115500.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "stanger-design-srl"
   },
   {
     "name": "SAGA INFRASTRUCTURĂ S.R.L.",
@@ -817,7 +817,7 @@
     "lng": 27.331323,
     "valoare": 28119.22,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "saga-infrastructura-srl"
   },
   {
     "name": "CXB CONSULTING & TECHNICAL SUPPORT SRL",
@@ -827,7 +827,7 @@
     "lng": 26.130345,
     "valoare": 180000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "cxb-consulting-technical-support-srl"
   },
   {
     "name": "PMC GROUP DISTRIBUTIE SRL",
@@ -837,7 +837,7 @@
     "lng": 26.165099,
     "valoare": 2714.26,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "pmc-group-distributie-srl"
   },
   {
     "name": "DNS BIROTICA SRL",
@@ -847,7 +847,7 @@
     "lng": 26.119018,
     "valoare": 3676.3,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "dns-birotica-srl"
   },
   {
     "name": "RHEEA CONSTRUCTION S.R.L.",
@@ -867,7 +867,7 @@
     "lng": 26.130345,
     "valoare": 0.01,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "pluxee-romania-srl"
   },
   {
     "name": "PRESTIGE EVENTS SRL",
@@ -877,7 +877,7 @@
     "lng": 26.032448,
     "valoare": 108000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "prestige-events-srl"
   },
   {
     "name": "GEO AUTO AGRO S.R.L.",
@@ -887,7 +887,7 @@
     "lng": 26.130345,
     "valoare": 285.71,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "geo-auto-agro-srl"
   },
   {
     "name": "CREATIVE PEOPLE S.R.L.",
@@ -897,7 +897,7 @@
     "lng": 26.0413,
     "valoare": 350000.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "creative-people-srl"
   },
   {
     "name": "SEMNAL.EU S.R.L.",
@@ -907,7 +907,7 @@
     "lng": 26.050155,
     "valoare": 118000.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "semnaleu-srl"
   },
   {
     "name": "OMNI CONSTRUCT LOGISTIC SRL",
@@ -917,7 +917,7 @@
     "lng": 28.65076,
     "valoare": 7920929.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "omni-construct-logistic-srl"
   },
   {
     "name": "SICURO INVEST SRL",
@@ -927,7 +927,7 @@
     "lng": 26.182527,
     "valoare": 15070720.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "sicuro-invest-srl"
   },
   {
     "name": "FAST NEW PRINT SERVICES S.R.L.",
@@ -937,7 +937,7 @@
     "lng": 26.203556,
     "valoare": 225408.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "fast-new-print-services-srl"
   },
   {
     "name": "MODSERV IMPEX SRL",
@@ -947,7 +947,7 @@
     "lng": 26.130345,
     "valoare": 1716.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "modserv-impex-srl"
   },
   {
     "name": "ROMNETS CORPORATION SRL",
@@ -957,7 +957,7 @@
     "lng": 25.273296,
     "valoare": 10027.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "romnets-corporation-srl"
   },
   {
     "name": "FOCUS COMPANY CONSULTING CCN SRL",
@@ -967,7 +967,7 @@
     "lng": 26.050155,
     "valoare": 384990.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "focus-company-consulting-ccn-srl"
   },
   {
     "name": "AXICO GRUP SRL",
@@ -977,7 +977,7 @@
     "lng": 28.714638,
     "valoare": 22305.36,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "axico-grup-srl"
   },
   {
     "name": "EPSILON S.R.L.",
@@ -987,7 +987,7 @@
     "lng": 27.331323,
     "valoare": 63.03,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "epsilon-srl"
   },
   {
     "name": "DATABASE PRO SRL",
@@ -997,7 +997,7 @@
     "lng": 26.032448,
     "valoare": 126.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "database-pro-srl"
   },
   {
     "name": "ROMSYSTEMS SRL",
@@ -1007,7 +1007,7 @@
     "lng": 26.915356,
     "valoare": 4568.54,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "romsystems-srl"
   },
   {
     "name": "VIR COM EM SRL",
@@ -1017,7 +1017,7 @@
     "lng": 26.165099,
     "valoare": 1236.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "vir-com-em-srl"
   },
   {
     "name": "ROFUSION ADVERTISING S.R.L.",
@@ -1027,7 +1027,7 @@
     "lng": 26.050155,
     "valoare": 239.67,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "rofusion-advertising-srl"
   },
   {
     "name": "A.F. CONSULTING SRL",
@@ -1037,7 +1037,7 @@
     "lng": 26.119018,
     "valoare": 239900.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "af-consulting-srl"
   },
   {
     "name": "DV PROD MEDIA SRL",
@@ -1047,7 +1047,7 @@
     "lng": 26.130345,
     "valoare": 4038.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "dv-prod-media-srl"
   },
   {
     "name": "FLAX COMPUTERS SRL",
@@ -1057,7 +1057,7 @@
     "lng": 25.462816,
     "valoare": 209.7,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "flax-computers-srl"
   },
   {
     "name": "LUKA NIKAT UTILAJE SRL",
@@ -1067,7 +1067,7 @@
     "lng": 26.203556,
     "valoare": 2850.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "luka-nikat-utilaje-srl"
   },
   {
     "name": "RALEX PROIECT CONSTRUCT SRL",
@@ -1077,7 +1077,7 @@
     "lng": 27.331323,
     "valoare": 1017350.0,
     "nr_contracte": 5,
-    "slug": ""
+    "slug": "ralex-proiect-construct-srl"
   },
   {
     "name": "CAPITAL GRUP INSTAL SRL",
@@ -1087,7 +1087,7 @@
     "lng": 26.165099,
     "valoare": 75000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "capital-grup-instal-srl"
   },
   {
     "name": "FINANCE PUBLIC CONSULTING S.R.L.",
@@ -1097,7 +1097,7 @@
     "lng": 26.050155,
     "valoare": 275000.0,
     "nr_contracte": 3,
-    "slug": ""
+    "slug": "finance-public-consulting-srl"
   },
   {
     "name": "SOFA SOFT SRL",
@@ -1107,7 +1107,7 @@
     "lng": 21.330255,
     "valoare": 1098.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "sofa-soft-srl"
   },
   {
     "name": "DO&DO SILVER SPRINT SRL",
@@ -1117,7 +1117,7 @@
     "lng": 26.245235,
     "valoare": 162495.0,
     "nr_contracte": 3,
-    "slug": ""
+    "slug": "dodo-silver-sprint-srl"
   },
   {
     "name": "CARTOGATE GROUP SRL",
@@ -1127,7 +1127,7 @@
     "lng": 26.218155,
     "valoare": 4095.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "cartogate-group-srl"
   },
   {
     "name": "POLITES ONLINE SRL",
@@ -1137,7 +1137,7 @@
     "lng": 23.796561,
     "valoare": 11223.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "polites-online-srl"
   },
   {
     "name": "NOICONSTRUIM.RO SRL",
@@ -1147,7 +1147,7 @@
     "lng": 26.245235,
     "valoare": 10982.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "noiconstruimro-srl"
   },
   {
     "name": "TACHONAN SERVICE SRL",
@@ -1157,7 +1157,7 @@
     "lng": 21.928523,
     "valoare": 909.09,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "tachonan-service-srl"
   },
   {
     "name": "VEST INSTAL S.R.L.",
@@ -1167,7 +1167,7 @@
     "lng": 27.331323,
     "valoare": 211200.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "vest-instal-srl"
   },
   {
     "name": "TITAN MACHINERY ROMANIA SRL",
@@ -1177,7 +1177,7 @@
     "lng": 25.945338,
     "valoare": 5135.13,
     "nr_contracte": 3,
-    "slug": ""
+    "slug": "titan-machinery-romania-srl"
   },
   {
     "name": "CORVIN DESIGN SRL",
@@ -1187,7 +1187,7 @@
     "lng": 22.945243,
     "valoare": 7149763.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "corvin-design-srl"
   },
   {
     "name": "ELECTROCONS GROUP PROIECT INTL SRL",
@@ -1197,7 +1197,7 @@
     "lng": 26.165099,
     "valoare": 7149763.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "electrocons-group-proiect-intl-srl"
   },
   {
     "name": "ACG CONSTRUCTION & PROJECTS S.R.L.",
@@ -1207,7 +1207,7 @@
     "lng": 26.119018,
     "valoare": 13570756.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "acg-construction-projects-srl"
   },
   {
     "name": "OLTENIA GARDEN SRL",
@@ -1217,7 +1217,7 @@
     "lng": 23.963011,
     "valoare": 13570756.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "oltenia-garden-srl"
   },
   {
     "name": "ALA EXPERT CONSTRUCT SRL",
@@ -1227,7 +1227,7 @@
     "lng": 26.071651,
     "valoare": 29508940.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "ala-expert-construct-srl"
   },
   {
     "name": "SANTIA PARTNER CONSTRUCT SRL",
@@ -1237,7 +1237,7 @@
     "lng": 26.02365,
     "valoare": 29508940.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "santia-partner-construct-srl"
   },
   {
     "name": "YARDMAN SRL",
@@ -1247,7 +1247,7 @@
     "lng": 26.177279,
     "valoare": 29508940.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "yardman-srl"
   },
   {
     "name": "GLOBEXTERRA S.R.L.",
@@ -1257,7 +1257,7 @@
     "lng": 26.050155,
     "valoare": 24184504.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "globexterra-srl"
   },
   {
     "name": "ROMCO SYSTEM SRL",
@@ -1267,7 +1267,7 @@
     "lng": 26.165099,
     "valoare": 24184504.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "romco-system-srl"
   },
   {
     "name": "FRAMEWORKS SRL",
@@ -1277,7 +1277,7 @@
     "lng": 26.165099,
     "valoare": 3437.06,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "frameworks-srl"
   },
   {
     "name": "FLEXABILITY MANAGEMENT SRL",
@@ -1287,7 +1287,7 @@
     "lng": 26.050155,
     "valoare": 230000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "flexability-management-srl"
   },
   {
     "name": "GHE STUBEANU 2000 SRL",
@@ -1297,7 +1297,7 @@
     "lng": 25.965645,
     "valoare": 60000.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "ghe-stubeanu-2000-srl"
   },
   {
     "name": "LEGAL ASSISTANCE SRL",
@@ -1307,7 +1307,7 @@
     "lng": 26.165099,
     "valoare": 10000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "legal-assistance-srl"
   },
   {
     "name": "BIROTICIENII S.R.L.",
@@ -1317,7 +1317,7 @@
     "lng": 26.165099,
     "valoare": 747.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "biroticienii-srl"
   },
   {
     "name": "WURTH ROMANIA SRL",
@@ -1327,7 +1327,7 @@
     "lng": 26.050155,
     "valoare": 3123.5,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "wurth-romania-srl"
   },
   {
     "name": "TEHNOSERVICE ACTIV INSTAL SRL",
@@ -1337,7 +1337,7 @@
     "lng": 26.071651,
     "valoare": 35472.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "tehnoservice-activ-instal-srl"
   },
   {
     "name": "GPK INFRASTRUCTURE DESIGN S.R.L.",
@@ -1347,7 +1347,7 @@
     "lng": 26.203556,
     "valoare": 252500.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "gpk-infrastructure-design-srl"
   },
   {
     "name": "KOMORA ENGINEERING SRL",
@@ -1357,7 +1357,7 @@
     "lng": 27.331323,
     "valoare": 125000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "komora-engineering-srl"
   },
   {
     "name": "SAMTEC MONDO TECHNOLOGY INDUSTRY S.R.L.",
@@ -1367,7 +1367,7 @@
     "lng": 22.357742,
     "valoare": 164700.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "samtec-mondo-technology-industry-srl"
   },
   {
     "name": "SCHWARZ GRUPPE INT SRL",
@@ -1377,7 +1377,7 @@
     "lng": 24.154624,
     "valoare": 1568.83,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "schwarz-gruppe-int-srl"
   },
   {
     "name": "MIRON COM SRL",
@@ -1387,7 +1387,7 @@
     "lng": 27.974293,
     "valoare": 246000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "miron-com-srl"
   },
   {
     "name": "HENTZA CONSULTING S.R.L.",
@@ -1397,7 +1397,7 @@
     "lng": 26.202984,
     "valoare": 198000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "hentza-consulting-srl"
   },
   {
     "name": "HENTZA PROPERTIES S.R.L.",
@@ -1407,7 +1407,7 @@
     "lng": 26.202984,
     "valoare": 49000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "hentza-properties-srl"
   },
   {
     "name": "GREEN DEVELOPMENT SOLUTIONS AND MANAGEMENT S.R.L.",
@@ -1417,7 +1417,7 @@
     "lng": 26.130345,
     "valoare": 270000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "green-development-solutions-and-management-srl"
   },
   {
     "name": "PANORAMIC CONCEPT CONS S.R.L.",
@@ -1427,7 +1427,7 @@
     "lng": 26.050155,
     "valoare": 470000.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "panoramic-concept-cons-srl"
   },
   {
     "name": "OPTIC HOUSE TRANSILVANIA S.R.L.",
@@ -1437,7 +1437,7 @@
     "lng": 24.496395,
     "valoare": 34355.37,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "optic-house-transilvania-srl"
   },
   {
     "name": "TIRIAC AUTO SRL",
@@ -1447,7 +1447,7 @@
     "lng": 26.050155,
     "valoare": 6060.77,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "tiriac-auto-srl"
   },
   {
     "name": "CLIMTEH SRL",
@@ -1457,7 +1457,7 @@
     "lng": 26.130345,
     "valoare": 1225.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "climteh-srl"
   },
   {
     "name": "GDM REPAIR S.R.L.",
@@ -1467,7 +1467,7 @@
     "lng": 26.50968,
     "valoare": 3770.0,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "gdm-repair-srl"
   },
   {
     "name": "TIRES AND PARTS SRL",
@@ -1477,7 +1477,7 @@
     "lng": 26.130345,
     "valoare": 1103.29,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "tires-and-parts-srl"
   },
   {
     "name": "GIMAR STINGSERV SRL",
@@ -1487,7 +1487,7 @@
     "lng": 26.050155,
     "valoare": 1043.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "gimar-stingserv-srl"
   },
   {
     "name": "NIPLICAD SRL",
@@ -1497,7 +1497,7 @@
     "lng": 26.203556,
     "valoare": 63008.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "niplicad-srl"
   },
   {
     "name": "GREEN SPACE ART SRL",
@@ -1507,7 +1507,7 @@
     "lng": 26.33501,
     "valoare": 63520.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "green-space-art-srl"
   },
   {
     "name": "ETA AUTOMATIZARI INDUSTRIALE SRL",
@@ -1517,7 +1517,7 @@
     "lng": 21.225747,
     "valoare": 3188.16,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "eta-automatizari-industriale-srl"
   },
   {
     "name": "TOTAL WATER DESIGN SRL",
@@ -1527,7 +1527,7 @@
     "lng": 26.165099,
     "valoare": 75000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "total-water-design-srl"
   },
   {
     "name": "WINTER COM SRL",
@@ -1537,7 +1537,7 @@
     "lng": 24.496395,
     "valoare": 1773.5,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "winter-com-srl"
   },
   {
     "name": "OCONO ROMANIA S.R.L.",
@@ -1547,17 +1547,17 @@
     "lng": 26.032448,
     "valoare": 5416.34,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "ocono-romania-srl"
   },
   {
     "name": "SELGROS CASH & CARRY SRL",
     "cif": "11805367",
     "adresa": "JUD. BRAŞOV, MUN. BRAŞOV, CAL. BUCUREŞTI, NR.231",
-    "lat": 45.64404,
-    "lng": 25.62385,
+    "lat": 45.634456,
+    "lng": 25.634003,
     "valoare": 9031.31,
     "nr_contracte": 2,
-    "slug": ""
+    "slug": "selgros-cash-carry-srl"
   },
   {
     "name": "NEWLINE MUSIC S.R.L.",
@@ -1567,7 +1567,7 @@
     "lng": 26.203556,
     "valoare": 6000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "newline-music-srl"
   },
   {
     "name": "HAHAHA S.R.L.",
@@ -1577,7 +1577,7 @@
     "lng": 26.130345,
     "valoare": 600.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "hahaha-srl"
   },
   {
     "name": "DAV GARDEN & SERVICE SRL",
@@ -1587,7 +1587,7 @@
     "lng": 26.629686,
     "valoare": 10385059.0,
     "nr_contracte": 3,
-    "slug": ""
+    "slug": "dav-garden-service-srl"
   },
   {
     "name": "SSG SELECT SOLUTIONS SRL",
@@ -1597,7 +1597,7 @@
     "lng": 26.24943,
     "valoare": 2880.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "ssg-select-solutions-srl"
   },
   {
     "name": "ITG ONLINE SRL",
@@ -1607,7 +1607,7 @@
     "lng": 26.165099,
     "valoare": 13909.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "itg-online-srl"
   },
   {
     "name": "CENTRAL SERVICE INSTAL SRL",
@@ -1617,7 +1617,7 @@
     "lng": 26.119018,
     "valoare": 6456.21,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "central-service-instal-srl"
   },
   {
     "name": "WOLTERS KLUWER ROMÂNIA SRL",
@@ -1627,7 +1627,7 @@
     "lng": 26.071651,
     "valoare": 8988.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "wolters-kluwer-romania-srl"
   },
   {
     "name": "COMPANIA NATIONALA POSTA ROMANA S.A.",
@@ -1637,7 +1637,7 @@
     "lng": 26.130345,
     "valoare": 150000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "compania-nationala-posta-romana-sa"
   },
   {
     "name": "MEDA CONSULT SRL",
@@ -1647,7 +1647,7 @@
     "lng": 25.462816,
     "valoare": 1238.84,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "meda-consult-srl"
   },
   {
     "name": "BLITZ PRINT SRL",
@@ -1657,7 +1657,7 @@
     "lng": 26.130345,
     "valoare": 25400.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "blitz-print-srl"
   },
   {
     "name": "GPT PIPE PLAN S.R.L.",
@@ -1667,7 +1667,7 @@
     "lng": 26.165099,
     "valoare": 43000.0,
     "nr_contracte": 3,
-    "slug": ""
+    "slug": "gpt-pipe-plan-srl"
   },
   {
     "name": "ALPHA SHOT SRL",
@@ -1677,17 +1677,17 @@
     "lng": 26.165099,
     "valoare": 4130.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "alpha-shot-srl"
   },
   {
     "name": "PROF PRINT S.R.L.",
     "cif": "30153510",
-    "adresa": "JUD. IALOMIŢA, MUN. SLOBOZIA, STR. VASILE ALECSANDRI, NR.20",
+    "adresa": "JUD. IALOMIŢA, MUN. SLOBOZIA, STR. GĂRII NOI, NR.20A",
     "lat": 44.5636,
     "lng": 27.361848,
     "valoare": 4380.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "prof-print-srl"
   },
   {
     "name": "QUICK SERVICE SRL",
@@ -1697,7 +1697,7 @@
     "lng": 28.65076,
     "valoare": 70200.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "quick-service-srl"
   },
   {
     "name": "SARMIS COLUMNA FIRE SRL",
@@ -1707,7 +1707,7 @@
     "lng": 26.071651,
     "valoare": 15172.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "sarmis-columna-fire-srl"
   },
   {
     "name": "EXPERT DESIGN CONSULTING S.R.L.",
@@ -1717,7 +1717,7 @@
     "lng": 26.130345,
     "valoare": 15000.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "expert-design-consulting-srl"
   },
   {
     "name": "A-Z INSTAL GAZ S.R.L.",
@@ -1727,7 +1727,7 @@
     "lng": 26.119018,
     "valoare": 53600.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "a-z-instal-gaz-srl"
   },
   {
     "name": "SUBANSAMBLE AUTO SA",
@@ -1737,7 +1737,7 @@
     "lng": 25.786537,
     "valoare": 9694.5,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "subansamble-auto-sa"
   },
   {
     "name": "MIDAS ROAD S.R.L.",
@@ -1747,7 +1747,7 @@
     "lng": 26.184697,
     "valoare": 880411.88,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "midas-road-srl"
   },
   {
     "name": "SMART CHOICE SRL",
@@ -1757,7 +1757,7 @@
     "lng": 27.583781,
     "valoare": 633.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "smart-choice-srl"
   },
   {
     "name": "CRIA GENERAL CONSTRUCT S.R.L.",
@@ -1767,7 +1767,7 @@
     "lng": 26.119018,
     "valoare": 12671650.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "cria-general-construct-srl"
   },
   {
     "name": "DORBASTI CONSTRUCT S.R.L.",
@@ -1777,7 +1777,7 @@
     "lng": 26.164075,
     "valoare": 12671650.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "dorbasti-construct-srl"
   },
   {
     "name": "GRI CONSTRUCT ACM S.R.L.",
@@ -1787,7 +1787,7 @@
     "lng": 26.165099,
     "valoare": 12671650.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "gri-construct-acm-srl"
   },
   {
     "name": "QUANTUM AUTO MAX S.R.L.",
@@ -1797,7 +1797,7 @@
     "lng": 26.050155,
     "valoare": 2656673.0,
     "nr_contracte": 1,
-    "slug": ""
+    "slug": "quantum-auto-max-srl"
   },
   {
     "name": "BEPA CONSTRUCTII CIVILE SRL",
@@ -1807,6 +1807,6 @@
     "lng": 26.203556,
     "valoare": 21561196.0,
     "nr_contracte": 3,
-    "slug": ""
+    "slug": "bepa-constructii-civile-srl"
   }
 ]

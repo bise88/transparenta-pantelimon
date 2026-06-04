@@ -246,9 +246,9 @@
       "id": "14399840",
       "label": "DANTE INTERNATIONAL SA",
       "cui": "14399840",
-      "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 6, ŞOS. VIRTUŢII, NR.148, SPATIUL E47",
-      "lat": 44.447875,
-      "lng": 26.032448,
+      "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, STR. GARA HERĂSTRĂU, NR.6, CLADIREA GLOBALWORTH SQUARE, ET.1,2,3,5,8",
+      "lat": 44.459585,
+      "lng": 26.130345,
       "valoare": 488.99,
       "nr_contracte": 2,
       "in_retea": false
@@ -885,8 +885,8 @@
       "label": "STANGER DESIGN S.R.L.",
       "cui": "40412167",
       "adresa": "JUD. CĂLĂRAŞI, MUN. CĂLĂRAŞI, PRL. BUCUREŞTI, NR.24, BL.M19, SC.2, ET.3, AP.6",
-      "lat": 44.210116,
-      "lng": 27.30713,
+      "lat": 44.190311,
+      "lng": 27.338525,
       "valoare": 115500.0,
       "nr_contracte": 1,
       "in_retea": false
@@ -1710,8 +1710,8 @@
       "label": "SELGROS CASH & CARRY SRL",
       "cui": "11805367",
       "adresa": "JUD. BRAŞOV, MUN. BRAŞOV, CAL. BUCUREŞTI, NR.231",
-      "lat": 45.64404,
-      "lng": 25.62385,
+      "lat": 45.634456,
+      "lng": 25.634003,
       "valoare": 9031.31,
       "nr_contracte": 2,
       "in_retea": false
@@ -1852,7 +1852,7 @@
       "id": "30153510",
       "label": "PROF PRINT S.R.L.",
       "cui": "30153510",
-      "adresa": "JUD. IALOMIŢA, MUN. SLOBOZIA, STR. VASILE ALECSANDRI, NR.20",
+      "adresa": "JUD. IALOMIŢA, MUN. SLOBOZIA, STR. GĂRII NOI, NR.20A",
       "lat": 44.5636,
       "lng": 27.361848,
       "valoare": 4380.0,
@@ -2060,5 +2060,5 @@
     "edges_adresa_comuna": 4,
     "total_edges": 4
   },
-  "generated_at": "2026-06-03T10:52:16.706570"
+  "generated_at": "2026-06-04T10:03:51.044661"
 }

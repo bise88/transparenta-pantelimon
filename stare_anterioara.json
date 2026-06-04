@@ -274,6 +274,7 @@
     "achizitie-directa-2026-337092_VALOARE_ROTUNDA_SUSPECTA",
     "achizitie-directa-2026-355882_VALOARE_ROTUNDA_SUSPECTA",
     "achizitie-directa-2026-384386_VALOARE_ROTUNDA_SUSPECTA",
+    "achizitie-directa-2025-195226_FIRMA_INACTIVA",
     "global_RISC_SISTEMIC_FIRMA",
     "global_RISC_SISTEMIC_FIRMA",
     "global_RISC_SISTEMIC_FIRMA",
@@ -298,7 +299,11 @@
     "global_RISC_SISTEMIC_FIRMA",
     "global_RISC_SISTEMIC_FIRMA",
     "global_RISC_SISTEMIC_FIRMA",
-    "HCL-META-001_sedinte_extraordinare_excesive"
+    "achizitie-directa-2026-197259,achizitie-directa-2026-203198,achizitie-directa-2026-255020_FRAGMENTARE_TEMPORARA",
+    "achizitie-directa-2025-343336,achizitie-directa-2025-343382,achizitie-directa-2025-343418_FRAGMENTARE_TEMPORARA",
+    "_VALORI_IDENTICE_ACEEASI_ZI",
+    "_BURST_CONTRACTE",
+    "HCL-META_SEDINTE_EXTRAORDINARE_EXCESIVE"
   ],
   "contracte_vazute": [
     "achizitie-directa-2025-2637",
@@ -809,6 +814,6 @@
     "contract-2026-181043"
   ],
   "hcl_urls_vazute": [],
-  "data_ultima_rulare": "2026-05-26T12:59:48.768995",
-  "total_flags": 299
+  "data_ultima_rulare": "2026-06-04T09:59:43.167551",
+  "total_flags": 304
 }

@@ -1,8 +1,24 @@
 {
-  "data_curenta": "2026-05-26T12:59:48.729152",
-  "data_anterioara": "2026-05-26T06:55:32.216018",
-  "nereguli_noi": 0,
-  "nereguli_rezolvate": 0,
+  "data_curenta": "2026-06-04T09:58:52.580350",
+  "data_anterioara": "2026-05-26T12:59:48.768995",
+  "nereguli_noi": 6,
+  "nereguli_rezolvate": 1,
   "scor_transparenta": 17,
-  "top_noi": []
+  "top_noi": [
+    {
+      "titlu": "Contract cu firmă inactiv la ANAF",
+      "severitate": "CRITIC",
+      "index": 1
+    },
+    {
+      "titlu": "Fragmentare temporară: 3 contracte sub-prag, sumă combinată 281K RON",
+      "severitate": "CRITIC",
+      "index": 2
+    },
+    {
+      "titlu": "Fragmentare temporară: 3 contracte sub-prag, sumă combinată 162K RON",
+      "severitate": "CRITIC",
+      "index": 3
+    }
+  ]
 }

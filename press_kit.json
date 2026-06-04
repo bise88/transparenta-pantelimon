@@ -1,14 +1,192 @@
 {
-  "generated_at": "2026-05-26T12:59:48.757413",
+  "schema_version": "1.0",
+  "generated_at": "2026-06-04",
+  "uat": {
+    "name": "Orașul Pantelimon",
+    "cif": "4420759",
+    "judet": "Ilfov"
+  },
   "statistici": {
-    "total_nereguli": 299,
-    "critice": 107,
+    "total_nereguli": 304,
+    "critice": 111,
     "majore": 55,
-    "medii": 137,
+    "medii": 138,
     "total_contracte": 506,
+    "valoare_totala_ron": 313680510.12,
     "valoare_totala_mil": 313.68,
     "scor_transparenta": 17
   },
-  "entitate": "Orașul Pantelimon",
-  "sursa_date": "SEAP / data.gov.ro"
+  "top_nereguli": [
+    {
+      "titlu": "3 contracte de valoare identică (29,508,940 RON) în aceeași zi",
+      "severitate": "CRITIC",
+      "descriere": "În data de 2025-07-29, 3 firme diferite au primit contracte cu valoare EXACT identică (29,508,940 RON fiecare). Total: 88,526,820 RON. Firme: ALA EXPERT CONSTRUCT, SANTIA PARTNER CONSTRUCT, YARDMAN. Pattern clasic de împărțire artificială a unui lot (art. 11 alin. (1) L98/2016).",
+      "furnizor": "",
+      "valoare_ron": 88526820.0,
+      "data": "2025-07-29",
+      "contract_id": "",
+      "tip": "VALORI_IDENTICE_ACEEASI_ZI",
+      "anchor": "#nereguli-302"
+    },
+    {
+      "titlu": "Posibilă fragmentare artificială a contractelor",
+      "severitate": "CRITIC",
+      "descriere": "Furnizor \"BEPA CONSTRUCTII CIVILE\" a primit 2 contracte similare la interval de 0 zile, valoare combinată 17.92 mil. RON (peste pragul de 130K RON). Notă: 14.58 mil. RON (primul contract depășește singur pragul); 3.34 mil. RON (al doilea contract depășește singur pragul). Încălcare art. 11 alin. (1)",
+      "furnizor": "BEPA CONSTRUCTII CIVILE",
+      "valoare_ron": 17916190.0,
+      "data": "2024-12-03",
+      "contract_id": "contract-2026-181041,contract-2026-181042",
+      "tip": "FRAGMENTARE",
+      "anchor": "#nereguli-210"
+    },
+    {
+      "titlu": "Posibilă fragmentare artificială a contractelor",
+      "severitate": "CRITIC",
+      "descriere": "Furnizor \"Sicuro Invest\" a primit 2 contracte similare la interval de 0 zile, valoare combinată 15.07 mil. RON (peste pragul de 130K RON). Notă: 10.05 mil. RON (primul contract depășește singur pragul); 5.02 mil. RON (al doilea contract depășește singur pragul). Încălcare art. 11 alin. (1) din Legea",
+      "furnizor": "Sicuro Invest",
+      "valoare_ron": 15070720.0,
+      "data": "2025-05-26",
+      "contract_id": "contract-2025-135150,contract-2025-135151",
+      "tip": "FRAGMENTARE",
+      "anchor": "#nereguli-206"
+    },
+    {
+      "titlu": "Creștere bruscă de valoare în revizie contract",
+      "severitate": "CRITIC",
+      "descriere": "Contractul \"Servicii de curatenie\" a crescut de la 2.79 mil. RON la 14.58 mil. RON (+423%) între versiuni. Modificări substanțiale de preț după atribuire sunt reglementate strict (art. 221 alin. (1) lit. a) Legea 98/2016: modificări substanțiale de preț >10% necesită renegociere completă). Pot indic",
+      "furnizor": "BEPA CONSTRUCTII CIVILE",
+      "valoare_ron": 14580025.0,
+      "data": "2024-12-03",
+      "contract_id": "contract-2026-181041",
+      "tip": "CRESTERE_BRUSCA_VALOARE",
+      "anchor": "#nereguli-230"
+    },
+    {
+      "titlu": "Posibilă fragmentare artificială a contractelor",
+      "severitate": "CRITIC",
+      "descriere": "Furnizor \"TOP A-Z CONCEPT S.R.L.\" a primit 2 contracte similare la interval de 0 zile, valoare combinată 13.94 mil. RON (peste pragul de 130K RON). Notă: 11.15 mil. RON (primul contract depășește singur pragul); 2.79 mil. RON (al doilea contract depășește singur pragul). Încălcare art. 11 alin. (1) ",
+      "furnizor": "TOP A-Z CONCEPT S.R.L.",
+      "valoare_ron": 13940043.0,
+      "data": "2023-09-11",
+      "contract_id": "contract-2025-114194,contract-2025-114195",
+      "tip": "FRAGMENTARE",
+      "anchor": "#nereguli-205"
+    },
+    {
+      "titlu": "Creștere bruscă de valoare în revizie contract",
+      "severitate": "CRITIC",
+      "descriere": "Contractul \"Lucrari de reparatii generale si de renovare\" a crescut de la 240K RON la 12.67 mil. RON (+5182%) între versiuni. Modificări substanțiale de preț după atribuire sunt reglementate strict (art. 221 alin. (1) lit. a) Legea 98/2016: modificări substanțiale de preț >10% necesită renegociere c",
+      "furnizor": "GRI CONSTRUCT ACM S.R.L.",
+      "valoare_ron": 12671650.0,
+      "data": "2025-12-03",
+      "contract_id": "contract-2026-3959",
+      "tip": "CRESTERE_BRUSCA_VALOARE",
+      "anchor": "#nereguli-236"
+    },
+    {
+      "titlu": "Posibilă fragmentare artificială a contractelor",
+      "severitate": "CRITIC",
+      "descriere": "Furnizor \"DAV  GARDEN & SERVICE\" a primit 2 contracte similare la interval de 0 zile, valoare combinată 9.23 mil. RON (peste pragul de 130K RON). Notă: 4.62 mil. RON (primul contract depășește singur pragul); 4.62 mil. RON (al doilea contract depășește singur pragul). Încălcare art. 11 alin. (1) din",
+      "furnizor": "DAV  GARDEN & SERVICE",
+      "valoare_ron": 9231164.0,
+      "data": "2025-12-11",
+      "contract_id": "contract-2025-113859,contract-2026-168284",
+      "tip": "FRAGMENTARE",
+      "anchor": "#nereguli-209"
+    },
+    {
+      "titlu": "Firmă cu risc sistemic — 4 tipuri de nereguli",
+      "severitate": "CRITIC",
+      "descriere": "Firma <strong>\"Constopograf Expert\"</strong> (CUI 25145252) apare în <strong>4 categorii diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, FRAGMENTARE, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală contracte implicate: <strong>8.37 mil. RON</strong>. Apariția în multiple categor",
+      "furnizor": "Constopograf Expert",
+      "valoare_ron": 8370000.0,
+      "data": "2026-06-04",
+      "contract_id": "global",
+      "tip": "RISC_SISTEMIC_FIRMA",
+      "anchor": "#nereguli-279"
+    },
+    {
+      "titlu": "Creștere bruscă de valoare în revizie contract",
+      "severitate": "CRITIC",
+      "descriere": "Contractul \"Amenajare si intretinere de spatii verzi\" a crescut de la 1.15 mil. RON la 4.62 mil. RON (+300%) între versiuni. Modificări substanțiale de preț după atribuire sunt reglementate strict (art. 221 alin. (1) lit. a) Legea 98/2016: modificări substanțiale de preț >10% necesită renegociere co",
+      "furnizor": "DAV  GARDEN & SERVICE",
+      "valoare_ron": 4615582.0,
+      "data": "2025-12-11",
+      "contract_id": "contract-2026-168284",
+      "tip": "CRESTERE_BRUSCA_VALOARE",
+      "anchor": "#nereguli-242"
+    },
+    {
+      "titlu": "Posibilă fragmentare artificială a contractelor",
+      "severitate": "CRITIC",
+      "descriere": "Furnizor \"AUTOVEST\" a primit 2 contracte similare la interval de 0 zile, valoare combinată 4.37 mil. RON (peste pragul de 130K RON). Notă: 2.91 mil. RON (primul contract depășește singur pragul); 1.46 mil. RON (al doilea contract depășește singur pragul). Încălcare art. 11 alin. (1) din Legea 98/201",
+      "furnizor": "AUTOVEST",
+      "valoare_ron": 4369065.0,
+      "data": "2025-02-24",
+      "contract_id": "contract-2025-79964,contract-2025-79965",
+      "tip": "FRAGMENTARE",
+      "anchor": "#nereguli-204"
+    }
+  ],
+  "top_firme": [
+    {
+      "nume": "ALA EXPERT CONSTRUCT",
+      "valoare_ron": 29508940.0,
+      "nr_contracte": 1
+    },
+    {
+      "nume": "SANTIA PARTNER CONSTRUCT",
+      "valoare_ron": 29508940.0,
+      "nr_contracte": 1
+    },
+    {
+      "nume": "YARDMAN",
+      "valoare_ron": 29508940.0,
+      "nr_contracte": 1
+    },
+    {
+      "nume": "GLOBEXTERRA",
+      "valoare_ron": 24184504.0,
+      "nr_contracte": 1
+    },
+    {
+      "nume": "ROMCO SYSTEM S.R.L.",
+      "valoare_ron": 24184504.0,
+      "nr_contracte": 1
+    },
+    {
+      "nume": "BEPA CONSTRUCTII CIVILE",
+      "valoare_ron": 21561196.0,
+      "nr_contracte": 3
+    },
+    {
+      "nume": "TOP A-Z CONCEPT S.R.L.",
+      "valoare_ron": 16728051.0,
+      "nr_contracte": 3
+    },
+    {
+      "nume": "Sicuro Invest",
+      "valoare_ron": 15070720.0,
+      "nr_contracte": 2
+    },
+    {
+      "nume": "ACG CONSTRUCTION & PROJECTS",
+      "valoare_ron": 13570756.0,
+      "nr_contracte": 1
+    },
+    {
+      "nume": "SC OLTENIA GARDEN SRL",
+      "valoare_ron": 13570756.0,
+      "nr_contracte": 1
+    }
+  ],
+  "date_deschise": {
+    "api_json": "https://aprindemlumina.eu/raport.json",
+    "contracte_json": "https://aprindemlumina.eu/contracte.json",
+    "rss_feed": "https://aprindemlumina.eu/feed.xml",
+    "harta": "https://aprindemlumina.eu/harta.html"
+  },
+  "contact": "",
+  "site": "https://aprindemlumina.eu",
+  "disclaimer": "Toate datele sunt fapte publice (SEAP, ANAF, ONRC). Site-ul nu face afirmații despre intenții sau vinovăție — doar afișează statistici și legi posibil încălcate. Concluziile sunt la latitudinea cititorului."
 }
