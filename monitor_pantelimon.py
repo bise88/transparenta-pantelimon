@@ -2282,6 +2282,9 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
     # Detectează: firme inactive/radiate, firme nou înregistrate (<2 ani).
     # Îmbogățit cu date de acționariat/administrator din openapi.ro (dacă cheie configurată).
     cui_furnizori = list({c["castigator_cui"] for c in contracte if c.get("castigator_cui")})
+    firme_openapi = {}   # inițializat cu {} — suprascris mai jos dacă cui_furnizori e populat
+    firme_anaf = {}
+    firme_onrc = {}
     if cui_furnizori:
         # Date ANAF (status, dată înregistrare)
         firme_anaf = _get_firme_anaf_batch(cui_furnizori)
