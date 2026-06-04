@@ -5918,6 +5918,9 @@ def main():
     from collections import defaultdict as _defaultdict
     import os as _os
 
+    # risc_firma e construit în genereaza_raport_html; reconstruim minimal pentru pagini furnizori
+    risc_firma = {}
+
     contracte_per_firma = _defaultdict(list)
     for c in contracte:
         if c.get("castigator"):
