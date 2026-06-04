@@ -5864,6 +5864,8 @@ def main():
     print("\n[4/6] Analizez red flags...")
     flags_contracte = analizeaza_red_flags(contracte, CONFIG)
     toate_flags = flags_contracte + flags_hcl
+    # firme_openapi e construit în analizeaza_red_flags și pus în CONFIG["_firme_openapi"]
+    firme_openapi = CONFIG.get("_firme_openapi", {})
     # Calculam scorul de transparenta
     rezultat_scor = calculeaza_scor_transparenta(toate_flags, contracte, statistici_hcl)
     CONFIG["_scor"] = rezultat_scor
