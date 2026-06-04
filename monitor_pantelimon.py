@@ -5449,6 +5449,7 @@ def genereaza_pagina_furnizor(
         firme_legate: list = None) -> str:
     """Generează pagina HTML dedicată unui furnizor."""
     import html as html_mod
+    import re
 
     valoare_totala = sum(c.get("valoare_ron", 0) for c in contracte_firma)
     n_critic = sum(1 for f in flags_firma if f.get("severitate") == "CRITIC")
