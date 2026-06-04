@@ -3586,7 +3586,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
         <div class="tp-flag"
              onclick="toggleFlag(this)"
              id="nereguli-{idx}"
-             data-severity="{f['severitate']}"
+             data-severity="{f.get('severitate','MEDIU')}"
              data-supplier="{furnizor_attr}"
              data-sum-ron="{valoare_num}"
              data-date="{f.get('data', '')}"
@@ -3602,25 +3602,25 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
             <span style="font-size:12px;font-weight:700;color:#bbb;min-width:32px">#{idx}</span>
             <span style="font-size:16px">{emoji}</span>
-            <strong style="color:{culoare}">[{f['severitate']}]</strong>
-                     <span style="font-weight:700">{f['titlu']}</span>
+            <strong style="color:{culoare}">[{f.get('severitate','MEDIU')}]</strong>
+                     <span style="font-weight:700">{f.get('titlu','')}</span>
             {nou_badge}{risc_badge}
             <span class="flag-arrow" style="margin-left:auto;font-size:11px;color:#aaa">▼ detalii</span>
           </div>
-          <p style="font-size:13px;color:#444;margin:0 0 8px">{f['descriere']}</p>
+          <p style="font-size:13px;color:#444;margin:0 0 8px">{f.get('descriere','')}</p>
           <div style="font-size:12px;color:#777;display:flex;gap:16px;flex-wrap:wrap">
-            <span>💰 {_fmt_ron(f['valoare'])}</span>
+            <span>💰 {_fmt_ron(f.get('valoare',0) or 0)}</span>
             <span>🏢 {furnizor or '–'}</span>
-            <span>📅 {f['data']}</span>
-            <span>⚙️ {f['tip_procedura']}</span>
+            <span>📅 {f.get('data','')}</span>
+            <span>⚙️ {f.get('tip_procedura') or '–'}</span>
             {(f'<span style="background:#EBF5FB;border:1px solid #AED6F1;border-radius:4px;padding:1px 7px;color:#1A5276;font-weight:700;letter-spacing:.3px" title="Număr SEAP — copiază-l pentru căutare manuală">🔍 {_seap_nr(contract_id)}</span>') if _seap_nr(contract_id) else f'<span>📋 {contract_id or "–"}</span>'}
           </div>
           <div class="flag-detail" style="display:none;margin-top:14px;padding-top:12px;border-top:1px solid #eee">
             <div style="font-size:12px;color:#555;margin-bottom:10px">
               <strong>Firmă:</strong> {furnizor or '–'} &nbsp;|&nbsp;
-              <strong>Sumă:</strong> {_fmt_ron(f['valoare'])} &nbsp;|&nbsp;
-              <strong>Data:</strong> {f['data']} &nbsp;|&nbsp;
-              <strong>Procedură:</strong> {f['tip_procedura'] or '–'}
+              <strong>Sumă:</strong> {_fmt_ron(f.get('valoare',0) or 0)} &nbsp;|&nbsp;
+              <strong>Data:</strong> {f.get('data','')} &nbsp;|&nbsp;
+              <strong>Procedură:</strong> {f.get('tip_procedura') or '–'}
             </div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
               <a href="{_seap_url(contract_id, f.get('tip_procedura',''))}"
@@ -3645,7 +3645,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
               <a href="https://e-licitatie.ro/pub/" target="_blank" onclick="event.stopPropagation()"
                  style="color:#0070C0">e-licitatie.ro</a>
               după <strong>{_seap_nr(contract_id) or contract_id}</strong>
-              (data: <strong>{f['data']}</strong>, autoritate: <strong>Pantelimon</strong>).
+              (data: <strong>{f.get('data','')}</strong>, autoritate: <strong>Pantelimon</strong>).
             </div>
           </div>
         </div>"""
