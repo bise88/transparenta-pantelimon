@@ -1,4 +1,4 @@
-﻿"""
+"""
 Monitor Transparență Bugetară — Primăria Pantelimon
 ====================================================
 Script de monitorizare automată: trage date din data.gov.ro (export SEAP oficial)
@@ -2575,7 +2575,8 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
     flags_unice = []
     ids_vazute = set()
     for f in flags:
-        key = f"{f['tip']}_{f['contract_id']}_{f['furnizor']}"
+        cid = f.get('contract_id') or f.get('contract_numar') or ''
+        key = f"{f.get('tip','?')}_{cid}_{f.get('furnizor','?')}"
         if key not in ids_vazute:
             flags_unice.append(f)
             ids_vazute.add(key)
@@ -3096,7 +3097,7 @@ def incarca_stare_anterioara(fisier: str) -> dict:
 def salveaza_stare(fisier: str, flags: list, contracte: list, hcl_list: list = None):
     """Salvează starea curentă pentru comparație viitoare."""
     stare = {
-        "flags_anterioare": [f["contract_id"] + "_" + f["tip"] for f in flags],
+        "flags_anterioare": [(f.get("contract_id") or f.get("contract_numar") or "") + "_" + f.get("tip", "") for f in flags],
         "contracte_vazute": [c["id"] for c in contracte],
         "hcl_urls_vazute": [h["url"] for h in (hcl_list or [])],
         "data_ultima_rulare": datetime.now().isoformat(),
@@ -3111,7 +3112,7 @@ def detecteaza_flags_noi(flags_curente: list, stare_anterioara: dict) -> list:
     """Returnează doar flags-urile care nu existau la ultima rulare."""
     ids_anterioare = set(stare_anterioara.get("flags_anterioare", []))
     noi = [f for f in flags_curente
-           if (f["contract_id"] + "_" + f["tip"]) not in ids_anterioare]
+           if ((f.get("contract_id") or f.get("contract_numar") or "") + "_" + f.get("tip", "")) not in ids_anterioare]
     return noi
 
 
@@ -5867,7 +5868,7 @@ def main():
 
     # 4b. Detectăm flags NOI față de rularea precedentă
     flags_noi = detecteaza_flags_noi(toate_flags, stare_ant)
-    ids_curente = set(f["contract_id"] + "_" + f["tip"] for f in toate_flags)
+    ids_curente = set((f.get("contract_id") or f.get("contract_numar") or "") + "_" + f.get("tip", "") for f in toate_flags)
     ids_anterioare = set(stare_ant.get("flags_anterioare", []))
     flags_rezolvate_n = len(ids_anterioare - ids_curente)
     data_anterioara_str = stare_ant.get("data_ultima_rulare", None)
