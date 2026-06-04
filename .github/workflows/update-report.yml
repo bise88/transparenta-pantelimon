@@ -67,6 +67,11 @@ jobs:
         # Output: mentiuni_presa_auto.json — citit de monitor_pantelimon.py pentru flaguri
         run: python monitorizare_presa.py 2>/dev/null || echo "monitorizare presa skipped"
 
+
+      - name: Generare analiza AI Gemini (gratuit - zero cost)
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python genereaza_analiza_ai.py 2>&1 || echo 'AI skipped (no key)'
       - name: 💾 Commit raport actualizat
         run: |
           git config --local user.email "transparenta-bot@cetatenipantelimon.ro"
