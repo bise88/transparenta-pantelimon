@@ -31,7 +31,7 @@
     {
       "titlu": "Posibilă fragmentare artificială a contractelor",
       "severitate": "CRITIC",
-      "descriere": "Furnizor \"BEPA CONSTRUCTII CIVILE\" a primit 2 contracte similare la interval de 0 zile, valoare combinată 17.92 mil. RON (peste pragul de 130K RON). Notă: 14.58 mil. RON (primul contract depășește singur pragul); 3.34 mil. RON (al doilea contract depășește singur pragul). Încălcare art. 11 alin. (1)",
+      "descriere": "BEPA CONSTRUCTII CIVILE a primit 2 contracte similare în 0 zile, cu o valoare combinată de 17.92 mil. RON. Separat, fiecare pare sub pragul de licitație (130K RON) — dar împreună îl depășesc. Aceasta se numește fragmentare artificială și este interzisă. Notă: 14.58 mil. RON (primul contract depășeșt",
       "furnizor": "BEPA CONSTRUCTII CIVILE",
       "valoare_ron": 17916190.0,
       "data": "2024-12-03",
@@ -42,7 +42,7 @@
     {
       "titlu": "Posibilă fragmentare artificială a contractelor",
       "severitate": "CRITIC",
-      "descriere": "Furnizor \"Sicuro Invest\" a primit 2 contracte similare la interval de 0 zile, valoare combinată 15.07 mil. RON (peste pragul de 130K RON). Notă: 10.05 mil. RON (primul contract depășește singur pragul); 5.02 mil. RON (al doilea contract depășește singur pragul). Încălcare art. 11 alin. (1) din Legea",
+      "descriere": "Sicuro Invest a primit 2 contracte similare în 0 zile, cu o valoare combinată de 15.07 mil. RON. Separat, fiecare pare sub pragul de licitație (130K RON) — dar împreună îl depășesc. Aceasta se numește fragmentare artificială și este interzisă. Notă: 10.05 mil. RON (primul contract depășește singur p",
       "furnizor": "Sicuro Invest",
       "valoare_ron": 15070720.0,
       "data": "2025-05-26",
@@ -53,7 +53,7 @@
     {
       "titlu": "Creștere bruscă de valoare în revizie contract",
       "severitate": "CRITIC",
-      "descriere": "Contractul \"Servicii de curatenie\" a crescut de la 2.79 mil. RON la 14.58 mil. RON (+423%) între versiuni. Modificări substanțiale de preț după atribuire sunt reglementate strict (art. 221 alin. (1) lit. a) Legea 98/2016: modificări substanțiale de preț >10% necesită renegociere completă). Pot indic",
+      "descriere": "Contractul „Servicii de curatenie\" a crescut cu 423% între versiuni: de la 2.79 mil. RON la 14.58 mil. RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
       "furnizor": "BEPA CONSTRUCTII CIVILE",
       "valoare_ron": 14580025.0,
       "data": "2024-12-03",
@@ -64,7 +64,7 @@
     {
       "titlu": "Posibilă fragmentare artificială a contractelor",
       "severitate": "CRITIC",
-      "descriere": "Furnizor \"TOP A-Z CONCEPT S.R.L.\" a primit 2 contracte similare la interval de 0 zile, valoare combinată 13.94 mil. RON (peste pragul de 130K RON). Notă: 11.15 mil. RON (primul contract depășește singur pragul); 2.79 mil. RON (al doilea contract depășește singur pragul). Încălcare art. 11 alin. (1) ",
+      "descriere": "TOP A-Z CONCEPT S.R.L. a primit 2 contracte similare în 0 zile, cu o valoare combinată de 13.94 mil. RON. Separat, fiecare pare sub pragul de licitație (130K RON) — dar împreună îl depășesc. Aceasta se numește fragmentare artificială și este interzisă. Notă: 11.15 mil. RON (primul contract depășește",
       "furnizor": "TOP A-Z CONCEPT S.R.L.",
       "valoare_ron": 13940043.0,
       "data": "2023-09-11",
@@ -75,7 +75,7 @@
     {
       "titlu": "Creștere bruscă de valoare în revizie contract",
       "severitate": "CRITIC",
-      "descriere": "Contractul \"Lucrari de reparatii generale si de renovare\" a crescut de la 240K RON la 12.67 mil. RON (+5182%) între versiuni. Modificări substanțiale de preț după atribuire sunt reglementate strict (art. 221 alin. (1) lit. a) Legea 98/2016: modificări substanțiale de preț >10% necesită renegociere c",
+      "descriere": "Contractul „Lucrari de reparatii generale si de renovare\" a crescut cu 5182% între versiuni: de la 240K RON la 12.67 mil. RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
       "furnizor": "GRI CONSTRUCT ACM S.R.L.",
       "valoare_ron": 12671650.0,
       "data": "2025-12-03",
@@ -86,7 +86,7 @@
     {
       "titlu": "Posibilă fragmentare artificială a contractelor",
       "severitate": "CRITIC",
-      "descriere": "Furnizor \"DAV  GARDEN & SERVICE\" a primit 2 contracte similare la interval de 0 zile, valoare combinată 9.23 mil. RON (peste pragul de 130K RON). Notă: 4.62 mil. RON (primul contract depășește singur pragul); 4.62 mil. RON (al doilea contract depășește singur pragul). Încălcare art. 11 alin. (1) din",
+      "descriere": "DAV  GARDEN & SERVICE a primit 2 contracte similare în 0 zile, cu o valoare combinată de 9.23 mil. RON. Separat, fiecare pare sub pragul de licitație (130K RON) — dar împreună îl depășesc. Aceasta se numește fragmentare artificială și este interzisă. Notă: 4.62 mil. RON (primul contract depășește si",
       "furnizor": "DAV  GARDEN & SERVICE",
       "valoare_ron": 9231164.0,
       "data": "2025-12-11",
@@ -97,7 +97,7 @@
     {
       "titlu": "Firmă cu risc sistemic — 4 tipuri de nereguli",
       "severitate": "CRITIC",
-      "descriere": "Firma <strong>\"Constopograf Expert\"</strong> (CUI 25145252) apare în <strong>4 categorii diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, FRAGMENTARE, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală contracte implicate: <strong>8.37 mil. RON</strong>. Apariția în multiple categor",
+      "descriere": "<strong>Constopograf Expert</strong> (CUI 25145252) apare în <strong>4 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, FRAGMENTARE, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>8.37 mil. RON</strong>. Când o firmă acumulează probleme în atât de multe",
       "furnizor": "Constopograf Expert",
       "valoare_ron": 8370000.0,
       "data": "2026-06-08",
@@ -108,7 +108,7 @@
     {
       "titlu": "Creștere bruscă de valoare în revizie contract",
       "severitate": "CRITIC",
-      "descriere": "Contractul \"Amenajare si intretinere de spatii verzi\" a crescut de la 1.15 mil. RON la 4.62 mil. RON (+300%) între versiuni. Modificări substanțiale de preț după atribuire sunt reglementate strict (art. 221 alin. (1) lit. a) Legea 98/2016: modificări substanțiale de preț >10% necesită renegociere co",
+      "descriere": "Contractul „Amenajare si intretinere de spatii verzi\" a crescut cu 300% între versiuni: de la 1.15 mil. RON la 4.62 mil. RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
       "furnizor": "DAV  GARDEN & SERVICE",
       "valoare_ron": 4615582.0,
       "data": "2025-12-11",
@@ -119,7 +119,7 @@
     {
       "titlu": "Posibilă fragmentare artificială a contractelor",
       "severitate": "CRITIC",
-      "descriere": "Furnizor \"AUTOVEST\" a primit 2 contracte similare la interval de 0 zile, valoare combinată 4.37 mil. RON (peste pragul de 130K RON). Notă: 2.91 mil. RON (primul contract depășește singur pragul); 1.46 mil. RON (al doilea contract depășește singur pragul). Încălcare art. 11 alin. (1) din Legea 98/201",
+      "descriere": "AUTOVEST a primit 2 contracte similare în 0 zile, cu o valoare combinată de 4.37 mil. RON. Separat, fiecare pare sub pragul de licitație (130K RON) — dar împreună îl depășesc. Aceasta se numește fragmentare artificială și este interzisă. Notă: 2.91 mil. RON (primul contract depășește singur pragul);",
       "furnizor": "AUTOVEST",
       "valoare_ron": 4369065.0,
       "data": "2025-02-24",
