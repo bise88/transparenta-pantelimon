@@ -653,8 +653,8 @@
     "name": "TOP A-Z CONCEPT S.R.L.",
     "cif": "45058860",
     "adresa": "JUD. ILFOV, SAT FUNDENI COM. DOBROEŞTI, STR. MĂRULUI, NR.19, CAMERA 2, SC.A, ET.2, AP.16",
-    "lat": 44.470278,
-    "lng": 26.176246,
+    "lat": 44.457455,
+    "lng": 26.16276,
     "valoare": 16728051.0,
     "nr_contracte": 3,
     "slug": "top-a-z-concept-srl"
@@ -770,7 +770,7 @@
     "slug": "ifncons-media-srl"
   },
   {
-    "name": "COMINDFLEX S.R.L.",
+    "name": "COMINDFLEX SRL",
     "cif": "1393676",
     "adresa": "JUD. TELEORMAN, MUN. ROŞIORI DE VEDE, STR. CRISAN, NR.10",
     "lat": 44.108349,
@@ -892,7 +892,7 @@
   {
     "name": "CREATIVE PEOPLE S.R.L.",
     "cif": "39329387",
-    "adresa": "JUD. PRAHOVA, SAT CERAŞU COM. CERAŞU, G CERAŞU, NR.132",
+    "adresa": "JUD. PRAHOVA, SAT CERAŞU COM. CERAŞU, STR. AVRAM IANCU, NR.1",
     "lat": 45.325221,
     "lng": 26.0413,
     "valoare": 350000.0,
@@ -1553,8 +1553,8 @@
     "name": "SELGROS CASH & CARRY SRL",
     "cif": "11805367",
     "adresa": "JUD. BRAŞOV, MUN. BRAŞOV, CAL. BUCUREŞTI, NR.231",
-    "lat": 45.634456,
-    "lng": 25.634003,
+    "lat": 45.638966,
+    "lng": 25.628976,
     "valoare": 9031.31,
     "nr_contracte": 2,
     "slug": "selgros-cash-carry-srl"
