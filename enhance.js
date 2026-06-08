@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * transparenta-enhance.js  v1.0
  * Progressive enhancement pentru https://aprindemlumina.eu/
  *
@@ -231,15 +231,55 @@ html[data-tp-theme="dark"] {
 }
 .tp-back-top.visible { opacity: 1; pointer-events: auto; }
 
-/* Mobile */
-@media (max-width: 640px) {
-  .tp-nav-inner { padding: .4rem .6rem; gap: .4rem; }
-  .tp-nav-brand { font-size: .82rem; }
-  .tp-nav-links a { padding: .35rem .55rem; font-size: .8rem; }
-  .tp-toolbar { top: 52px; padding: .55rem .6rem; }
-  .tp-search { font-size: 16px; flex-basis: 100%; } /* fără zoom iOS; full linie → chips pe rândul următor */
-  .tp-select { max-width: 100%; flex: 1; }
+/* ── touch-action pe toate elementele interactive ── */
+.tp-chip, .tp-btn, .tp-nav-links a, #tp-load-more, .tp-theme-toggle, .tp-back-top {
+  touch-action: manipulation;
 }
+/* ── Touch targets min 44px ── */
+.tp-chip { min-height: 44px; display: inline-flex; align-items: center; }
+.tp-btn { min-height: 44px; display: inline-flex; align-items: center; }
+.tp-search { min-height: 44px; }
+.tp-select { min-height: 44px; }
+.tp-nav-links a { min-height: 44px; display: inline-flex; align-items: center; }
+#tp-load-more { min-height: 44px; min-width: 200px; }
+/* ── Hamburger ── */
+.tp-hamburger {
+  display: none; flex-direction: column; justify-content: center; align-items: center;
+  gap: 5px; padding: 10px; border: none; background: transparent;
+  cursor: pointer; min-width: 44px; min-height: 44px;
+  color: var(--tp-fg); border-radius: 6px; touch-action: manipulation; flex-shrink: 0;
+}
+.tp-hamburger span { display: block; width: 22px; height: 2px; background: currentColor; border-radius: 2px; transition: transform .2s, opacity .2s; }
+.tp-nav.open .tp-hamburger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.tp-nav.open .tp-hamburger span:nth-child(2) { opacity: 0; }
+.tp-nav.open .tp-hamburger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .tp-nav-inner { padding: .4rem .6rem; gap: .4rem; flex-wrap: nowrap; align-items: center; }
+  .tp-hamburger { display: flex; }
+  .tp-nav-links {
+    display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 200;
+    flex-direction: column; gap: 0; background: var(--tp-bg);
+    border-bottom: 2px solid var(--tp-accent); box-shadow: 0 4px 16px rgba(0,0,0,.12); padding: .5rem .6rem;
+  }
+  .tp-nav.open .tp-nav-links { display: flex; }
+  .tp-nav-links a { padding: .6rem .8rem; font-size: .95rem; border-radius: 6px; border-bottom: 1px solid var(--tp-border); min-height: 48px; }
+  .tp-nav-links a:last-child { border-bottom: none; }
+  .tp-nav-brand { font-size: .82rem; flex: 1; }
+  .tp-toolbar { padding: .5rem .6rem; }
+  .tp-toolbar-row { flex-wrap: nowrap; }
+  .tp-chips-sev { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .tp-chips-sev::-webkit-scrollbar { display: none; }
+  .tp-toolbar-row:nth-child(2) { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .tp-toolbar-row:nth-child(2)::-webkit-scrollbar { display: none; }
+  .tp-select { min-width: 140px; flex: 0 0 auto; }
+  .tp-search { font-size: 16px; flex-basis: 100%; flex-shrink: 0; }
+}
+@media (max-width: 480px) {
+  .tp-nav-brand { font-size: .78rem; }
+  .tp-chip { font-size: .8rem; padding: .3rem .6rem; }
+}
+@media (min-width: 641px) { .tp-hamburger { display: none !important; } }
 
 /* Print */
 @media print {
@@ -367,8 +407,21 @@ html[data-tp-theme="dark"] .tp-anap-btn {
     document.head.appendChild(s);
   }
 
+  function injectManifest() {
+    if (document.querySelector('link[rel="manifest"]')) return;
+    const link = document.createElement('link');
+    link.rel = 'manifest'; link.href = '/manifest.json';
+    document.head.appendChild(link);
+    if (!document.querySelector('meta[name="theme-color"]')) {
+      const meta = document.createElement('meta');
+      meta.name = 'theme-color'; meta.content = '#dc2626';
+      document.head.appendChild(meta);
+    }
+  }
+
   function injectNav() {
     if ($('.tp-nav')) return;
+    injectManifest();
 
     // §4.4 Skip link — keyboard users jump past nav directly to content
     const skipLink = document.createElement('a');
@@ -401,10 +454,14 @@ html[data-tp-theme="dark"] .tp-anap-btn {
       return `<a href="${base}${l.href}"${active ? ' class="active" aria-current="page"' : ''}><span aria-hidden="true">${l.emoji}</span> ${l.text}</a>`;
     }).join('');
 
+    nav.style.position = 'sticky';
     nav.innerHTML = `
       <div class="tp-nav-inner">
         <a href="${base}index.html" class="tp-nav-brand"><span aria-hidden="true">🏛️</span> Transparența Pantelimon</a>
-        <div class="tp-nav-links">
+        <button class="tp-hamburger" id="tp-hamburger" aria-label="Meniu" aria-expanded="false" aria-controls="tp-nav-links">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="tp-nav-links" id="tp-nav-links">
           ${linksHTML}
           <a href="https://transparenta.eu/entities/4420759" target="_blank" rel="noopener">ANAF ↗</a>
           <a href="https://github.com/transparenta-locala/transparenta-pantelimon" target="_blank" rel="noopener">GitHub ↗</a>
@@ -413,6 +470,22 @@ html[data-tp-theme="dark"] .tp-anap-btn {
       </div>
     `;
     document.body.insertBefore(nav, skipLink.nextSibling);
+
+    // Hamburger toggle
+    const hamburgerBtn = document.getElementById('tp-hamburger');
+    if (hamburgerBtn) {
+      hamburgerBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = nav.classList.toggle('open');
+        hamburgerBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+      document.addEventListener('click', (e) => {
+        if (!nav.contains(e.target)) { nav.classList.remove('open'); hamburgerBtn.setAttribute('aria-expanded', 'false'); }
+      });
+      nav.querySelectorAll('.tp-nav-links a').forEach(a => {
+        a.addEventListener('click', () => { nav.classList.remove('open'); hamburgerBtn.setAttribute('aria-expanded', 'false'); });
+      });
+    }
 
     // Toggle dark/light mode
     $('#tp-theme-btn').addEventListener('click', () => {
@@ -980,9 +1053,23 @@ html[data-tp-theme="dark"] .tp-anap-btn {
     });
     $('#tp-export-csv').addEventListener('click', () => exportCSV(items, state));
     $('#tp-export-json').addEventListener('click', () => exportJSON(items, state));
+    // Toolbar sticky top — calculat dinamic după înălțimea nav
+    function updateToolbarTop() {
+      const navEl = document.querySelector('.tp-nav');
+      const toolbarEl = document.querySelector('.tp-toolbar');
+      if (navEl && toolbarEl) toolbarEl.style.top = navEl.offsetHeight + 'px';
+    }
+    updateToolbarTop();
+    window.addEventListener('resize', updateToolbarTop);
+    const navObs = new ResizeObserver(updateToolbarTop);
+    const navElObs = document.querySelector('.tp-nav');
+    if (navElObs) navObs.observe(navElObs);
+
     $('#tp-load-more').addEventListener('click', () => {
+      const firstHidden = items.find(it => it.el.classList.contains('tp-card-hidden'));
       state.shown += CFG.pageSize;
       apply();
+      if (firstHidden) requestAnimationFrame(() => firstHidden.el.scrollIntoView({ behavior: 'smooth', block: 'start' }));
     });
 
     // Scurtături tastatură: "/" focus search, Esc clear
