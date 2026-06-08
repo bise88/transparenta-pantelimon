@@ -4291,15 +4291,46 @@ function showFirmaContracts(firma, evt) {{
       : Math.round(v/1000) + ' K RON';
   }}
 
+  // Extrage numărul SEAP din câmpul id (ex: "contract-2025-79964" → "79964")
+  function seapNr(id) {{
+    if (!id) return '';
+    var parts = id.split('-');
+    return parts[parts.length - 1];
+  }}
+
+  // Construiește URL SEAP din id
+  function seapUrl(id) {{
+    if (!id) return '#';
+    var nr = seapNr(id);
+    if (!nr) return '#';
+    if (id.indexOf('achizitie-directa') !== -1)
+      return 'https://e-licitatie.ro/pub/direct-acquisition/' + nr;
+    return 'https://e-licitatie.ro/pub/contract-notice/' + nr;
+  }}
+
   var rows = matches.map(function(c, i) {{
     var bg = i % 2 === 0 ? '#fff' : '#f8f9fa';
     var ofColor = c.ofertanti === 1 ? '#C0392B' : '#27AE60';
+    var nr = seapNr(c.id);
+    var url = seapUrl(c.id);
+    var seapCell = nr
+      ? '<a href="' + url + '" target="_blank" onclick="event.stopPropagation()" '
+        + 'style="color:#0070C0;font-weight:700;text-decoration:none;white-space:nowrap" '
+        + 'title="Deschide în SEAP">' + nr + ' ↗</a>'
+      : '–';
+    var ofCell = '<span style="color:' + ofColor + ';font-weight:700">' + (c.ofertanti || '?') + '</span>';
+    if (c.ofertanti === 2) {{
+      ofCell += ' <a href="' + url + '" target="_blank" onclick="event.stopPropagation()" '
+        + 'style="font-size:10px;color:#0070C0;text-decoration:none" '
+        + 'title="Cel de-al doilea ofertant — vizualizează în SEAP">→ SEAP</a>';
+    }}
     return '<tr style="background:' + bg + '">'
       + '<td style="padding:6px 10px;font-size:12px;white-space:nowrap">' + (c.data || '–') + '</td>'
-      + '<td style="padding:6px 10px;font-size:12px;max-width:300px">' + (c.titlu || '').substring(0, 70) + '</td>'
+      + '<td style="padding:6px 10px;font-size:12px;max-width:260px">' + (c.titlu || '').substring(0, 70) + '</td>'
       + '<td style="padding:6px 10px;font-size:12px;font-weight:700;white-space:nowrap">' + fmtVal(c.valoare) + '</td>'
       + '<td style="padding:6px 10px;font-size:12px">' + (c.tip || '–') + '</td>'
-      + '<td style="padding:6px 10px;font-size:12px;text-align:center;color:' + ofColor + ';font-weight:700">' + (c.ofertanti || '?') + '</td>'
+      + '<td style="padding:6px 10px;font-size:12px;text-align:center">' + ofCell + '</td>'
+      + '<td style="padding:6px 10px;font-size:12px;text-align:center">' + seapCell + '</td>'
       + '</tr>';
   }}).join('');
 
@@ -4322,8 +4353,10 @@ function showFirmaContracts(firma, evt) {{
         + '<th style="padding:6px 10px;font-size:11px;text-align:left">Valoare</th>'
         + '<th style="padding:6px 10px;font-size:11px;text-align:left">Tip procedură</th>'
         + '<th style="padding:6px 10px;font-size:11px;text-align:center">Ofertanți</th>'
+        + '<th style="padding:6px 10px;font-size:11px;text-align:center">Nr. SEAP</th>'
         + '</tr></thead><tbody>' + rows + '</tbody></table></div>')
-    + '<div style="margin-top:10px;font-size:11px;color:#777">Date: data.gov.ro · Perioadă analizată: ultimele 12 luni</div>'
+    + '<div style="margin-top:10px;font-size:11px;color:#777">Date: data.gov.ro · Perioadă analizată: ultimele 12 luni'
+    + ' · <em>Al doilea ofertant — apasă „→ SEAP" pentru detalii complete</em></div>'
     + '</div>';
 
   flagDiv.appendChild(panel);
