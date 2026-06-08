@@ -1996,11 +1996,10 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
                 "tip": "OFERTANT_UNIC",
                 "severitate": severitate,
                 "titlu": "Un singur ofertant",
-                "descriere": f'Contractul "{c["titlu"][:60]}..." ({_fmt_ron(c["valoare_ron"])}) '
-                             f'a fost atribuit unui singur ofertant, fără competiție reală. '
-                             f'Legea 98/2016, art. 2 (principiul concurenței) și art. 209 (condiții '
-                             f'achiziție directă) prevăd obligativitatea unui proces competitiv. '
-                             f'Verifică dacă au existat specificații tehnice restrictive (art. 156 L98/2016).',
+                "descriere": f'{c["castigator"]} a primit {_fmt_ron(c["valoare_ron"])} pentru '
+                             f'„{c["titlu"][:55]}", dar în SEAP apare un singur ofertant. '
+                             f'Fără oferte concurente, nu putem ști dacă prețul e corect. '
+                             f'Primăria ar fi trebuit să ceară cel puțin 3 oferte.',
                 "contract_id": c["id"],
                 "contract_numar": c["numar"],
                 "valoare": c["valoare_ron"],
@@ -2030,9 +2029,10 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
                 "tip": "ACHIZITIE_DIRECTA_PESTE_PRAG",
                 "severitate": "CRITIC",
                 "titlu": "Achiziție directă peste pragul legal",
-                "descriere": (f'Contract "{c["titlu"][:70]}" ({_fmt_ron(v)}) '
-                              f'depășește singur pragul de achiziție directă ({_fmt_ron(prag_s)}). '
-                              f'Valoarea ar fi impus licitație publică (Legea 98/2016, art. 7).'
+                "descriere": (f'{c["castigator"]} a primit {_fmt_ron(v)} pentru '
+                              f'„{c["titlu"][:55]}" fără licitație publică — deși legea o impune '
+                              f'de la {_fmt_ron(prag_s)} în sus. Primăria a ales achiziție directă '
+                              f'cu {_fmt_ron(v - prag_s)} peste pragul legal.'
                               + nota_ofertanti),
                 "contract_id": c["id"],
                 "contract_numar": c["numar"],
@@ -2052,12 +2052,10 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
                         "tip": "APROAPE_DE_PRAG",
                         "severitate": "MAJOR",
                         "titlu": "Valoare suspectă aproape de prag",
-                        "descriere": (f'Contract {tip_prag} cu valoare {_fmt_ron(v)}, '
-                                     f'cu {_fmt_ron(prag - v)} sub pragul de licitație ({_fmt_ron(prag)}). '
-                                     f'Posibilă evitare deliberată a procedurii competitive. '
-                                     f'Legea 98/2016, art. 11 alin. (1) interzice explicit fragmentarea '
-                                     f'sau structurarea achizițiilor cu scopul de a ocoli pragurile legale. '
-                                     f'Sancțiuni: contravenție conform art. 224 L98/2016.'),
+                        "descriere": (f'{c["castigator"]} a primit {_fmt_ron(v)} pentru {tip_prag} — '
+                                     f'cu exact {_fmt_ron(prag - v)} sub pragul de licitație obligatorie ({_fmt_ron(prag)}). '
+                                     f'Contractele plasate intenționat sub prag ca să evite licitația sunt interzise. '
+                                     f'Există suspiciunea că valoarea reală ar fi putut fi mai mare.'),
                         "contract_id": c["id"],
                         "contract_numar": c["numar"],
                         "valoare": v,
@@ -2106,12 +2104,10 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
                     "tip": "FRAGMENTARE",
                     "severitate": "CRITIC",
                     "titlu": "Posibilă fragmentare artificială a contractelor",
-                    "descriere": (f'Furnizor "{a["castigator"]}" a primit 2 contracte similare '
-                                 f'la interval de {zile_diferenta} zile, valoare combinată '
-                                 f'{_fmt_ron(valoare_combinata)} (peste pragul de {_fmt_ron(prag_s)}).{nota_individuala} '
-                                 f'Încălcare art. 11 alin. (1) din Legea 98/2016 (interzicerea fragmentării artificiale). '
-                                 f'Sancțiuni: contravenție art. 224 L98/2016, amendă 2.000–15.000 RON. '
-                                 f'Sesizare posibilă la ANAP (formular online anap.gov.ro) sau Curtea de Conturi.'),
+                    "descriere": (f'{a["castigator"]} a primit 2 contracte similare în {zile_diferenta} zile, '
+                                 f'cu o valoare combinată de {_fmt_ron(valoare_combinata)}. '
+                                 f'Separat, fiecare pare sub pragul de licitație ({_fmt_ron(prag_s)}) — dar împreună îl depășesc. '
+                                 f'Aceasta se numește fragmentare artificială și este interzisă.{nota_individuala}'),
                     "contract_id": f"{a['id']},{b['id']}",
                     "contract_numar": f"{a['numar']} + {b['numar']}",
                     "valoare": valoare_combinata,
@@ -2132,12 +2128,9 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
                 "severitate": "MAJOR",
                 "titlu": "Exces de proceduri non-competitive",
                 "descriere": (f'{len(directe)} din {total} contracte ({pct_directe:.0f}%) '
-                             f'au fost atribuite prin cumpărare directă sau negociere fără publicare. '
-                             f'Media națională recomandată este sub 30%. '
-                             f'Legea 98/2016, art. 7 stabilește pragurile obligatorii pentru licitație; '
-                             f'art. 104-106 reglementează condițiile stricte pentru negociere fără '
-                             f'publicare prealabilă. Utilizarea excesivă a achizițiilor directe poate '
-                             f'constitui abatere de la principiul transparenței (art. 2 L98/2016).'),
+                             f'au fost atribuite fără licitație publică — media națională e sub 30%. '
+                             f'Când primăria evită constant licitațiile, cetățenii nu pot verifica '
+                             f'dacă banii publici au mers spre cele mai bune oferte disponibile.'),
                 "contract_id": "global",
                 "contract_numar": "–",
                 "valoare": sum(c["valoare_ron"] for c in directe),
@@ -2160,12 +2153,10 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
                     "tip": "FURNIZOR_DOMINANT",
                     "severitate": "MEDIU",
                     "titlu": "Furnizor dominant în achizițiile publice",
-                    "descriere": (f'"{furnizor}" a primit {pct:.0f}% din totalul contractelor '
-                                 f'({_fmt_ron(valoare)} din {_fmt_ron(total_valoare)}). '
-                                 f'Concentrare excesivă — risc de conflict de interese sau specificații preferențiale. '
-                                 f'Legea 98/2016, art. 57-64 (conflicte de interese) și art. 2 (principiul '
-                                 f'tratamentului egal) impun evitarea avantajării sistematice a unui furnizor. '
-                                 f'Verifică dacă există relații de afiliere cu persoane din conducerea primăriei (art. 59 L98/2016).'),
+                    "descriere": (f'{furnizor} a câștigat {pct:.0f}% din toate contractele '
+                                 f'Primăriei Pantelimon: {_fmt_ron(valoare)} din {_fmt_ron(total_valoare)} total. '
+                                 f'Un singur furnizor care domină achizițiile ridică semne de favoritism. '
+                                 f'Merită investigat dacă există legături între această firmă și conducerea primăriei.'),
                     "contract_id": "global",
                     "contract_numar": "–",
                     "valoare": valoare,
@@ -2203,12 +2194,11 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
                     "tip": "CONTRACTE_CONSECUTIVE",
                     "severitate": "MAJOR",
                     "titlu": "Contracte consecutive excesive cu același furnizor",
-                    "descriere": (f'Furnizor "{fereastra[0]["castigator"]}" a primit {len(fereastra)} contracte '
-                                 f'în interval de 30 de zile (între {fereastra[0]["data_publicare"]} și '
-                                 f'{fereastra[-1]["data_publicare"]}), valoare totală '
-                                 f'{_fmt_ron(valoare_totala)}. '
-                                 f'Posibilă fragmentare artificială (art. 11 alin. (1) Legea 98/2016). '
-                                 f'Pattern neobișnuit — posibilă relație privilegiată sau dependență exclusivă de furnizor.'),
+                    "descriere": (f'{fereastra[0]["castigator"]} a primit {len(fereastra)} contracte '
+                                 f'în numai 30 de zile ({fereastra[0]["data_publicare"]} — {fereastra[-1]["data_publicare"]}), '
+                                 f'cu o valoare totală de {_fmt_ron(valoare_totala)}. '
+                                 f'Un ritm atât de concentrat e neobișnuit și poate indica o relație privilegiată '
+                                 f'cu această firmă sau împărțirea unui contract mare în bucăți mici.'),
                     "contract_id": ",".join(c["id"] for c in fereastra[:3]),
                     "contract_numar": f'{fereastra[0]["numar"]} + {len(fereastra)-1} altele',
                     "valoare": valoare_totala,
@@ -2238,12 +2228,10 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
                 "tip": "CRESTERE_BRUSCA_VALOARE",
                 "severitate": "MAJOR" if crestere_pct < 200 else "CRITIC",
                 "titlu": "Creștere bruscă de valoare în revizie contract",
-                "descriere": (f'Contractul "{titlu_base[:60]}" a crescut de la '
-                             f'{_fmt_ron(v_min)} la {_fmt_ron(v_max)} (+{crestere_pct:.0f}%) '
-                             f'între versiuni. Modificări substanțiale de preț după atribuire sunt '
-                             f'reglementate strict (art. 221 alin. (1) lit. a) Legea 98/2016: modificări '
-                             f'substanțiale de preț >10% necesită renegociere completă). Pot indica evitarea '
-                             f'procedurii competitive sau ajustare post-atribuire abuzivă.'),
+                "descriere": (f'Contractul „{titlu_base[:55]}" a crescut cu {crestere_pct:.0f}% între versiuni: '
+                             f'de la {_fmt_ron(v_min)} la {_fmt_ron(v_max)}. '
+                             f'O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat '
+                             f'o nouă licitație la valoarea reală?'),
                 "contract_id": versiuni_sorted[-1]["id"],
                 "contract_numar": versiuni_sorted[-1]["numar"],
                 "valoare": v_max,
@@ -2265,11 +2253,10 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
                     "tip": "VALOARE_ROTUNDA_SUSPECTA",
                     "severitate": "MEDIU",
                     "titlu": "Valoare contract rotundă suspectă",
-                    "descriere": (f'Contract "{c["titlu"][:60]}" are valoare exact {_fmt_ron(v)} — '
-                                 f'sumă rotundă care poate indica o estimare forfetară fără studiu de piață real. '
-                                 f'HG 395/2016, art. 131 alin. (1) impune obligativitatea unui studiu de piață '
-                                 f'documentat pentru orice achiziție directă. '
-                                 f'Contractele legitimate au de obicei valori calculate precis (ex: 127.450 RON).'),
+                    "descriere": (f'{c["castigator"]} a primit exact {_fmt_ron(v)} pentru '
+                                 f'„{c["titlu"][:55]}". O sumă perfect rotundă poate însemna că prețul '
+                                 f'a fost stabilit forfetar, fără un studiu de piață real. '
+                                 f'Contractele normale au valori calculate precis, nu sume rotunde.'),
                     "contract_id": c["id"],
                     "contract_numar": c["numar"],
                     "valoare": v,
@@ -2320,12 +2307,10 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
                     "severitate": "CRITIC",
                     "titlu": f"Contract cu firmă {stare.lower()} la ANAF",
                     "descriere": (
-                        f'Firma "{furnizor}" (CUI {cui_display}) are statut '
-                        f'<strong>{stare}</strong> în registrul ANAF, dar a câștigat '
-                        f'contractul "{c["titlu"][:60]}" în valoare de {_fmt_ron(valoare)}. '
-                        f'Contractele cu firme inactive/radiate pot fi nule de drept (art. 220 alin. (1) '
-                        f'L98/2016 + art. 248 Cod Civil privind nulitatea actelor juridice). '
-                        f'Risc de recuperare prejudiciu prin ANAF sau DNA. '
+                        f'<strong>{furnizor}</strong> (CUI {cui_display}) are statut '
+                        f'<strong>{stare}</strong> la ANAF — o firmă {stare.lower()} nu ar trebui '
+                        f'să primească bani publici. Contractul „{c["titlu"][:50]}" a valorat {_fmt_ron(valoare)}. '
+                        f'Plata unei firme {stare.lower()} poate fi nulă de drept — verifică dacă banii au fost recuperați. '
                         + (f'<br><small style="color:#555">{_fmt_actionariat(firme_openapi.get(cui_f))}</small><br>' if firme_openapi.get(cui_f) else '')
                         + f'Verifică administrator și istoricul complet: '
                         f'<a href="{termene_link}" target="_blank">termene.ro →</a>'
@@ -2355,16 +2340,13 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
                             "severitate": sev,
                             "titlu": f"Contract cu firmă de {varsta_luni} luni vechime",
                             "descriere": (
-                                f'Firma "{furnizor}" (CUI {cui_display}) a fost înregistrată pe '
+                                f'<strong>{furnizor}</strong> (CUI {cui_display}) a fost înregistrată pe '
                                 f'{data_inf_str[:10]} — cu doar <strong>{varsta_luni} luni</strong> '
-                                f'înainte de semnarea contractului. '
-                                f'Contractul "{c["titlu"][:60]}" are valoarea {_fmt_ron(valoare)}. '
-                                f'Legea 98/2016, art. 163 lit. d) și art. 179-187 (capacitate tehnică și profesională) '
-                                f'impun verificarea experienței și bonității furnizorului. '
-                                f'Firmele nou create pot fi vehicule de captare de fonduri publice (practică '
-                                f'sancționată de ANAP și DNA în multiple dosare de achiziții publice). '
-                                f'Verifică administrator, acționari și angajați: '
-                                f'<a href="{termene_link}" target="_blank">termene.ro →</a>'
+                                f'înainte de a primi un contract de {_fmt_ron(valoare)} pentru '
+                                f'„{c["titlu"][:50]}". '
+                                f'O firmă atât de nouă nu poate demonstra experiență reală. '
+                                f'Merită verificat cine o deține și dacă are relații cu primăria. '
+                                f'<a href="{termene_link}" target="_blank">Verifică pe termene.ro →</a>'
                             ),
                             "contract_id": c["id"],
                             "contract_numar": c["numar"],
@@ -2533,13 +2515,12 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
                 "severitate": "CRITIC",
                 "titlu": f"Firmă cu risc sistemic — {len(tipuri)} tipuri de nereguli",
                 "descriere": (
-                    f'Firma <strong>"{furnizor}"</strong> (CUI {cui_display}) apare în '
-                    f'<strong>{len(tipuri)} categorii diferite</strong> de nereguli: {tipuri_str}. '
-                    f'Valoare totală contracte implicate: <strong>{_fmt_ron(valoare)}</strong>. '
-                    f'Apariția în multiple categorii de algoritmi indică un pattern sistematic, '
-                    f'nu un incident izolat — risc ridicat de corupție sau favoritism. '
-                    f'Recomandat sesizare urgentă la ANAP și Curtea de Conturi. '
-                    f'<a href="{_termene_url(cui_f)}" target="_blank">termene.ro →</a>'
+                    f'<strong>{furnizor}</strong> (CUI {cui_display}) apare în '
+                    f'<strong>{len(tipuri)} tipuri diferite</strong> de nereguli: {tipuri_str}. '
+                    f'Valoare totală implicată: <strong>{_fmt_ron(valoare)}</strong>. '
+                    f'Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — '
+                    f'e un pattern sistematic care merită o investigație serioasă. '
+                    f'<a href="{_termene_url(cui_f)}" target="_blank">Verifică pe termene.ro →</a>'
                 ),
                 "contract_id": "global",
                 "contract_numar": "",
@@ -3606,7 +3587,8 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
             <span style="font-size:12px;font-weight:700;color:#bbb;min-width:32px">#{idx}</span>
             <span style="font-size:16px">{emoji}</span>
             <strong style="color:{culoare}">[{f.get('severitate','MEDIU')}]</strong>
-                     <span style="font-weight:700">{f.get('titlu','')}</span>
+                     <span style="font-weight:700;font-size:14px">{furnizor or "—"}</span>
+                     <span style="font-size:11px;color:#888;font-weight:400"> — {f.get('titlu','')}</span>
             {nou_badge}{risc_badge}
             <span class="flag-arrow" style="margin-left:auto;font-size:11px;color:#aaa">▼ detalii</span>
           </div>
