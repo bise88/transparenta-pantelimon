@@ -233,7 +233,7 @@
 
 <!-- ALERT BANNER -->
 <div class="alert-banner">
-  🔴 <strong><span id="idx-banner-nereguli">299</span> nereguli detectate</strong> în ultima analiză automată, din care <strong><span id="idx-banner-critic">107</span> CRITICE</strong> —
+  🔴 <strong><span id="idx-banner-nereguli">304</span> nereguli detectate</strong> în ultima analiză automată, din care <strong><span id="idx-banner-critic">111</span> CRITICE</strong> —
   <a href="raport_transparenta.html">Vezi raportul complet →</a>
 </div>
 
@@ -245,7 +245,7 @@
 
   <div class="hero-stats">
     <div class="hero-stat">
-      <span class="v" id="idx-nereguli">299</span>
+      <span class="v" id="idx-nereguli">304</span>
       <span class="l">Nereguli detectate</span>
     </div>
     <div class="hero-stat">
@@ -295,6 +295,8 @@
       fetch('istoric_scor.json?' + ts).then(function(r){return r.json();}).catch(function(){return [];})
     ]).then(function(results){
       var raport = results[0], istoric = results[1];
+      // istoric_scor.json are forma {puncte:[...]} (scris de monitor) — acceptam si array direct
+      if (istoric && !Array.isArray(istoric) && Array.isArray(istoric.puncte)) istoric = istoric.puncte;
       var scorObj = raport && raport.scor_transparenta;
       if (!scorObj) return;
       var val = (typeof scorObj === 'object') ? scorObj.scor : scorObj;
@@ -368,7 +370,7 @@
   <div class="flags-preview">
     <div class="flags-header">
       <h3>🚩 Cele mai recente nereguli detectate</h3>
-      <a href="raport_transparenta.html" id="idx-see-all">Vezi toate 299 →</a>
+      <a href="raport_transparenta.html" id="idx-see-all">Vezi toate 304 →</a>
     </div>
     <div class="flag-item">
       <span class="flag-sev sev-critic">CRITIC</span>

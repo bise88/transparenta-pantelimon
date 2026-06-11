@@ -4552,7 +4552,8 @@ def genereaza_feed_atom(nereguli: list, data_generare: datetime) -> str:
             valoare = float(n.get("valoare", 0) or 0)
         except (TypeError, ValueError):
             valoare = 0.0
-        descriere = html_mod.escape(str(n.get("descriere", "") or ""))[:500]
+        # Trunchiem ÎNAINTE de escape — altfel tăiem o entitate (&quot;) în jumătate → XML invalid
+        descriere = html_mod.escape(str(n.get("descriere", "") or "")[:500])
         data_neregula = html_mod.escape(str(n.get("data", "") or ""))
         url = f"{BASE}/raport_transparenta.html#nereguli-{i}"
         entry_id = f"{BASE}/raport_transparenta.html#nereguli-{i}-{updated}"
