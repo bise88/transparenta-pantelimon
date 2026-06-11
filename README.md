@@ -2,9 +2,9 @@
 
 Monitorizare cetateasca automata a achizitiilor publice ale Primariei Pantelimon.
 
-**Site live:** [aprindemlumina.eu](https://aprindemlumina.eu)  
-**Raport nereguli:** [aprindemlumina.eu/raport_transparenta.html](https://aprindemlumina.eu/raport_transparenta.html)  
-**Retele firme:** [aprindemlumina.eu/retele.html](https://aprindemlumina.eu/retele.html)
+**Site live:** [transparenta-pantelimon.eu](https://transparenta-pantelimon.eu)  
+**Raport nereguli:** [transparenta-pantelimon.eu/raport_transparenta.html](https://transparenta-pantelimon.eu/raport_transparenta.html)  
+**Retele firme:** [transparenta-pantelimon.eu/retele.html](https://transparenta-pantelimon.eu/retele.html)
 
 > **Stare curentă (automatizat):** 299 nereguli · 506 contracte analizate · 313M RON total · 90/93 firme cu CUI · 83 cu date ANAF
 
@@ -158,7 +158,7 @@ tests/test_retele_firme.py       # analizeaza_retele.py (norm adresa, clustering
 
 **Cod:** MIT
 **Date generate (rapoarte, JSON, feed):** [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/)
-Atribuire: *Transparenta Pantelimon — aprindemlumina.eu*
+Atribuire: *Transparenta Pantelimon — transparenta-pantelimon.eu*
 
 ## Disclaimer
 

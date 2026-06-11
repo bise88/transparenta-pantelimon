@@ -73,7 +73,7 @@ Verificat manual pe baza checklist-ului din roadmap. BUG-1..BUG-3, BUG-5..BUG-7 
 
 **Fișier:** `201.html` (pagina "Buget vs. Realizat")  
 **Probleme:**
-1. Linia 14: `canonical` href → `bise88.github.io/...` (vechi, trebuie `aprindemlumina.eu`)
+1. Linia 14: `canonical` href → `bise88.github.io/...` (vechi, trebuie `transparenta-pantelimon.eu`)
 2. Linia 18: `og:url` → `bise88.github.io/...`
 3. Linia 2522: link offline fallback → `bise88.github.io/...`
 4. Linia 2716: referință text → `bise88.github.io/...`

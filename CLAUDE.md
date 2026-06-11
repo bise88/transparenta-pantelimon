@@ -23,8 +23,8 @@ github-repo/
 └── .github/workflows/          # GitHub Actions pentru rulare automată
 ```
 
-**URL live (custom domain):** `https://aprindemlumina.eu/`
-**Raport live:** `https://aprindemlumina.eu/raport_transparenta.html`
+**URL live (custom domain):** `https://transparenta-pantelimon.eu/`
+**Raport live:** `https://transparenta-pantelimon.eu/raport_transparenta.html`
 **GitHub Pages (redirect):** `https://transparenta-locala.github.io/transparenta-pantelimon/`
 
 ---
@@ -348,11 +348,11 @@ Verificare că site-ul funcționează non-stop. Setup manual cu UptimeRobot (gra
 
 **Pași:**
 1. Creează cont la [uptimerobot.com](https://uptimerobot.com) (plan Free — 50 monitoare, interval 5 min)
-2. Add Monitor → **HTTPS Keyword** pe `https://aprindemlumina.eu` — keyword: `Raport Transparență`
+2. Add Monitor → **HTTPS Keyword** pe `https://transparenta-pantelimon.eu` — keyword: `Raport Transparență`
    - Detectează și că pagina conține datele reale (nu doar că serverul răspunde)
-3. Add Monitor → **HTTPS** pe `https://aprindemlumina.eu/raport_transparenta.html` — check HTTP status 200
+3. Add Monitor → **HTTPS** pe `https://transparenta-pantelimon.eu/raport_transparenta.html` — check HTTP status 200
 4. Configurează alertă email la adresa ta privată (nu cea publică)
-5. Opțional: Add Monitor → **HTTPS** pe `https://aprindemlumina.eu/feed.xml` (RSS functional)
+5. Opțional: Add Monitor → **HTTPS** pe `https://transparenta-pantelimon.eu/feed.xml` (RSS functional)
 
 **Badge status** (adaugă în README.md după ce ai URL-ul public al monitorului):
 ```markdown

@@ -1,6 +1,6 @@
 # Audit tehnic — transparenta-pantelimon
 
-**Site:** https://aprindemlumina.eu
+**Site:** https://transparenta-pantelimon.eu
 **Repo:** https://github.com/transparenta-locala/transparenta-pantelimon
 **Data:** 22 mai 2026
 **Scop:** observații tehnice și propuneri de cod pentru îmbunătățirea instrumentului de monitorizare. Document complementar la `IMPROVEMENTS.md` (roadmap existent).
@@ -19,7 +19,7 @@
 
 1. Bug vizibil pe live: tabelul de pe `transparenta_pantelimon.html` arată permanent „⏳ Se încarcă datele din SEAP..." (vezi §1.1).
 2. Discrepanță numerică între pagini: index zice 147M RON cheltuieli / 506 contracte, tab „Achiziții" zice 4.2M RON contracte (vezi §1.2 — calcul de reconciliere automată).
-3. Canonical URLs trimit la `bise88.github.io`, nu la `aprindemlumina.eu` — Google indexează URL-ul vechi (vezi §1.3).
+3. Canonical URLs trimit la `bise88.github.io`, nu la `transparenta-pantelimon.eu` — Google indexează URL-ul vechi (vezi §1.3).
 4. Lipsește `README.md` în repo (vezi §6.3).
 
 **Propuneri cu cel mai mare impact tehnic:**
@@ -173,15 +173,15 @@ CSS aferent:
 
 **Ce trebuie:**
 ```html
-<link rel="canonical" href="https://aprindemlumina.eu/">
-<meta property="og:url" content="https://aprindemlumina.eu/">
+<link rel="canonical" href="https://transparenta-pantelimon.eu/">
+<meta property="og:url" content="https://transparenta-pantelimon.eu/">
 ```
 
-**Impact:** Google poate considera `aprindemlumina.eu` ca duplicat secundar. Share-urile pe rețele sociale afișează URL-ul vechi.
+**Impact:** Google poate considera `transparenta-pantelimon.eu` ca duplicat secundar. Share-urile pe rețele sociale afișează URL-ul vechi.
 
 **Fix:**
 ```bash
-git grep -l "bise88.github.io" | xargs sed -i 's|bise88.github.io/transparenta-pantelimon|aprindemlumina.eu|g'
+git grep -l "bise88.github.io" | xargs sed -i 's|bise88.github.io/transparenta-pantelimon|transparenta-pantelimon.eu|g'
 ```
 
 Verifică și `enhance.js` — în funcția `injectNav()` linkul GitHub e hard-coded la `bise88/transparenta-pantelimon` în loc de `transparenta-locala/transparenta-pantelimon`.
@@ -852,7 +852,7 @@ if ('serviceWorker' in navigator) {
 - `enhance.js` cu `defer` (deja făcut)
 - Imagini cu `loading="lazy"` + `width`/`height` explicit (CLS)
 - CSS critical inline, restul async
-- Rulează `npx lighthouse https://aprindemlumina.eu` și fixează ce iese roșu
+- Rulează `npx lighthouse https://transparenta-pantelimon.eu` și fixează ce iese roșu
 
 ### 4.6 Map view — Leaflet
 
@@ -915,15 +915,15 @@ def genereaza_press_kit(nereguli, contracte, scor, contact_email):
 {top_5_table}
 
 ## Date deschise
-- API JSON: https://aprindemlumina.eu/raport.json
-- CSV: https://aprindemlumina.eu/contracte.csv
-- RSS: https://aprindemlumina.eu/feed.xml
+- API JSON: https://transparenta-pantelimon.eu/raport.json
+- CSV: https://transparenta-pantelimon.eu/contracte.csv
+- RSS: https://transparenta-pantelimon.eu/feed.xml
 
 ## Contact
 {contact_email}
 
 ## Metodologie completă
-https://aprindemlumina.eu/metodologie.html
+https://transparenta-pantelimon.eu/metodologie.html
 
 ## Disclaimer
 Toate datele sunt fapte publice. Concluziile sunt la latitudinea cititorului.
@@ -1036,7 +1036,7 @@ def generate_og_image(stats, output='og-image.png'):
     d.rectangle((60, 410, 1140, 470), fill='#1f1f1f')
     d.text((80, 420), f'Scor transparență: {stats["scor"]}/100',
            fill='#fff', font=font_med)
-    d.text((60, 540), 'aprindemlumina.eu', fill='#6b7280', font=font_sm)
+    d.text((60, 540), 'transparenta-pantelimon.eu', fill='#6b7280', font=font_sm)
     img.save(output, 'PNG', optimize=True)
 ```
 
@@ -1164,7 +1164,7 @@ jobs:
 # Transparența Pantelimon
 
 Monitorizare cetățenească automată a achizițiilor publice ale Primăriei Pantelimon.
-Site live: [aprindemlumina.eu](https://aprindemlumina.eu)
+Site live: [transparenta-pantelimon.eu](https://transparenta-pantelimon.eu)
 
 ## Ce face
 

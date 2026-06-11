@@ -49,7 +49,7 @@ def test_sitemap_contine_paginile_statice():
     assert 'petitie.html' in xml
     assert 'harta.html' in xml
     assert 'furnizori/index.html' in xml
-    assert 'aprindemlumina.eu' in xml
+    assert 'transparenta-pantelimon.eu' in xml
 
 
 def test_sitemap_structura_xml_valida():

@@ -255,9 +255,9 @@ class TestGenereazaFeedAtom:
         assert "raport_transparenta.html" in result
 
     def test_url_base_aprindemlumina(self):
-        """Feed-ul foloseste domeniul aprindemlumina.eu."""
+        """Feed-ul foloseste domeniul transparenta-pantelimon.eu."""
         result = genereaza_feed_atom(NEREGULI_SAMPLE, datetime(2026, 5, 27))
-        assert "aprindemlumina.eu" in result
+        assert "transparenta-pantelimon.eu" in result
 
     def test_timezone_aware_data(self):
         """Accepta datetime cu timezone."""

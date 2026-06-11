@@ -3,13 +3,13 @@
 Datele generate automat de `monitor_pantelimon.py` sunt disponibile public ca endpoint JSON.
 Actualizate lunar (de obicei pe 15 ale lunii).
 
-**Licență:** Creative Commons CC-BY 4.0 — atribuire obligatorie: „Transparența Pantelimon / aprindemlumina.eu"
+**Licență:** Creative Commons CC-BY 4.0 — atribuire obligatorie: „Transparența Pantelimon / transparenta-pantelimon.eu"
 
 ---
 
 ## Endpoint: `raport.json`
 
-**URL:** `https://aprindemlumina.eu/raport.json`
+**URL:** `https://transparenta-pantelimon.eu/raport.json`
 
 Raportul complet cu toate neregulile detectate, totaluri și scor de transparență.
 
@@ -99,7 +99,7 @@ Raportul complet cu toate neregulile detectate, totaluri și scor de transparen�
 
 ## Endpoint: `contracte.json`
 
-**URL:** `https://aprindemlumina.eu/contracte.json`
+**URL:** `https://transparenta-pantelimon.eu/contracte.json`
 
 Lista tuturor contractelor analizate (sursa: SEAP).
 
@@ -124,7 +124,7 @@ Lista tuturor contractelor analizate (sursa: SEAP).
 
 ## Endpoint: `feed.xml`
 
-**URL:** `https://aprindemlumina.eu/feed.xml`
+**URL:** `https://transparenta-pantelimon.eu/feed.xml`
 
 Feed Atom cu top 20 nereguli (compatibil RSS). Util pentru Feedly, Inoreader etc.
 
@@ -132,7 +132,7 @@ Feed Atom cu top 20 nereguli (compatibil RSS). Util pentru Feedly, Inoreader etc
 
 ## Endpoint: `contracte.csv`
 
-**URL:** `https://aprindemlumina.eu/contracte.csv`
+**URL:** `https://transparenta-pantelimon.eu/contracte.csv`
 
 Același dataset ca `contracte.json` în format CSV — compatibil Excel, Google Sheets, pandas.
 
@@ -153,7 +153,7 @@ Același dataset ca `contracte.json` în format CSV — compatibil Excel, Google
 
 ## Endpoint: `press_kit.json`
 
-**URL:** `https://aprindemlumina.eu/press_kit.json`
+**URL:** `https://transparenta-pantelimon.eu/press_kit.json`
 
 Press kit auto-generat cu statistici și top nereguli — destinat jurnaliștilor.
 
@@ -195,7 +195,7 @@ Press kit auto-generat cu statistici și top nereguli — destinat jurnaliștilo
 
 ## Endpoint: `pnrr_projects.json`
 
-**URL:** `https://aprindemlumina.eu/pnrr_projects.json`
+**URL:** `https://transparenta-pantelimon.eu/pnrr_projects.json`
 
 Proiectele PNRR cu beneficiar Primăria Pantelimon (sursă: `proiecte.pnrr.gov.ro`).
 Cache TTL: 7 zile.
@@ -217,7 +217,7 @@ Cache TTL: 7 zile.
 
 ## Endpoint: `ani_declaratii.json`
 
-**URL:** `https://aprindemlumina.eu/ani_declaratii.json`
+**URL:** `https://transparenta-pantelimon.eu/ani_declaratii.json`
 
 Declarații de avere și interese ale aleșilor locali din Pantelimon (sursă: ANI / integritate.eu).
 Cache TTL: 30 zile.
@@ -237,7 +237,7 @@ Cache TTL: 30 zile.
 
 ## Endpoint: `curtea_de_conturi.json`
 
-**URL:** `https://aprindemlumina.eu/curtea_de_conturi.json`
+**URL:** `https://transparenta-pantelimon.eu/curtea_de_conturi.json`
 
 Rapoarte de audit ale Curții de Conturi pentru UAT Pantelimon (sursă: curteadeconturi.ro).
 Cache TTL: 30 zile.
@@ -256,7 +256,7 @@ Cache TTL: 30 zile.
 
 ## Endpoint: `ted_notices.json`
 
-**URL:** `https://aprindemlumina.eu/ted_notices.json`
+**URL:** `https://transparenta-pantelimon.eu/ted_notices.json`
 
 Anunțuri de achiziție publică din Jurnalul Oficial al UE (TED Europa) pentru cumpărătorul cu CIF 4420759.
 Contracte > 500.000 EUR trebuie publicate obligatoriu în TED (Directiva UE 2014/24).
@@ -277,7 +277,7 @@ Cache TTL: 7 zile.
 
 ## Endpoint: `mol_primarie.json`
 
-**URL:** `https://aprindemlumina.eu/mol_primarie.json`
+**URL:** `https://transparenta-pantelimon.eu/mol_primarie.json`
 
 Hotărâri din Monitorul Oficial Local al Primăriei Pantelimon (sursă: primariapantelimon.ro).
 Cache TTL: 7 zile.
@@ -297,7 +297,7 @@ Cache TTL: 7 zile.
 
 ## Endpoint: `firme_geocoded.json`
 
-**URL:** `https://aprindemlumina.eu/firme_geocoded.json`
+**URL:** `https://transparenta-pantelimon.eu/firme_geocoded.json`
 
 Coordonatele geografice ale sediilor furnizorilor cu contracte la Primăria Pantelimon.
 Geocodare via Nominatim/OpenStreetMap. Cache TTL: 180 zile.
@@ -320,7 +320,7 @@ Folosit de harta.html (Leaflet.js).
 ## Utilizare responsabilă
 
 - Respectă limitele serverului (max 1 req/minut dacă faci poll automat)
-- Citează sursa: „Date: Transparența Pantelimon / aprindemlumina.eu, CC-BY 4.0"
+- Citează sursa: „Date: Transparența Pantelimon / transparenta-pantelimon.eu, CC-BY 4.0"
 - Datele SEAP au decalaj de 1-3 luni față de realitate
 - Neregulile detectate sunt indicatori factuali, nu concluzii juridice definitive
 

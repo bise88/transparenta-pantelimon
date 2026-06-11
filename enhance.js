@@ -1,6 +1,6 @@
 /*!
  * transparenta-enhance.js  v1.0
- * Progressive enhancement pentru https://aprindemlumina.eu/
+ * Progressive enhancement pentru https://transparenta-pantelimon.eu/
  *
  * Funcționalități:
  *   - Bară de navigare unificată pe toate paginile (Acasă / Nereguli / Buget / surse)

@@ -1,6 +1,6 @@
 /**
  * sw.js — Service Worker §4.3
- * Transparența Pantelimon — https://aprindemlumina.eu
+ * Transparența Pantelimon — https://transparenta-pantelimon.eu
  *
  * Strategie: Cache-First pentru resurse statice, Network-First pentru date JSON.
  * Permite consultare offline a raportului și paginii principale.
@@ -101,7 +101,7 @@ async function cacheFirstStatic(request) {
   } catch {
     // Offline și nu în cache — returnăm pagina principală dacă există
     const fallback = await caches.match('/index.html');
-    return fallback || new Response('Offline — deschideți https://aprindemlumina.eu pentru a accesa datele salvate.', {
+    return fallback || new Response('Offline — deschideți https://transparenta-pantelimon.eu pentru a accesa datele salvate.', {
       status: 503,
       headers: { 'Content-Type': 'text/plain; charset=utf-8' }
     });

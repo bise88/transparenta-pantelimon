@@ -181,12 +181,12 @@
     }
   ],
   "date_deschise": {
-    "api_json": "https://aprindemlumina.eu/raport.json",
-    "contracte_json": "https://aprindemlumina.eu/contracte.json",
-    "rss_feed": "https://aprindemlumina.eu/feed.xml",
-    "harta": "https://aprindemlumina.eu/harta.html"
+    "api_json": "https://transparenta-pantelimon.eu/raport.json",
+    "contracte_json": "https://transparenta-pantelimon.eu/contracte.json",
+    "rss_feed": "https://transparenta-pantelimon.eu/feed.xml",
+    "harta": "https://transparenta-pantelimon.eu/harta.html"
   },
   "contact": "",
-  "site": "https://aprindemlumina.eu",
+  "site": "https://transparenta-pantelimon.eu",
   "disclaimer": "Toate datele sunt fapte publice (SEAP, ANAF, ONRC). Site-ul nu face afirmații despre intenții sau vinovăție — doar afișează statistici și legi posibil încălcate. Concluziile sunt la latitudinea cititorului."
 }

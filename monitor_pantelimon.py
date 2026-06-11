@@ -3917,14 +3917,14 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
 <meta name="description" content="{seo_description}">
 <meta name="keywords" content="transparență, Pantelimon, primărie, achiziții publice, SEAP, ANAF, monitorizare cetățenească, Ilfov, nereguli, raport">
 <meta name="author" content="Inițiativă cetățenească independentă">
-<link rel="canonical" href="https://aprindemlumina.eu/raport_transparenta.html">
+<link rel="canonical" href="https://transparenta-pantelimon.eu/raport_transparenta.html">
 
 <!-- Open Graph (Facebook, LinkedIn) -->
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://aprindemlumina.eu/raport_transparenta.html">
+<meta property="og:url" content="https://transparenta-pantelimon.eu/raport_transparenta.html">
 <meta property="og:title" content="{seo_title}">
 <meta property="og:description" content="{seo_description}">
-<meta property="og:image" content="https://aprindemlumina.eu/og-image.png">
+<meta property="og:image" content="https://transparenta-pantelimon.eu/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="ro_RO">
@@ -3934,7 +3934,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{seo_title}">
 <meta name="twitter:description" content="{seo_description}">
-<meta name="twitter:image" content="https://aprindemlumina.eu/og-image.png">
+<meta name="twitter:image" content="https://transparenta-pantelimon.eu/og-image.png">
 <style>
   body{{font-family:'Segoe UI',Arial,sans-serif;background:#F4F6F9;color:#1A1A2E;margin:0;padding:0}}
   .wrap{{max-width:960px;margin:0 auto;padding:24px 16px 60px}}
@@ -4027,7 +4027,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
   [data-tp-theme="dark"] .tp-reco-gap span {{ color: #fca5a5; }}
   [data-tp-theme="dark"] .tp-reco-note   {{ background: #422006; border-left-color: #ca8a04; color: #fef3c7; }}
 </style>
-<link rel="alternate" type="application/atom+xml" title="Nereguli noi — Transparența Pantelimon" href="https://aprindemlumina.eu/feed.xml">
+<link rel="alternate" type="application/atom+xml" title="Nereguli noi — Transparența Pantelimon" href="https://transparenta-pantelimon.eu/feed.xml">
 <script src="enhance.js" defer></script>
 </head>
 <body>
@@ -4530,7 +4530,7 @@ def genereaza_feed_atom(nereguli: list, data_generare: datetime) -> str:
     import html as html_mod
     from datetime import timezone
 
-    BASE = "https://aprindemlumina.eu"
+    BASE = "https://transparenta-pantelimon.eu"
     if data_generare.tzinfo is None:
         updated = data_generare.replace(tzinfo=timezone.utc).isoformat()
     else:
@@ -4616,7 +4616,7 @@ Monitor Transparență Bugetară — Pantelimon
 
 {flags_text}
 
-Raport complet: https://aprindemlumina.eu/raport_transparenta.html
+Raport complet: https://transparenta-pantelimon.eu/raport_transparenta.html
 
 ---
 Inițiativă cetățenească independentă · Date din surse publice oficiale.
@@ -5018,7 +5018,7 @@ def genereaza_og_image(n_flags: int, n_critic: int, valoare_mil: float,
 
     # Header
     d.text((40, 40), 'Transparența Pantelimon', fill='#94a3b8', font=_font_reg(30))
-    d.text((40, 90), 'aprindemlumina.eu', fill='#64748b', font=_font_reg(22))
+    d.text((40, 90), 'transparenta-pantelimon.eu', fill='#64748b', font=_font_reg(22))
 
     # Numărul mare de nereguli
     d.text((40, 150), f'{n_flags}', fill='#dc2626', font=_font(130))
@@ -5074,7 +5074,7 @@ def genereaza_press_kit(
     import json as json_mod
     from datetime import datetime
 
-    BASE_URL = "https://aprindemlumina.eu"
+    BASE_URL = "https://transparenta-pantelimon.eu"
     azi = datetime.now().strftime("%d.%m.%Y")
     azi_iso = datetime.now().strftime("%Y-%m-%d")
 
@@ -5232,7 +5232,7 @@ Toate datele sunt fapte publice. Concluziile sunt la latitudinea cititorului.
 
 def genereaza_sitemap(index_furnizori: list) -> str:
     """Regenerează sitemap.xml cu paginile statice + toate paginile furnizori."""
-    BASE = "https://aprindemlumina.eu"
+    BASE = "https://transparenta-pantelimon.eu"
     azi = datetime.now().strftime("%Y-%m-%d")
     statice = [
         ("",                              "1.0", "weekly"),
@@ -5475,7 +5475,7 @@ def genereaza_pagina_furnizor(
     n_major  = sum(1 for f in flags_firma if f.get("severitate") == "MAJOR")
     n_mediu  = sum(1 for f in flags_firma if f.get("severitate") == "MEDIU")
     cui_f    = (contracte_firma[0].get("castigator_cui", "") or "") if contracte_firma else ""
-    base_url = "https://aprindemlumina.eu"
+    base_url = "https://transparenta-pantelimon.eu"
     safe_name = html_mod.escape(nume)
 
     culori = {"CRITIC": "#C0392B", "MAJOR": "#E67E22", "MEDIU": "#F39C12"}
@@ -5699,7 +5699,7 @@ def genereaza_index_furnizori(index: list) -> str:
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Furnizori Primăria Pantelimon — Transparența</title>
   <meta name="description" content="Index A-Z al furnizorilor Primăriei Pantelimon cu nereguli detectate automat.">
-  <link rel="canonical" href="https://aprindemlumina.eu/furnizori/">
+  <link rel="canonical" href="https://transparenta-pantelimon.eu/furnizori/">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
   <script src="../enhance.js" defer></script>
   <style>

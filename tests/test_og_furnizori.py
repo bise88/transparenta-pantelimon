@@ -202,9 +202,9 @@ class TestGenereazaIndexFurnizori:
         assert "#888" in result
 
     def test_canonical_url(self):
-        """Pagina contine canonical URL spre aprindemlumina.eu."""
+        """Pagina contine canonical URL spre transparenta-pantelimon.eu."""
         result = genereaza_index_furnizori(INDEX_SAMPLE)
-        assert "aprindemlumina.eu/furnizori/" in result
+        assert "transparenta-pantelimon.eu/furnizori/" in result
 
     def test_enhance_js_inclus(self):
         """enhance.js este inclus in pagina."""

@@ -1,4 +1,4 @@
 ﻿User-agent: *
 Allow: /
 
-Sitemap: https://aprindemlumina.eu/sitemap.xml
+Sitemap: https://transparenta-pantelimon.eu/sitemap.xml
