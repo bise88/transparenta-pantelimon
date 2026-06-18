@@ -227,13 +227,14 @@
   }
 </style>
 <link rel="alternate" type="application/atom+xml" title="Nereguli noi — Transparența Pantelimon" href="https://transparenta-pantelimon.eu/feed.xml">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <script src="enhance.js" defer></script>
 </head>
 <body>
 
 <!-- ALERT BANNER -->
 <div class="alert-banner">
-  🔴 <strong><span id="idx-banner-nereguli">304</span> nereguli detectate</strong> în ultima analiză automată, din care <strong><span id="idx-banner-critic">111</span> CRITICE</strong> —
+  🔴 <strong><span id="idx-banner-nereguli">304</span> nereguli detectate</strong> în ultima analiză automată<span id="idx-data-analiza"></span>, din care <strong><span id="idx-banner-critic">111</span> CRITICE</strong> —
   <a href="raport_transparenta.html">Vezi raportul complet →</a>
 </div>
 
@@ -286,13 +287,15 @@
       <div id="scor-componente" style="font-size:.8rem;color:#4a5568;min-width:210px;"></div>
     </div>
   </section>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script>
   (function(){
-    var ts = Date.now();
+    // Revalidare condiționată (ETag) în loc de ?Date.now() — nu sparge cache-ul SW/HTTP,
+    // dar ia mereu versiunea proaspătă când fișierul s-a schimbat (304 ieftin când e identic).
+    var opts = { cache: 'no-cache' };
     Promise.all([
-      fetch('raport.json?' + ts).then(function(r){return r.json();}).catch(function(){return null;}),
-      fetch('istoric_scor.json?' + ts).then(function(r){return r.json();}).catch(function(){return [];})
+      fetch('raport.json', opts).then(function(r){return r.json();}).catch(function(){return null;}),
+      fetch('istoric_scor.json', opts).then(function(r){return r.json();}).catch(function(){return [];})
     ]).then(function(results){
       var raport = results[0], istoric = results[1];
       // istoric_scor.json are forma {puncte:[...]} (scris de monitor) — acceptam si array direct
@@ -331,8 +334,17 @@
         var elSeeAll = document.getElementById('idx-see-all');
         if (elSeeAll) elSeeAll.textContent = 'Vezi toate ' + nf + ' →';
       }
+      // Marker prospețime: data ultimei analize din raport.json (generated_at)
+      var gen = raport && raport.generated_at;
+      if (gen) {
+        var d = new Date(gen);
+        if (!isNaN(d)) {
+          var elData = document.getElementById('idx-data-analiza');
+          if (elData) elData.textContent = ' (' + d.toLocaleDateString('ro-RO', {day:'numeric', month:'long', year:'numeric'}) + ')';
+        }
+      }
 
-      if (Array.isArray(istoric) && istoric.length > 1) {
+      if (Array.isArray(istoric) && istoric.length > 1 && typeof Chart !== 'undefined') {
         var ctx = document.getElementById('scor-chart');
         if (ctx) {
           new Chart(ctx, {
