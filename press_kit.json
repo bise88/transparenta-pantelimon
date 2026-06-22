@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-06-08",
+  "generated_at": "2026-06-22",
   "uat": {
     "name": "Orașul Pantelimon",
     "cif": "4420759",
@@ -100,7 +100,7 @@
       "descriere": "<strong>Constopograf Expert</strong> (CUI 25145252) apare în <strong>4 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, FRAGMENTARE, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>8.37 mil. RON</strong>. Când o firmă acumulează probleme în atât de multe",
       "furnizor": "Constopograf Expert",
       "valoare_ron": 8370000.0,
-      "data": "2026-06-08",
+      "data": "2026-06-22",
       "contract_id": "global",
       "tip": "RISC_SISTEMIC_FIRMA",
       "anchor": "#nereguli-279"
