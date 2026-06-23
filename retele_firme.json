@@ -720,8 +720,8 @@
       "label": "TOP A-Z CONCEPT S.R.L.",
       "cui": "45058860",
       "adresa": "JUD. ILFOV, SAT FUNDENI COM. DOBROEŞTI, STR. MĂRULUI, NR.19, CAMERA 2, SC.A, ET.2, AP.16",
-      "lat": 44.470278,
-      "lng": 26.176246,
+      "lat": 44.457455,
+      "lng": 26.16276,
       "valoare": 16728051.0,
       "nr_contracte": 3,
       "in_retea": false
@@ -830,8 +830,8 @@
       "label": "OPIUM OFFICE CONSULTING S.R.L.",
       "cui": "32265200",
       "adresa": "JUD. ILFOV, SAT 1 DECEMBRIE COM. 1 DECEMBRIE, STR. 13, NR.18",
-      "lat": 44.495934,
-      "lng": 26.174623,
+      "lat": 44.495849,
+      "lng": 26.174806,
       "valoare": 4500.0,
       "nr_contracte": 1,
       "in_retea": false
@@ -1710,8 +1710,8 @@
       "label": "SELGROS CASH & CARRY SRL",
       "cui": "11805367",
       "adresa": "JUD. BRAŞOV, MUN. BRAŞOV, CAL. BUCUREŞTI, NR.231",
-      "lat": 45.638966,
-      "lng": 25.628976,
+      "lat": 45.634456,
+      "lng": 25.634003,
       "valoare": 9031.31,
       "nr_contracte": 2,
       "in_retea": false
@@ -2060,5 +2060,5 @@
     "edges_adresa_comuna": 4,
     "total_edges": 4
   },
-  "generated_at": "2026-06-22T11:36:21.731625"
+  "generated_at": "2026-06-23T12:44:52.012211"
 }
