@@ -167,9 +167,10 @@ def fetch_contracts_seap(cui: str, luni: int = 12) -> tuple:
         return [], ["openpyxl lipsă"]
 
     IS_CI = os.environ.get("GITHUB_ACTIONS") == "true"
-    # Fișierele "Contracte" sunt ~10-15MB; "Achizitii directe" sunt >50MB.
-    # În CI limităm la 25MB — destul pentru Contracte, evităm descărcări uriașe.
-    MAX_FILE_MB = 25 if IS_CI else 200
+    # Fișierele "Contracte" sunt ~22MB; "Achizitii directe" sunt ~57MB.
+    # Runnerul GitHub Actions are 7GB RAM și openpyxl read_only iterează lazy,
+    # deci putem procesa și fișierul mare. Plafon generos doar ca siguranță.
+    MAX_FILE_MB = 80 if IS_CI else 200
 
     debug_log = [f"IS_CI={IS_CI} MAX_FILE_MB={MAX_FILE_MB}MB cui={cui}"]
     print(f"  [data.gov.ro] Caut contracte pentru CUI {cui} (IS_CI={IS_CI}, max={MAX_FILE_MB}MB)...")
@@ -208,8 +209,8 @@ def fetch_contracts_seap(cui: str, luni: int = 12) -> tuple:
             if not (url.endswith(".xlsx") or url.endswith(".xls")):
                 continue
             este_contracte = "contracte" in name and "modificare" not in name
-            # Includem și achizitii directe NUMAI dacă nu suntem în CI (fișiere prea mari)
-            este_directe = (not IS_CI) and "direct" in name and "notific" not in name and "atribuire" not in name
+            # Includem și achizitii directe în CI (plafonul MAX_FILE_MB acoperă acum ~57MB)
+            este_directe = "direct" in name and "notific" not in name and "atribuire" not in name
             if este_contracte or este_directe:
                 tip = "contract" if este_contracte else "achizitie-directa"
                 fisiere_relevante.append((tip, url, res.get("name", "")))
@@ -1795,6 +1796,21 @@ def detect_burst_contracte(contracte: list,
     def _data(c):
         return (c.get("data_publicare") or c.get("data") or "")[:10]
 
+    def _lista(ctrs):
+        """Lista contractelor componente, pentru afișare expandabilă în raport."""
+        out = []
+        for c in ctrs:
+            out.append({
+                "firma": c.get("castigator") or c.get("furnizor") or c.get("ofertant") or "Necunoscut",
+                "cui_firma": c.get("castigator_cui") or c.get("cui_ofertant") or c.get("cui") or "",
+                "valoare": _val(c),
+                "id": c.get("id") or "",
+                "nr_seap": c.get("numar") or c.get("numar_contract") or c.get("id") or "",
+                "procedura": c.get("tip_procedura") or c.get("procedura") or "",
+                "titlu": c.get("titlu") or c.get("denumire") or "",
+            })
+        return out
+
     pe_zi = _dd3(list)
     for c in contracte:
         data = _data(c)
@@ -1829,6 +1845,7 @@ def detect_burst_contracte(contracte: list,
                 "valoare": valoare_zi,
                 "nr_contracte": len(ctrs),
                 "weekend": este_weekend,
+                "contracte": _lista(ctrs),
             })
         # Weekend cu valoare mare (chiar sub prag_nr)
         elif este_weekend and valoare_zi >= 200_000:
@@ -1845,6 +1862,7 @@ def detect_burst_contracte(contracte: list,
                 "valoare": valoare_zi,
                 "nr_contracte": len(ctrs),
                 "weekend": True,
+                "contracte": _lista(ctrs),
             })
     return sorted(flags, key=lambda f: f["valoare"], reverse=True)
 
@@ -3566,6 +3584,43 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
         else:
             _firma_panel_html = ''
 
+        # Sublistă contracte componente (ex. flag BURST_CONTRACTE — „9 contracte într-o zi")
+        _contracte_comp = f.get('contracte') or []
+        if _contracte_comp:
+            _rows = ""
+            for _c in _contracte_comp:
+                _cid = _c.get('id') or ''
+                _seap_txt = _seap_nr(_cid) or (f"Nr. SEAP: {_c.get('nr_seap')}" if _c.get('nr_seap') else '')
+                _seap_cell = (
+                    f'<a href="{_seap_url(_cid, _c.get("procedura",""))}" target="_blank" '
+                    f'onclick="event.stopPropagation()" style="color:#0070C0;text-decoration:none">'
+                    f'🔍 {_seap_txt or "deschide"} ↗</a>'
+                ) if (_cid or _c.get('nr_seap')) else '–'
+                _rows += (
+                    '<tr>'
+                    f'<td style="padding:5px 8px;border-bottom:1px solid #eee">{_c.get("firma") or "–"}</td>'
+                    f'<td style="padding:5px 8px;border-bottom:1px solid #eee;text-align:right;white-space:nowrap">{_fmt_ron(_c.get("valoare",0) or 0)}</td>'
+                    f'<td style="padding:5px 8px;border-bottom:1px solid #eee">{_c.get("procedura") or "–"}</td>'
+                    f'<td style="padding:5px 8px;border-bottom:1px solid #eee">{_seap_cell}</td>'
+                    '</tr>'
+                )
+            _contracte_lista_html = (
+                '<div style="margin-top:12px">'
+                f'<div style="font-size:12px;font-weight:700;color:#555;margin-bottom:6px">'
+                f'📑 Cele {len(_contracte_comp)} contracte componente:</div>'
+                '<table style="width:100%;border-collapse:collapse;font-size:12px">'
+                '<thead><tr style="text-align:left;color:#888">'
+                '<th style="padding:5px 8px;border-bottom:2px solid #ddd">Firmă</th>'
+                '<th style="padding:5px 8px;border-bottom:2px solid #ddd;text-align:right">Valoare</th>'
+                '<th style="padding:5px 8px;border-bottom:2px solid #ddd">Procedură</th>'
+                '<th style="padding:5px 8px;border-bottom:2px solid #ddd">SEAP</th>'
+                '</tr></thead>'
+                f'<tbody>{_rows}</tbody>'
+                '</table></div>'
+            )
+        else:
+            _contracte_lista_html = ''
+
         flags_html += f"""
         <div class="tp-flag"
              onclick="toggleFlag(this)"
@@ -3622,6 +3677,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
               </a>
               {btn_firma}
             </div>
+            {_contracte_lista_html}
             {_firma_panel_html}
             <div style="margin-top:10px;padding:8px 12px;background:#F4F6F8;border-radius:6px;
                         font-size:11px;color:#666;line-height:1.6">

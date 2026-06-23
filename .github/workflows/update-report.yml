@@ -2,9 +2,9 @@
 
 "on":
   schedule:
-    # În fiecare luni, 06:00 UTC = 08:00 ora României
+    # În fiecare lună, pe 1, la 06:00 UTC = 08:00/09:00 ora României
     # SEAP e sursă publică; rate limiting de 1.2s/req e respectat în cod
-    - cron: '0 6 * * 1'
+    - cron: '0 6 1 * *'
   workflow_dispatch:  # permite și pornire manuală din GitHub
 
 jobs:
