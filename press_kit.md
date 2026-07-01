@@ -1,4 +1,4 @@
-# Press kit — Transparența Pantelimon (23.06.2026)
+# Press kit — Transparența Pantelimon (01.07.2026)
 
 Monitorizare cetățenească automată a achizițiilor publice — Orașul Pantelimon.
 
@@ -48,4 +48,4 @@ https://transparenta-pantelimon.eu/despre.html
 Toate datele sunt fapte publice. Concluziile sunt la latitudinea cititorului.
 
 ---
-*Generat automat de monitor_pantelimon.py la 2026-06-23*
+*Generat automat de monitor_pantelimon.py la 2026-07-01*
