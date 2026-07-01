@@ -25,6 +25,19 @@ from pathlib import Path
 import requests
 from bs4 import BeautifulSoup
 
+from config import (
+    TTL_SEAP_CONTRACTE_DAYS,
+    TTL_HCL_DAYS,
+    TTL_CURTEA_CONTURI_DAYS,
+    TTL_ANI_DAYS,
+    TTL_TED_DAYS,
+    TTL_MOL_DAYS,
+    TTL_PNRR_DAYS,
+    TTL_ONRC_DAYS,
+    TTL_NOMINATIM_DAYS,
+    TTL_ANAF_V9_DAYS,
+)
+
 # Optional: risc_firma.py — indicatori financiari firme furnizoare (SQLite cache, TTL 30 zile)
 try:
     from risc_firma import fetch_firma_anaf as _fetch_firma_anaf
@@ -153,12 +166,71 @@ def fetch_budget_transparenta(cui: str) -> dict:
 # 2. DATE CONTRACTE DIN DATA.GOV.RO (export oficial SEAP trimestrial)
 # ==============================================================================
 
-def fetch_contracts_seap(cui: str, luni: int = 12) -> tuple:
+def fetch_contracts_seap(
+    cui: str,
+    luni: int = 12,
+    cache_db: str = "seap_contracte_cache.db",
+    ttl_zile: int = TTL_SEAP_CONTRACTE_DAYS,
+) -> tuple:
     """
     Descarcă contractele Primăriei Pantelimon din data.gov.ro — exportul oficial
     trimestrial al SEAP publicat de ANAP. Mult mai fiabil decât API-ul direct SEAP.
     Returnează (lista_contracte, lista_debug) pentru diagnosticare.
+
+    Foloseşte SQLite cache cu TTL ttl_zile (implicit TTL_SEAP_CONTRACTE_DAYS) —
+    exportul trimestrial SEAP nu se schimbă de la o rulare zilnică la alta.
     """
+    import sqlite3
+    import json as json_mod
+    from datetime import timedelta as _timedelta
+
+    def _init_cache(db_path):
+        conn = sqlite3.connect(db_path)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS seap_contracte (
+                cache_key TEXT PRIMARY KEY, extras_la TEXT, date_json TEXT, debug_json TEXT
+            )
+        """)
+        conn.commit()
+        return conn
+
+    def _cache_get(conn, key):
+        row = conn.execute(
+            "SELECT date_json, debug_json, extras_la FROM seap_contracte WHERE cache_key=?", (key,)
+        ).fetchone()
+        if not row:
+            return None
+        date_json, debug_json, extras_la = row
+        try:
+            if datetime.now() - datetime.fromisoformat(extras_la) < _timedelta(days=ttl_zile):
+                return json_mod.loads(date_json), json_mod.loads(debug_json)
+        except (ValueError, TypeError):
+            pass
+        return None
+
+    def _cache_set(conn, key, contracte, debug_log):
+        conn.execute(
+            "INSERT OR REPLACE INTO seap_contracte (cache_key, extras_la, date_json, debug_json) VALUES (?,?,?,?)",
+            (key, datetime.now().isoformat(), json_mod.dumps(contracte, ensure_ascii=False), json_mod.dumps(debug_log, ensure_ascii=False))
+        )
+        conn.commit()
+
+    cache_key = f"{cui}_{luni}"
+    conn = _init_cache(cache_db)
+    cached = _cache_get(conn, cache_key)
+    if cached is not None:
+        conn.close()
+        print(f"  [data.gov.ro] Contracte pentru CUI {cui} (din cache, TTL {ttl_zile}z)")
+        return cached
+
+    contracte, debug_log = _fetch_contracts_seap_live(cui, luni)
+    _cache_set(conn, cache_key, contracte, debug_log)
+    conn.close()
+    return contracte, debug_log
+
+
+def _fetch_contracts_seap_live(cui: str, luni: int = 12) -> tuple:
+    """Logica de fetch propriu-zisă pentru fetch_contracts_seap(), fără cache."""
     import io, time
     try:
         import openpyxl
@@ -395,8 +467,66 @@ HCL_RED_FLAG_KEYWORDS = {
 }
 
 
-def fetch_hcl_metadata(url: str) -> list:
-    """Extrage lista de HCL-uri (PDF-uri) de pe pagina primăriei."""
+def fetch_hcl_metadata(
+    url: str,
+    cache_db: str = "hcl_cache.db",
+    ttl_zile: int = TTL_HCL_DAYS,
+) -> list:
+    """Extrage lista de HCL-uri (PDF-uri) de pe pagina primăriei.
+
+    Foloseşte SQLite cache cu TTL ttl_zile (implicit TTL_HCL_DAYS) — pagina de
+    hotărâri se actualizează la fiecare ședință a Consiliului Local.
+    """
+    import sqlite3
+    import json as json_mod
+    from datetime import timedelta as _timedelta
+
+    def _init_cache(db_path):
+        conn = sqlite3.connect(db_path)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS hcl_metadata (
+                url TEXT PRIMARY KEY, extras_la TEXT, date_json TEXT
+            )
+        """)
+        conn.commit()
+        return conn
+
+    def _cache_get(conn, key):
+        row = conn.execute(
+            "SELECT date_json, extras_la FROM hcl_metadata WHERE url=?", (key,)
+        ).fetchone()
+        if not row:
+            return None
+        date_json, extras_la = row
+        try:
+            if datetime.now() - datetime.fromisoformat(extras_la) < _timedelta(days=ttl_zile):
+                return json_mod.loads(date_json)
+        except (ValueError, TypeError):
+            pass
+        return None
+
+    def _cache_set(conn, key, results):
+        conn.execute(
+            "INSERT OR REPLACE INTO hcl_metadata (url, extras_la, date_json) VALUES (?,?,?)",
+            (key, datetime.now().isoformat(), json_mod.dumps(results, ensure_ascii=False))
+        )
+        conn.commit()
+
+    conn = _init_cache(cache_db)
+    cached = _cache_get(conn, url)
+    if cached is not None:
+        conn.close()
+        print(f"    ✓ HCL {url} (din cache, TTL {ttl_zile}z)")
+        return cached
+
+    results = _fetch_hcl_metadata_live(url)
+    _cache_set(conn, url, results)
+    conn.close()
+    return results
+
+
+def _fetch_hcl_metadata_live(url: str) -> list:
+    """Logica de fetch propriu-zisă pentru fetch_hcl_metadata(), fără cache."""
     try:
         r = requests.get(url, headers=HEADERS, timeout=20)
         r.raise_for_status()
@@ -597,14 +727,14 @@ def analizeaza_hcl(stare_anterioara: dict) -> dict:
 def fetch_curtea_de_conturi(
     uat_nume: str = "Pantelimon",
     cache_db: str = "curtea_conturi_cache.db",
-    ttl_zile: int = 30,
+    ttl_zile: int = TTL_CURTEA_CONTURI_DAYS,
     timeout: int = 20,
 ) -> list:
     """§3.1 Caută rapoarte de audit Curtea de Conturi pentru UAT.
 
     Strategia: caută pe curteadeconturi.ro după numele UAT + filtrează
     rezultatele HTML cu BeautifulSoup. Returnează lista de rapoarte găsite.
-    Foloseşte SQLite cache cu TTL 30 zile (rapoartele CC apar anual).
+    Foloseşte SQLite cache cu TTL TTL_CURTEA_CONTURI_DAYS (rapoartele CC apar anual).
 
     Args:
         uat_nume:  Numele UAT de căutat (ex: "Pantelimon")
@@ -774,7 +904,7 @@ def fetch_curtea_de_conturi(
 def fetch_declaratii_avere(
     uat: str = "Pantelimon",
     cache_db: str = "ani_cache.db",
-    ttl_zile: int = 30,
+    ttl_zile: int = TTL_ANI_DAYS,
     timeout: int = 20,
 ) -> list:
     """§3.2 Scraping declarații de avere aleși locali de pe integritate.eu (ANI).
@@ -928,7 +1058,7 @@ def search_ted_for_buyer(
     cif_buyer: str,
     year: int = None,
     cache_db: str = "ted_cache.db",
-    ttl_zile: int = 7,
+    ttl_zile: int = TTL_TED_DAYS,
     timeout: int = 30,
 ) -> list:
     """§3.4 Caută anunțuri TED Europa pentru un cumpărător identificat prin CIF.
@@ -1056,7 +1186,7 @@ def search_ted_for_buyer(
 def fetch_mol_primarie(
     url: str = "https://www.primariapantelimon.ro/mol/",
     cache_db: str = "mol_cache.db",
-    ttl_zile: int = 7,
+    ttl_zile: int = TTL_MOL_DAYS,
     timeout: int = 20,
 ) -> list:
     """§3.5 Scraping Monitorul Oficial Local al primăriei.
@@ -1067,7 +1197,7 @@ def fetch_mol_primarie(
     Args:
         url:       URL pagina MOL primărie
         cache_db:  Cale fișier SQLite cache
-        ttl_zile:  TTL cache în zile (implicit 7)
+        ttl_zile:  TTL cache în zile (implicit TTL_MOL_DAYS)
         timeout:   Timeout HTTP în secunde
 
     Returns:
@@ -1207,7 +1337,7 @@ def fetch_mol_primarie(
 def fetch_pnrr_projects(
     cif_beneficiar: str = "4420759",
     cache_db: str = "pnrr_cache.db",
-    ttl_zile: int = 7,
+    ttl_zile: int = TTL_PNRR_DAYS,
     timeout: int = 30,
 ) -> list:
     """§3.3 Caută proiectele PNRR ale unui UAT pe proiecte.pnrr.gov.ro.
@@ -2291,10 +2421,10 @@ def analizeaza_red_flags(contracte: list, config: dict) -> list:
     firme_anaf = {}
     firme_onrc = {}
     if cui_furnizori:
-        # Date ANAF (status, dată înregistrare)
-        firme_anaf = _get_firme_anaf_batch(cui_furnizori)
-        # Date openapi.ro (acționari, administrator, angajați) — opțional
         fisier_cache = config.get("fisier_cache_firme", "cache_firme.json")
+        # Date ANAF (status, dată înregistrare)
+        firme_anaf = _get_firme_anaf_batch(cui_furnizori, fisier_cache)
+        # Date openapi.ro (acționari, administrator, angajați) — opțional
         firme_openapi = _get_actionariat_openapi(
             cui_furnizori, config.get("openapi_ro_key", ""), fisier_cache
         )
@@ -2668,13 +2798,18 @@ def _similaritate_titlu(a: str, b: str) -> float:
     return len(wa & wb) / len(wa | wb)
 
 
-def _get_firme_anaf_batch(cui_list: list) -> dict:
+def _get_firme_anaf_batch(cui_list: list, fisier_cache: str = "cache_firme.json") -> dict:
     """
     Interoghează API-ul ANAF (v8) pentru informații despre firme furnizoare.
     Returnează dict keyed by CUI (string) cu:
       dataInregistrare, stare, denumire, nrRegCom, inactiv_tva
     Procesează în batch-uri de 499 CUI-uri (limita ANAF).
+
+    Rezultatele sunt cache-uite TTL_ANAF_V9_DAYS zile în fisier_cache
+    (cheia '_anaf_v9_data') — starea de înregistrare TVA se schimbă rar.
     """
+    import time as _time
+
     result = {}
     cui_clean, cui_map = [], {}
     for cui_str in cui_list:
@@ -2691,13 +2826,30 @@ def _get_firme_anaf_batch(cui_list: list) -> dict:
     if not cui_clean:
         return result
 
+    cache = _incarca_cache_firme(fisier_cache)
+    anaf_cache = cache.get("_anaf_v9_data", {})
+    now_ts = _time.time()
+
+    # Separă CUI-urile cu cache valid de cele care trebuie interogate
+    cui_de_interogat = []
+    for cui_int in cui_clean:
+        orig = cui_map[cui_int]
+        entry = anaf_cache.get(orig)
+        if entry and (now_ts - entry.get("_ts", 0)) <= TTL_ANAF_V9_DAYS * 86400:
+            result[orig] = {k: v for k, v in entry.items() if k != "_ts"}
+        else:
+            cui_de_interogat.append(cui_int)
+
+    if not cui_de_interogat:
+        return result
+
     today  = datetime.now().strftime("%Y-%m-%d")
     url    = "https://webservicesp.anaf.ro/api/PlatitorTvaRest/v9/tva"
     BATCH  = 499
     total_found = 0
 
-    for i in range(0, len(cui_clean), BATCH):
-        batch   = cui_clean[i:i + BATCH]
+    for i in range(0, len(cui_de_interogat), BATCH):
+        batch   = cui_de_interogat[i:i + BATCH]
         payload = [{"cui": ci, "data": today} for ci in batch]
         try:
             resp = requests.post(url, json=payload, timeout=25,
@@ -2729,16 +2881,20 @@ def _get_firme_anaf_batch(cui_list: list) -> dict:
                 stare = "ACTIV"
             else:
                 stare = "NECUNOSCUT"
-            result[orig] = {
+            entry = {
                 "dataInregistrare": dg.get("data_infiintare") or None,
                 "stare": stare,
                 "denumire": dg.get("denumire", ""),
                 "nrRegCom": dg.get("nrRegCom", ""),
                 "inactiv_tva": bool(si.get("statusInactivi")),
             }
+            result[orig] = entry
+            anaf_cache[orig] = {**entry, "_ts": now_ts}
             total_found += 1
 
-    print(f"    ✓ ANAF firme: {total_found}/{len(cui_clean)} găsite")
+    cache["_anaf_v9_data"] = anaf_cache
+    _salveaza_cache_firme(fisier_cache, cache)
+    print(f"    ✓ ANAF firme: {total_found}/{len(cui_de_interogat)} găsite (interogate); {len(result) - total_found} din cache")
     return result
 
 
@@ -2890,7 +3046,7 @@ def _get_reprezentanti_onrc(cui_list: list, fisier_cache: str) -> dict:
     """
     Descarcă OD_FIRME.CSV și OD_REPREZENTANTI_LEGALI.CSV de pe ONRC/data.gov.ro
     și extrage administratori/directori pentru CUI-urile date.
-    Rezultatele sunt cache-uite 30 zile în fisier_cache (cheia '_onrc_data').
+    Rezultatele sunt cache-uite TTL_ONRC_DAYS zile în fisier_cache (cheia '_onrc_data').
     Returnează: {cui: {reprezentanti: [{nume, calitate, localitate}],
                         forma_juridica, data_inmatriculare, cod_inmatriculare}}
     """
@@ -2900,7 +3056,7 @@ def _get_reprezentanti_onrc(cui_list: list, fisier_cache: str) -> dict:
 
     cache = _incarca_cache_firme(fisier_cache)
     onrc_cache = cache.get("_onrc_data", {})
-    TTL_ZILE = 30
+    TTL_ZILE = TTL_ONRC_DAYS
     now_ts = time.time()
 
     needed = []
@@ -5334,12 +5490,12 @@ def geocodeaza_firme(
     cui_contracte: dict,
     index_furnizori: list,
     cache_db: str = "geocoding_cache.db",
-    ttl_zile: int = 180,
+    ttl_zile: int = TTL_NOMINATIM_DAYS,
 ) -> list:
     """§3.6 Geocodare adrese firme furnizoare via Nominatim (OpenStreetMap).
 
     Returnează lista de dict-uri cu coordonate pentru harta Leaflet.
-    Foloseşte SQLite cache cu TTL 180 zile pentru a nu supraîncărca API-ul.
+    Foloseşte SQLite cache cu TTL TTL_NOMINATIM_DAYS pentru a nu supraîncărca API-ul.
 
     Args:
         firme_openapi: dict CUI -> {adresa, judet, ...} de la openapi.ro
@@ -5347,7 +5503,7 @@ def geocodeaza_firme(
         cui_contracte: dict CUI -> număr contracte
         index_furnizori: list [{nume, slug, ...}] pentru link-uri
         cache_db:      cale fișier SQLite cache
-        ttl_zile:      TTL cache în zile (implicit 180)
+        ttl_zile:      TTL cache în zile (implicit TTL_NOMINATIM_DAYS)
 
     Returns:
         list [{name, cif, adresa, lat, lng, valoare, nr_contracte, slug}]
@@ -5897,25 +6053,25 @@ def main():
     flags_hcl = rezultat_hcl["flags"]
     statistici_hcl = rezultat_hcl["statistici"]
 
-    # §3.1 Curtea de Conturi — rapoarte audit UAT (cache 30 zile)
+    # §3.1 Curtea de Conturi — rapoarte audit UAT (cache TTL_CURTEA_CONTURI_DAYS)
     rapoarte_cc = fetch_curtea_de_conturi(
         uat_nume=CONFIG.get("uat_search", "Pantelimon"),
     )
     CONFIG["_rapoarte_cc"] = rapoarte_cc
 
-    # §3.2 ANI — declarații avere aleși locali (cache 30 zile)
+    # §3.2 ANI — declarații avere aleși locali (cache TTL_ANI_DAYS)
     declaratii_ani = fetch_declaratii_avere(
         uat=CONFIG.get("uat_search", "Pantelimon"),
     )
     CONFIG["_declaratii_ani"] = declaratii_ani
 
-    # §3.4 TED Europa — cross-referențiere contracte mari (cache 7 zile)
+    # §3.4 TED Europa — cross-referențiere contracte mari (cache TTL_TED_DAYS)
     ted_notices = search_ted_for_buyer(
         cif_buyer=CONFIG["cui"],
     )
     CONFIG["_ted_notices"] = ted_notices
 
-    # §3.5 MOL primărie — rectificări bugetare și HCL (cache 7 zile)
+    # §3.5 MOL primărie — rectificări bugetare și HCL (cache TTL_MOL_DAYS)
     mol_intrari = fetch_mol_primarie()
     CONFIG["_mol_intrari"] = mol_intrari
 
