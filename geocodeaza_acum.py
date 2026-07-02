@@ -3,8 +3,9 @@ geocodeaza_acum.py — Script standalone geocodare firme furnizoare Pantelimon
 ==============================================================================
 Folosește:
   - ANAF v9 API (gratuit, fără API key) pentru adrese firme
+    SQLite cache (anaf_v9_cache.db) cu TTL 365 zile
   - Nominatim / OpenStreetMap (gratuit) pentru coordonate lat/lng
-  - SQLite cache (geocoding_cache.db) cu TTL 180 zile
+    SQLite cache (geocoding_cache.db) cu TTL 365 zile
 
 Nu rulează scraping SEAP. Citește contracte.json local și produce firme_geocoded.json.
 
@@ -22,6 +23,8 @@ from datetime import datetime, timedelta
 
 import requests
 
+from config import TTL_NOMINATIM_DAYS, TTL_ANAF_V9_DAYS
+
 # Forteaza UTF-8 pe Windows (evita UnicodeEncodeError cu emoji)
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
@@ -30,6 +33,7 @@ REPO_DIR   = os.path.dirname(os.path.abspath(__file__))
 CONTRACTE  = os.path.join(REPO_DIR, "contracte.json")
 GEO_OUT    = os.path.join(REPO_DIR, "firme_geocoded.json")
 CACHE_DB   = os.path.join(REPO_DIR, "geocoding_cache.db")
+ANAF_CACHE_DB = os.path.join(REPO_DIR, "anaf_v9_cache.db")
 INDEX_JSON = os.path.join(REPO_DIR, "furnizori", "index.html")  # fallback
 
 USER_AGENT     = "transparenta-pantelimon-bot (contact: contact@transparenta-pantelimon.eu)"
@@ -50,7 +54,7 @@ def _init_cache(db):
     return conn
 
 
-def _cache_get(conn, adresa, ttl=180):
+def _cache_get(conn, adresa, ttl=TTL_NOMINATIM_DAYS):
     row = conn.execute(
         "SELECT lat, lng, geocodat_la FROM geocoding WHERE adresa=?", (adresa,)
     ).fetchone()
@@ -74,11 +78,56 @@ def _cache_set(conn, adresa, lat, lng):
     conn.commit()
 
 
+# ── Cache SQLite ANAF v9 ────────────────────────────────────────────────────────
+
+def _init_anaf_cache(db):
+    conn = sqlite3.connect(db)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS anaf_v9 (
+            cui TEXT PRIMARY KEY, denumire TEXT, adresa TEXT, stare TEXT,
+            nrRegCom TEXT, extras_la TEXT
+        )
+    """)
+    conn.commit()
+    return conn
+
+
+def _anaf_cache_get(conn, cui, ttl=TTL_ANAF_V9_DAYS):
+    row = conn.execute(
+        "SELECT denumire, adresa, stare, nrRegCom, extras_la FROM anaf_v9 WHERE cui=?",
+        (cui,)
+    ).fetchone()
+    if not row:
+        return None
+    denumire, adresa, stare, nr_reg_com, ts = row
+    if ts:
+        try:
+            if datetime.now() - datetime.fromisoformat(ts) < timedelta(days=ttl):
+                return {"denumire": denumire, "adresa": adresa, "stare": stare, "nrRegCom": nr_reg_com}
+        except ValueError:
+            pass
+    return None
+
+
+def _anaf_cache_set(conn, cui, info):
+    conn.execute(
+        "INSERT OR REPLACE INTO anaf_v9 (cui,denumire,adresa,stare,nrRegCom,extras_la) VALUES (?,?,?,?,?,?)",
+        (cui, info["denumire"], info["adresa"], info["stare"], info["nrRegCom"], datetime.now().isoformat())
+    )
+    conn.commit()
+
+
 # ── ANAF v9 batch ─────────────────────────────────────────────────────────────
 
-def fetch_anaf_batch(cui_list):
-    """Returnează dict CUI -> {denumire, adresa, stare} via ANAF v9 (gratuit)."""
+def fetch_anaf_batch(cui_list, cache_db=ANAF_CACHE_DB):
+    """Returnează dict CUI -> {denumire, adresa, stare} via ANAF v9 (gratuit).
+
+    Rezultatele sunt cache-uite SQLite cu TTL TTL_ANAF_V9_DAYS — starea de
+    înregistrare TVA se schimbă rar (radiere, suspendare).
+    """
     result = {}
+    conn = _init_anaf_cache(cache_db)
+
     # Normalizare CUI (int, fără prefix RO)
     cui_int_map = {}
     for raw in cui_list:
@@ -96,8 +145,20 @@ def fetch_anaf_batch(cui_list):
     total = len(cui_ints)
     gasit = 0
 
-    for i in range(0, total, BATCH):
-        batch = cui_ints[i:i + BATCH]
+    # Separă CUI-urile deja în cache de cele care trebuie interogate
+    de_interogat = []
+    for ci in cui_ints:
+        orig = cui_int_map[ci]
+        cached = _anaf_cache_get(conn, orig)
+        if cached:
+            result[orig] = cached
+            if cached.get("adresa"):
+                gasit += 1
+        else:
+            de_interogat.append(ci)
+
+    for i in range(0, len(de_interogat), BATCH):
+        batch = de_interogat[i:i + BATCH]
         payload = [{"cui": c, "data": today} for c in batch]
         try:
             r = requests.post(
@@ -119,15 +180,18 @@ def fetch_anaf_batch(cui_list):
                 continue
             orig = cui_int_map.get(ci, str(ci))
             adresa = (dg.get("adresa") or "").strip()
-            result[orig] = {
+            info = {
                 "denumire": (dg.get("denumire") or "").strip(),
                 "adresa":   adresa,
                 "stare":    (dg.get("stare_inregistrare") or "").strip(),
                 "nrRegCom": (dg.get("nrRegCom") or "").strip(),
             }
+            result[orig] = info
+            _anaf_cache_set(conn, orig, info)
             if adresa:
                 gasit += 1
 
+    conn.close()
     print(f"  ANAF: {gasit}/{total} firme cu adresă")
     return result
 
@@ -232,7 +296,7 @@ def main():
     firme_anaf = fetch_anaf_batch(cui_list)
 
     # 4. Geocodare Nominatim cu cache
-    print("\n🗺  Geocodez via Nominatim (cu cache SQLite 180 zile)...")
+    print(f"\n🗺  Geocodez via Nominatim (cu cache SQLite {TTL_NOMINATIM_DAYS} zile)...")
     conn      = _init_cache(CACHE_DB)
     rezultate = []
     ultima_req = 0.0

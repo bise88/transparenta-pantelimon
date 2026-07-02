@@ -374,6 +374,34 @@ Neregulile detectate de monitor pot fi sesizate la:
 
 ---
 
+## Cache TTL policy
+
+Toate duratele de valabilitate (TTL) ale cache-urilor sunt centralizate în
+**`config.py`** (nu magic numbers împrăștiate în fiecare script). Valorile au
+fost ajustate pe baza cadenței reale de publicare a fiecărei surse:
+
+| Sursă | Constantă | TTL | Justificare |
+|---|---|---|---|
+| mfinante.gov.ro (`risc_firma.py`) | `TTL_MFINANTE_DAYS` | 30 zile | Situații financiare anuale — neschimbat |
+| SEAP contracte (`fetch_contracts_seap`) | `TTL_SEAP_CONTRACTE_DAYS` | 7 zile | Export trimestrial data.gov.ro (fișiere XLSX 10-50MB) — nu are rost re-descărcat la fiecare rulare zilnică |
+| HCL primărie (`fetch_hcl_metadata`) | `TTL_HCL_DAYS` | 7 zile | Pagina de hotărâri se actualizează la fiecare ședință CL, nu zilnic |
+| Curtea de Conturi (`fetch_curtea_de_conturi`) | `TTL_CURTEA_CONTURI_DAYS` | 90 zile | Rapoartele de audit apar de regulă anual |
+| ANI declarații avere (`fetch_declaratii_avere`) | `TTL_ANI_DAYS` | 30 zile | Declarații actualizate anual/la depunere — neschimbat |
+| TED Europa (`search_ted_for_buyer`) | `TTL_TED_DAYS` | 7 zile | Anunțuri publicate zilnic — neschimbat |
+| MOL primărie (`fetch_mol_primarie`) | `TTL_MOL_DAYS` | 14 zile | Rectificări bugetare/HCL publicate la fiecare ședință CL (cadență ~bilunară) |
+| PNRR (`fetch_pnrr_projects`) | `TTL_PNRR_DAYS` | 7 zile | Proiecte actualizate ocazional — neschimbat |
+| ONRC reprezentanți legali (`_get_reprezentanti_onrc`) | `TTL_ONRC_DAYS` | 30 zile | Administratori/reprezentanți se schimbă rar — neschimbat |
+| Nominatim / OSM (geocodare) | `TTL_NOMINATIM_DAYS` | 365 zile | Sediile fiscale se mută foarte rar |
+| ANAF v9 (înregistrare TVA) | `TTL_ANAF_V9_DAYS` | 365 zile | Starea de înregistrare TVA se schimbă rar (radiere/suspendare) — API gratuit, nu trebuie suprasolicitat |
+| data.gov.ro CSV (`import_financiar_datagov.py`, situații financiare) | `TTL_FIRME_FINANCIAR_REFRESH_DAYS` | 365 zile | Situații financiare ANAF publicate anual (mai-iulie); prag citit din `config.py` de `.github/workflows/update-report.yml` |
+| Google News + Context.ro (`monitorizare_presa.py`) | `TTL_PRESA_DAYS` | 7 zile | Mențiuni presă, conținut dinamic — neschimbat |
+
+Sursele fără cache anterior (SEAP contracte, HCL, ANAF v9) au primit acum
+cache SQLite/JSON dedicat, pentru a evita re-descărcarea acelorași date la
+fiecare rulare a cron-ului săptămânal (`update-report.yml`).
+
+---
+
 ## Dependențe Python
 
 ```

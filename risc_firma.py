@@ -24,8 +24,10 @@ import sqlite3
 import time
 from datetime import datetime, timedelta
 
+from config import TTL_MFINANTE_DAYS
+
 CONTACT_EMAIL_DEFAULT = 'transparenta-pantelimon-bot (contact: contact@transparenta-pantelimon.eu)'
-TTL_DAYS = 30
+TTL_DAYS = TTL_MFINANTE_DAYS
 CACHE_FILE = 'firme_cache.db'
 REQUEST_DELAY = 1.2   # secunde între request-uri (rate limiting)
 

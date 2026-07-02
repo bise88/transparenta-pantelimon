@@ -30,13 +30,15 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from pathlib import Path
 
+from config import TTL_PRESA_DAYS
+
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 # ── Configurare ────────────────────────────────────────────────────────────────
 
 USER_AGENT  = 'transparenta-pantelimon-bot (contact: contact@transparenta-pantelimon.eu)'
 CACHE_DB    = Path(__file__).parent / '.cache_presa.sqlite'
-CACHE_TTL_DAYS = 7          # mai scurt decât cache geocodare; presa e dinamică
+CACHE_TTL_DAYS = TTL_PRESA_DAYS   # mai scurt decât cache geocodare; presa e dinamică
 RATE_LIMIT_S   = 1.2        # secunde între requests
 MAX_MENTIUNI_PER_FIRMA = 20 # per sursă RSS
 HTML_FILE   = Path(__file__).parent / 'raport_transparenta.html'
