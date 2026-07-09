@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Offline — Transparența Pantelimon</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+    background: #F4F6F9; color: #1A1A2E; min-height: 100vh;
+    display: flex; align-items: center; justify-content: center; padding: 2rem;
+  }
+  .card {
+    background: #fff; border-radius: 16px; padding: 2.5rem; max-width: 480px;
+    width: 100%; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,.08);
+  }
+  .icon { font-size: 3rem; margin-bottom: 1rem; }
+  h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: .75rem; }
+  p { color: #4b5563; line-height: 1.7; margin-bottom: 1.25rem; font-size: .95rem; }
+  .btn {
+    display: inline-block; background: #00427A; color: #fff; padding: .75rem 1.5rem;
+    border-radius: 8px; text-decoration: none; font-weight: 600; font-size: .9rem;
+    min-height: 44px;
+  }
+  .btn:hover { background: #003366; }
+  .hint { font-size: .8rem; color: #6b7280; margin-top: 1.5rem; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="icon" aria-hidden="true">📡</div>
+  <h1>Fără conexiune la internet</h1>
+  <p>Pagina solicitată nu este disponibilă offline. Verificați conexiunea și încercați din nou.</p>
+  <a href="/" class="btn" onclick="location.reload(); return false;">Reîncearcă</a>
+  <p class="hint">Paginile vizitate anterior sunt disponibile offline din cache.</p>
+</div>
+</body>
+</html>

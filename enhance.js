@@ -231,6 +231,48 @@ html[data-tp-theme="dark"] {
 }
 .tp-back-top.visible { opacity: 1; pointer-events: auto; }
 
+/* ── Breadcrumbs ── */
+.tp-breadcrumb { padding: 8px 16px; font-size: 13px; color: var(--tp-muted, #4b5563); }
+.tp-breadcrumb ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px; max-width: 1200px; margin: 0 auto; }
+.tp-breadcrumb li::after { content: '›'; margin-left: 6px; opacity: .5; }
+.tp-breadcrumb li:last-child::after { content: ''; margin: 0; }
+.tp-breadcrumb li:last-child { font-weight: 600; color: var(--tp-fg, #1a202c); }
+.tp-breadcrumb a { color: var(--tp-accent, #00427A); text-decoration: none; }
+.tp-breadcrumb a:hover { text-decoration: underline; }
+
+/* ── Sticky CTA mobile ── */
+.tp-sticky-cta { display: none; }
+@media (max-width: 640px) {
+  .tp-sticky-cta {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 90;
+    background: var(--tp-bg, #fff); border-top: 1px solid var(--tp-border, #e2e8f0);
+    display: flex; justify-content: space-around; padding: 6px 8px;
+    box-shadow: 0 -2px 8px rgba(0,0,0,.1);
+  }
+  .tp-sticky-cta a {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    font-size: 11px; font-weight: 600; color: var(--tp-fg, #1a202c);
+    text-decoration: none; padding: 6px 12px; border-radius: 8px;
+    min-height: 44px; justify-content: center;
+  }
+  .tp-sticky-cta a:hover, .tp-sticky-cta a:active { background: var(--tp-card-bg, #f7fafc); }
+  body { padding-bottom: 64px; }
+}
+@media print { .tp-sticky-cta { display: none !important; } }
+
+/* ── Focus-visible pe elemente interactive ── */
+.tp-chip:focus-visible, .tp-btn:focus-visible, .tp-nav-links a:focus-visible,
+.tp-theme-toggle:focus-visible, .tp-back-top:focus-visible, .tp-search:focus-visible,
+#tp-load-more:focus-visible, .tp-hamburger:focus-visible {
+  outline: 2px solid var(--tp-accent, #00427A); outline-offset: 2px; border-radius: 6px;
+}
+
+/* ── Print ── */
+@media print {
+  .tp-nav, .tp-toolbar, .tp-back-top, .tp-breadcrumb, .alert-banner { display: none !important; }
+  body { padding-bottom: 0 !important; }
+}
+
 /* ── touch-action pe toate elementele interactive ── */
 .tp-chip, .tp-btn, .tp-nav-links a, #tp-load-more, .tp-theme-toggle, .tp-back-top {
   touch-action: manipulation;
@@ -322,6 +364,57 @@ html[data-tp-theme="dark"] .tp-anap-btn {
   background: #3f1515; border-color: #7f1d1d; color: #fca5a5;
 }
 
+/* Modal mailto fallback (WebView) */
+.tp-mailto-modal-overlay {
+  position: fixed; inset: 0; z-index: 10000;
+  background: rgba(0,0,0,.55);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+}
+.tp-mailto-modal {
+  background: var(--tp-bg, #fff); border-radius: 14px;
+  max-width: 480px; width: 100%; max-height: 85vh; overflow-y: auto;
+  padding: 1.5rem; box-shadow: 0 12px 40px rgba(0,0,0,.25);
+  position: relative;
+}
+.tp-mailto-modal h3 { font-size: 1rem; font-weight: 600; margin-bottom: .75rem; }
+.tp-mailto-modal-close {
+  position: absolute; top: .75rem; right: .75rem;
+  background: none; border: none; font-size: 1.3rem; cursor: pointer;
+  color: var(--tp-muted, #888); padding: .25rem;
+}
+.tp-mailto-field { margin-bottom: .75rem; }
+.tp-mailto-field label { display: block; font-size: .75rem; font-weight: 600; color: var(--tp-muted, #888); margin-bottom: .25rem; text-transform: uppercase; letter-spacing: .5px; }
+.tp-mailto-field textarea, .tp-mailto-field input {
+  width: 100%; border: 1px solid var(--tp-border, #e5e7eb); border-radius: 6px;
+  padding: .5rem; font-size: .85rem; font-family: inherit;
+  background: var(--tp-card-bg, #fafafa); color: var(--tp-fg, #1a1a1a);
+  resize: vertical;
+}
+.tp-mailto-actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: 1rem; }
+.tp-mailto-actions a, .tp-mailto-actions button {
+  padding: .55rem 1rem; border-radius: 8px; font-size: .85rem; font-weight: 600;
+  text-decoration: none; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: .35rem;
+  min-height: 44px;
+}
+.tp-mailto-copy { background: #fef2f2; color: #b91c1c; border: 1px solid #fca5a5 !important; }
+.tp-mailto-copy:hover { background: #fee2e2; }
+.tp-mailto-web { background: #e67e22; color: #fff; }
+.tp-mailto-web:hover { background: #d35400; }
+.tp-mailto-email { background: #0070C0; color: #fff; }
+.tp-mailto-email:hover { background: #005a9e; }
+.tp-mailto-toast {
+  position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+  background: #27ae60; color: #fff; padding: .6rem 1.2rem; border-radius: 8px;
+  font-size: .85rem; font-weight: 600; z-index: 10001;
+  animation: tpToastIn .3s ease;
+}
+@keyframes tpToastIn { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+html[data-tp-theme="dark"] .tp-mailto-modal { background: #1a1a1a; }
+html[data-tp-theme="dark"] .tp-mailto-copy { background: #3f1515; border-color: #7f1d1d !important; color: #fca5a5; }
+html[data-tp-theme="dark"] .tp-mailto-field textarea,
+html[data-tp-theme="dark"] .tp-mailto-field input { background: #141414; border-color: #2a2a2a; color: #f3f4f6; }
+
 /* Banner "ce e nou" */
 .tp-banner-whats-new {
   background: var(--tp-accent, #dc2626); color: #fff;
@@ -397,6 +490,22 @@ html[data-tp-theme="dark"] .tp-anap-btn {
   }
 
   // ──────────────────────────────────────────────────────────────
+  // HEAD INJECTION — favicon, CSP (toate paginile, o singură dată)
+  // ──────────────────────────────────────────────────────────────
+  function injectHead() {
+    if (!document.querySelector('link[rel="icon"]')) {
+      var icon = document.createElement('link');
+      icon.rel = 'icon'; icon.href = '/icon-192.png'; icon.type = 'image/png';
+      document.head.appendChild(icon);
+    }
+    if (!document.querySelector('link[rel="apple-touch-icon"]')) {
+      var apple = document.createElement('link');
+      apple.rel = 'apple-touch-icon'; apple.href = '/icon-192.png';
+      document.head.appendChild(apple);
+    }
+  }
+
+  // ──────────────────────────────────────────────────────────────
   // NAV (toate paginile)
   // ──────────────────────────────────────────────────────────────
   function injectStyle() {
@@ -410,7 +519,7 @@ html[data-tp-theme="dark"] .tp-anap-btn {
   function injectManifest() {
     if (document.querySelector('link[rel="manifest"]')) return;
     const link = document.createElement('link');
-    link.rel = 'manifest'; link.href = '/manifest.json';
+    link.rel = 'manifest'; link.href = '/manifest.webmanifest';
     document.head.appendChild(link);
     if (!document.querySelector('meta[name="theme-color"]')) {
       const meta = document.createElement('meta');
@@ -1371,14 +1480,81 @@ html[data-tp-theme="dark"] .tp-anap-btn {
   }
 
   // ──────────────────────────────────────────────────────────────
+  // WEBVIEW DETECTION + MAILTO FALLBACK
+  // ──────────────────────────────────────────────────────────────
+  function isWebView() {
+    var ua = navigator.userAgent || '';
+    return /FBAN|FBAV|Instagram|Line\/|Snapchat|Twitter|MicroMessenger|WebView|wv\)/i.test(ua);
+  }
+
+  function showMailtoModal(emailTo, subject, bodyText, webUrl) {
+    var existing = document.querySelector('.tp-mailto-modal-overlay');
+    if (existing) existing.remove();
+
+    var overlay = document.createElement('div');
+    overlay.className = 'tp-mailto-modal-overlay';
+    var subjectDecoded = decodeURIComponent(subject);
+    var bodyDecoded = decodeURIComponent(bodyText);
+
+    overlay.innerHTML = '<div class="tp-mailto-modal">'
+      + '<button class="tp-mailto-modal-close" aria-label="Închide">×</button>'
+      + '<h3>Sesizare — ' + emailTo + '</h3>'
+      + '<div class="tp-mailto-field"><label>Destinatar</label>'
+      + '<input type="text" value="' + emailTo + '" readonly></div>'
+      + '<div class="tp-mailto-field"><label>Subiect</label>'
+      + '<input type="text" value="' + subjectDecoded.replace(/"/g, '&quot;') + '" readonly></div>'
+      + '<div class="tp-mailto-field"><label>Text sesizare (editabil)</label>'
+      + '<textarea rows="10">' + bodyDecoded.replace(/</g, '&lt;') + '</textarea></div>'
+      + '<div class="tp-mailto-actions">'
+      + '<button class="tp-mailto-copy" data-action="copy">Copiază textul</button>'
+      + (webUrl ? '<a class="tp-mailto-web" href="' + webUrl + '" target="_blank" rel="noopener noreferrer">Deschide formularul online</a>' : '')
+      + '<a class="tp-mailto-email" href="mailto:' + emailTo + '?subject=' + subject + '&body=' + bodyText + '">Deschide în email</a>'
+      + '</div></div>';
+
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay || e.target.classList.contains('tp-mailto-modal-close')) {
+        overlay.remove();
+      }
+      if (e.target.dataset.action === 'copy') {
+        var ta = overlay.querySelector('textarea');
+        var fullText = 'Către: ' + emailTo + '\nSubiect: ' + subjectDecoded + '\n\n' + ta.value;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(fullText).then(function() { showToast('Text copiat!'); });
+        } else {
+          ta.select();
+          document.execCommand('copy');
+          showToast('Text copiat!');
+        }
+      }
+    });
+
+    document.body.appendChild(overlay);
+  }
+
+  function showToast(msg) {
+    var t = document.createElement('div');
+    t.className = 'tp-mailto-toast';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function() { t.remove(); }, 2500);
+  }
+
+  function handleMailtoClick(e, emailTo, subject, bodyText, webUrl) {
+    if (isWebView()) {
+      e.preventDefault();
+      showMailtoModal(emailTo, subject, bodyText, webUrl);
+    }
+  }
+
+  // ──────────────────────────────────────────────────────────────
   // EMAIL SESIZARE ANAP (§5.2)
   // ──────────────────────────────────────────────────────────────
-  function generateAnapEmail(card) {
-    const subject = encodeURIComponent(
-      `Sesizare achiziții publice — Primăria Pantelimon${card.contract ? ' — ' + card.contract : ''}`
+  function generateAnapEmailParts(card) {
+    var subject = encodeURIComponent(
+      'Sesizare achiziții publice — Primăria Pantelimon' + (card.contract ? ' — ' + card.contract : '')
     );
-    const cardUrl = location.origin + location.pathname + '#nereguli-' + (card.idx + 1);
-    const body = encodeURIComponent([
+    var cardUrl = location.origin + location.pathname + '#nereguli-' + (card.idx + 1);
+    var body = encodeURIComponent([
       'Subsemnatul/a [NUMELE TĂU], domiciliat în [ADRESA], CNP [CNP],',
       'în calitate de cetățean, sesizez următoarea posibilă neregulă:',
       '',
@@ -1402,19 +1578,26 @@ html[data-tp-theme="dark"] .tp-anap-btn {
       'Semnătura: [SEMNĂTURĂ OLOGRAFĂ]',
     ].filter(Boolean).join('\n'));
 
-    return 'mailto:sesizari@anap.gov.ro?subject=' + subject + '&body=' + body;
+    return { email: 'sesizari@anap.gov.ro', subject: subject, body: body, webUrl: 'https://www.anap.gov.ro/web/sesizari/' };
+  }
+
+  function generateAnapEmail(card) {
+    var parts = generateAnapEmailParts(card);
+    return 'mailto:' + parts.email + '?subject=' + parts.subject + '&body=' + parts.body;
   }
 
   function injectAnapButtons(items) {
-    items.forEach(card => {
-      // Nu adăugăm dacă există deja
+    items.forEach(function(card) {
       if (card.el.querySelector('.tp-anap-btn')) return;
-      const btn = document.createElement('a');
+      var btn = document.createElement('a');
       btn.className = 'tp-anap-btn';
       btn.href = generateAnapEmail(card);
       btn.textContent = '📧 Sesizare ANAP';
       btn.title = 'Deschide client email cu sesizare pre-completată pentru ANAP';
-      // Inserăm la finalul cardului (după ultimul copil al <details> sau la finalul containerului)
+      btn.addEventListener('click', function(e) {
+        var parts = generateAnapEmailParts(card);
+        handleMailtoClick(e, parts.email, parts.subject, parts.body, parts.webUrl);
+      });
       card.el.appendChild(btn);
     });
   }
@@ -1503,15 +1686,93 @@ html[data-tp-theme="dark"] .tp-anap-btn {
     });
   }
 
+  function interceptMailtoLinks() {
+    if (!isWebView()) return;
+    var WEB_URLS = {
+      'sesizari@anap.gov.ro': 'https://www.anap.gov.ro/web/sesizari/',
+      'sesizari@pna.ro': 'https://www.pna.ro/sesizare.xhtml',
+      'avp@avp.ro': 'https://www.avp.ro/index.php/petitii-si-sesizari',
+      'prefectura@prefecturaif.ro': 'https://ilfov.prefecturas.ro/contact/',
+      'secretariat@primariapantelimon.ro': 'https://www.primariapantelimon.ro/contact/'
+    };
+    document.addEventListener('click', function(e) {
+      var link = e.target.closest('a[href^="mailto:"]');
+      if (!link) return;
+      e.preventDefault();
+      var href = link.href || link.getAttribute('href') || '';
+      var match = href.match(/^mailto:([^?]+)/);
+      if (!match) return;
+      var emailTo = decodeURIComponent(match[1]);
+      var params = new URLSearchParams(href.split('?')[1] || '');
+      var subject = params.get('subject') || '';
+      var body = params.get('body') || '';
+      showMailtoModal(emailTo, encodeURIComponent(subject), encodeURIComponent(body), WEB_URLS[emailTo] || '');
+    });
+  }
+
+  // ──────────────────────────────────────────────────────────────
+  // BREADCRUMBS — navigare ierarhică pe paginile secundare
+  // ──────────────────────────────────────────────────────────────
+  var BREADCRUMB_MAP = {
+    'raport_transparenta.html': 'Raport Nereguli',
+    'transparenta_pantelimon.html': 'Buget & Grafice',
+    'harta.html': 'Hartă Furnizori',
+    'presa.html': 'Presă',
+    'despre.html': 'Despre',
+    'petitie.html': 'Petiție',
+    'gdpr.html': 'GDPR',
+    'retele.html': 'Rețele'
+  };
+
+  function injectBreadcrumbs() {
+    var path = location.pathname.split('/').pop() || 'index.html';
+    if (path === 'index.html' || path === '' || path === '/') return;
+    var pageName = BREADCRUMB_MAP[path];
+    if (!pageName && /^furnizori\//.test(location.pathname)) pageName = document.title.split('—')[0].trim() || 'Furnizor';
+    if (!pageName) return;
+
+    var nav = document.createElement('nav');
+    nav.className = 'tp-breadcrumb';
+    nav.setAttribute('aria-label', 'Breadcrumb');
+    var ol = document.createElement('ol');
+    ol.innerHTML = '<li><a href="index.html">Acasă</a></li><li aria-current="page">' + pageName + '</li>';
+    nav.appendChild(ol);
+    var main = document.querySelector('main, .page-wrap, header');
+    if (main) main.parentNode.insertBefore(nav, main);
+  }
+
+  // ──────────────────────────────────────────────────────────────
+  // STICKY CTA — bar fixat pe mobile cu acțiuni principale
+  // ──────────────────────────────────────────────────────────────
+  function injectStickyCTA() {
+    var path = location.pathname.split('/').pop() || 'index.html';
+    if (path !== 'index.html' && path !== '' && path !== '/') return;
+
+    var bar = document.createElement('div');
+    bar.className = 'tp-sticky-cta';
+    bar.innerHTML = '<a href="raport_transparenta.html"><span aria-hidden="true">🚩</span> Raport</a>' +
+      '<a href="transparenta_pantelimon.html"><span aria-hidden="true">📊</span> Buget</a>' +
+      '<a href="petitie.html"><span aria-hidden="true">✍️</span> Petiție</a>';
+    document.body.appendChild(bar);
+  }
+
   function boot() {
     applyTheme();
+    injectHead();
     injectStyle();
     injectNav();
+    var fallbackNav = document.querySelector('.static-nav');
+    if (fallbackNav) fallbackNav.style.display = 'none';
+    var fallbackSkip = document.querySelector('.skip-link');
+    if (fallbackSkip) fallbackSkip.style.display = 'none';
     injectMainId();
+    injectBreadcrumbs();
     injectLazyImages();
     injectBackToTop();
     injectLastUpdated();
     showWhatsNewBanner();
+    interceptMailtoLinks();
+    injectStickyCTA();
 
     const path = location.pathname.toLowerCase();
     if (/raport_transparenta/.test(path)) {

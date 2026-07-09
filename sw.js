@@ -6,8 +6,8 @@
  * Permite consultare offline a raportului și paginii principale.
  */
 
-const CACHE_VERSION = 'tp-v5';
-const CACHE_STATIC = 'tp-static-v5';
+const CACHE_VERSION = 'tp-v6';
+const CACHE_STATIC = 'tp-static-v6';
 const CACHE_DATA   = 'tp-data-v2';
 
 // Resurse core — pre-cached la install (offline-first pentru navigare)
@@ -15,13 +15,14 @@ const CORE_URLS = [
   '/',
   '/index.html',
   '/transparenta_pantelimon.html',
-  '/enhance.js',
+  '/enhance.min.js',
   '/harta.html',
   '/retele.html',
   '/presa.html',
   '/despre.html',
   '/petitie.html',
   '/gdpr.html',
+  '/offline.html',
 ];
 
 // Date care se schimbă frecvent — Network-First cu fallback cache
@@ -99,8 +100,8 @@ async function cacheFirstStatic(request) {
     }
     return response;
   } catch {
-    // Offline și nu în cache — returnăm pagina principală dacă există
-    const fallback = await caches.match('/index.html');
+    // Offline și nu în cache — returnăm pagina offline stilizată
+    const fallback = await caches.match('/offline.html');
     return fallback || new Response('Offline — deschideți https://transparenta-pantelimon.eu pentru a accesa datele salvate.', {
       status: 503,
       headers: { 'Content-Type': 'text/plain; charset=utf-8' }

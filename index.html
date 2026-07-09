@@ -27,9 +27,38 @@
 <meta name="twitter:title" content="Transparența Banului Public — Primăria Pantelimon">
 <meta name="twitter:description" content="Monitorizăm cheltuielile administrației locale. Nereguli detectate automat, contracte analizate, buget vs realizat.">
 <meta name="twitter:image" content="https://transparenta-pantelimon.eu/og-image.png">
+
+<!-- Favicon -->
+<link rel="icon" href="/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+
+<!-- CSP -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.tile.openstreetmap.org; connect-src 'self'; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self';">
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Transparența Pantelimon",
+  "url": "https://transparenta-pantelimon.eu/",
+  "description": "Monitorizare cetățenească a achizițiilor publice ale Primăriei Pantelimon, bazată pe date SEAP și ANAF.",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Inițiativă cetățenească independentă",
+    "url": "https://transparenta-pantelimon.eu/"
+  },
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://transparenta-pantelimon.eu/raport_transparenta.html",
+    "name": "Vezi raportul de nereguli"
+  }
+}
+</script>
+
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; background: #F4F6F9; color: #1A1A2E; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', Arial, sans-serif; background: #F4F6F9; color: #1A1A2E; }
 
   /* HERO */
   header {
@@ -112,7 +141,7 @@
 
   .section-label {
     font-size: 11px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 1.5px; color: #999; margin-bottom: 14px;
+    letter-spacing: 1.5px; color: #6b7280; margin-bottom: 14px;
   }
 
   /* CARDS */
@@ -225,12 +254,62 @@
     .hero-stat { min-width: 70px; padding: 8px 10px; }
     .hero-stat .v { font-size: 18px; }
   }
+
+  /* Skip link */
+  .skip-link {
+    position: absolute; top: -100%; left: 1rem;
+    background: #C0392B; color: #fff;
+    padding: .5rem 1.1rem; border-radius: 0 0 6px 6px;
+    font-size: .9rem; font-weight: 600; z-index: 9999;
+    text-decoration: none; transition: top .15s;
+  }
+  .skip-link:focus { top: 0; outline: 2px solid #fff; outline-offset: 2px; }
+
+  /* Static nav fallback */
+  .static-nav {
+    background: #fff; border-bottom: 1px solid #e5e7eb;
+    padding: 8px 16px; display: flex; align-items: center;
+    gap: 8px; flex-wrap: wrap; font-size: 13px;
+  }
+  .static-nav a {
+    color: #00427A; text-decoration: none; padding: 6px 12px;
+    border-radius: 6px; font-weight: 600; min-height: 44px;
+    display: inline-flex; align-items: center;
+  }
+  .static-nav a:hover { background: #f4f6f9; }
+  .static-nav .nav-brand { font-weight: 700; margin-right: auto; }
+  .tp-nav ~ .static-nav { display: none; }
+
+  /* Action cards */
+  .action-card {
+    background: #fff; border-radius: 12px; padding: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .action-card-icon { font-size: 22px; margin-bottom: 8px; }
+  .action-card-title { font-size: 15px; font-weight: 700; }
+  .action-card-desc { font-size: 13px; color: #555; margin: 8px 0 12px; line-height: 1.65; }
+  .action-card-link {
+    font-size: 13px; font-weight: 600; text-decoration: none;
+    display: inline-flex; align-items: center; min-height: 44px;
+    padding: 8px 0;
+  }
 </style>
 <link rel="alternate" type="application/atom+xml" title="Nereguli noi — Transparența Pantelimon" href="https://transparenta-pantelimon.eu/feed.xml">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<script src="enhance.js" defer></script>
+<script src="enhance.min.js" defer></script>
 </head>
 <body>
+
+<a href="#main-content" class="skip-link">Salt la conținut</a>
+
+<nav class="static-nav" id="static-nav-fallback" aria-label="Navigare principală">
+  <a href="index.html" class="nav-brand"><span aria-hidden="true">🏛️</span> Transparența Pantelimon</a>
+  <a href="raport_transparenta.html"><span aria-hidden="true">🚩</span> Nereguli</a>
+  <a href="transparenta_pantelimon.html"><span aria-hidden="true">📊</span> Buget</a>
+  <a href="harta.html"><span aria-hidden="true">🗺️</span> Hartă</a>
+  <a href="petitie.html"><span aria-hidden="true">✍️</span> Petiție</a>
+  <a href="presa.html"><span aria-hidden="true">📰</span> Presă</a>
+</nav>
 
 <!-- ALERT BANNER -->
 <div class="alert-banner">
@@ -254,11 +333,11 @@
       <span class="l">Contracte analizate</span>
     </div>
     <div class="hero-stat">
-      <span class="v">147M RON</span>
-      <span class="l">Cheltuieli 2025</span>
+      <span class="v" id="idx-cheltuieli">147M RON</span>
+      <span class="l" id="idx-cheltuieli-label">Cheltuieli 2025</span>
     </div>
     <div class="hero-stat">
-      <span class="v">săpt.</span>
+      <span class="v" id="idx-ultima-actualizare">săpt.</span>
       <span class="l">Actualizare automată</span>
     </div>
   </div>
@@ -273,10 +352,10 @@
   <section id="scor-transparenta" style="background:#fff;border-bottom:1px solid #e2e8f0;padding:24px 40px;">
     <div style="max-width:900px;margin:0 auto;display:flex;flex-wrap:wrap;gap:24px;align-items:center;">
       <div id="scor-gauge" style="text-align:center;min-width:140px;">
-        <div id="scor-val" style="font-size:3rem;font-weight:700;color:#718096;">—</div>
+        <div id="scor-val" style="font-size:3rem;font-weight:700;color:#e53e3e;">32</div>
         <div style="font-size:.85rem;color:#718096;text-transform:uppercase;letter-spacing:.05em;margin-top:4px;">Scor transparență</div>
         <div style="height:10px;border-radius:5px;background:#e2e8f0;margin-top:8px;overflow:hidden;">
-          <div id="scor-fill" style="height:100%;width:0;transition:width .6s ease;background:#38a169;"></div>
+          <div id="scor-fill" style="height:100%;width:32%;transition:width .6s ease;background:#e53e3e;"></div>
         </div>
         <div id="scor-data" style="font-size:.75rem;color:#a0aec0;margin-top:4px;"></div>
       </div>
@@ -287,7 +366,7 @@
       <div id="scor-componente" style="font-size:.8rem;color:#4a5568;min-width:210px;"></div>
     </div>
   </section>
-  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" integrity="sha384-9nhczxUqK87bcKHh20fSQcTGD4qq5GhayNYSYWqwBkINBhOfQLg/P5HG5lF1urn4" crossorigin="anonymous"></script>
   <script>
   (function(){
     // Revalidare condiționată (ETag) în loc de ?Date.now() — nu sparge cache-ul SW/HTTP,
@@ -341,6 +420,11 @@
         if (!isNaN(d)) {
           var elData = document.getElementById('idx-data-analiza');
           if (elData) elData.textContent = ' (' + d.toLocaleDateString('ro-RO', {day:'numeric', month:'long', year:'numeric'}) + ')';
+          var elUpd = document.getElementById('idx-ultima-actualizare');
+          if (elUpd) {
+            var diff = Math.floor((Date.now() - d.getTime()) / 86400000);
+            elUpd.textContent = diff === 0 ? 'azi' : diff === 1 ? 'ieri' : diff + ' zile';
+          }
         }
       }
 
@@ -376,12 +460,12 @@
   </script>
 
 
-<main>
+<main id="main-content">
 
   <!-- FLAGS PREVIEW -->
   <div class="flags-preview">
     <div class="flags-header">
-      <h3>🚩 Cele mai recente nereguli detectate</h3>
+      <h2 style="font-size:1.1rem">🚩 Cele mai recente nereguli detectate</h2>
       <a href="raport_transparenta.html" id="idx-see-all">Vezi toate 304 →</a>
     </div>
     <div class="flag-item">
@@ -464,54 +548,47 @@
   <p style="font-size:14px;color:#555;margin:0 0 20px;max-width:720px">Dacă ai identificat o neregulă în raportul de mai sus — ai instrumente legale la dispoziție. Iată acțiunile concrete, pas cu pas.</p>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:32px">
 
-    <div style="background:#fff;border-radius:12px;padding:20px;border-top:4px solid #0070C0;box-shadow:0 1px 4px rgba(0,0,0,0.08)">
-      <div style="font-size:22px;margin-bottom:8px">📄</div>
-      <strong style="color:#0070C0;font-size:15px">Cerere de informații publice</strong>
-      <p style="font-size:13px;color:#555;margin:8px 0 12px">Orice cetățean poate solicita orice document public. Primăria e obligată să răspundă în <strong>10 zile</strong> (L. 544/2001). Refuzul poate fi contestat în instanță.</p>
-      <a href="https://www.primariapantelimon.ro/contact/" target="_blank" rel="noopener"
-         style="font-size:12px;font-weight:600;color:#0070C0;text-decoration:none">Trimite cerere la primărie →</a>
+    <div class="action-card" style="border-top:4px solid #0070C0">
+      <div class="action-card-icon" aria-hidden="true">📄</div>
+      <span class="action-card-title" style="color:#0070C0">Cerere de informații publice</span>
+      <p class="action-card-desc">Orice cetățean poate solicita orice document public. Primăria e obligată să răspundă în <strong>10 zile</strong> (L. 544/2001). Refuzul poate fi contestat în instanță.</p>
+      <a class="action-card-link" style="color:#0070C0" href="https://www.primariapantelimon.ro/contact/" target="_blank" rel="noopener">Trimite cerere la primărie →</a>
     </div>
 
-    <div style="background:#fff;border-radius:12px;padding:20px;border-top:4px solid #8E44AD;box-shadow:0 1px 4px rgba(0,0,0,0.08)">
-      <div style="font-size:22px;margin-bottom:8px">📬</div>
-      <strong style="color:#8E44AD;font-size:15px">Petiție / Sesizare la primărie</strong>
-      <p style="font-size:13px;color:#555;margin:8px 0 12px">Poți depune o petiție la orice instituție publică. Răspunsul este obligatoriu în <strong>30 de zile</strong>. Fără răspuns → sesizezi prefectura.</p>
-      <a href="petitie.html"
-         style="font-size:12px;font-weight:600;color:#8E44AD;text-decoration:none;display:inline-block;margin-bottom:6px">✍️ Semnează petiția cetățenilor →</a><br>
-      <a href="https://www.prefecturailfov.ro/petitii/" target="_blank" rel="noopener"
-         style="font-size:12px;font-weight:600;color:#8E44AD;text-decoration:none">Sesizare Prefectură Ilfov →</a>
+    <div class="action-card" style="border-top:4px solid #8E44AD">
+      <div class="action-card-icon" aria-hidden="true">📬</div>
+      <span class="action-card-title" style="color:#8E44AD">Petiție / Sesizare la primărie</span>
+      <p class="action-card-desc">Poți depune o petiție la orice instituție publică. Răspunsul este obligatoriu în <strong>30 de zile</strong>. Fără răspuns → sesizezi prefectura.</p>
+      <a class="action-card-link" style="color:#8E44AD" href="petitie.html"><span aria-hidden="true">✍️</span> Semnează petiția cetățenilor →</a><br>
+      <a class="action-card-link" style="color:#8E44AD" href="https://www.prefecturailfov.ro/petitii/" target="_blank" rel="noopener">Sesizare Prefectură Ilfov →</a>
     </div>
 
-    <div style="background:#fff;border-radius:12px;padding:20px;border-top:4px solid #E67E22;box-shadow:0 1px 4px rgba(0,0,0,0.08)">
-      <div style="font-size:22px;margin-bottom:8px">🏗️</div>
-      <strong style="color:#E67E22;font-size:15px">Sesizare ANAP</strong>
-      <p style="font-size:13px;color:#555;margin:8px 0 12px">Agenția Națională pentru Achiziții Publice. Sesizează dacă suspectezi: fragmentare contracte, criteriu discriminatoriu, atribuire fără licitație.</p>
-      <a href="https://www.anap.gov.ro/web/sesizari/" target="_blank" rel="noopener"
-         style="font-size:12px;font-weight:600;color:#E67E22;text-decoration:none">Sesizare online ANAP →</a>
+    <div class="action-card" style="border-top:4px solid #E67E22">
+      <div class="action-card-icon" aria-hidden="true">🏗️</div>
+      <span class="action-card-title" style="color:#E67E22">Sesizare ANAP</span>
+      <p class="action-card-desc">Agenția Națională pentru Achiziții Publice. Sesizează dacă suspectezi: fragmentare contracte, criteriu discriminatoriu, atribuire fără licitație.</p>
+      <a class="action-card-link" style="color:#E67E22" href="https://www.anap.gov.ro/web/sesizari/" target="_blank" rel="noopener">Sesizare online ANAP →</a>
     </div>
 
-    <div style="background:#fff;border-radius:12px;padding:20px;border-top:4px solid #27AE60;box-shadow:0 1px 4px rgba(0,0,0,0.08)">
-      <div style="font-size:22px;margin-bottom:8px">🏦</div>
-      <strong style="color:#27AE60;font-size:15px">Sesizare Curtea de Conturi</strong>
-      <p style="font-size:13px;color:#555;margin:8px 0 12px">Controlează utilizarea fondurilor publice. Sesizează dacă observi: cheltuieli nejustificate, bugete fabricate, investiții abandonate.</p>
-      <a href="https://www.curteadeconturi.ro/sesizari" target="_blank" rel="noopener"
-         style="font-size:12px;font-weight:600;color:#27AE60;text-decoration:none">Sesizare Curtea de Conturi →</a>
+    <div class="action-card" style="border-top:4px solid #27AE60">
+      <div class="action-card-icon" aria-hidden="true">🏦</div>
+      <span class="action-card-title" style="color:#27AE60">Sesizare Curtea de Conturi</span>
+      <p class="action-card-desc">Controlează utilizarea fondurilor publice. Sesizează dacă observi: cheltuieli nejustificate, bugete fabricate, investiții abandonate.</p>
+      <a class="action-card-link" style="color:#27AE60" href="https://www.curteadeconturi.ro/sesizari" target="_blank" rel="noopener">Sesizare Curtea de Conturi →</a>
     </div>
 
-    <div style="background:#fff;border-radius:12px;padding:20px;border-top:4px solid #C0392B;box-shadow:0 1px 4px rgba(0,0,0,0.08)">
-      <div style="font-size:22px;margin-bottom:8px">🔵</div>
-      <strong style="color:#C0392B;font-size:15px">Sesizare DNA / Parchet</strong>
-      <p style="font-size:13px;color:#555;margin:8px 0 12px">Pentru fapte penale: corupție, abuz în serviciu, conflict de interese. Sesizarea trebuie să conțină fapte concrete și documente.</p>
-      <a href="https://www.pna.ro/sesizare.xhtml" target="_blank" rel="noopener"
-         style="font-size:12px;font-weight:600;color:#C0392B;text-decoration:none">Sesizare online DNA →</a>
+    <div class="action-card" style="border-top:4px solid #C0392B">
+      <div class="action-card-icon" aria-hidden="true">🔵</div>
+      <span class="action-card-title" style="color:#C0392B">Sesizare DNA / Parchet</span>
+      <p class="action-card-desc">Pentru fapte penale: corupție, abuz în serviciu, conflict de interese. Sesizarea trebuie să conțină fapte concrete și documente.</p>
+      <a class="action-card-link" style="color:#C0392B" href="https://www.pna.ro/sesizare.xhtml" target="_blank" rel="noopener">Sesizare online DNA →</a>
     </div>
 
-    <div style="background:#EBF5FB;border-radius:12px;padding:20px;border-top:4px solid #2E86C1;box-shadow:0 1px 4px rgba(0,0,0,0.08)">
-      <div style="font-size:22px;margin-bottom:8px">📖</div>
-      <strong style="color:#2E86C1;font-size:15px">Ghid complet + modele cereri</strong>
-      <p style="font-size:13px;color:#555;margin:8px 0 12px">Pe pagina de analiză completă găsești pași detaliari, ce lege se aplică, termene, și modele de cereri pentru fiecare caz în parte.</p>
-      <a href="transparenta_pantelimon.html#drepturile-tale"
-         style="font-size:12px;font-weight:700;color:#2E86C1;text-decoration:none">Deschide ghidul complet →</a>
+    <div class="action-card" style="background:#EBF5FB;border-top:4px solid #2E86C1">
+      <div class="action-card-icon" aria-hidden="true">📖</div>
+      <span class="action-card-title" style="color:#2E86C1">Ghid complet + modele cereri</span>
+      <p class="action-card-desc">Pe pagina de analiză completă găsești pași detaliați, ce lege se aplică, termene, și modele de cereri pentru fiecare caz în parte.</p>
+      <a class="action-card-link" style="color:#2E86C1;font-weight:700" href="transparenta_pantelimon.html#drepturile-tale">Deschide ghidul complet →</a>
     </div>
 
   </div>
@@ -524,7 +601,7 @@
       <span style="font-size:22px">📈</span>
       <div>
         <strong>transparenta.eu / ANAF</strong><br>
-        <span style="color:#999">Execuții bugetare oficiale raportate la Ministerul Finanțelor</span>
+        <span style="color:#6b7280">Execuții bugetare oficiale raportate la Ministerul Finanțelor</span>
       </div>
       <div class="dot dot-green"></div>
     </a>
@@ -533,7 +610,7 @@
       <span style="font-size:22px">🛒</span>
       <div>
         <strong>SEAP / e-licitatie.ro</strong><br>
-        <span style="color:#999">Sistemul electronic de achiziții publice — contracte și licitații</span>
+        <span style="color:#6b7280">Sistemul electronic de achiziții publice — contracte și licitații</span>
       </div>
       <div class="dot dot-green"></div>
     </a>
@@ -542,7 +619,7 @@
       <span style="font-size:22px">📋</span>
       <div>
         <strong>Hotărâri Consiliu Local — primariapantelimon.ro</strong><br>
-        <span style="color:#999">Buget aprobat, rectificări bugetare, decizii administrative</span>
+        <span style="color:#6b7280">Buget aprobat, rectificări bugetare, decizii administrative</span>
       </div>
       <div class="dot dot-green"></div>
     </a>
@@ -577,16 +654,20 @@
 
 <footer>
   <p>
-    Inițiativă cetățenească independentă &nbsp;·&nbsp;
-    Date din surse publice oficiale &nbsp;·&nbsp;
-    <a href="https://www.primariapantelimon.ro" target="_blank">primariapantelimon.ro</a> &nbsp;·&nbsp;
-    <a href="https://www.e-licitatie.ro/pub" target="_blank">e-licitatie.ro</a> &nbsp;·&nbsp;
-    <a href="https://transparenta.eu" target="_blank">transparenta.eu</a> &nbsp;·&nbsp;
-    <a href="petitie.html">✍️ Petiție</a> &nbsp;·&nbsp;
-    <a href="gdpr.html">🔒 GDPR</a>
+    <a href="raport_transparenta.html">Raport Nereguli</a> &nbsp;·&nbsp;
+    <a href="transparenta_pantelimon.html">Buget</a> &nbsp;·&nbsp;
+    <a href="harta.html">Hartă</a> &nbsp;·&nbsp;
+    <a href="petitie.html"><span aria-hidden="true">✍️</span> Petiție</a> &nbsp;·&nbsp;
+    <a href="presa.html">Presă</a> &nbsp;·&nbsp;
+    <a href="gdpr.html"><span aria-hidden="true">🔒</span> GDPR</a>
+  </p>
+  <p style="margin-top:6px">
+    Surse: <a href="https://www.primariapantelimon.ro" target="_blank" rel="noopener">primariapantelimon.ro</a> &nbsp;·&nbsp;
+    <a href="https://www.e-licitatie.ro/pub" target="_blank" rel="noopener">e-licitatie.ro</a> &nbsp;·&nbsp;
+    <a href="https://transparenta.eu" target="_blank" rel="noopener">transparenta.eu</a>
   </p>
   <p style="margin-top:8px;font-size:11px;opacity:.6">
-    Acest site nu este afiliat cu Primăria Pantelimon. Monitorizare independentă bazată pe date publice.
+    Inițiativă cetățenească independentă. Acest site nu este afiliat cu Primăria Pantelimon. Monitorizare bazată pe date publice.
   </p>
 </footer>
 

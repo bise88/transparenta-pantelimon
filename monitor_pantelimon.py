@@ -4240,7 +4240,7 @@ def genereaza_raport_html(budget: dict, contracte: list, flags: list,
   [data-tp-theme="dark"] .tp-reco-note   {{ background: #422006; border-left-color: #ca8a04; color: #fef3c7; }}
 </style>
 <link rel="alternate" type="application/atom+xml" title="Nereguli noi — Transparența Pantelimon" href="https://transparenta-pantelimon.eu/feed.xml">
-<script src="enhance.js" defer></script>
+<script src="enhance.min.js" defer></script>
 </head>
 <body>
 <div style="background:linear-gradient(135deg,#00427A,#0070C0);color:#fff;padding:24px 32px">
@@ -5825,10 +5825,9 @@ def genereaza_pagina_furnizor(
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="{base_url}/og-image.png">
   <link rel="canonical" href="{base_url}/furnizori/{slug}.html">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
-  <script src="../enhance.js" defer></script>
+  <script src="../enhance.min.js" defer></script>
   <style>
-    body{{font-family:Inter,system-ui,sans-serif;margin:0;background:#f5f7fa;color:#1a1a1a}}
+    body{{font-family:system-ui,-apple-system,'Segoe UI',Arial,sans-serif;margin:0;background:#f5f7fa;color:#1a1a1a}}
     .container{{max-width:900px;margin:0 auto;padding:24px 16px}}
     .back-link{{color:#0070C0;text-decoration:none;font-size:14px}}
     .back-link:hover{{text-decoration:underline}}
@@ -5912,10 +5911,9 @@ def genereaza_index_furnizori(index: list) -> str:
   <title>Furnizori Primăria Pantelimon — Transparența</title>
   <meta name="description" content="Index A-Z al furnizorilor Primăriei Pantelimon cu nereguli detectate automat.">
   <link rel="canonical" href="https://transparenta-pantelimon.eu/furnizori/">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
-  <script src="../enhance.js" defer></script>
+  <script src="../enhance.min.js" defer></script>
   <style>
-    body{{font-family:Inter,system-ui,sans-serif;margin:0;background:#f5f7fa;color:#1a1a1a}}
+    body{{font-family:system-ui,-apple-system,'Segoe UI',Arial,sans-serif;margin:0;background:#f5f7fa;color:#1a1a1a}}
     .container{{max-width:900px;margin:0 auto;padding:24px 16px}}
     h1{{font-size:1.5rem;margin-bottom:4px}}
     .sub{{color:#666;font-size:14px;margin-bottom:20px}}

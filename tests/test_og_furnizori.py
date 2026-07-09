@@ -207,9 +207,9 @@ class TestGenereazaIndexFurnizori:
         assert "transparenta-pantelimon.eu/furnizori/" in result
 
     def test_enhance_js_inclus(self):
-        """enhance.js este inclus in pagina."""
+        """enhance.min.js este inclus in pagina."""
         result = genereaza_index_furnizori(INDEX_SAMPLE)
-        assert "enhance.js" in result
+        assert "enhance.min.js" in result
 
     def test_back_link_la_raport(self):
         """Pagina contine link de inapoi la raportul principal."""
