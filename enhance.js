@@ -494,13 +494,16 @@ html[data-tp-theme="dark"] .tp-mailto-field input { background: #141414; border-
   // ──────────────────────────────────────────────────────────────
   function injectHead() {
     if (!document.querySelector('link[rel="icon"]')) {
+      var ico = document.createElement('link');
+      ico.rel = 'icon'; ico.href = '/favicon.ico'; ico.setAttribute('sizes', 'any');
+      document.head.appendChild(ico);
       var icon = document.createElement('link');
-      icon.rel = 'icon'; icon.href = '/icon-192.png'; icon.type = 'image/png';
+      icon.rel = 'icon'; icon.href = '/icon-192.png'; icon.type = 'image/png'; icon.setAttribute('sizes', '192x192');
       document.head.appendChild(icon);
     }
     if (!document.querySelector('link[rel="apple-touch-icon"]')) {
       var apple = document.createElement('link');
-      apple.rel = 'apple-touch-icon'; apple.href = '/icon-192.png';
+      apple.rel = 'apple-touch-icon'; apple.href = '/apple-touch-icon.png';
       document.head.appendChild(apple);
     }
   }
