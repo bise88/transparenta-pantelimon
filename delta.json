@@ -1,8 +1,24 @@
 {
-  "data_curenta": "2026-07-01T09:56:50.098422",
-  "data_anterioara": "2026-06-23T12:40:48.182581",
-  "nereguli_noi": 0,
-  "nereguli_rezolvate": 0,
+  "data_curenta": "2026-09-01T11:21:46.058245",
+  "data_anterioara": "2026-09-01T10:44:37.186652",
+  "nereguli_noi": 81,
+  "nereguli_rezolvate": 25,
   "scor_transparenta": 17,
-  "top_noi": []
+  "top_noi": [
+    {
+      "titlu": "Achiziție directă peste pragul legal",
+      "severitate": "CRITIC",
+      "index": 1
+    },
+    {
+      "titlu": "Achiziție directă peste pragul legal",
+      "severitate": "CRITIC",
+      "index": 2
+    },
+    {
+      "titlu": "Achiziție directă peste pragul legal",
+      "severitate": "CRITIC",
+      "index": 3
+    }
+  ]
 }

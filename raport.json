@@ -1,18 +1,18 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-07-01T09:57:56.379526",
+  "generated_at": "2026-09-01T11:22:39.350412",
   "entity": {
     "name": "Orașul Pantelimon",
     "cif": "4420759",
     "judet": "Ilfov"
   },
   "totals": {
-    "flags": 304,
+    "flags": 303,
     "contracts_analyzed": 506,
     "total_value_ron": 313680510.12,
     "by_severity": {
       "CRITIC": 111,
-      "MAJOR": 55,
+      "MAJOR": 54,
       "MEDIU": 138
     }
   },
@@ -26,7 +26,7 @@
       "sum_ron": 66000.0,
       "date": "2025-01-08",
       "contract_id": "achizitie-directa-2025-2637",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-1"
     },
@@ -39,7 +39,7 @@
       "sum_ron": 120000.0,
       "date": "2025-01-08",
       "contract_id": "achizitie-directa-2025-7219",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-2"
     },
@@ -52,7 +52,7 @@
       "sum_ron": 135000.0,
       "date": "2025-01-09",
       "contract_id": "achizitie-directa-2025-12448",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-3"
     },
@@ -65,7 +65,7 @@
       "sum_ron": 36056.0,
       "date": "2025-01-13",
       "contract_id": "achizitie-directa-2025-23576",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-4"
     },
@@ -78,7 +78,7 @@
       "sum_ron": 235000.0,
       "date": "2025-01-14",
       "contract_id": "achizitie-directa-2025-29850",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-5"
     },
@@ -91,7 +91,7 @@
       "sum_ron": 34792.0,
       "date": "2025-01-14",
       "contract_id": "achizitie-directa-2025-34525",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-6"
     },
@@ -104,7 +104,7 @@
       "sum_ron": 192720.0,
       "date": "2025-01-15",
       "contract_id": "achizitie-directa-2025-38546",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-7"
     },
@@ -117,7 +117,7 @@
       "sum_ron": 270000.0,
       "date": "2025-01-16",
       "contract_id": "achizitie-directa-2025-51666",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-8"
     },
@@ -130,7 +130,7 @@
       "sum_ron": 48000.0,
       "date": "2025-01-21",
       "contract_id": "achizitie-directa-2025-68364",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-9"
     },
@@ -143,7 +143,7 @@
       "sum_ron": 270000.0,
       "date": "2025-01-21",
       "contract_id": "achizitie-directa-2025-69059",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-10"
     },
@@ -156,7 +156,7 @@
       "sum_ron": 24000.0,
       "date": "2025-01-21",
       "contract_id": "achizitie-directa-2025-70407",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-11"
     },
@@ -169,7 +169,7 @@
       "sum_ron": 48000.0,
       "date": "2025-01-21",
       "contract_id": "achizitie-directa-2025-70792",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-12"
     },
@@ -182,7 +182,7 @@
       "sum_ron": 270000.0,
       "date": "2025-01-22",
       "contract_id": "achizitie-directa-2025-79099",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-13"
     },
@@ -195,7 +195,7 @@
       "sum_ron": 137750.0,
       "date": "2025-01-22",
       "contract_id": "achizitie-directa-2025-80581",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-14"
     },
@@ -208,7 +208,7 @@
       "sum_ron": 79500.0,
       "date": "2025-01-22",
       "contract_id": "achizitie-directa-2025-84785",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-15"
     },
@@ -221,7 +221,7 @@
       "sum_ron": 24000.0,
       "date": "2025-01-29",
       "contract_id": "achizitie-directa-2025-119887",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-16"
     },
@@ -234,7 +234,7 @@
       "sum_ron": 270000.0,
       "date": "2025-01-31",
       "contract_id": "achizitie-directa-2025-130585",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-17"
     },
@@ -247,7 +247,7 @@
       "sum_ron": 135000.0,
       "date": "2025-01-31",
       "contract_id": "achizitie-directa-2025-131563",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-18"
     },
@@ -260,7 +260,7 @@
       "sum_ron": 86400.0,
       "date": "2025-02-04",
       "contract_id": "achizitie-directa-2025-152465",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-19"
     },
@@ -273,7 +273,7 @@
       "sum_ron": 290275.66000000003,
       "date": "2025-02-06",
       "contract_id": "achizitie-directa-2025-169758",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-20"
     },
@@ -286,7 +286,7 @@
       "sum_ron": 110000.0,
       "date": "2025-02-06",
       "contract_id": "achizitie-directa-2025-170844",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-21"
     },
@@ -299,7 +299,7 @@
       "sum_ron": 81000.0,
       "date": "2025-02-06",
       "contract_id": "achizitie-directa-2025-172364",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-22"
     },
@@ -312,7 +312,7 @@
       "sum_ron": 53235.0,
       "date": "2025-02-10",
       "contract_id": "achizitie-directa-2025-189805",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-23"
     },
@@ -325,7 +325,7 @@
       "sum_ron": 270000.0,
       "date": "2025-02-18",
       "contract_id": "achizitie-directa-2025-220295",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-24"
     },
@@ -338,7 +338,7 @@
       "sum_ron": 96000.0,
       "date": "2025-03-11",
       "contract_id": "achizitie-directa-2025-358513",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-25"
     },
@@ -351,7 +351,7 @@
       "sum_ron": 70800.0,
       "date": "2025-03-13",
       "contract_id": "achizitie-directa-2025-378581",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-26"
     },
@@ -364,7 +364,7 @@
       "sum_ron": 270000.0,
       "date": "2025-03-17",
       "contract_id": "achizitie-directa-2025-396843",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-27"
     },
@@ -377,7 +377,7 @@
       "sum_ron": 180441.6,
       "date": "2025-03-24",
       "contract_id": "achizitie-directa-2025-443714",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-28"
     },
@@ -390,7 +390,7 @@
       "sum_ron": 30000.0,
       "date": "2025-03-24",
       "contract_id": "achizitie-directa-2025-445368",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-29"
     },
@@ -403,7 +403,7 @@
       "sum_ron": 32558.05,
       "date": "2025-03-24",
       "contract_id": "achizitie-directa-2025-446005",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-30"
     },
@@ -416,7 +416,7 @@
       "sum_ron": 45000.0,
       "date": "2025-03-25",
       "contract_id": "achizitie-directa-2025-452438",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-31"
     },
@@ -429,7 +429,7 @@
       "sum_ron": 56700.0,
       "date": "2025-03-31",
       "contract_id": "achizitie-directa-2025-488342",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-32"
     },
@@ -442,7 +442,7 @@
       "sum_ron": 125000.0,
       "date": "2025-03-31",
       "contract_id": "achizitie-directa-2025-489392",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-33"
     },
@@ -455,7 +455,7 @@
       "sum_ron": 89500.0,
       "date": "2025-04-08",
       "contract_id": "achizitie-directa-2025-63186",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-34"
     },
@@ -468,7 +468,7 @@
       "sum_ron": 30000.0,
       "date": "2025-04-16",
       "contract_id": "achizitie-directa-2025-130950",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-35"
     },
@@ -481,7 +481,7 @@
       "sum_ron": 96000.0,
       "date": "2025-04-16",
       "contract_id": "achizitie-directa-2025-136869",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-36"
     },
@@ -494,7 +494,7 @@
       "sum_ron": 100000.0,
       "date": "2025-04-17",
       "contract_id": "achizitie-directa-2025-144043",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-37"
     },
@@ -507,7 +507,7 @@
       "sum_ron": 135000.0,
       "date": "2025-04-23",
       "contract_id": "achizitie-directa-2025-150100",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-38"
     },
@@ -520,7 +520,7 @@
       "sum_ron": 26496.0,
       "date": "2025-04-24",
       "contract_id": "achizitie-directa-2025-165685",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-39"
     },
@@ -533,7 +533,7 @@
       "sum_ron": 39022.08,
       "date": "2025-04-28",
       "contract_id": "achizitie-directa-2025-175154",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-40"
     },
@@ -546,7 +546,7 @@
       "sum_ron": 187248.6,
       "date": "2025-04-30",
       "contract_id": "achizitie-directa-2025-203951",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-41"
     },
@@ -559,7 +559,7 @@
       "sum_ron": 240000.0,
       "date": "2025-05-05",
       "contract_id": "achizitie-directa-2025-222535",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-42"
     },
@@ -572,7 +572,7 @@
       "sum_ron": 29000.0,
       "date": "2025-05-07",
       "contract_id": "achizitie-directa-2025-245030",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-43"
     },
@@ -585,7 +585,7 @@
       "sum_ron": 115500.0,
       "date": "2025-05-16",
       "contract_id": "achizitie-directa-2025-317311",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-44"
     },
@@ -598,7 +598,7 @@
       "sum_ron": 28119.22,
       "date": "2025-05-20",
       "contract_id": "achizitie-directa-2025-341823",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-45"
     },
@@ -611,7 +611,7 @@
       "sum_ron": 180000.0,
       "date": "2025-05-20",
       "contract_id": "achizitie-directa-2025-344097",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-46"
     },
@@ -624,7 +624,7 @@
       "sum_ron": 50000.0,
       "date": "2025-05-27",
       "contract_id": "achizitie-directa-2025-391697",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-47"
     },
@@ -637,7 +637,7 @@
       "sum_ron": 35000.0,
       "date": "2025-05-30",
       "contract_id": "achizitie-directa-2025-421925",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-48"
     },
@@ -650,7 +650,7 @@
       "sum_ron": 66000.0,
       "date": "2025-06-03",
       "contract_id": "achizitie-directa-2025-441573",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-49"
     },
@@ -663,7 +663,7 @@
       "sum_ron": 59500.0,
       "date": "2025-06-06",
       "contract_id": "achizitie-directa-2025-475536",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-50"
     },
@@ -676,7 +676,7 @@
       "sum_ron": 108000.0,
       "date": "2025-06-06",
       "contract_id": "achizitie-directa-2025-476830",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-51"
     },
@@ -689,7 +689,7 @@
       "sum_ron": 45600.0,
       "date": "2025-06-10",
       "contract_id": "achizitie-directa-2025-478530",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-52"
     },
@@ -702,7 +702,7 @@
       "sum_ron": 263976.0,
       "date": "2025-06-13",
       "contract_id": "achizitie-directa-2025-509507",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-53"
     },
@@ -715,7 +715,7 @@
       "sum_ron": 25000.0,
       "date": "2025-06-16",
       "contract_id": "achizitie-directa-2025-517695",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-54"
     },
@@ -728,7 +728,7 @@
       "sum_ron": 105780.0,
       "date": "2025-06-17",
       "contract_id": "achizitie-directa-2025-529819",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-55"
     },
@@ -741,7 +741,7 @@
       "sum_ron": 270000.0,
       "date": "2025-06-18",
       "contract_id": "achizitie-directa-2025-545933",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-56"
     },
@@ -754,7 +754,7 @@
       "sum_ron": 269920.0,
       "date": "2025-06-19",
       "contract_id": "achizitie-directa-2025-552093",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-57"
     },
@@ -767,7 +767,7 @@
       "sum_ron": 250000.0,
       "date": "2025-06-24",
       "contract_id": "achizitie-directa-2025-576566",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-58"
     },
@@ -780,7 +780,7 @@
       "sum_ron": 48000.0,
       "date": "2025-06-30",
       "contract_id": "achizitie-directa-2025-610038",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-59"
     },
@@ -806,7 +806,7 @@
       "sum_ron": 225408.0,
       "date": "2025-07-02",
       "contract_id": "achizitie-directa-2025-16996",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-61"
     },
@@ -819,7 +819,7 @@
       "sum_ron": 35600.0,
       "date": "2025-07-18",
       "contract_id": "achizitie-directa-2025-107341",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-62"
     },
@@ -832,7 +832,7 @@
       "sum_ron": 269990.0,
       "date": "2025-07-24",
       "contract_id": "achizitie-directa-2025-143065",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-63"
     },
@@ -845,7 +845,7 @@
       "sum_ron": 114000.0,
       "date": "2025-07-28",
       "contract_id": "achizitie-directa-2025-151253",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-64"
     },
@@ -858,7 +858,7 @@
       "sum_ron": 30970.0,
       "date": "2025-07-28",
       "contract_id": "achizitie-directa-2025-153663",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-65"
     },
@@ -871,7 +871,7 @@
       "sum_ron": 22305.36,
       "date": "2025-07-31",
       "contract_id": "achizitie-directa-2025-179089",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-66"
     },
@@ -884,7 +884,7 @@
       "sum_ron": 239900.0,
       "date": "2025-08-11",
       "contract_id": "achizitie-directa-2025-226609",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-67"
     },
@@ -897,7 +897,7 @@
       "sum_ron": 85000.0,
       "date": "2025-08-14",
       "contract_id": "achizitie-directa-2025-246374",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-68"
     },
@@ -910,7 +910,7 @@
       "sum_ron": 246850.0,
       "date": "2025-08-18",
       "contract_id": "achizitie-directa-2025-250386",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-69"
     },
@@ -923,7 +923,7 @@
       "sum_ron": 64020.0,
       "date": "2025-08-19",
       "contract_id": "achizitie-directa-2025-253599",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-70"
     },
@@ -936,7 +936,7 @@
       "sum_ron": 35640.0,
       "date": "2025-08-19",
       "contract_id": "achizitie-directa-2025-253651",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-71"
     },
@@ -949,7 +949,7 @@
       "sum_ron": 75000.0,
       "date": "2025-08-19",
       "contract_id": "achizitie-directa-2025-259650",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-72"
     },
@@ -962,7 +962,7 @@
       "sum_ron": 80000.0,
       "date": "2025-08-26",
       "contract_id": "achizitie-directa-2025-287475",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-73"
     },
@@ -975,7 +975,7 @@
       "sum_ron": 50000.0,
       "date": "2025-09-02",
       "contract_id": "achizitie-directa-2025-322582",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-74"
     },
@@ -988,7 +988,7 @@
       "sum_ron": 23460.0,
       "date": "2025-09-04",
       "contract_id": "achizitie-directa-2025-343336",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-75"
     },
@@ -1001,7 +1001,7 @@
       "sum_ron": 28635.0,
       "date": "2025-09-04",
       "contract_id": "achizitie-directa-2025-343382",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-76"
     },
@@ -1014,7 +1014,7 @@
       "sum_ron": 110400.0,
       "date": "2025-09-04",
       "contract_id": "achizitie-directa-2025-343418",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-77"
     },
@@ -1027,7 +1027,7 @@
       "sum_ron": 38920.0,
       "date": "2025-09-10",
       "contract_id": "achizitie-directa-2025-374926",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-78"
     },
@@ -1040,7 +1040,7 @@
       "sum_ron": 75000.0,
       "date": "2025-09-16",
       "contract_id": "achizitie-directa-2025-415221",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-79"
     },
@@ -1053,7 +1053,7 @@
       "sum_ron": 85600.0,
       "date": "2025-09-22",
       "contract_id": "achizitie-directa-2025-447227",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-80"
     },
@@ -1066,7 +1066,7 @@
       "sum_ron": 211200.0,
       "date": "2025-09-30",
       "contract_id": "achizitie-directa-2025-507255",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-81"
     },
@@ -1105,7 +1105,7 @@
       "sum_ron": 104000.0,
       "date": "2025-10-02",
       "contract_id": "achizitie-directa-2025-10631",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-84"
     },
@@ -1118,7 +1118,7 @@
       "sum_ron": 100000.0,
       "date": "2025-10-02",
       "contract_id": "achizitie-directa-2025-19677",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-85"
     },
@@ -1131,7 +1131,7 @@
       "sum_ron": 230000.0,
       "date": "2025-10-14",
       "contract_id": "achizitie-directa-2025-86474",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-86"
     },
@@ -1144,7 +1144,7 @@
       "sum_ron": 216500.0,
       "date": "2025-10-14",
       "contract_id": "achizitie-directa-2025-86672",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-87"
     },
@@ -1157,7 +1157,7 @@
       "sum_ron": 30000.0,
       "date": "2025-10-14",
       "contract_id": "achizitie-directa-2025-86792",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-88"
     },
@@ -1170,7 +1170,7 @@
       "sum_ron": 150000.0,
       "date": "2025-10-20",
       "contract_id": "achizitie-directa-2025-116448",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-89"
     },
@@ -1183,7 +1183,7 @@
       "sum_ron": 30000.0,
       "date": "2025-10-20",
       "contract_id": "achizitie-directa-2025-116577",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-90"
     },
@@ -1196,7 +1196,7 @@
       "sum_ron": 60000.0,
       "date": "2025-10-20",
       "contract_id": "achizitie-directa-2025-120775",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-91"
     },
@@ -1209,7 +1209,7 @@
       "sum_ron": 88885.0,
       "date": "2025-10-21",
       "contract_id": "achizitie-directa-2025-130839",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-92"
     },
@@ -1222,7 +1222,7 @@
       "sum_ron": 21172.0,
       "date": "2025-10-22",
       "contract_id": "achizitie-directa-2025-141531",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-93"
     },
@@ -1235,7 +1235,7 @@
       "sum_ron": 252500.0,
       "date": "2025-10-27",
       "contract_id": "achizitie-directa-2025-161218",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-94"
     },
@@ -1248,7 +1248,7 @@
       "sum_ron": 30000.0,
       "date": "2025-10-31",
       "contract_id": "achizitie-directa-2025-189397",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-95"
     },
@@ -1261,7 +1261,7 @@
       "sum_ron": 125000.0,
       "date": "2025-11-03",
       "contract_id": "achizitie-directa-2025-203111",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-96"
     },
@@ -1274,7 +1274,7 @@
       "sum_ron": 164700.0,
       "date": "2025-11-04",
       "contract_id": "achizitie-directa-2025-210774",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-97"
     },
@@ -1287,7 +1287,7 @@
       "sum_ron": 246000.0,
       "date": "2025-11-07",
       "contract_id": "achizitie-directa-2025-245511",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-98"
     },
@@ -1300,7 +1300,7 @@
       "sum_ron": 70000.0,
       "date": "2025-11-11",
       "contract_id": "achizitie-directa-2025-261331",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-99"
     },
@@ -1313,7 +1313,7 @@
       "sum_ron": 198000.0,
       "date": "2025-11-11",
       "contract_id": "achizitie-directa-2025-267214",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-100"
     },
@@ -1326,7 +1326,7 @@
       "sum_ron": 49000.0,
       "date": "2025-11-11",
       "contract_id": "achizitie-directa-2025-267271",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-101"
     },
@@ -1339,7 +1339,7 @@
       "sum_ron": 270000.0,
       "date": "2025-11-13",
       "contract_id": "achizitie-directa-2025-283211",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-102"
     },
@@ -1352,7 +1352,7 @@
       "sum_ron": 270000.0,
       "date": "2025-11-17",
       "contract_id": "achizitie-directa-2025-302080",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-103"
     },
@@ -1365,7 +1365,7 @@
       "sum_ron": 34355.37,
       "date": "2025-11-19",
       "contract_id": "achizitie-directa-2025-327460",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-104"
     },
@@ -1378,7 +1378,7 @@
       "sum_ron": 26496.0,
       "date": "2025-11-21",
       "contract_id": "achizitie-directa-2025-349181",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-105"
     },
@@ -1391,7 +1391,7 @@
       "sum_ron": 63008.0,
       "date": "2025-12-02",
       "contract_id": "achizitie-directa-2025-420929",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-106"
     },
@@ -1404,7 +1404,7 @@
       "sum_ron": 63520.0,
       "date": "2025-12-02",
       "contract_id": "achizitie-directa-2025-420997",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-107"
     },
@@ -1417,7 +1417,7 @@
       "sum_ron": 75000.0,
       "date": "2025-12-03",
       "contract_id": "achizitie-directa-2025-433808",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-108"
     },
@@ -1430,7 +1430,7 @@
       "sum_ron": 265000.0,
       "date": "2025-12-04",
       "contract_id": "achizitie-directa-2025-438971",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-109"
     },
@@ -1443,7 +1443,7 @@
       "sum_ron": 30000.0,
       "date": "2025-12-08",
       "contract_id": "achizitie-directa-2025-461546",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-110"
     },
@@ -1456,7 +1456,7 @@
       "sum_ron": 35000.0,
       "date": "2025-12-19",
       "contract_id": "achizitie-directa-2025-578634",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-111"
     },
@@ -1469,7 +1469,7 @@
       "sum_ron": 155000.0,
       "date": "2025-12-22",
       "contract_id": "achizitie-directa-2025-586755",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-112"
     },
@@ -1482,7 +1482,7 @@
       "sum_ron": 132000.0,
       "date": "2026-01-12",
       "contract_id": "achizitie-directa-2026-17785",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-113"
     },
@@ -1495,7 +1495,7 @@
       "sum_ron": 72000.0,
       "date": "2026-01-12",
       "contract_id": "achizitie-directa-2026-20053",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-114"
     },
@@ -1508,7 +1508,7 @@
       "sum_ron": 39044.0,
       "date": "2026-01-13",
       "contract_id": "achizitie-directa-2026-20824",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-115"
     },
@@ -1521,7 +1521,7 @@
       "sum_ron": 212000.0,
       "date": "2026-01-20",
       "contract_id": "achizitie-directa-2026-55866",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-116"
     },
@@ -1534,7 +1534,7 @@
       "sum_ron": 24000.0,
       "date": "2026-01-27",
       "contract_id": "achizitie-directa-2026-98904",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-117"
     },
@@ -1547,7 +1547,7 @@
       "sum_ron": 115000.0,
       "date": "2026-01-28",
       "contract_id": "achizitie-directa-2026-107378",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-118"
     },
@@ -1560,7 +1560,7 @@
       "sum_ron": 150000.0,
       "date": "2026-01-28",
       "contract_id": "achizitie-directa-2026-107413",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-119"
     },
@@ -1573,7 +1573,7 @@
       "sum_ron": 70000.0,
       "date": "2026-01-30",
       "contract_id": "achizitie-directa-2026-119204",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-120"
     },
@@ -1586,7 +1586,7 @@
       "sum_ron": 66000.0,
       "date": "2026-02-02",
       "contract_id": "achizitie-directa-2026-132696",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-121"
     },
@@ -1599,7 +1599,7 @@
       "sum_ron": 25400.0,
       "date": "2026-02-06",
       "contract_id": "achizitie-directa-2026-163730",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-122"
     },
@@ -1612,7 +1612,7 @@
       "sum_ron": 270000.0,
       "date": "2026-02-06",
       "contract_id": "achizitie-directa-2026-166563",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-123"
     },
@@ -1625,7 +1625,7 @@
       "sum_ron": 55908.0,
       "date": "2026-02-09",
       "contract_id": "achizitie-directa-2026-176143",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-124"
     },
@@ -1638,7 +1638,7 @@
       "sum_ron": 91000.0,
       "date": "2026-02-12",
       "contract_id": "achizitie-directa-2026-197259",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-125"
     },
@@ -1651,7 +1651,7 @@
       "sum_ron": 95040.0,
       "date": "2026-02-12",
       "contract_id": "achizitie-directa-2026-197510",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-126"
     },
@@ -1664,7 +1664,7 @@
       "sum_ron": 100000.0,
       "date": "2026-02-13",
       "contract_id": "achizitie-directa-2026-203198",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-127"
     },
@@ -1677,7 +1677,7 @@
       "sum_ron": 90000.0,
       "date": "2026-02-24",
       "contract_id": "achizitie-directa-2026-255020",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-128"
     },
@@ -1690,7 +1690,7 @@
       "sum_ron": 70200.0,
       "date": "2026-02-26",
       "contract_id": "achizitie-directa-2026-272564",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-129"
     },
@@ -1703,7 +1703,7 @@
       "sum_ron": 200000.0,
       "date": "2026-02-27",
       "contract_id": "achizitie-directa-2026-278679",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-130"
     },
@@ -1716,7 +1716,7 @@
       "sum_ron": 268800.0,
       "date": "2026-03-03",
       "contract_id": "achizitie-directa-2026-299822",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-131"
     },
@@ -1729,7 +1729,7 @@
       "sum_ron": 189000.0,
       "date": "2026-03-05",
       "contract_id": "achizitie-directa-2026-315250",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-132"
     },
@@ -1742,7 +1742,7 @@
       "sum_ron": 270000.0,
       "date": "2026-03-10",
       "contract_id": "achizitie-directa-2026-337092",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-133"
     },
@@ -1755,7 +1755,7 @@
       "sum_ron": 270000.0,
       "date": "2026-03-12",
       "contract_id": "achizitie-directa-2026-355882",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-134"
     },
@@ -1768,7 +1768,7 @@
       "sum_ron": 72000.0,
       "date": "2026-03-13",
       "contract_id": "achizitie-directa-2026-364805",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-135"
     },
@@ -1781,7 +1781,7 @@
       "sum_ron": 53600.0,
       "date": "2026-03-13",
       "contract_id": "achizitie-directa-2026-367309",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-136"
     },
@@ -1794,7 +1794,7 @@
       "sum_ron": 270000.0,
       "date": "2026-03-17",
       "contract_id": "achizitie-directa-2026-384386",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-137"
     },
@@ -1807,7 +1807,7 @@
       "sum_ron": 268800.0,
       "date": "2026-03-19",
       "contract_id": "achizitie-directa-2026-397609",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-138"
     },
@@ -1820,7 +1820,7 @@
       "sum_ron": 880411.88,
       "date": "2026-03-19",
       "contract_id": "achizitie-directa-2026-404065",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-139"
     },
@@ -1833,7 +1833,7 @@
       "sum_ron": 269000.0,
       "date": "2026-03-25",
       "contract_id": "achizitie-directa-2026-434178",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-140"
     },
@@ -1846,7 +1846,7 @@
       "sum_ron": 69120.0,
       "date": "2026-03-25",
       "contract_id": "achizitie-directa-2026-438121",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-141"
     },
@@ -1859,7 +1859,7 @@
       "sum_ron": 25000.0,
       "date": "2026-03-26",
       "contract_id": "achizitie-directa-2026-446978",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "OFERTANT_UNIC",
       "anchor": "nereguli-142"
     },
@@ -1911,7 +1911,7 @@
       "sum_ron": 135000.0,
       "date": "2025-01-09",
       "contract_id": "achizitie-directa-2025-12448",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-146"
     },
@@ -1924,7 +1924,7 @@
       "sum_ron": 235000.0,
       "date": "2025-01-14",
       "contract_id": "achizitie-directa-2025-29850",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-147"
     },
@@ -1937,7 +1937,7 @@
       "sum_ron": 192720.0,
       "date": "2025-01-15",
       "contract_id": "achizitie-directa-2025-38546",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-148"
     },
@@ -1950,7 +1950,7 @@
       "sum_ron": 270000.0,
       "date": "2025-01-16",
       "contract_id": "achizitie-directa-2025-51666",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-149"
     },
@@ -1963,7 +1963,7 @@
       "sum_ron": 270000.0,
       "date": "2025-01-21",
       "contract_id": "achizitie-directa-2025-69059",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-150"
     },
@@ -1976,7 +1976,7 @@
       "sum_ron": 270000.0,
       "date": "2025-01-22",
       "contract_id": "achizitie-directa-2025-79099",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-151"
     },
@@ -1989,7 +1989,7 @@
       "sum_ron": 137750.0,
       "date": "2025-01-22",
       "contract_id": "achizitie-directa-2025-80581",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-152"
     },
@@ -2002,7 +2002,7 @@
       "sum_ron": 270000.0,
       "date": "2025-01-31",
       "contract_id": "achizitie-directa-2025-130585",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-153"
     },
@@ -2015,7 +2015,7 @@
       "sum_ron": 135000.0,
       "date": "2025-01-31",
       "contract_id": "achizitie-directa-2025-131563",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-154"
     },
@@ -2028,7 +2028,7 @@
       "sum_ron": 290275.66000000003,
       "date": "2025-02-06",
       "contract_id": "achizitie-directa-2025-169758",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-155"
     },
@@ -2041,7 +2041,7 @@
       "sum_ron": 270000.0,
       "date": "2025-02-18",
       "contract_id": "achizitie-directa-2025-220295",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-156"
     },
@@ -2054,7 +2054,7 @@
       "sum_ron": 270000.0,
       "date": "2025-03-17",
       "contract_id": "achizitie-directa-2025-396843",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-157"
     },
@@ -2067,7 +2067,7 @@
       "sum_ron": 180441.6,
       "date": "2025-03-24",
       "contract_id": "achizitie-directa-2025-443714",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-158"
     },
@@ -2080,7 +2080,7 @@
       "sum_ron": 135000.0,
       "date": "2025-04-23",
       "contract_id": "achizitie-directa-2025-150100",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-159"
     },
@@ -2093,7 +2093,7 @@
       "sum_ron": 187248.6,
       "date": "2025-04-30",
       "contract_id": "achizitie-directa-2025-203951",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-160"
     },
@@ -2106,7 +2106,7 @@
       "sum_ron": 240000.0,
       "date": "2025-05-05",
       "contract_id": "achizitie-directa-2025-222535",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-161"
     },
@@ -2119,7 +2119,7 @@
       "sum_ron": 180000.0,
       "date": "2025-05-20",
       "contract_id": "achizitie-directa-2025-344097",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-162"
     },
@@ -2132,7 +2132,7 @@
       "sum_ron": 263976.0,
       "date": "2025-06-13",
       "contract_id": "achizitie-directa-2025-509507",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-163"
     },
@@ -2145,7 +2145,7 @@
       "sum_ron": 270000.0,
       "date": "2025-06-18",
       "contract_id": "achizitie-directa-2025-545933",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-164"
     },
@@ -2158,7 +2158,7 @@
       "sum_ron": 269920.0,
       "date": "2025-06-19",
       "contract_id": "achizitie-directa-2025-552093",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-165"
     },
@@ -2171,7 +2171,7 @@
       "sum_ron": 250000.0,
       "date": "2025-06-24",
       "contract_id": "achizitie-directa-2025-576566",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-166"
     },
@@ -2184,7 +2184,7 @@
       "sum_ron": 225408.0,
       "date": "2025-07-02",
       "contract_id": "achizitie-directa-2025-16996",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-167"
     },
@@ -2197,7 +2197,7 @@
       "sum_ron": 269990.0,
       "date": "2025-07-24",
       "contract_id": "achizitie-directa-2025-143065",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-168"
     },
@@ -2210,7 +2210,7 @@
       "sum_ron": 239900.0,
       "date": "2025-08-11",
       "contract_id": "achizitie-directa-2025-226609",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-169"
     },
@@ -2223,7 +2223,7 @@
       "sum_ron": 246850.0,
       "date": "2025-08-18",
       "contract_id": "achizitie-directa-2025-250386",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-170"
     },
@@ -2236,7 +2236,7 @@
       "sum_ron": 211200.0,
       "date": "2025-09-30",
       "contract_id": "achizitie-directa-2025-507255",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-171"
     },
@@ -2249,7 +2249,7 @@
       "sum_ron": 230000.0,
       "date": "2025-10-14",
       "contract_id": "achizitie-directa-2025-86474",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-172"
     },
@@ -2262,7 +2262,7 @@
       "sum_ron": 216500.0,
       "date": "2025-10-14",
       "contract_id": "achizitie-directa-2025-86672",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-173"
     },
@@ -2275,7 +2275,7 @@
       "sum_ron": 150000.0,
       "date": "2025-10-20",
       "contract_id": "achizitie-directa-2025-116448",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-174"
     },
@@ -2288,7 +2288,7 @@
       "sum_ron": 252500.0,
       "date": "2025-10-27",
       "contract_id": "achizitie-directa-2025-161218",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-175"
     },
@@ -2301,7 +2301,7 @@
       "sum_ron": 164700.0,
       "date": "2025-11-04",
       "contract_id": "achizitie-directa-2025-210774",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-176"
     },
@@ -2314,7 +2314,7 @@
       "sum_ron": 246000.0,
       "date": "2025-11-07",
       "contract_id": "achizitie-directa-2025-245511",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-177"
     },
@@ -2327,7 +2327,7 @@
       "sum_ron": 198000.0,
       "date": "2025-11-11",
       "contract_id": "achizitie-directa-2025-267214",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-178"
     },
@@ -2340,7 +2340,7 @@
       "sum_ron": 270000.0,
       "date": "2025-11-13",
       "contract_id": "achizitie-directa-2025-283211",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-179"
     },
@@ -2353,7 +2353,7 @@
       "sum_ron": 270000.0,
       "date": "2025-11-17",
       "contract_id": "achizitie-directa-2025-302080",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-180"
     },
@@ -2366,7 +2366,7 @@
       "sum_ron": 265000.0,
       "date": "2025-12-04",
       "contract_id": "achizitie-directa-2025-438971",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-181"
     },
@@ -2379,7 +2379,7 @@
       "sum_ron": 155000.0,
       "date": "2025-12-22",
       "contract_id": "achizitie-directa-2025-586755",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-182"
     },
@@ -2392,7 +2392,7 @@
       "sum_ron": 132000.0,
       "date": "2026-01-12",
       "contract_id": "achizitie-directa-2026-17785",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-183"
     },
@@ -2405,7 +2405,7 @@
       "sum_ron": 212000.0,
       "date": "2026-01-20",
       "contract_id": "achizitie-directa-2026-55866",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-184"
     },
@@ -2418,7 +2418,7 @@
       "sum_ron": 150000.0,
       "date": "2026-01-28",
       "contract_id": "achizitie-directa-2026-107413",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-185"
     },
@@ -2431,7 +2431,7 @@
       "sum_ron": 270000.0,
       "date": "2026-02-06",
       "contract_id": "achizitie-directa-2026-166563",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-186"
     },
@@ -2444,7 +2444,7 @@
       "sum_ron": 200000.0,
       "date": "2026-02-27",
       "contract_id": "achizitie-directa-2026-278679",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-187"
     },
@@ -2457,7 +2457,7 @@
       "sum_ron": 268800.0,
       "date": "2026-03-03",
       "contract_id": "achizitie-directa-2026-299822",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-188"
     },
@@ -2470,7 +2470,7 @@
       "sum_ron": 189000.0,
       "date": "2026-03-05",
       "contract_id": "achizitie-directa-2026-315250",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-189"
     },
@@ -2483,7 +2483,7 @@
       "sum_ron": 270000.0,
       "date": "2026-03-10",
       "contract_id": "achizitie-directa-2026-337092",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-190"
     },
@@ -2496,7 +2496,7 @@
       "sum_ron": 270000.0,
       "date": "2026-03-12",
       "contract_id": "achizitie-directa-2026-355882",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-191"
     },
@@ -2509,7 +2509,7 @@
       "sum_ron": 270000.0,
       "date": "2026-03-17",
       "contract_id": "achizitie-directa-2026-384386",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-192"
     },
@@ -2522,7 +2522,7 @@
       "sum_ron": 268800.0,
       "date": "2026-03-19",
       "contract_id": "achizitie-directa-2026-397609",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-193"
     },
@@ -2535,7 +2535,7 @@
       "sum_ron": 880411.88,
       "date": "2026-03-19",
       "contract_id": "achizitie-directa-2026-404065",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-194"
     },
@@ -2548,7 +2548,7 @@
       "sum_ron": 269000.0,
       "date": "2026-03-25",
       "contract_id": "achizitie-directa-2026-434178",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "ACHIZITIE_DIRECTA_PESTE_PRAG",
       "anchor": "nereguli-195"
     },
@@ -2561,7 +2561,7 @@
       "sum_ron": 540000.0,
       "date": "2025-01-16",
       "contract_id": "achizitie-directa-2025-51666,achizitie-directa-2025-69059",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "FRAGMENTARE",
       "anchor": "nereguli-196"
     },
@@ -2574,7 +2574,7 @@
       "sum_ron": 540000.0,
       "date": "2025-01-21",
       "contract_id": "achizitie-directa-2025-69059,achizitie-directa-2025-79099",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "FRAGMENTARE",
       "anchor": "nereguli-197"
     },
@@ -2587,7 +2587,7 @@
       "sum_ron": 540000.0,
       "date": "2025-01-22",
       "contract_id": "achizitie-directa-2025-79099,achizitie-directa-2025-220295",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "FRAGMENTARE",
       "anchor": "nereguli-198"
     },
@@ -2600,7 +2600,7 @@
       "sum_ron": 540000.0,
       "date": "2026-03-10",
       "contract_id": "achizitie-directa-2026-337092,achizitie-directa-2026-355882",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "FRAGMENTARE",
       "anchor": "nereguli-199"
     },
@@ -2613,7 +2613,7 @@
       "sum_ron": 540000.0,
       "date": "2026-03-12",
       "contract_id": "achizitie-directa-2026-355882,achizitie-directa-2026-384386",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "FRAGMENTARE",
       "anchor": "nereguli-200"
     },
@@ -2626,7 +2626,7 @@
       "sum_ron": 191000.0,
       "date": "2026-02-12",
       "contract_id": "achizitie-directa-2026-197259,achizitie-directa-2026-203198",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "FRAGMENTARE",
       "anchor": "nereguli-201"
     },
@@ -2639,7 +2639,7 @@
       "sum_ron": 190000.0,
       "date": "2026-02-13",
       "contract_id": "achizitie-directa-2026-203198,achizitie-directa-2026-255020",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "FRAGMENTARE",
       "anchor": "nereguli-202"
     },
@@ -2652,7 +2652,7 @@
       "sum_ron": 312248.6,
       "date": "2025-03-31",
       "contract_id": "achizitie-directa-2025-489392,achizitie-directa-2025-203951",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "FRAGMENTARE",
       "anchor": "nereguli-203"
     },
@@ -2704,7 +2704,7 @@
       "sum_ron": 463350.0,
       "date": "2025-08-18",
       "contract_id": "achizitie-directa-2025-250386,achizitie-directa-2025-86672",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "FRAGMENTARE",
       "anchor": "nereguli-207"
     },
@@ -2717,7 +2717,7 @@
       "sum_ron": 139035.0,
       "date": "2025-09-04",
       "contract_id": "achizitie-directa-2025-343382,achizitie-directa-2025-343418",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "FRAGMENTARE",
       "anchor": "nereguli-208"
     },
@@ -2750,31 +2750,18 @@
     {
       "id": 211,
       "severity": "MAJOR",
-      "title": "Exces de proceduri non-competitive",
-      "explanation": "479 din 506 contracte (95%) au fost atribuite fără licitație publică — media națională e sub 30%. Când primăria evită constant licitațiile, cetățenii nu pot verifica dacă banii publici au mers spre cele mai bune oferte disponibile.",
-      "supplier": "Multiple",
-      "sum_ron": 18637001.119999997,
-      "date": "2026-07-01",
-      "contract_id": "global",
-      "procedure": "Multiple",
-      "type": "PROCEDURI_NON_COMPETITIVE",
-      "anchor": "nereguli-211"
-    },
-    {
-      "id": 212,
-      "severity": "MAJOR",
       "title": "Contracte consecutive excesive cu același furnizor",
       "explanation": "TURBOTOP a primit 5 contracte în numai 30 de zile (2025-02-21 — 2025-03-13), cu o valoare totală de 9K RON. Un ritm atât de concentrat e neobișnuit și poate indica o relație privilegiată cu această firmă sau împărțirea unui contract mare în bucăți mici.",
       "supplier": "TURBOTOP",
       "sum_ron": 9438.35,
       "date": "2025-02-21",
       "contract_id": "achizitie-directa-2025-249717,achizitie-directa-2025-338857,achizitie-directa-2025-355688",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CONTRACTE_CONSECUTIVE",
-      "anchor": "nereguli-212"
+      "anchor": "nereguli-211"
     },
     {
-      "id": 213,
+      "id": 212,
       "severity": "MAJOR",
       "title": "Contracte consecutive excesive cu același furnizor",
       "explanation": "AUTO MARCU'S GRUP SA a primit 5 contracte în numai 30 de zile (2025-01-21 — 2025-02-20), cu o valoare totală de 8K RON. Un ritm atât de concentrat e neobișnuit și poate indica o relație privilegiată cu această firmă sau împărțirea unui contract mare în bucăți mici.",
@@ -2782,12 +2769,12 @@
       "sum_ron": 8033.58,
       "date": "2025-01-21",
       "contract_id": "achizitie-directa-2025-70887,achizitie-directa-2025-115429,achizitie-directa-2025-152162",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CONTRACTE_CONSECUTIVE",
-      "anchor": "nereguli-213"
+      "anchor": "nereguli-212"
     },
     {
-      "id": 214,
+      "id": 213,
       "severity": "MAJOR",
       "title": "Contracte consecutive excesive cu același furnizor",
       "explanation": "KSA ROAD SERVICES a primit 9 contracte în numai 30 de zile (2025-02-26 — 2025-03-12), cu o valoare totală de 19K RON. Un ritm atât de concentrat e neobișnuit și poate indica o relație privilegiată cu această firmă sau împărțirea unui contract mare în bucăți mici.",
@@ -2795,12 +2782,12 @@
       "sum_ron": 19288.0,
       "date": "2025-02-26",
       "contract_id": "achizitie-directa-2025-272782,achizitie-directa-2025-272827,achizitie-directa-2025-272845",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CONTRACTE_CONSECUTIVE",
-      "anchor": "nereguli-214"
+      "anchor": "nereguli-213"
     },
     {
-      "id": 215,
+      "id": 214,
       "severity": "MAJOR",
       "title": "Contracte consecutive excesive cu același furnizor",
       "explanation": "GI EUROSERVICE a primit 6 contracte în numai 30 de zile (2025-02-03 — 2025-02-26), cu o valoare totală de 7K RON. Un ritm atât de concentrat e neobișnuit și poate indica o relație privilegiată cu această firmă sau împărțirea unui contract mare în bucăți mici.",
@@ -2808,12 +2795,12 @@
       "sum_ron": 6686.8099999999995,
       "date": "2025-02-03",
       "contract_id": "achizitie-directa-2025-139720,achizitie-directa-2025-139803,achizitie-directa-2025-240729",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CONTRACTE_CONSECUTIVE",
-      "anchor": "nereguli-215"
+      "anchor": "nereguli-214"
     },
     {
-      "id": 216,
+      "id": 215,
       "severity": "MAJOR",
       "title": "Contracte consecutive excesive cu același furnizor",
       "explanation": "DEDEMAN S.R.L. a primit 5 contracte în numai 30 de zile (2025-02-07 — 2025-03-05), cu o valoare totală de 11K RON. Un ritm atât de concentrat e neobișnuit și poate indica o relație privilegiată cu această firmă sau împărțirea unui contract mare în bucăți mici.",
@@ -2821,12 +2808,12 @@
       "sum_ron": 11423.47,
       "date": "2025-02-07",
       "contract_id": "achizitie-directa-2025-181852,achizitie-directa-2025-259835,achizitie-directa-2025-264435",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CONTRACTE_CONSECUTIVE",
-      "anchor": "nereguli-216"
+      "anchor": "nereguli-215"
     },
     {
-      "id": 217,
+      "id": 216,
       "severity": "CRITIC",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Servicii de reparare si intretinere\" a crescut cu 18650% între versiuni: de la 720 RON la 135K RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -2834,12 +2821,12 @@
       "sum_ron": 135000.0,
       "date": "2025-01-09",
       "contract_id": "achizitie-directa-2025-12448",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-217"
+      "anchor": "nereguli-216"
     },
     {
-      "id": 218,
+      "id": 217,
       "severity": "CRITIC",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Servicii de asistenta si de consultanta informatica\" a crescut cu 1903% între versiuni: de la 5K RON la 106K RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -2847,12 +2834,12 @@
       "sum_ron": 105780.0,
       "date": "2025-06-17",
       "contract_id": "achizitie-directa-2025-529819",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-218"
+      "anchor": "nereguli-217"
     },
     {
-      "id": 219,
+      "id": 218,
       "severity": "MAJOR",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Servicii de reparare si de intretinere a echipamentului\" a crescut cu 192% între versiuni: de la 24K RON la 70K RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -2860,12 +2847,12 @@
       "sum_ron": 70200.0,
       "date": "2026-02-26",
       "contract_id": "achizitie-directa-2026-272564",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-219"
+      "anchor": "nereguli-218"
     },
     {
-      "id": 220,
+      "id": 219,
       "severity": "MAJOR",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Piatra de cariera si concasata\" a crescut cu 95% între versiuni: de la 138K RON la 269K RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -2873,12 +2860,12 @@
       "sum_ron": 268800.0,
       "date": "2026-03-03",
       "contract_id": "achizitie-directa-2026-299822",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-220"
+      "anchor": "nereguli-219"
     },
     {
-      "id": 221,
+      "id": 220,
       "severity": "MAJOR",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Alte materiale de constructii diverse\" a crescut cu 138% între versiuni: de la 80K RON la 189K RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -2886,12 +2873,12 @@
       "sum_ron": 189000.0,
       "date": "2026-03-05",
       "contract_id": "achizitie-directa-2026-315250",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-221"
+      "anchor": "nereguli-220"
     },
     {
-      "id": 222,
+      "id": 221,
       "severity": "CRITIC",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Servicii de elaborare de studii\" a crescut cu 800% între versiuni: de la 30K RON la 270K RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -2899,12 +2886,12 @@
       "sum_ron": 270000.0,
       "date": "2025-01-31",
       "contract_id": "achizitie-directa-2025-130585",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-222"
+      "anchor": "nereguli-221"
     },
     {
-      "id": 223,
+      "id": 222,
       "severity": "CRITIC",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Servicii de proiectare specializata\" a crescut cu 800% între versiuni: de la 15K RON la 135K RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -2912,12 +2899,12 @@
       "sum_ron": 135000.0,
       "date": "2025-01-31",
       "contract_id": "achizitie-directa-2025-131563",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-223"
+      "anchor": "nereguli-222"
     },
     {
-      "id": 224,
+      "id": 223,
       "severity": "CRITIC",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Servicii de proiectare tehnica pentru infrastructura de\" a crescut cu 2550% între versiuni: de la 10K RON la 265K RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -2925,12 +2912,12 @@
       "sum_ron": 265000.0,
       "date": "2025-12-04",
       "contract_id": "achizitie-directa-2025-438971",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-224"
+      "anchor": "nereguli-223"
     },
     {
-      "id": 225,
+      "id": 224,
       "severity": "CRITIC",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Servicii de inspectie si testare tehnica\" a crescut cu 26523% între versiuni: de la 210 RON la 56K RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -2938,12 +2925,12 @@
       "sum_ron": 55908.0,
       "date": "2026-02-09",
       "contract_id": "achizitie-directa-2026-176143",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-225"
+      "anchor": "nereguli-224"
     },
     {
-      "id": 226,
+      "id": 225,
       "severity": "MAJOR",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Servicii de analiza sau consultanta tehnica\" a crescut cu 120% între versiuni: de la 30K RON la 66K RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -2951,12 +2938,12 @@
       "sum_ron": 66000.0,
       "date": "2025-06-03",
       "contract_id": "achizitie-directa-2025-441573",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-226"
+      "anchor": "nereguli-225"
     },
     {
-      "id": 227,
+      "id": 226,
       "severity": "MAJOR",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Lucrari de vopsire\" a crescut cu 175% între versiuni: de la 33K RON la 90K RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -2964,12 +2951,12 @@
       "sum_ron": 89500.0,
       "date": "2025-04-08",
       "contract_id": "achizitie-directa-2025-63186",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-227"
+      "anchor": "nereguli-226"
     },
     {
-      "id": 228,
+      "id": 227,
       "severity": "CRITIC",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Lucrari de reparare a spatiilor de recreere\" a crescut cu 731% între versiuni: de la 15K RON la 125K RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -2977,12 +2964,12 @@
       "sum_ron": 125000.0,
       "date": "2025-03-31",
       "contract_id": "achizitie-directa-2025-489392",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-228"
+      "anchor": "nereguli-227"
     },
     {
-      "id": 229,
+      "id": 228,
       "severity": "MAJOR",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Motorina\" a crescut cu 100% între versiuni: de la 1.46 mil. RON la 2.91 mil. RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -2992,10 +2979,10 @@
       "contract_id": "contract-2025-79964",
       "procedure": "Licitatie deschisa",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-229"
+      "anchor": "nereguli-228"
     },
     {
-      "id": 230,
+      "id": 229,
       "severity": "CRITIC",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Servicii de curatenie\" a crescut cu 423% între versiuni: de la 2.79 mil. RON la 14.58 mil. RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -3005,10 +2992,10 @@
       "contract_id": "contract-2026-181041",
       "procedure": "Licitatie deschisa",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-230"
+      "anchor": "nereguli-229"
     },
     {
-      "id": 231,
+      "id": 230,
       "severity": "CRITIC",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Servicii generale de consultanta in management\" a crescut cu 500% între versiuni: de la 30K RON la 180K RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -3016,12 +3003,12 @@
       "sum_ron": 180000.0,
       "date": "2025-05-20",
       "contract_id": "achizitie-directa-2025-344097",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-231"
+      "anchor": "nereguli-230"
     },
     {
-      "id": 232,
+      "id": 231,
       "severity": "CRITIC",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Servicii de reparare si de intretinere a grupurilor de \" a crescut cu 8063% între versiuni: de la 1K RON la 100K RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -3029,12 +3016,12 @@
       "sum_ron": 100000.0,
       "date": "2025-04-17",
       "contract_id": "achizitie-directa-2025-144043",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-232"
+      "anchor": "nereguli-231"
     },
     {
-      "id": 233,
+      "id": 232,
       "severity": "CRITIC",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Lucrari de reparare a drumurilor\" a crescut cu 3031% între versiuni: de la 28K RON la 880K RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -3042,12 +3029,12 @@
       "sum_ron": 880411.88,
       "date": "2026-03-19",
       "contract_id": "achizitie-directa-2026-404065",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-233"
+      "anchor": "nereguli-232"
     },
     {
-      "id": 234,
+      "id": 233,
       "severity": "MAJOR",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Servicii de consultanta privind gestionarea proiectelor\" a crescut cu 67% între versiuni: de la 150K RON la 250K RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -3055,12 +3042,12 @@
       "sum_ron": 250000.0,
       "date": "2025-06-24",
       "contract_id": "achizitie-directa-2025-576566",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-234"
+      "anchor": "nereguli-233"
     },
     {
-      "id": 235,
+      "id": 234,
       "severity": "MAJOR",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Servicii de paza\" a crescut cu 100% între versiuni: de la 5.02 mil. RON la 10.05 mil. RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -3070,10 +3057,10 @@
       "contract_id": "contract-2025-135150",
       "procedure": "Licitatie deschisa",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-235"
+      "anchor": "nereguli-234"
     },
     {
-      "id": 236,
+      "id": 235,
       "severity": "CRITIC",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Lucrari de reparatii generale si de renovare\" a crescut cu 5182% între versiuni: de la 240K RON la 12.67 mil. RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -3083,10 +3070,10 @@
       "contract_id": "contract-2026-3959",
       "procedure": "Procedura simplificata",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-236"
+      "anchor": "nereguli-235"
     },
     {
-      "id": 237,
+      "id": 236,
       "severity": "CRITIC",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Echipament de incalzire centrala\" a crescut cu 751% între versiuni: de la 6K RON la 54K RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -3094,12 +3081,12 @@
       "sum_ron": 53600.0,
       "date": "2026-03-13",
       "contract_id": "achizitie-directa-2026-367309",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-237"
+      "anchor": "nereguli-236"
     },
     {
-      "id": 238,
+      "id": 237,
       "severity": "CRITIC",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Transport de pasageri ocazional\" a crescut cu 371% între versiuni: de la 23K RON la 110K RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -3107,12 +3094,12 @@
       "sum_ron": 110400.0,
       "date": "2025-09-04",
       "contract_id": "achizitie-directa-2025-343418",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-238"
+      "anchor": "nereguli-237"
     },
     {
-      "id": 239,
+      "id": 238,
       "severity": "MAJOR",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Servicii de campanii de publicitate\" a crescut cu 100% între versiuni: de la 30K RON la 60K RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -3120,12 +3107,12 @@
       "sum_ron": 60000.0,
       "date": "2025-10-20",
       "contract_id": "achizitie-directa-2025-120775",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-239"
+      "anchor": "nereguli-238"
     },
     {
-      "id": 240,
+      "id": 239,
       "severity": "CRITIC",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Supraveghere a lucrarilor de constructii\" a crescut cu 304% între versiuni: de la 49K RON la 198K RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -3133,12 +3120,12 @@
       "sum_ron": 198000.0,
       "date": "2025-11-11",
       "contract_id": "achizitie-directa-2025-267214",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-240"
+      "anchor": "nereguli-239"
     },
     {
-      "id": 241,
+      "id": 240,
       "severity": "CRITIC",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Servicii de proiectare a conductelor\" a crescut cu 477% între versiuni: de la 13K RON la 75K RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -3146,12 +3133,12 @@
       "sum_ron": 75000.0,
       "date": "2025-12-03",
       "contract_id": "achizitie-directa-2025-433808",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-241"
+      "anchor": "nereguli-240"
     },
     {
-      "id": 242,
+      "id": 241,
       "severity": "CRITIC",
       "title": "Creștere bruscă de valoare în revizie contract",
       "explanation": "Contractul „Amenajare si intretinere de spatii verzi\" a crescut cu 300% între versiuni: de la 1.15 mil. RON la 4.62 mil. RON. O creștere atât de mare după semnare ridică întrebarea: de ce nu s-a organizat o nouă licitație la valoarea reală?",
@@ -3161,10 +3148,10 @@
       "contract_id": "contract-2026-168284",
       "procedure": "Licitatie deschisa",
       "type": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "nereguli-242"
+      "anchor": "nereguli-241"
     },
     {
-      "id": 243,
+      "id": 242,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "INDOOR MEDIA GROUP a primit exact 120K RON pentru „Servicii de promovare (Rev.2)\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3172,12 +3159,12 @@
       "sum_ron": 120000.0,
       "date": "2025-01-08",
       "contract_id": "achizitie-directa-2025-7219",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-243"
+      "anchor": "nereguli-242"
     },
     {
-      "id": 244,
+      "id": 243,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "Constopograf Expert a primit exact 270K RON pentru „Servicii de cadastru (Rev.2)\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3185,12 +3172,12 @@
       "sum_ron": 270000.0,
       "date": "2025-01-16",
       "contract_id": "achizitie-directa-2025-51666",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-244"
+      "anchor": "nereguli-243"
     },
     {
-      "id": 245,
+      "id": 244,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "Constopograf Expert a primit exact 270K RON pentru „Servicii de topografie (Rev.2)\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3198,12 +3185,12 @@
       "sum_ron": 270000.0,
       "date": "2025-01-21",
       "contract_id": "achizitie-directa-2025-69059",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-245"
+      "anchor": "nereguli-244"
     },
     {
-      "id": 246,
+      "id": 245,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "Constopograf Expert a primit exact 270K RON pentru „Servicii de arpentaj cadastral (Rev.2)\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3211,12 +3198,12 @@
       "sum_ron": 270000.0,
       "date": "2025-01-22",
       "contract_id": "achizitie-directa-2025-79099",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-246"
+      "anchor": "nereguli-245"
     },
     {
-      "id": 247,
+      "id": 246,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "PERCONS EU a primit exact 270K RON pentru „Servicii de elaborare de studii (Rev.2)\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3224,12 +3211,12 @@
       "sum_ron": 270000.0,
       "date": "2025-01-31",
       "contract_id": "achizitie-directa-2025-130585",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-247"
+      "anchor": "nereguli-246"
     },
     {
-      "id": 248,
+      "id": 247,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "MASTER SOLUTIONS TEAM a primit exact 110K RON pentru „Servicii de proiectare tehnica pentru infrastructura de\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3237,12 +3224,12 @@
       "sum_ron": 110000.0,
       "date": "2025-02-06",
       "contract_id": "achizitie-directa-2025-170844",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-248"
+      "anchor": "nereguli-247"
     },
     {
-      "id": 249,
+      "id": 248,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "Constopograf Expert a primit exact 270K RON pentru „Servicii de cartografie aeriana (Rev.2)\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3250,12 +3237,12 @@
       "sum_ron": 270000.0,
       "date": "2025-02-18",
       "contract_id": "achizitie-directa-2025-220295",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-249"
+      "anchor": "nereguli-248"
     },
     {
-      "id": 250,
+      "id": 249,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "BETIRA CONSTRUCT a primit exact 270K RON pentru „Servicii de curatare a canalelor de ape reziduale (Rev.\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3263,12 +3250,12 @@
       "sum_ron": 270000.0,
       "date": "2025-03-17",
       "contract_id": "achizitie-directa-2025-396843",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-250"
+      "anchor": "nereguli-249"
     },
     {
-      "id": 251,
+      "id": 250,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "ADLO PROCARS SRL a primit exact 100K RON pentru „Servicii de reparare si de intretinere a grupurilor de \". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3276,12 +3263,12 @@
       "sum_ron": 100000.0,
       "date": "2025-04-17",
       "contract_id": "achizitie-directa-2025-144043",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-251"
+      "anchor": "nereguli-250"
     },
     {
-      "id": 252,
+      "id": 251,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "IFNCONS MEDIA a primit exact 240K RON pentru „Servicii de consultanta financiara (Rev.2)\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3289,12 +3276,12 @@
       "sum_ron": 240000.0,
       "date": "2025-05-05",
       "contract_id": "achizitie-directa-2025-222535",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-252"
+      "anchor": "nereguli-251"
     },
     {
-      "id": 253,
+      "id": 252,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "CXB CONSULTING & TECHNICAL SUPPORT a primit exact 180K RON pentru „Servicii generale de consultanta in management (Rev.2)\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3302,12 +3289,12 @@
       "sum_ron": 180000.0,
       "date": "2025-05-20",
       "contract_id": "achizitie-directa-2025-344097",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-253"
+      "anchor": "nereguli-252"
     },
     {
-      "id": 254,
+      "id": 253,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "ALPHA CONSULT GENERAL a primit exact 50K RON pentru „Servicii de supraveghere a lucrarilor (Rev.2)\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3315,12 +3302,12 @@
       "sum_ron": 50000.0,
       "date": "2025-05-27",
       "contract_id": "achizitie-directa-2025-391697",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-254"
+      "anchor": "nereguli-253"
     },
     {
-      "id": 255,
+      "id": 254,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "GEMCO TRADE a primit exact 270K RON pentru „Pietris, nisip, piatra concasata si agregate (Rev.2)\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3328,12 +3315,12 @@
       "sum_ron": 270000.0,
       "date": "2025-06-18",
       "contract_id": "achizitie-directa-2025-545933",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-255"
+      "anchor": "nereguli-254"
     },
     {
-      "id": 256,
+      "id": 255,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "CREATIVE PEOPLE a primit exact 250K RON pentru „Servicii de consultanta privind gestionarea proiectelor\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3341,12 +3328,12 @@
       "sum_ron": 250000.0,
       "date": "2025-06-24",
       "contract_id": "achizitie-directa-2025-576566",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-256"
+      "anchor": "nereguli-255"
     },
     {
-      "id": 257,
+      "id": 256,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "STRABO COSTRUCTION & MENTENANCE a primit exact 80K RON pentru „Lucrari de vopsire (Rev.2)\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3354,12 +3341,12 @@
       "sum_ron": 80000.0,
       "date": "2025-08-26",
       "contract_id": "achizitie-directa-2025-287475",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-257"
+      "anchor": "nereguli-256"
     },
     {
-      "id": 258,
+      "id": 257,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "FINANCE PUBLIC CONSULTING a primit exact 50K RON pentru „Servicii generale de consultanta in management (Rev.2)\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3367,12 +3354,12 @@
       "sum_ron": 50000.0,
       "date": "2025-09-02",
       "contract_id": "achizitie-directa-2025-322582",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-258"
+      "anchor": "nereguli-257"
     },
     {
-      "id": 259,
+      "id": 258,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "CREATIVE PEOPLE a primit exact 100K RON pentru „Servicii generale de consultanta in management (Rev.2)\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3380,12 +3367,12 @@
       "sum_ron": 100000.0,
       "date": "2025-10-02",
       "contract_id": "achizitie-directa-2025-19677",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-259"
+      "anchor": "nereguli-258"
     },
     {
-      "id": 260,
+      "id": 259,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "FLEXABILITY MANAGEMENT a primit exact 230K RON pentru „Consultanta in afaceri si in management si servicii con\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3393,12 +3380,12 @@
       "sum_ron": 230000.0,
       "date": "2025-10-14",
       "contract_id": "achizitie-directa-2025-86474",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-260"
+      "anchor": "nereguli-259"
     },
     {
-      "id": 261,
+      "id": 260,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "FINANCE PUBLIC CONSULTING a primit exact 150K RON pentru „Servicii de consultanta privind gestionarea proiectelor\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3406,12 +3393,12 @@
       "sum_ron": 150000.0,
       "date": "2025-10-20",
       "contract_id": "achizitie-directa-2025-116448",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-261"
+      "anchor": "nereguli-260"
     },
     {
-      "id": 262,
+      "id": 261,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "INDOOR MEDIA GROUP a primit exact 60K RON pentru „Servicii de campanii de publicitate (Rev.2)\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3419,12 +3406,12 @@
       "sum_ron": 60000.0,
       "date": "2025-10-20",
       "contract_id": "achizitie-directa-2025-120775",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-262"
+      "anchor": "nereguli-261"
     },
     {
-      "id": 263,
+      "id": 262,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "SOCIETATEA NATIONALA DE INFORMATICA a primit exact 70K RON pentru „Sistem de contabilitate (Rev.2)\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3432,12 +3419,12 @@
       "sum_ron": 70000.0,
       "date": "2025-11-11",
       "contract_id": "achizitie-directa-2025-261331",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-263"
+      "anchor": "nereguli-262"
     },
     {
-      "id": 264,
+      "id": 263,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "GREEN DEVELOPMENT SOLUTIONS AND MANAGEMENT S.R.L. a primit exact 270K RON pentru „Servicii de proiectare a sistemelor de energie electric\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3445,12 +3432,12 @@
       "sum_ron": 270000.0,
       "date": "2025-11-13",
       "contract_id": "achizitie-directa-2025-283211",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-264"
+      "anchor": "nereguli-263"
     },
     {
-      "id": 265,
+      "id": 264,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "PANORAMIC CONCEPT CONS a primit exact 270K RON pentru „Servicii de proiectare arhitecturala (Rev.2)\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3458,12 +3445,12 @@
       "sum_ron": 270000.0,
       "date": "2025-11-17",
       "contract_id": "achizitie-directa-2025-302080",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-265"
+      "anchor": "nereguli-264"
     },
     {
-      "id": 266,
+      "id": 265,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "COMPANIA NATIONALA POSTA ROMANA S.A. a primit exact 150K RON pentru „Servicii postale (Rev.2)\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3471,12 +3458,12 @@
       "sum_ron": 150000.0,
       "date": "2026-01-28",
       "contract_id": "achizitie-directa-2026-107413",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-266"
+      "anchor": "nereguli-265"
     },
     {
-      "id": 267,
+      "id": 266,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "Semnal.EU a primit exact 70K RON pentru „Publicatii periodice (Rev.2)\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3484,12 +3471,12 @@
       "sum_ron": 70000.0,
       "date": "2026-01-30",
       "contract_id": "achizitie-directa-2026-119204",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-267"
+      "anchor": "nereguli-266"
     },
     {
-      "id": 268,
+      "id": 267,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "MASTER SOLUTIONS TEAM a primit exact 270K RON pentru „Servicii de proiectare tehnica pentru constructia de lu\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3497,12 +3484,12 @@
       "sum_ron": 270000.0,
       "date": "2026-02-06",
       "contract_id": "achizitie-directa-2026-166563",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-268"
+      "anchor": "nereguli-267"
     },
     {
-      "id": 269,
+      "id": 268,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "PERCONS EU a primit exact 100K RON pentru „Servicii de consultanta in domeniul achizitiilor (Rev.2\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3510,12 +3497,12 @@
       "sum_ron": 100000.0,
       "date": "2026-02-13",
       "contract_id": "achizitie-directa-2026-203198",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-269"
+      "anchor": "nereguli-268"
     },
     {
-      "id": 270,
+      "id": 269,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "PERCONS EU a primit exact 90K RON pentru „Servicii de consultanta in domeniul achizitiilor (Rev.2\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3523,12 +3510,12 @@
       "sum_ron": 90000.0,
       "date": "2026-02-24",
       "contract_id": "achizitie-directa-2026-255020",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-270"
+      "anchor": "nereguli-269"
     },
     {
-      "id": 271,
+      "id": 270,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "PANORAMIC CONCEPT CONS a primit exact 200K RON pentru „Servicii de elaborare de studii (Rev.2)\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3536,12 +3523,12 @@
       "sum_ron": 200000.0,
       "date": "2026-02-27",
       "contract_id": "achizitie-directa-2026-278679",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-271"
+      "anchor": "nereguli-270"
     },
     {
-      "id": 272,
+      "id": 271,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "Constopograf Expert a primit exact 270K RON pentru „Servicii de cadastru (Rev.2)\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3549,12 +3536,12 @@
       "sum_ron": 270000.0,
       "date": "2026-03-10",
       "contract_id": "achizitie-directa-2026-337092",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-272"
+      "anchor": "nereguli-271"
     },
     {
-      "id": 273,
+      "id": 272,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "Constopograf Expert a primit exact 270K RON pentru „Servicii de topografie (Rev.2)\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3562,12 +3549,12 @@
       "sum_ron": 270000.0,
       "date": "2026-03-12",
       "contract_id": "achizitie-directa-2026-355882",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-273"
+      "anchor": "nereguli-272"
     },
     {
-      "id": 274,
+      "id": 273,
       "severity": "MEDIU",
       "title": "Valoare contract rotundă suspectă",
       "explanation": "Constopograf Expert a primit exact 270K RON pentru „Servicii de arpentaj cadastral (Rev.2)\". O sumă perfect rotundă poate însemna că prețul a fost stabilit forfetar, fără un studiu de piață real. Contractele normale au valori calculate precis, nu sume rotunde.",
@@ -3575,12 +3562,12 @@
       "sum_ron": 270000.0,
       "date": "2026-03-17",
       "contract_id": "achizitie-directa-2026-384386",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "VALOARE_ROTUNDA_SUSPECTA",
-      "anchor": "nereguli-274"
+      "anchor": "nereguli-273"
     },
     {
-      "id": 275,
+      "id": 274,
       "severity": "CRITIC",
       "title": "Contract cu firmă inactiv la ANAF",
       "explanation": "<strong>ELLIS STORE CONCEPT</strong> (CUI 50893467) are statut <strong>INACTIV</strong> la ANAF — o firmă inactiv nu ar trebui să primească bani publici. Contractul „Produse informative si de promovare (Rev.2)\" a valorat 12K RON. Plata unei firme inactiv poate fi nulă de drept — verifică dacă banii au fost recuperați. Verifică administrator și istoricul complet: <a href=\"https://termene.ro/firma/50893467\" target=\"_blank\">termene.ro →</a>",
@@ -3588,18 +3575,31 @@
       "sum_ron": 12475.0,
       "date": "2025-02-14",
       "contract_id": "achizitie-directa-2025-195226",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "FIRMA_INACTIVA",
+      "anchor": "nereguli-274"
+    },
+    {
+      "id": 275,
+      "severity": "CRITIC",
+      "title": "Firmă cu risc sistemic — 4 tipuri de nereguli",
+      "explanation": "<strong>INDOOR MEDIA GROUP</strong> (CUI 18436062) apare în <strong>4 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>785K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/18436062\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "INDOOR MEDIA GROUP",
+      "sum_ron": 784600.0,
+      "date": "2026-09-01",
+      "contract_id": "global",
+      "procedure": "Multiple",
+      "type": "RISC_SISTEMIC_FIRMA",
       "anchor": "nereguli-275"
     },
     {
       "id": 276,
       "severity": "CRITIC",
       "title": "Firmă cu risc sistemic — 4 tipuri de nereguli",
-      "explanation": "<strong>INDOOR MEDIA GROUP</strong> (CUI 18436062) apare în <strong>4 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>785K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/18436062\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "INDOOR MEDIA GROUP",
-      "sum_ron": 784600.0,
-      "date": "2026-07-01",
+      "explanation": "<strong>ADLO PROCARS SRL</strong> (CUI 29496361) apare în <strong>4 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>705K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/29496361\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "ADLO PROCARS SRL",
+      "sum_ron": 705000.0,
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3608,11 +3608,11 @@
     {
       "id": 277,
       "severity": "CRITIC",
-      "title": "Firmă cu risc sistemic — 4 tipuri de nereguli",
-      "explanation": "<strong>ADLO PROCARS SRL</strong> (CUI 29496361) apare în <strong>4 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>705K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/29496361\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "ADLO PROCARS SRL",
-      "sum_ron": 705000.0,
-      "date": "2026-07-01",
+      "title": "Firmă cu risc sistemic — 3 tipuri de nereguli",
+      "explanation": "<strong>SOCIETATEA NATIONALA DE INFORMATICA</strong> (CUI 1556587) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>949K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/1556587\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "SOCIETATEA NATIONALA DE INFORMATICA",
+      "sum_ron": 949440.0,
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3621,11 +3621,11 @@
     {
       "id": 278,
       "severity": "CRITIC",
-      "title": "Firmă cu risc sistemic — 3 tipuri de nereguli",
-      "explanation": "<strong>SOCIETATEA NATIONALA DE INFORMATICA</strong> (CUI 1556587) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>949K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/1556587\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "SOCIETATEA NATIONALA DE INFORMATICA",
-      "sum_ron": 949440.0,
-      "date": "2026-07-01",
+      "title": "Firmă cu risc sistemic — 4 tipuri de nereguli",
+      "explanation": "<strong>Constopograf Expert</strong> (CUI 25145252) apare în <strong>4 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, FRAGMENTARE, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>8.37 mil. RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/25145252\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "Constopograf Expert",
+      "sum_ron": 8370000.0,
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3635,10 +3635,10 @@
       "id": 279,
       "severity": "CRITIC",
       "title": "Firmă cu risc sistemic — 4 tipuri de nereguli",
-      "explanation": "<strong>Constopograf Expert</strong> (CUI 25145252) apare în <strong>4 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, FRAGMENTARE, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>8.37 mil. RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/25145252\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "Constopograf Expert",
-      "sum_ron": 8370000.0,
-      "date": "2026-07-01",
+      "explanation": "<strong>GEMCO TRADE</strong> (CUI 31335227) apare în <strong>4 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>2.43 mil. RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/31335227\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "GEMCO TRADE",
+      "sum_ron": 2431740.0,
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3647,11 +3647,11 @@
     {
       "id": 280,
       "severity": "CRITIC",
-      "title": "Firmă cu risc sistemic — 4 tipuri de nereguli",
-      "explanation": "<strong>GEMCO TRADE</strong> (CUI 31335227) apare în <strong>4 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>2.43 mil. RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/31335227\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "GEMCO TRADE",
-      "sum_ron": 2431740.0,
-      "date": "2026-07-01",
+      "title": "Firmă cu risc sistemic — 3 tipuri de nereguli",
+      "explanation": "<strong>GENERAL UTIL CONS</strong> (CUI 34772064) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, OFERTANT_UNIC. Valoare totală implicată: <strong>682K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/34772064\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "GENERAL UTIL CONS",
+      "sum_ron": 681500.0,
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3660,11 +3660,11 @@
     {
       "id": 281,
       "severity": "CRITIC",
-      "title": "Firmă cu risc sistemic — 3 tipuri de nereguli",
-      "explanation": "<strong>GENERAL UTIL CONS</strong> (CUI 34772064) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, OFERTANT_UNIC. Valoare totală implicată: <strong>682K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/34772064\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "GENERAL UTIL CONS",
-      "sum_ron": 681500.0,
-      "date": "2026-07-01",
+      "title": "Firmă cu risc sistemic — 5 tipuri de nereguli",
+      "explanation": "<strong>PERCONS EU</strong> (CUI 25535239) apare în <strong>5 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, FRAGMENTARE, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>2.17 mil. RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/25535239\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "PERCONS EU",
+      "sum_ron": 2168000.0,
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3673,11 +3673,11 @@
     {
       "id": 282,
       "severity": "CRITIC",
-      "title": "Firmă cu risc sistemic — 5 tipuri de nereguli",
-      "explanation": "<strong>PERCONS EU</strong> (CUI 25535239) apare în <strong>5 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, FRAGMENTARE, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>2.17 mil. RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/25535239\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "PERCONS EU",
-      "sum_ron": 2168000.0,
-      "date": "2026-07-01",
+      "title": "Firmă cu risc sistemic — 3 tipuri de nereguli",
+      "explanation": "<strong>CRISBO COMPANY</strong> (CUI 7954166) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, OFERTANT_UNIC. Valoare totală implicată: <strong>405K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/7954166\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "CRISBO COMPANY",
+      "sum_ron": 405000.0,
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3687,10 +3687,10 @@
       "id": 283,
       "severity": "CRITIC",
       "title": "Firmă cu risc sistemic — 3 tipuri de nereguli",
-      "explanation": "<strong>CRISBO COMPANY</strong> (CUI 7954166) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, OFERTANT_UNIC. Valoare totală implicată: <strong>405K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/7954166\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "CRISBO COMPANY",
-      "sum_ron": 405000.0,
-      "date": "2026-07-01",
+      "explanation": "<strong>MASTER SOLUTIONS TEAM</strong> (CUI 32099000) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>1.34 mil. RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/32099000\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "MASTER SOLUTIONS TEAM",
+      "sum_ron": 1340000.0,
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3700,10 +3700,10 @@
       "id": 284,
       "severity": "CRITIC",
       "title": "Firmă cu risc sistemic — 3 tipuri de nereguli",
-      "explanation": "<strong>MASTER SOLUTIONS TEAM</strong> (CUI 32099000) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>1.34 mil. RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/32099000\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "MASTER SOLUTIONS TEAM",
-      "sum_ron": 1340000.0,
-      "date": "2026-07-01",
+      "explanation": "<strong>BETIRA CONSTRUCT</strong> (CUI 30520358) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>1.88 mil. RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/30520358\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "BETIRA CONSTRUCT",
+      "sum_ron": 1875552.0,
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3713,10 +3713,10 @@
       "id": 285,
       "severity": "CRITIC",
       "title": "Firmă cu risc sistemic — 3 tipuri de nereguli",
-      "explanation": "<strong>BETIRA CONSTRUCT</strong> (CUI 30520358) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>1.88 mil. RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/30520358\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "BETIRA CONSTRUCT",
-      "sum_ron": 1875552.0,
-      "date": "2026-07-01",
+      "explanation": "<strong>STRABO COSTRUCTION & MENTENANCE</strong> (CUI 50464376) apare în <strong>3 tipuri diferite</strong> de nereguli: CRESTERE_BRUSCA_VALOARE, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>372K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/50464376\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "STRABO COSTRUCTION & MENTENANCE",
+      "sum_ron": 371558.05,
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3725,11 +3725,11 @@
     {
       "id": 286,
       "severity": "CRITIC",
-      "title": "Firmă cu risc sistemic — 3 tipuri de nereguli",
-      "explanation": "<strong>STRABO COSTRUCTION & MENTENANCE</strong> (CUI 50464376) apare în <strong>3 tipuri diferite</strong> de nereguli: CRESTERE_BRUSCA_VALOARE, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>372K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/50464376\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "STRABO COSTRUCTION & MENTENANCE",
-      "sum_ron": 371558.05,
-      "date": "2026-07-01",
+      "title": "Firmă cu risc sistemic — 4 tipuri de nereguli",
+      "explanation": "<strong>SC CITY PARK SRL</strong> (CUI 33945345) apare în <strong>4 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, FRAGMENTARE, OFERTANT_UNIC. Valoare totală implicată: <strong>937K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/33945345\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "SC CITY PARK SRL",
+      "sum_ron": 936745.7999999999,
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3738,11 +3738,11 @@
     {
       "id": 287,
       "severity": "CRITIC",
-      "title": "Firmă cu risc sistemic — 4 tipuri de nereguli",
-      "explanation": "<strong>SC CITY PARK SRL</strong> (CUI 33945345) apare în <strong>4 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, FRAGMENTARE, OFERTANT_UNIC. Valoare totală implicată: <strong>937K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/33945345\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "SC CITY PARK SRL",
-      "sum_ron": 936745.7999999999,
-      "date": "2026-07-01",
+      "title": "Firmă cu risc sistemic — 3 tipuri de nereguli",
+      "explanation": "<strong>IFNCONS MEDIA</strong> (CUI 16016984) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>720K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/16016984\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "IFNCONS MEDIA",
+      "sum_ron": 720000.0,
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3751,11 +3751,11 @@
     {
       "id": 288,
       "severity": "CRITIC",
-      "title": "Firmă cu risc sistemic — 3 tipuri de nereguli",
-      "explanation": "<strong>IFNCONS MEDIA</strong> (CUI 16016984) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>720K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/16016984\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "IFNCONS MEDIA",
+      "title": "Firmă cu risc sistemic — 4 tipuri de nereguli",
+      "explanation": "<strong>CXB CONSULTING & TECHNICAL SUPPORT</strong> (CUI 25837539) apare în <strong>4 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>720K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/25837539\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "CXB CONSULTING & TECHNICAL SUPPORT",
       "sum_ron": 720000.0,
-      "date": "2026-07-01",
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3765,10 +3765,10 @@
       "id": 289,
       "severity": "CRITIC",
       "title": "Firmă cu risc sistemic — 4 tipuri de nereguli",
-      "explanation": "<strong>CXB CONSULTING & TECHNICAL SUPPORT</strong> (CUI 25837539) apare în <strong>4 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>720K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/25837539\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "CXB CONSULTING & TECHNICAL SUPPORT",
-      "sum_ron": 720000.0,
-      "date": "2026-07-01",
+      "explanation": "<strong>CREATIVE PEOPLE</strong> (CUI 39329387) apare în <strong>4 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>1.20 mil. RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/39329387\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "CREATIVE PEOPLE",
+      "sum_ron": 1200000.0,
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3778,10 +3778,10 @@
       "id": 290,
       "severity": "CRITIC",
       "title": "Firmă cu risc sistemic — 4 tipuri de nereguli",
-      "explanation": "<strong>CREATIVE PEOPLE</strong> (CUI 39329387) apare în <strong>4 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>1.20 mil. RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/39329387\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "CREATIVE PEOPLE",
-      "sum_ron": 1200000.0,
-      "date": "2026-07-01",
+      "explanation": "<strong>RALEX PROIECT CONSTRUCT</strong> (CUI 29101593) apare în <strong>4 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, FRAGMENTARE, OFERTANT_UNIC. Valoare totală implicată: <strong>2.72 mil. RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/29101593\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "RALEX PROIECT CONSTRUCT",
+      "sum_ron": 2723050.0,
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3790,11 +3790,11 @@
     {
       "id": 291,
       "severity": "CRITIC",
-      "title": "Firmă cu risc sistemic — 4 tipuri de nereguli",
-      "explanation": "<strong>RALEX PROIECT CONSTRUCT</strong> (CUI 29101593) apare în <strong>4 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, FRAGMENTARE, OFERTANT_UNIC. Valoare totală implicată: <strong>2.72 mil. RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/29101593\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "RALEX PROIECT CONSTRUCT",
-      "sum_ron": 2723050.0,
-      "date": "2026-07-01",
+      "title": "Firmă cu risc sistemic — 3 tipuri de nereguli",
+      "explanation": "<strong>FINANCE PUBLIC CONSULTING</strong> (CUI 47236831) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>625K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/47236831\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "FINANCE PUBLIC CONSULTING",
+      "sum_ron": 625000.0,
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3804,10 +3804,10 @@
       "id": 292,
       "severity": "CRITIC",
       "title": "Firmă cu risc sistemic — 3 tipuri de nereguli",
-      "explanation": "<strong>FINANCE PUBLIC CONSULTING</strong> (CUI 47236831) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>625K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/47236831\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "FINANCE PUBLIC CONSULTING",
-      "sum_ron": 625000.0,
-      "date": "2026-07-01",
+      "explanation": "<strong>SC Do&Do Silver Sprint SRL</strong> (CUI 26167585) apare în <strong>3 tipuri diferite</strong> de nereguli: CRESTERE_BRUSCA_VALOARE, FRAGMENTARE, OFERTANT_UNIC. Valoare totală implicată: <strong>412K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/26167585\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "SC Do&Do Silver Sprint SRL",
+      "sum_ron": 411930.0,
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3817,10 +3817,10 @@
       "id": 293,
       "severity": "CRITIC",
       "title": "Firmă cu risc sistemic — 3 tipuri de nereguli",
-      "explanation": "<strong>SC Do&Do Silver Sprint SRL</strong> (CUI 26167585) apare în <strong>3 tipuri diferite</strong> de nereguli: CRESTERE_BRUSCA_VALOARE, FRAGMENTARE, OFERTANT_UNIC. Valoare totală implicată: <strong>412K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/26167585\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "SC Do&Do Silver Sprint SRL",
-      "sum_ron": 411930.0,
-      "date": "2026-07-01",
+      "explanation": "<strong>FLEXABILITY MANAGEMENT</strong> (CUI 19179498) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>690K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/19179498\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "FLEXABILITY MANAGEMENT",
+      "sum_ron": 690000.0,
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3830,10 +3830,10 @@
       "id": 294,
       "severity": "CRITIC",
       "title": "Firmă cu risc sistemic — 3 tipuri de nereguli",
-      "explanation": "<strong>FLEXABILITY MANAGEMENT</strong> (CUI 19179498) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>690K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/19179498\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "FLEXABILITY MANAGEMENT",
-      "sum_ron": 690000.0,
-      "date": "2026-07-01",
+      "explanation": "<strong>HENTZA CONSULTING</strong> (CUI 49783681) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, OFERTANT_UNIC. Valoare totală implicată: <strong>594K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/49783681\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "HENTZA CONSULTING",
+      "sum_ron": 594000.0,
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3843,10 +3843,10 @@
       "id": 295,
       "severity": "CRITIC",
       "title": "Firmă cu risc sistemic — 3 tipuri de nereguli",
-      "explanation": "<strong>HENTZA CONSULTING</strong> (CUI 49783681) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, OFERTANT_UNIC. Valoare totală implicată: <strong>594K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/49783681\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "HENTZA CONSULTING",
-      "sum_ron": 594000.0,
-      "date": "2026-07-01",
+      "explanation": "<strong>GREEN DEVELOPMENT SOLUTIONS AND MANAGEMENT S.R.L.</strong> (CUI 28072147) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>810K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/28072147\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "GREEN DEVELOPMENT SOLUTIONS AND MANAGEMENT S.R.L.",
+      "sum_ron": 810000.0,
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3856,10 +3856,10 @@
       "id": 296,
       "severity": "CRITIC",
       "title": "Firmă cu risc sistemic — 3 tipuri de nereguli",
-      "explanation": "<strong>GREEN DEVELOPMENT SOLUTIONS AND MANAGEMENT S.R.L.</strong> (CUI 28072147) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>810K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/28072147\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "GREEN DEVELOPMENT SOLUTIONS AND MANAGEMENT S.R.L.",
-      "sum_ron": 810000.0,
-      "date": "2026-07-01",
+      "explanation": "<strong>PANORAMIC CONCEPT CONS</strong> (CUI 37655409) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>1.41 mil. RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/37655409\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "PANORAMIC CONCEPT CONS",
+      "sum_ron": 1410000.0,
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3869,10 +3869,10 @@
       "id": 297,
       "severity": "CRITIC",
       "title": "Firmă cu risc sistemic — 3 tipuri de nereguli",
-      "explanation": "<strong>PANORAMIC CONCEPT CONS</strong> (CUI 37655409) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>1.41 mil. RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/37655409\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "PANORAMIC CONCEPT CONS",
-      "sum_ron": 1410000.0,
-      "date": "2026-07-01",
+      "explanation": "<strong>COMPANIA NATIONALA POSTA ROMANA S.A.</strong> (CUI 427410) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>450K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/427410\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "COMPANIA NATIONALA POSTA ROMANA S.A.",
+      "sum_ron": 450000.0,
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3882,10 +3882,10 @@
       "id": 298,
       "severity": "CRITIC",
       "title": "Firmă cu risc sistemic — 3 tipuri de nereguli",
-      "explanation": "<strong>COMPANIA NATIONALA POSTA ROMANA S.A.</strong> (CUI 427410) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>450K RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/427410\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "COMPANIA NATIONALA POSTA ROMANA S.A.",
-      "sum_ron": 450000.0,
-      "date": "2026-07-01",
+      "explanation": "<strong>MIDAS ROAD S.R.L.</strong> (CUI 47338351) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, OFERTANT_UNIC. Valoare totală implicată: <strong>2.64 mil. RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/47338351\" target=\"_blank\">Verifică pe termene.ro →</a>",
+      "supplier": "MIDAS ROAD S.R.L.",
+      "sum_ron": 2641235.64,
+      "date": "2026-09-01",
       "contract_id": "global",
       "procedure": "Multiple",
       "type": "RISC_SISTEMIC_FIRMA",
@@ -3894,31 +3894,18 @@
     {
       "id": 299,
       "severity": "CRITIC",
-      "title": "Firmă cu risc sistemic — 3 tipuri de nereguli",
-      "explanation": "<strong>MIDAS ROAD S.R.L.</strong> (CUI 47338351) apare în <strong>3 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, CRESTERE_BRUSCA_VALOARE, OFERTANT_UNIC. Valoare totală implicată: <strong>2.64 mil. RON</strong>. Când o firmă acumulează probleme în atât de multe categorii, nu e coincidență — e un pattern sistematic care merită o investigație serioasă. <a href=\"https://termene.ro/firma/47338351\" target=\"_blank\">Verifică pe termene.ro →</a>",
-      "supplier": "MIDAS ROAD S.R.L.",
-      "sum_ron": 2641235.64,
-      "date": "2026-07-01",
-      "contract_id": "global",
-      "procedure": "Multiple",
-      "type": "RISC_SISTEMIC_FIRMA",
-      "anchor": "nereguli-299"
-    },
-    {
-      "id": 300,
-      "severity": "CRITIC",
       "title": "Fragmentare temporară: 3 contracte sub-prag, sumă combinată 281K RON",
       "explanation": "Furnizor \"PERCONS EU\" (CUI 25535239) a primit 3 contracte individuale sub pragul de 130K RON, cu titluri similare (\"servicii de consultanta in\"), în fereastră de 90 de zile (2026-02-12 – 2026-02-24). Sumă combinată: 281K RON, care depășește pragul legal. Fiecare contract individual evită licitația, dar suma combinată ar fi impus o procedură competitivă. Art. 11 alin. (1) Legea 98/2016 interzice fragmentarea artificială pentru eludarea pragurilor. Sancțiuni: contravenție art. 224 L98/2016, amendă 2.000–15.000 RON.",
       "supplier": "PERCONS EU",
       "sum_ron": 281000.0,
       "date": "2026-02-12",
       "contract_id": "achizitie-directa-2026-197259,achizitie-directa-2026-203198,achizitie-directa-2026-255020",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "FRAGMENTARE_TEMPORARA",
-      "anchor": "nereguli-300"
+      "anchor": "nereguli-299"
     },
     {
-      "id": 301,
+      "id": 300,
       "severity": "CRITIC",
       "title": "Fragmentare temporară: 3 contracte sub-prag, sumă combinată 162K RON",
       "explanation": "Furnizor \"SC Do&Do Silver Sprint SRL\" (CUI 26167585) a primit 3 contracte individuale sub pragul de 130K RON, cu titluri similare (\"transport de pasageri ocazional\"), în fereastră de 90 de zile (2025-09-04 – 2025-09-04). Sumă combinată: 162K RON, care depășește pragul legal. Fiecare contract individual evită licitația, dar suma combinată ar fi impus o procedură competitivă. Art. 11 alin. (1) Legea 98/2016 interzice fragmentarea artificială pentru eludarea pragurilor. Sancțiuni: contravenție art. 224 L98/2016, amendă 2.000–15.000 RON.",
@@ -3926,12 +3913,12 @@
       "sum_ron": 162495.0,
       "date": "2025-09-04",
       "contract_id": "achizitie-directa-2025-343336,achizitie-directa-2025-343382,achizitie-directa-2025-343418",
-      "procedure": "Achizitie directa",
+      "procedure": "",
       "type": "FRAGMENTARE_TEMPORARA",
-      "anchor": "nereguli-301"
+      "anchor": "nereguli-300"
     },
     {
-      "id": 302,
+      "id": 301,
       "severity": "CRITIC",
       "title": "3 contracte de valoare identică (29,508,940 RON) în aceeași zi",
       "explanation": "În data de 2025-07-29, 3 firme diferite au primit contracte cu valoare EXACT identică (29,508,940 RON fiecare). Total: 88,526,820 RON. Firme: ALA EXPERT CONSTRUCT, SANTIA PARTNER CONSTRUCT, YARDMAN. Pattern clasic de împărțire artificială a unui lot (art. 11 alin. (1) L98/2016).",
@@ -3941,10 +3928,10 @@
       "contract_id": "",
       "procedure": "",
       "type": "VALORI_IDENTICE_ACEEASI_ZI",
-      "anchor": "nereguli-302"
+      "anchor": "nereguli-301"
     },
     {
-      "id": 303,
+      "id": 302,
       "severity": "MEDIU",
       "title": "9 contracte semnate într-o singură zi (2025-12-03)",
       "explanation": "În 2025-12-03 s-au semnat 9 contracte cu valoare totală 38,124,092 RON.",
@@ -3954,20 +3941,20 @@
       "contract_id": "",
       "procedure": "",
       "type": "BURST_CONTRACTE",
-      "anchor": "nereguli-303"
+      "anchor": "nereguli-302"
     },
     {
-      "id": 304,
+      "id": 303,
       "severity": "CRITIC",
       "title": "Rată ridicată de ședințe extraordinare: 43%",
       "explanation": "Din 81 ședințe de Consiliu Local analizate, 35 (43%) sunt 'extraordinare cu convocare de îndată'. O rată peste 25% sugerează că procedura de urgență este folosită sistematic pentru a ocoli consultarea publică obligatorie (Legea 52/2003, art. 7 — transparența decizională). Norma tipică: sub 15% ședințe extraordinare per an.",
       "supplier": "Consiliul Local",
       "sum_ron": 0,
-      "date": "2026-07-01",
+      "date": "2026-09-01",
       "contract_id": "HCL-META",
       "procedure": "Sedinta CL",
       "type": "SEDINTE_EXTRAORDINARE_EXCESIVE",
-      "anchor": "nereguli-304"
+      "anchor": "nereguli-303"
     }
   ],
   "scor_transparenta": {
@@ -3988,12 +3975,12 @@
       "documente_publicate": 10,
       "raspuns_544": 10
     },
-    "data": "2026-07-01"
+    "data": "2026-09-01"
   },
   "seap_debug": [
     "IS_CI=True MAX_FILE_MB=80MB cui=4420759",
-    "Pachet 2025 eroare: HTTPSConnectionPool(host='data.gov.ro', port=443): Max retries exceeded with url: /api/3/action/package_show?id=achizitii-publice-2025 (Caused by ConnectTimeoutError(<HTTPSConnection(host='data.gov.ro', port=443) at 0x7ff11fe96650>, 'Connection to data.gov.ro timed out. (connect timeout=20)'))",
-    "Pachet 2026 eroare: HTTPSConnectionPool(host='data.gov.ro', port=443): Max retries exceeded with url: /api/3/action/package_show?id=achizitii-publice-2026 (Caused by ConnectTimeoutError(<HTTPSConnection(host='data.gov.ro', port=443) at 0x7ff11f31bc10>, 'Connection to data.gov.ro timed out. (connect timeout=20)'))",
+    "Pachet 2025 eroare: HTTPSConnectionPool(host='data.gov.ro', port=443): Max retries exceeded with url: /api/3/action/package_show?id=achizitii-publice-2025 (Caused by ConnectTimeoutError(<HTTPSConnection(host='data.gov.ro', port=443) at 0x7f6733d6e890>, 'Connection to data.gov.ro timed out. (connect timeout=20)'))",
+    "Pachet 2026 eroare: HTTPSConnectionPool(host='data.gov.ro', port=443): Max retries exceeded with url: /api/3/action/package_show?id=achizitii-publice-2026 (Caused by ConnectTimeoutError(<HTTPSConnection(host='data.gov.ro', port=443) at 0x7f6733d6f3d0>, 'Connection to data.gov.ro timed out. (connect timeout=20)'))",
     "surse_ok=0 contracte=0",
     "FALLBACK: loaded 506 contracte din contracte.json"
   ]

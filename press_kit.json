@@ -1,15 +1,15 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-07-01",
+  "generated_at": "2026-09-01",
   "uat": {
     "name": "Orașul Pantelimon",
     "cif": "4420759",
     "judet": "Ilfov"
   },
   "statistici": {
-    "total_nereguli": 304,
+    "total_nereguli": 303,
     "critice": 111,
-    "majore": 55,
+    "majore": 54,
     "medii": 138,
     "total_contracte": 506,
     "valoare_totala_ron": 313680510.12,
@@ -26,7 +26,7 @@
       "data": "2025-07-29",
       "contract_id": "",
       "tip": "VALORI_IDENTICE_ACEEASI_ZI",
-      "anchor": "#nereguli-302"
+      "anchor": "#nereguli-301"
     },
     {
       "titlu": "Posibilă fragmentare artificială a contractelor",
@@ -59,7 +59,7 @@
       "data": "2024-12-03",
       "contract_id": "contract-2026-181041",
       "tip": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "#nereguli-230"
+      "anchor": "#nereguli-229"
     },
     {
       "titlu": "Posibilă fragmentare artificială a contractelor",
@@ -81,7 +81,7 @@
       "data": "2025-12-03",
       "contract_id": "contract-2026-3959",
       "tip": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "#nereguli-236"
+      "anchor": "#nereguli-235"
     },
     {
       "titlu": "Posibilă fragmentare artificială a contractelor",
@@ -100,10 +100,10 @@
       "descriere": "<strong>Constopograf Expert</strong> (CUI 25145252) apare în <strong>4 tipuri diferite</strong> de nereguli: ACHIZITIE_DIRECTA_PESTE_PRAG, FRAGMENTARE, OFERTANT_UNIC, VALOARE_ROTUNDA_SUSPECTA. Valoare totală implicată: <strong>8.37 mil. RON</strong>. Când o firmă acumulează probleme în atât de multe",
       "furnizor": "Constopograf Expert",
       "valoare_ron": 8370000.0,
-      "data": "2026-07-01",
+      "data": "2026-09-01",
       "contract_id": "global",
       "tip": "RISC_SISTEMIC_FIRMA",
-      "anchor": "#nereguli-279"
+      "anchor": "#nereguli-278"
     },
     {
       "titlu": "Creștere bruscă de valoare în revizie contract",
@@ -114,7 +114,7 @@
       "data": "2025-12-11",
       "contract_id": "contract-2026-168284",
       "tip": "CRESTERE_BRUSCA_VALOARE",
-      "anchor": "#nereguli-242"
+      "anchor": "#nereguli-241"
     },
     {
       "titlu": "Posibilă fragmentare artificială a contractelor",

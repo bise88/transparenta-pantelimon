@@ -22,7 +22,7 @@
   {
     "name": "INDOOR MEDIA GROUP SRL",
     "cif": "18436062",
-    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, ŞOS. PIPERA, NR.61, PARTER+MEZANIN, BL.4, SC.2, AP.80",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, ȘOS PIPERA, NR.61, PARTER+MEZANIN, BL.4, SC.2, AP.80",
     "lat": 44.459585,
     "lng": 26.130345,
     "valoare": 461950.0,
@@ -212,7 +212,7 @@
   {
     "name": "WORLD GLOBAL MEDIA S.R.L.",
     "cif": "44412011",
-    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 6, ŞOS VIRTUŢII, NR.19D, BIROU B, ET.4",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 6, STR DEALUL ȚUGULEA, NR.77, BIROU 2, ET.1",
     "lat": 44.447875,
     "lng": 26.032448,
     "valoare": 48000.0,
@@ -480,7 +480,7 @@
     "slug": "ziarul-semnal-enterprises-srl"
   },
   {
-    "name": "EUROPROIECT ESTATE S.R.L.",
+    "name": "EUROPROIECT ESTATE SRL",
     "cif": "24149442",
     "adresa": "JUD. BRĂILA, MUN. BRĂILA, BLD. INDEPENDENŢEI, NR.18, BL.B6",
     "lat": 45.271609,
@@ -702,7 +702,7 @@
   {
     "name": "DAF INTERNATIONAL PROFESSIONAL S.R.L.",
     "cif": "45501605",
-    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 6, STR. PRECIZIEI, NR.17, CORP C16",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 6, STR PRECIZIEI, NR.3",
     "lat": 44.447875,
     "lng": 26.032448,
     "valoare": 15270.0,
@@ -753,8 +753,8 @@
     "name": "OPIUM OFFICE CONSULTING S.R.L.",
     "cif": "32265200",
     "adresa": "JUD. ILFOV, SAT 1 DECEMBRIE COM. 1 DECEMBRIE, STR. 13, NR.18",
-    "lat": 44.495934,
-    "lng": 26.174623,
+    "lat": 44.495849,
+    "lng": 26.174806,
     "valoare": 4500.0,
     "nr_contracte": 1,
     "slug": "opium-office-consulting-srl"
@@ -803,8 +803,8 @@
     "name": "STANGER DESIGN S.R.L.",
     "cif": "40412167",
     "adresa": "JUD. CĂLĂRAŞI, MUN. CĂLĂRAŞI, PRL. BUCUREŞTI, NR.24, BL.M19, SC.2, ET.3, AP.6",
-    "lat": 44.189902,
-    "lng": 27.353423,
+    "lat": 44.189851,
+    "lng": 27.352862,
     "valoare": 115500.0,
     "nr_contracte": 1,
     "slug": "stanger-design-srl"
@@ -880,9 +880,9 @@
     "slug": "prestige-events-srl"
   },
   {
-    "name": "GEO AUTO AGRO S.R.L.",
+    "name": "GEO AUTO AGRO SRL",
     "cif": "26697077",
-    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, ŞOS. COLENTINA, NR.64, BL.105, SC.A, ET.9, AP.59",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, ŞOS. COLENTINA, NR.64, CAMERA 2, BL.105, SC.A, ET.9, AP.59",
     "lat": 44.459585,
     "lng": 26.130345,
     "valoare": 285.71,
@@ -893,8 +893,8 @@
     "name": "CREATIVE PEOPLE S.R.L.",
     "cif": "39329387",
     "adresa": "JUD. PRAHOVA, SAT CERAŞU COM. CERAŞU, STR. AVRAM IANCU, NR.1",
-    "lat": 45.325221,
-    "lng": 26.0413,
+    "lat": 45.324507,
+    "lng": 26.041455,
     "valoare": 350000.0,
     "nr_contracte": 2,
     "slug": "creative-people-srl"
@@ -1502,7 +1502,7 @@
   {
     "name": "GREEN SPACE ART SRL",
     "cif": "34596758",
-    "adresa": "JUD. ILFOV, SAT BRĂNEŞTI COM. BRĂNEŞTI, STR I.C. BRĂTIANU, NR.19, CAMERA NR. 1",
+    "adresa": "JUD. ILFOV, SAT BRĂNEŞTI COM. BRĂNEŞTI, STR. I.C. BRĂTIANU, NR.36, CAMERA NR. 1",
     "lat": 44.457562,
     "lng": 26.33501,
     "valoare": 63520.0,
@@ -1782,7 +1782,7 @@
   {
     "name": "GRI CONSTRUCT ACM S.R.L.",
     "cif": "41497242",
-    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, STR. SOLD. PETRE M. TINĂ, NR.2, BL.L9B, SC.1, AP.2",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, STR SOLD. PETRE M. TINĂ, NR.2, BL.L9B, SC.1, AP.2",
     "lat": 44.418284,
     "lng": 26.165099,
     "valoare": 12671650.0,
