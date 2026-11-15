@@ -1,9 +1,25 @@
 {
-  "data_curenta": "2026-11-03T14:29:31.655005",
-  "data_anterioara": "2026-11-01T11:59:57.736165",
-  "nereguli_noi": 0,
+  "data_curenta": "2026-11-15T12:54:02.790154",
+  "data_anterioara": "2026-11-03T14:29:59.500674",
+  "nereguli_noi": 10,
   "nereguli_rezolvate": 0,
-  "scor_transparenta": 23,
-  "top_noi": [],
-  "date_seap_pana_la": "2026-11-02"
+  "scor_transparenta": 19,
+  "top_noi": [
+    {
+      "titlu": "Semnal de posibilă fragmentare a contractelor",
+      "severitate": "CRITIC",
+      "index": 1
+    },
+    {
+      "titlu": "Semnal de posibilă fragmentare a contractelor",
+      "severitate": "CRITIC",
+      "index": 2
+    },
+    {
+      "titlu": "Contract cu firmă inactiv la ANAF",
+      "severitate": "CRITIC",
+      "index": 3
+    }
+  ],
+  "date_seap_pana_la": "2026-11-12"
 }

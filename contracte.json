@@ -93,8 +93,8 @@
     "cui": "29256636",
     "ofertanti": 2,
     "cod": "CAN1138613",
-    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100657706",
-    "k": "can:108131350",
+    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100667739",
+    "k": "can:108322297",
     "tipc": "subsecvent"
   },
   {
@@ -107,8 +107,8 @@
     "cui": "27019056",
     "ofertanti": 2,
     "cod": "CAN1138613",
-    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100657706",
-    "k": "can:108131351",
+    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100667739",
+    "k": "can:108322298",
     "tipc": "acord-cadru"
   },
   {
@@ -121,8 +121,8 @@
     "cui": "26281970",
     "ofertanti": 2,
     "cod": "CAN1138613",
-    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100657706",
-    "k": "can:108131352",
+    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100667739",
+    "k": "can:108322299",
     "tipc": "acord-cadru"
   },
   {
@@ -135,8 +135,8 @@
     "cui": "8078978",
     "ofertanti": 2,
     "cod": "CAN1138613",
-    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100657706",
-    "k": "can:108131353",
+    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100667739",
+    "k": "can:108322300",
     "tipc": "acord-cadru"
   },
   {
@@ -149,8 +149,8 @@
     "cui": "19737276",
     "ofertanti": 2,
     "cod": "CAN1138613",
-    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100657706",
-    "k": "can:108131354",
+    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100667739",
+    "k": "can:108322301",
     "tipc": "acord-cadru"
   },
   {
@@ -163,8 +163,8 @@
     "cui": "29256636",
     "ofertanti": 2,
     "cod": "CAN1138613",
-    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100657706",
-    "k": "can:108131355",
+    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100667739",
+    "k": "can:108322302",
     "tipc": "acord-cadru"
   },
   {
@@ -177,8 +177,8 @@
     "cui": "19737276",
     "ofertanti": 2,
     "cod": "CAN1138613",
-    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100657706",
-    "k": "can:108131356",
+    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100667739",
+    "k": "can:108322303",
     "tipc": "subsecvent"
   },
   {
@@ -191,8 +191,8 @@
     "cui": "27019056",
     "ofertanti": 2,
     "cod": "CAN1138613",
-    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100657706",
-    "k": "can:108131357",
+    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100667739",
+    "k": "can:108322304",
     "tipc": "subsecvent"
   },
   {
@@ -205,8 +205,8 @@
     "cui": "8078978",
     "ofertanti": 2,
     "cod": "CAN1138613",
-    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100657706",
-    "k": "can:108131358",
+    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100667739",
+    "k": "can:108322305",
     "tipc": "subsecvent"
   },
   {
@@ -219,8 +219,8 @@
     "cui": "26281970",
     "ofertanti": 2,
     "cod": "CAN1138613",
-    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100657706",
-    "k": "can:108131359",
+    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100667739",
+    "k": "can:108322306",
     "tipc": "subsecvent"
   },
   {
@@ -5362,34 +5362,6 @@
     "tipc": "achizitie-directa"
   },
   {
-    "id": "contract-2025-1081314850",
-    "titlu": "Inchiriere de vehicule industriale cu sofer (Rev.2)",
-    "valoare": 204549.0,
-    "data": "2025-11-18",
-    "tip": "Licitatie deschisa",
-    "firma": "AVALON UTILAJE",
-    "cui": "29256636",
-    "ofertanti": 2,
-    "cod": "CAN1138613",
-    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100657706",
-    "k": "can:108131485",
-    "tipc": "subsecvent"
-  },
-  {
-    "id": "contract-2025-1081315410",
-    "titlu": "Inchiriere de vehicule industriale cu sofer (Rev.2)",
-    "valoare": 75255.0,
-    "data": "2025-11-18",
-    "tip": "Licitatie deschisa",
-    "firma": "Val Cristi Construct Auto",
-    "cui": "19737276",
-    "ofertanti": 2,
-    "cod": "CAN1138613",
-    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100657706",
-    "k": "can:108131541",
-    "tipc": "subsecvent"
-  },
-  {
     "id": "contract-2025-1081315510",
     "titlu": "Inchiriere de vehicule industriale cu sofer (Rev.2)",
     "valoare": 69263.0,
@@ -5399,8 +5371,8 @@
     "cui": "27019056",
     "ofertanti": 2,
     "cod": "CAN1138613",
-    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100657706",
-    "k": "can:108131551",
+    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100667739",
+    "k": "can:108322296",
     "tipc": "subsecvent"
   },
   {
@@ -5413,8 +5385,36 @@
     "cui": "8078978",
     "ofertanti": 2,
     "cod": "CAN1138613",
-    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100657706",
-    "k": "can:108131584",
+    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100667739",
+    "k": "can:108322307",
+    "tipc": "subsecvent"
+  },
+  {
+    "id": "contract-2025-1081315410",
+    "titlu": "Inchiriere de vehicule industriale cu sofer (Rev.2)",
+    "valoare": 75255.0,
+    "data": "2025-11-18",
+    "tip": "Licitatie deschisa",
+    "firma": "Val Cristi Construct Auto",
+    "cui": "19737276",
+    "ofertanti": 2,
+    "cod": "CAN1138613",
+    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100667739",
+    "k": "can:108322308",
+    "tipc": "subsecvent"
+  },
+  {
+    "id": "contract-2025-1081314850",
+    "titlu": "Inchiriere de vehicule industriale cu sofer (Rev.2)",
+    "valoare": 204549.0,
+    "data": "2025-11-18",
+    "tip": "Licitatie deschisa",
+    "firma": "AVALON UTILAJE",
+    "cui": "29256636",
+    "ofertanti": 2,
+    "cod": "CAN1138613",
+    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100667739",
+    "k": "can:108322309",
     "tipc": "subsecvent"
   },
   {
@@ -10556,6 +10556,20 @@
     "tipc": "achizitie-directa"
   },
   {
+    "id": "contract-2026-1083148110",
+    "titlu": "Lucrari de instalatii electrice (Rev.2)",
+    "valoare": 2203128.41,
+    "data": "2026-10-26",
+    "tip": "Procedura simplificata",
+    "firma": "VODAFONE ROMANIA",
+    "cui": "8971726",
+    "ofertanti": 1,
+    "cod": "SCNA1139079",
+    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100667237",
+    "k": "can:108314811",
+    "tipc": "contract"
+  },
+  {
     "id": "achizitie-directa-2026-123337019",
     "titlu": "Servicii de reparare si de intretinere a automobilelor (Rev.2)",
     "valoare": 8375.0,
@@ -10637,6 +10651,160 @@
     "cod": "DA41531183",
     "url": "https://e-licitatie.ro/pub/direct-acquisition/view/123378961",
     "k": "da:123378961",
+    "tipc": "achizitie-directa"
+  },
+  {
+    "id": "achizitie-directa-2026-123394218",
+    "titlu": "Servicii de inspectie tehnica (Rev.2)",
+    "valoare": 2600.0,
+    "data": "2026-11-03",
+    "tip": "",
+    "firma": "A-Z INSTAL GAZ",
+    "cui": "33311747",
+    "ofertanti": 1,
+    "cod": "DA41545630",
+    "url": "https://e-licitatie.ro/pub/direct-acquisition/view/123394218",
+    "k": "da:123394218",
+    "tipc": "achizitie-directa"
+  },
+  {
+    "id": "contract-2026-1083223100",
+    "titlu": "Inchiriere de vehicule industriale cu sofer (Rev.2)",
+    "valoare": 140077.0,
+    "data": "2026-11-03",
+    "tip": "Licitatie deschisa",
+    "firma": "Val Cristi Construct Auto",
+    "cui": "19737276",
+    "ofertanti": 2,
+    "cod": "CAN1138613",
+    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100667739",
+    "k": "can:108322310",
+    "tipc": "subsecvent"
+  },
+  {
+    "id": "contract-2026-1083223110",
+    "titlu": "Inchiriere de vehicule industriale cu sofer (Rev.2)",
+    "valoare": 149886.0,
+    "data": "2026-11-03",
+    "tip": "Licitatie deschisa",
+    "firma": "BEPA CONSTRUCTII CIVILE",
+    "cui": "27019056",
+    "ofertanti": 2,
+    "cod": "CAN1138613",
+    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100667739",
+    "k": "can:108322311",
+    "tipc": "subsecvent"
+  },
+  {
+    "id": "contract-2026-1083223120",
+    "titlu": "Inchiriere de vehicule industriale cu sofer (Rev.2)",
+    "valoare": 199260.0,
+    "data": "2026-11-03",
+    "tip": "Licitatie deschisa",
+    "firma": "Societatea Agricola Orizont",
+    "cui": "8078978",
+    "ofertanti": 2,
+    "cod": "CAN1138613",
+    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100667739",
+    "k": "can:108322312",
+    "tipc": "subsecvent"
+  },
+  {
+    "id": "contract-2026-1083223130",
+    "titlu": "Inchiriere de vehicule industriale cu sofer (Rev.2)",
+    "valoare": 396086.0,
+    "data": "2026-11-03",
+    "tip": "Licitatie deschisa",
+    "firma": "AVALON UTILAJE",
+    "cui": "29256636",
+    "ofertanti": 2,
+    "cod": "CAN1138613",
+    "url": "https://e-licitatie.ro/pub/notices/ca-notices/view-c/100667739",
+    "k": "can:108322313",
+    "tipc": "subsecvent"
+  },
+  {
+    "id": "achizitie-directa-2026-123401500",
+    "titlu": "Produse de curatat pentru automobile (Rev.2)",
+    "valoare": 1000.0,
+    "data": "2026-11-04",
+    "tip": "",
+    "firma": "KSA ROAD SERVICES",
+    "cui": "35253022",
+    "ofertanti": 1,
+    "cod": "DA41552283",
+    "url": "https://e-licitatie.ro/pub/direct-acquisition/view/123401500",
+    "k": "da:123401500",
+    "tipc": "achizitie-directa"
+  },
+  {
+    "id": "achizitie-directa-2026-123420861",
+    "titlu": "Pneuri pentru autovehicule (Rev.2)",
+    "valoare": 12480.0,
+    "data": "2026-11-06",
+    "tip": "",
+    "firma": "KSA ROAD SERVICES",
+    "cui": "35253022",
+    "ofertanti": 1,
+    "cod": "DA41570320",
+    "url": "https://e-licitatie.ro/pub/direct-acquisition/view/123420861",
+    "k": "da:123420861",
+    "tipc": "achizitie-directa"
+  },
+  {
+    "id": "achizitie-directa-2026-123421807",
+    "titlu": "Servicii de reparare si de intretinere a automobilelor (Rev.2)",
+    "valoare": 2720.0,
+    "data": "2026-11-06",
+    "tip": "",
+    "firma": "AUTOPRO MOTORS",
+    "cui": "50157444",
+    "ofertanti": 1,
+    "cod": "DA41571153",
+    "url": "https://e-licitatie.ro/pub/direct-acquisition/view/123421807",
+    "k": "da:123421807",
+    "tipc": "achizitie-directa"
+  },
+  {
+    "id": "achizitie-directa-2026-123432973",
+    "titlu": "Servicii de consultanta in domeniul achizitiilor (Rev.2)",
+    "valoare": 110000.0,
+    "data": "2026-11-09",
+    "tip": "",
+    "firma": "VITERI CONCEPT SOLUTIONS S.R.L.",
+    "cui": "50324046",
+    "ofertanti": 1,
+    "cod": "DA41581602",
+    "url": "https://e-licitatie.ro/pub/direct-acquisition/view/123432973",
+    "k": "da:123432973",
+    "tipc": "achizitie-directa"
+  },
+  {
+    "id": "achizitie-directa-2026-123433662",
+    "titlu": "Sisteme de navigare si de pozitionare globala (GPS sau echivalente) (Rev.2)",
+    "valoare": 3188.16,
+    "data": "2026-11-09",
+    "tip": "",
+    "firma": "ETA  AUTOMATIZARI INDUSTRIALE  S.R.L",
+    "cui": "6825562",
+    "ofertanti": 1,
+    "cod": "DA41582202",
+    "url": "https://e-licitatie.ro/pub/direct-acquisition/view/123433662",
+    "k": "da:123433662",
+    "tipc": "achizitie-directa"
+  },
+  {
+    "id": "achizitie-directa-2026-123474885",
+    "titlu": "Servicii de reparare si de intretinere a instalatiilor electrice de constructii ",
+    "valoare": 100000.0,
+    "data": "2026-11-12",
+    "tip": "",
+    "firma": "ELECTROCONS GROUP PROIECT INT'L",
+    "cui": "15475580",
+    "ofertanti": 1,
+    "cod": "DA41620672",
+    "url": "https://e-licitatie.ro/pub/direct-acquisition/view/123474885",
+    "k": "da:123474885",
     "tipc": "achizitie-directa"
   }
 ]

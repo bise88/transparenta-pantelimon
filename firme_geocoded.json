@@ -3,11 +3,21 @@
     "name": "TOP A-Z CONCEPT S.R.L.",
     "cif": "45058860",
     "adresa": "JUD. ILFOV, SAT FUNDENI COM. DOBROEŞTI, STR. MĂRULUI, NR.19, CAMERA 2, SC.A, ET.2, AP.16",
-    "lat": 44.470278,
-    "lng": 26.176246,
+    "lat": 44.457455,
+    "lng": 26.16276,
     "valoare": 19516062.72,
     "nr_contracte": 4,
     "slug": "top-a-z-concept-srl"
+  },
+  {
+    "name": "GPK INFRASTRUCTURE DESIGN S.R.L.",
+    "cif": "40092259",
+    "adresa": "JUD. ILFOV, ORŞ. PANTELIMON, STR. RĂSCOALEI, NR. PROVENIT 41 A",
+    "lat": 44.451879,
+    "lng": 26.203556,
+    "valoare": 8896324.58,
+    "nr_contracte": 2,
+    "slug": "gpk-infrastructure-design-srl"
   },
   {
     "name": "MORNINGSTAR CONSULTING SRL",
@@ -45,8 +55,8 @@
     "adresa": "JUD. ILFOV, SAT PANTELIMON ORŞ. PANTELIMON, STR. NICOLAE BĂLCESCU, NR.4A, CAM. 1",
     "lat": 44.451879,
     "lng": 26.203556,
-    "valoare": 3072074.0,
-    "nr_contracte": 5,
+    "valoare": 3468160.0,
+    "nr_contracte": 6,
     "slug": "avalon-utilaje-srl"
   },
   {
@@ -55,8 +65,8 @@
     "adresa": "JUD. ILFOV, ORŞ. PANTELIMON, STR. CORBULUI, NR.5, ET.1",
     "lat": 44.451879,
     "lng": 26.203556,
-    "valoare": 21983792.3,
-    "nr_contracte": 6,
+    "valoare": 22133678.3,
+    "nr_contracte": 7,
     "slug": "bepa-constructii-civile-srl"
   },
   {
@@ -75,8 +85,8 @@
     "adresa": "JUD. ILFOV, SAT PANTELIMON ORŞ. PANTELIMON, ŞOS. CERNICA, NR.7",
     "lat": 44.451879,
     "lng": 26.203556,
-    "valoare": 1156721.0,
-    "nr_contracte": 5,
+    "valoare": 1355981.0,
+    "nr_contracte": 6,
     "slug": "societatea-agricola-orizont-pantelimon"
   },
   {
@@ -85,8 +95,8 @@
     "adresa": "JUD. ILFOV, SAT PANTELIMON ORŞ. PANTELIMON, STR. LIVEZILOR, NR.15, BL.I, SC.2, ET.1, AP.13",
     "lat": 44.451879,
     "lng": 26.203556,
-    "valoare": 965703.0,
-    "nr_contracte": 5,
+    "valoare": 1105780.0,
+    "nr_contracte": 6,
     "slug": "val-cristi-construct-auto-srl"
   },
   {
@@ -245,8 +255,8 @@
     "adresa": "JUD. ILFOV, ORŞ. PANTELIMON, STR. APUSULUI, NR.1, CAMERA 2",
     "lat": 44.451879,
     "lng": 26.203556,
-    "valoare": 213479.08,
-    "nr_contracte": 69,
+    "valoare": 226959.08,
+    "nr_contracte": 71,
     "slug": "ksa-road-services-srl"
   },
   {
@@ -405,8 +415,8 @@
     "adresa": "JUD. PRAHOVA, SAT IZVOARELE COM. IZVOARELE,  , NR.651",
     "lat": 45.281586,
     "lng": 26.010572,
-    "valoare": 166000.0,
-    "nr_contracte": 2,
+    "valoare": 276000.0,
+    "nr_contracte": 3,
     "slug": "viteri-concept-solutions-srl"
   },
   {
@@ -508,6 +518,16 @@
     "valoare": 5853.72,
     "nr_contracte": 3,
     "slug": "arox-equipment-srl"
+  },
+  {
+    "name": "AUTOVEST SRL",
+    "cif": "6836324",
+    "adresa": "JUD. BIHOR, MUN. ORADEA, STR. FRUNZEI, NR.10",
+    "lat": 47.054916,
+    "lng": 21.928523,
+    "valoare": 4369065.0,
+    "nr_contracte": 2,
+    "slug": "autovest-srl"
   },
   {
     "name": "HIDROCONSTRUCT SUD S.R.L.",
@@ -863,8 +883,8 @@
     "name": "STANGER DESIGN S.R.L.",
     "cif": "40412167",
     "adresa": "JUD. CĂLĂRAŞI, MUN. CĂLĂRAŞI, PRL. BUCUREŞTI, NR.24, BL.M19, SC.2, ET.3, AP.6",
-    "lat": 44.210116,
-    "lng": 27.30713,
+    "lat": 44.202216,
+    "lng": 27.316032,
     "valoare": 115500.0,
     "nr_contracte": 1,
     "slug": "stanger-design-srl"
@@ -933,8 +953,8 @@
     "name": "RHEEA CONSTRUCTION S.R.L.",
     "cif": "47379122",
     "adresa": "JUD. ILFOV, SAT TUNARI COM. TUNARI, STR. FAGULUI, NR.8A",
-    "lat": 44.545928,
-    "lng": 26.137698,
+    "lat": 44.548032,
+    "lng": 26.139094,
     "valoare": 150600.0,
     "nr_contracte": 4,
     "slug": "rheea-construction-srl"
@@ -995,8 +1015,8 @@
     "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 3, CALEA VITAN, NR.213, BL.20, SC.1, ET.1, AP.2",
     "lat": 44.418284,
     "lng": 26.165099,
-    "valoare": 7151763.25,
-    "nr_contracte": 2,
+    "valoare": 7251763.25,
+    "nr_contracte": 3,
     "slug": "electrocons-group-proiect-intl-srl"
   },
   {
@@ -1555,8 +1575,8 @@
     "adresa": "JUD. TIMIŞ, MUN. TIMIŞOARA, STR. GHEORGHE DOJA, NR.11, CASA DOJA BUSINESS CENTER. BIROURILE OG-13 (59). OG-12 (60). SP. FLEXIBIL (61). CORIDOR. OG-08 (72). OG-07 (73). OG-06 (74). OG-04 (76). SP. FLEX",
     "lat": 45.753836,
     "lng": 21.225747,
-    "valoare": 3188.16,
-    "nr_contracte": 1,
+    "valoare": 6376.32,
+    "nr_contracte": 2,
     "slug": "eta-automatizari-industriale-srl"
   },
   {
@@ -1623,8 +1643,8 @@
     "name": "SELGROS CASH & CARRY SRL",
     "cif": "11805367",
     "adresa": "JUD. BRAŞOV, MUN. BRAŞOV, CAL. BUCUREŞTI, NR.231",
-    "lat": 45.606983,
-    "lng": 25.65437,
+    "lat": 45.622345,
+    "lng": 25.646674,
     "valoare": 9449.72,
     "nr_contracte": 3,
     "slug": "selgros-cash-carry-srl"
@@ -1805,8 +1825,8 @@
     "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 4, BLD DIMITRIE CANTEMIR, NR.17, CAMERA NR.1, BL.10, SC.2, ET.5, AP.58",
     "lat": 44.381903,
     "lng": 26.119018,
-    "valoare": 142350.0,
-    "nr_contracte": 4,
+    "valoare": 144950.0,
+    "nr_contracte": 5,
     "slug": "a-z-instal-gaz-srl"
   },
   {
@@ -1973,8 +1993,8 @@
     "name": "BET AUTO SERVICE FUNDENI SRL",
     "cif": "27987613",
     "adresa": "JUD. ILFOV, SAT FUNDENI COM. DOBROEŞTI, DRM. GĂRII, NR.8, TEREN IN SUPRAFATA DE 600 MP SI CONSTRUCTIE P+1E",
-    "lat": 44.470278,
-    "lng": 26.176246,
+    "lat": 44.457455,
+    "lng": 26.16276,
     "valoare": 3050.0,
     "nr_contracte": 1,
     "slug": "bet-auto-service-fundeni-srl"
@@ -2062,7 +2082,7 @@
   {
     "name": "ECOLASER TRADING S.R.L.",
     "cif": "42968712",
-    "adresa": "JUD. CĂLĂRAŞI, SAT GĂLĂŢUI COM. ALEXANDRU ODOBESCU, STR. NICHITA STĂNESCU, NR.13, CONSTRUCȚIA C1, CAMERA 2",
+    "adresa": "JUD. CĂLĂRAŞI, SAT GĂLĂŢUI COM. ALEXANDRU ODOBESCU, STR. NICHITA STĂNESCU, NR.13, CONSTRUCȚIA C1. CAMERA 2",
     "lat": 44.262765,
     "lng": 27.114068,
     "valoare": 500.0,
@@ -2083,8 +2103,8 @@
     "name": "ATTO REGAL SRL",
     "cif": "11228633",
     "adresa": "JUD. ILFOV, SAT TUNARI COM. TUNARI, STR. ALEXANDRU IOAN CUZA, NR.1, CORP C2",
-    "lat": 44.545928,
-    "lng": 26.137698,
+    "lat": 44.548032,
+    "lng": 26.139094,
     "valoare": 3842.0,
     "nr_contracte": 1,
     "slug": "atto-regal-srl"
@@ -2170,13 +2190,23 @@
     "slug": "expert-mind-srl"
   },
   {
+    "name": "VODAFONE ROMANIA SA",
+    "cif": "8971726",
+    "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 2, STR BARBU VĂCĂRESCU, NR.201, ET.4",
+    "lat": 44.459585,
+    "lng": 26.130345,
+    "valoare": 2203128.41,
+    "nr_contracte": 1,
+    "slug": "vodafone-romania-sa"
+  },
+  {
     "name": "AUTOPRO MOTORS S.R.L.",
     "cif": "50157444",
     "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 4, ŞOS VITAN BÂRZEŞTI, NR.7D, BL.3, SC.A, ET.9, AP.335",
     "lat": 44.381903,
     "lng": 26.119018,
-    "valoare": 8375.0,
-    "nr_contracte": 1,
+    "valoare": 11095.0,
+    "nr_contracte": 2,
     "slug": "autopro-motors-srl"
   }
 ]
