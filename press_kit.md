@@ -38,7 +38,7 @@ Monitorizare cetățenească automată a achizițiilor publice — Orașul Pante
 
 ## Contact
 
-https://github.com/transparenta-locala/transparenta-pantelimon/issues
+https://github.com/bise88/transparenta-pantelimon/issues
 
 ## Metodologie completă
 

@@ -51,7 +51,7 @@ NAV_MAI_MULT = [
 ]
 NAV_EXTERN = [
     ("https://transparenta.eu/entities/4420759", "Date ANAF (transparenta.eu)"),
-    ("https://github.com/transparenta-locala/transparenta-pantelimon", "Codul sursă (GitHub)"),
+    ("https://github.com/bise88/transparenta-pantelimon", "Codul sursă (GitHub)"),
 ]
 
 # Fonturile din primul ecran (restul se încarcă la nevoie, prin unicode-range)
@@ -260,7 +260,7 @@ def footer_html(rel_path: str) -> str:
         '(SEAP, ANAF/MF, Consiliul Local). Semnalele sunt indicatori automați, nu concluzii juridice.</p></div>'
         f'<nav aria-label="Paginile site-ului"><ul>{lista(site)}</ul></nav>'
         f'<nav aria-label="Date deschise"><ul>{lista(date)}'
-        '<li><a href="https://github.com/transparenta-locala/transparenta-pantelimon" target="_blank" rel="noopener">Cod sursă</a></li>'
+        '<li><a href="https://github.com/bise88/transparenta-pantelimon" target="_blank" rel="noopener">Cod sursă</a></li>'
         "</ul></nav>"
         "</div></footer>\n"
         f"{_MARCAJE['footer'][1]}"

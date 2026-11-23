@@ -326,4 +326,4 @@ Folosit de harta.html (Leaflet.js).
 
 ## Contact
 
-Probleme cu schema sau lipsă date: [GitHub Issues](https://github.com/transparenta-locala/transparenta-pantelimon/issues)
+Probleme cu schema sau lipsă date: [GitHub Issues](https://github.com/bise88/transparenta-pantelimon/issues)

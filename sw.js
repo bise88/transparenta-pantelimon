@@ -11,8 +11,8 @@
  * Permite consultare offline a paginilor deja vizitate.
  */
 
-const CACHE_VERSION = 'tp-v12';
-const CACHE_STATIC = 'tp-static-v12';
+const CACHE_VERSION = 'tp-v13';
+const CACHE_STATIC = 'tp-static-v13';
 const CACHE_PAGES  = 'tp-pages-v1';
 const CACHE_DATA   = 'tp-data-v2';
 

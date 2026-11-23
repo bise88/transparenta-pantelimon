@@ -60,7 +60,7 @@ AUDIT.md                       # Audit tehnic public
 ## Replicare pentru alta localitate
 
 ```bash
-git clone https://github.com/transparenta-locala/transparenta-pantelimon
+git clone https://github.com/bise88/transparenta-pantelimon
 cd transparenta-pantelimon
 pip install -r requirements.txt
 
@@ -169,8 +169,8 @@ Concluziile sunt la latitudinea cititorului.
 ## Contact
 
 Inițiativă civică. Inițiatorul este membru USR Pantelimon; proiectul nu este un proiect oficial al partidului.
-Intrebari si sesizari: [deschide un Issue](https://github.com/transparenta-locala/transparenta-pantelimon/issues)
+Intrebari si sesizari: [deschide un Issue](https://github.com/bise88/transparenta-pantelimon/issues)
 
 ---
 
-*Generat automat cu [GitHub Actions](https://github.com/transparenta-locala/transparenta-pantelimon/actions) — date publice SEAP + ANAF*
+*Generat automat cu [GitHub Actions](https://github.com/bise88/transparenta-pantelimon/actions) — date publice SEAP + ANAF*

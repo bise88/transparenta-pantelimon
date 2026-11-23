@@ -81,7 +81,7 @@ CONFIG = {
     "email_smtp": "smtp.gmail.com",
     "email_port": 587,
     "email_parola": "",        # recomandăm App Password Google, nu parola reală
-    "contact_url": "https://github.com/transparenta-locala/transparenta-pantelimon/issues",
+    "contact_url": "https://github.com/bise88/transparenta-pantelimon/issues",
 
     # openapi.ro — date acționariat/administrator firme (opțional, gratuit 100 cereri/lună)
     # Înregistrare gratuită: https://openapi.ro/ro → Fă-ți un cont → generează cheie API

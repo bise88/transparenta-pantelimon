@@ -314,7 +314,7 @@
       { href: 'retele.html',  text: 'Rețele de firme' },
       { href: 'presa.html',   text: 'Pentru presă' },
       { href: 'https://transparenta.eu/entities/4420759', text: 'Date ANAF (transparenta.eu)', ext: true },
-      { href: 'https://github.com/transparenta-locala/transparenta-pantelimon', text: 'Codul sursă (GitHub)', ext: true },
+      { href: 'https://github.com/bise88/transparenta-pantelimon', text: 'Codul sursă (GitHub)', ext: true },
     ];
     const inSub = /\/(furnizori|semnale)\//.test(location.pathname);
     const isActive = l => {

@@ -30,7 +30,7 @@ de implementare, dependențe, criterii de verificare și mesaje de commit sugera
 
 ## CONTEXT REPO (pentru orientare)
 
-- **Repo**: `transparenta-locala/transparenta-pantelimon`, publicat pe GitHub Pages.
+- **Repo**: `bise88/transparenta-pantelimon`, publicat pe GitHub Pages.
 - **Script principal**: `monitor_pantelimon.py` — rulează lunar automat (probabil GitHub
   Actions; verifică `.github/workflows/`). Face scraping pe SEAP + transparenta.eu, aplică
   5 algoritmi de detecție nereguli, generează `raport_transparenta.html`.
