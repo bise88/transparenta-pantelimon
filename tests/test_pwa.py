@@ -126,7 +126,7 @@ class TestServiceWorker:
         path = os.path.join(REPO_ROOT, 'sw.js')
         with open(path, encoding='utf-8') as f:
             content = f.read()
-        assert 'tp-static-v12' in content
+        assert 'tp-static-v13' in content
 
     def test_sw_network_first_csv(self):
         """sw.js contine functia networkFirstCsv pentru fallback CSV offline."""
