@@ -5,8 +5,8 @@
       "label": "TOP A-Z CONCEPT S.R.L.",
       "cui": "45058860",
       "adresa": "JUD. ILFOV, SAT FUNDENI COM. DOBROEŞTI, STR. MĂRULUI, NR.19, CAMERA 2, SC.A, ET.2, AP.16",
-      "lat": 44.457455,
-      "lng": 26.16276,
+      "lat": 44.457952,
+      "lng": 26.162859,
       "valoare": 19516062.72,
       "nr_contracte": 4,
       "in_retea": false
@@ -95,7 +95,7 @@
       "adresa": "JUD. ILFOV, SAT PANTELIMON ORŞ. PANTELIMON, ŞOS. CERNICA, NR.7",
       "lat": 44.451879,
       "lng": 26.203556,
-      "valoare": 1355981.0,
+      "valoare": 1356600.0,
       "nr_contracte": 6,
       "in_retea": false
     },
@@ -282,8 +282,8 @@
       "adresa": "JUD. ILFOV, ORŞ. PANTELIMON, STR. APUSULUI, NR.1, CAMERA 2",
       "lat": 44.451879,
       "lng": 26.203556,
-      "valoare": 226959.08,
-      "nr_contracte": 71,
+      "valoare": 234761.08,
+      "nr_contracte": 73,
       "in_retea": false
     },
     {
@@ -326,8 +326,8 @@
       "adresa": "JUD. GORJ, MUN. TÂRGU JIU, STR. TUDOR VLADIMIRESCU, NR.17",
       "lat": 45.042295,
       "lng": 23.272812,
-      "valoare": 27245.0,
-      "nr_contracte": 15,
+      "valoare": 28165.0,
+      "nr_contracte": 18,
       "in_retea": false
     },
     {
@@ -940,8 +940,8 @@
       "label": "COMINDFLEX SRL",
       "cui": "1393676",
       "adresa": "JUD. TELEORMAN, MUN. ROŞIORI DE VEDE, STR. CRISAN, NR.10",
-      "lat": 44.108349,
-      "lng": 24.995209,
+      "lat": 44.123367,
+      "lng": 24.978892,
       "valoare": 74300.0,
       "nr_contracte": 2,
       "in_retea": false
@@ -964,8 +964,8 @@
       "adresa": "JUD. ILFOV, SAT CĂLDĂRARU COM. CERNICA, STR. OXIGENULUI, NR.1H",
       "lat": 44.413187,
       "lng": 26.26116,
-      "valoare": 29291.89,
-      "nr_contracte": 15,
+      "valoare": 37757.31,
+      "nr_contracte": 16,
       "in_retea": false
     },
     {
@@ -973,8 +973,8 @@
       "label": "STANGER DESIGN S.R.L.",
       "cui": "40412167",
       "adresa": "JUD. CĂLĂRAŞI, MUN. CĂLĂRAŞI, PRL. BUCUREŞTI, NR.24, BL.M19, SC.2, ET.3, AP.6",
-      "lat": 44.202216,
-      "lng": 27.316032,
+      "lat": 44.213586,
+      "lng": 27.302916,
       "valoare": 115500.0,
       "nr_contracte": 1,
       "in_retea": false
@@ -1272,8 +1272,8 @@
       "adresa": "JUD. BACĂU, MUN. BACĂU, STR. ABATORULUI, NR.4",
       "lat": 46.556049,
       "lng": 26.915356,
-      "valoare": 9350.4,
-      "nr_contracte": 5,
+      "valoare": 10945.41,
+      "nr_contracte": 6,
       "in_retea": false
     },
     {
@@ -1349,8 +1349,8 @@
       "adresa": "JUD. CĂLĂRAŞI, MUN. CĂLĂRAŞI, STR. NUFĂRULUI, NR.4, BL.E7, SC.B, ET.2, AP.6",
       "lat": 44.196165,
       "lng": 27.331323,
-      "valoare": 1151850.0,
-      "nr_contracte": 7,
+      "valoare": 1231350.0,
+      "nr_contracte": 8,
       "in_retea": false
     },
     {
@@ -1503,8 +1503,8 @@
       "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 1, STR BARBU DELAVRANCEA, NR.59, ET.1, AP.3",
       "lat": 44.487945,
       "lng": 26.050155,
-      "valoare": 503000.0,
-      "nr_contracte": 5,
+      "valoare": 743000.0,
+      "nr_contracte": 6,
       "in_retea": false
     },
     {
@@ -1668,8 +1668,8 @@
       "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 1, BLD. EXPOZIŢIEI, NR.2, BL.CLADIREA C9",
       "lat": 44.487945,
       "lng": 26.050155,
-      "valoare": 6060.77,
-      "nr_contracte": 1,
+      "valoare": 8864.54,
+      "nr_contracte": 2,
       "in_retea": false
     },
     {
@@ -1809,8 +1809,8 @@
       "label": "SELGROS CASH & CARRY SRL",
       "cui": "11805367",
       "adresa": "JUD. BRAŞOV, MUN. BRAŞOV, CAL. BUCUREŞTI, NR.231",
-      "lat": 45.622345,
-      "lng": 25.646674,
+      "lat": 45.650194,
+      "lng": 25.616718,
       "valoare": 9449.72,
       "nr_contracte": 3,
       "in_retea": false
@@ -2185,8 +2185,8 @@
       "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 5, STR ECHINOCŢIULUI, NR.80",
       "lat": 44.405054,
       "lng": 26.071651,
-      "valoare": 872.48,
-      "nr_contracte": 1,
+      "valoare": 996.45,
+      "nr_contracte": 2,
       "in_retea": false
     },
     {
@@ -2194,8 +2194,8 @@
       "label": "BET AUTO SERVICE FUNDENI SRL",
       "cui": "27987613",
       "adresa": "JUD. ILFOV, SAT FUNDENI COM. DOBROEŞTI, DRM. GĂRII, NR.8, TEREN IN SUPRAFATA DE 600 MP SI CONSTRUCTIE P+1E",
-      "lat": 44.457455,
-      "lng": 26.16276,
+      "lat": 44.457952,
+      "lng": 26.162859,
       "valoare": 3050.0,
       "nr_contracte": 1,
       "in_retea": false
@@ -2430,6 +2430,17 @@
       "valoare": 11095.0,
       "nr_contracte": 2,
       "in_retea": false
+    },
+    {
+      "id": "31087725",
+      "label": "GEMCARD SERVICES SRL",
+      "cui": "31087725",
+      "adresa": "MUNICIPIUL BUCUREŞTI, SECTOR 6, STR VALEA LUNGĂ, NR.52A",
+      "lat": 44.447875,
+      "lng": 26.032448,
+      "valoare": 2995.0,
+      "nr_contracte": 1,
+      "in_retea": false
     }
   ],
   "edges": [
@@ -2510,10 +2521,10 @@
     }
   ],
   "stats": {
-    "total_noduri": 221,
+    "total_noduri": 222,
     "noduri_in_retea": 10,
     "edges_adresa_comuna": 5,
     "total_edges": 5
   },
-  "generated_at": "2026-11-15T13:00:09.831058"
+  "generated_at": "2026-11-23T14:28:00.919471"
 }

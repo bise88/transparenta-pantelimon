@@ -1,4 +1,4 @@
-# Press kit — Transparența Pantelimon (15.11.2026)
+# Press kit — Transparența Pantelimon (23.11.2026)
 
 Monitorizare cetățenească automată a achizițiilor publice — Orașul Pantelimon.
 
@@ -6,11 +6,11 @@ Monitorizare cetățenească automată a achizițiilor publice — Orașul Pante
 
 | Indicator | Valoare |
 |---|---|
-| Semnale automate totale | 359 |
-| Contracte unice cu semnale | 256 |
-| Critice / Majore / Medii | 31 / 98 / 230 |
-| Contracte analizate | 761 |
-| Valoare totală contracte | 172.62 M RON |
+| Semnale automate totale | 362 |
+| Contracte unice cu semnale | 258 |
+| Critice / Majore / Medii | 31 / 99 / 232 |
+| Contracte analizate | 773 |
+| Valoare totală contracte | 172.96 M RON |
 | Scor transparență | 19/100 |
 
 ## Top 5 semnale (severitate + valoare)
@@ -18,7 +18,7 @@ Monitorizare cetățenească automată a achizițiilor publice — Orașul Pante
 1. [CRITIC] **Furnizor cu indicatori cumulați — 4 categorii** — BETIRA CONSTRUCT — 9,982,301 RON
 2. [CRITIC] **Furnizor cu indicatori cumulați — 5 categorii** — Constopograf Expert — 2,160,000 RON
 3. [CRITIC] **Furnizor cu indicatori cumulați — 3 categorii** — GEMCO TRADE — 1,216,430 RON
-4. [CRITIC] **Furnizor cu indicatori cumulați — 4 categorii** — RALEX PROIECT CONSTRUCT — 1,117,350 RON
+4. [CRITIC] **Furnizor cu indicatori cumulați — 4 categorii** — RALEX PROIECT CONSTRUCT — 1,196,850 RON
 5. [CRITIC] **Furnizor cu indicatori cumulați — 4 categorii** — FINANCE PUBLIC CONSULTING — 1,045,000 RON
 
 ## Top 5 firme după valoare contracte
@@ -49,4 +49,4 @@ https://transparenta-pantelimon.eu/despre.html
 Semnalele sunt indicatori euristici și nu reprezintă constatări juridice sau prejudicii.
 
 ---
-*Generat automat de monitor_pantelimon.py la 2026-11-15*
+*Generat automat de monitor_pantelimon.py la 2026-11-23*
